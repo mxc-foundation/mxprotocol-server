@@ -21,8 +21,6 @@ func NewWithdrawServerAPI() *WithdrawServerAPI {
 }
 
 func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWithdrawFeeRequest) (*api.GetWithdrawFeeResponse, error){
-	var withdrawFee string
 	ctxWithdraw.withdrawFee += 2.0
-	withdrawFee = fmt.Sprint(ctxWithdraw.withdrawFee)
-	return &api.GetWithdrawFeeResponse{WithdrawFee:withdrawFee,Error:"",}, nil
+	return &api.GetWithdrawFeeResponse{WithdrawFee:ctxWithdraw.withdrawFee,Error:"",}, nil
 }

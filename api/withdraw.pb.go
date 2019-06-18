@@ -7,6 +7,7 @@ import (
 	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
 	math "math"
 )
@@ -22,33 +23,34 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type MoneyAbbreviation int32
+type CryptoCurrencies int32
 
 const (
-	MoneyAbbreviation_Ether MoneyAbbreviation = 0
+	CryptoCurrencies_Ether CryptoCurrencies = 0
 )
 
-var MoneyAbbreviation_name = map[int32]string{
+var CryptoCurrencies_name = map[int32]string{
 	0: "Ether",
 }
 
-var MoneyAbbreviation_value = map[string]int32{
+var CryptoCurrencies_value = map[string]int32{
 	"Ether": 0,
 }
 
-func (x MoneyAbbreviation) String() string {
-	return proto.EnumName(MoneyAbbreviation_name, int32(x))
+func (x CryptoCurrencies) String() string {
+	return proto.EnumName(CryptoCurrencies_name, int32(x))
 }
 
-func (MoneyAbbreviation) EnumDescriptor() ([]byte, []int) {
+func (CryptoCurrencies) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_b0dd7acb611886fa, []int{0}
 }
 
 type GetWithdrawFeeRequest struct {
-	Money                MoneyAbbreviation `protobuf:"varint,1,opt,name=money,proto3,enum=api.MoneyAbbreviation" json:"money,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
-	XXX_unrecognized     []byte            `json:"-"`
-	XXX_sizecache        int32             `json:"-"`
+	// type of crypto currency
+	CryptoCurrency       CryptoCurrencies `protobuf:"varint,1,opt,name=cryptoCurrency,proto3,enum=api.CryptoCurrencies" json:"cryptoCurrency,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
 }
 
 func (m *GetWithdrawFeeRequest) Reset()         { *m = GetWithdrawFeeRequest{} }
@@ -76,16 +78,17 @@ func (m *GetWithdrawFeeRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetWithdrawFeeRequest proto.InternalMessageInfo
 
-func (m *GetWithdrawFeeRequest) GetMoney() MoneyAbbreviation {
+func (m *GetWithdrawFeeRequest) GetCryptoCurrency() CryptoCurrencies {
 	if m != nil {
-		return m.Money
+		return m.CryptoCurrency
 	}
-	return MoneyAbbreviation_Ether
+	return CryptoCurrencies_Ether
 }
 
 type GetWithdrawFeeResponse struct {
-	WithdrawFee          string   `protobuf:"bytes,1,opt,name=withdraw_fee,json=withdrawFee,proto3" json:"withdraw_fee,omitempty"`
-	Error                string   `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	// Withdraw object.
+	WithdrawFee          float64  `protobuf:"fixed64,1,opt,name=WithdrawFee,proto3" json:"WithdrawFee,omitempty"`
+	Error                string   `protobuf:"bytes,2,opt,name=Error,proto3" json:"Error,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -116,11 +119,11 @@ func (m *GetWithdrawFeeResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetWithdrawFeeResponse proto.InternalMessageInfo
 
-func (m *GetWithdrawFeeResponse) GetWithdrawFee() string {
+func (m *GetWithdrawFeeResponse) GetWithdrawFee() float64 {
 	if m != nil {
 		return m.WithdrawFee
 	}
-	return ""
+	return 0
 }
 
 func (m *GetWithdrawFeeResponse) GetError() string {
@@ -131,7 +134,7 @@ func (m *GetWithdrawFeeResponse) GetError() string {
 }
 
 func init() {
-	proto.RegisterEnum("api.MoneyAbbreviation", MoneyAbbreviation_name, MoneyAbbreviation_value)
+	proto.RegisterEnum("api.CryptoCurrencies", CryptoCurrencies_name, CryptoCurrencies_value)
 	proto.RegisterType((*GetWithdrawFeeRequest)(nil), "api.GetWithdrawFeeRequest")
 	proto.RegisterType((*GetWithdrawFeeResponse)(nil), "api.GetWithdrawFeeResponse")
 }
@@ -139,20 +142,23 @@ func init() {
 func init() { proto.RegisterFile("withdraw.proto", fileDescriptor_b0dd7acb611886fa) }
 
 var fileDescriptor_b0dd7acb611886fa = []byte{
-	// 200 bytes of a gzipped FileDescriptorProto
+	// 251 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2b, 0xcf, 0x2c, 0xc9,
-	0x48, 0x29, 0x4a, 0x2c, 0xd7, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x4e, 0x2c, 0xc8, 0x54,
-	0x72, 0xe5, 0x12, 0x75, 0x4f, 0x2d, 0x09, 0x87, 0xca, 0xb8, 0xa5, 0xa6, 0x06, 0xa5, 0x16, 0x96,
-	0xa6, 0x16, 0x97, 0x08, 0xe9, 0x70, 0xb1, 0xe6, 0xe6, 0xe7, 0xa5, 0x56, 0x4a, 0x30, 0x2a, 0x30,
-	0x6a, 0xf0, 0x19, 0x89, 0xe9, 0x25, 0x16, 0x64, 0xea, 0xf9, 0x82, 0x44, 0x1c, 0x93, 0x92, 0x8a,
-	0x52, 0xcb, 0x32, 0x13, 0x4b, 0x32, 0xf3, 0xf3, 0x82, 0x20, 0x8a, 0x94, 0x02, 0xb9, 0xc4, 0xd0,
-	0x8d, 0x29, 0x2e, 0xc8, 0xcf, 0x2b, 0x4e, 0x15, 0x52, 0xe4, 0xe2, 0x81, 0xd9, 0x1b, 0x9f, 0x96,
-	0x9a, 0x0a, 0x36, 0x8e, 0x33, 0x88, 0xbb, 0x1c, 0xa1, 0x54, 0x48, 0x84, 0x8b, 0x35, 0xb5, 0xa8,
-	0x28, 0xbf, 0x48, 0x82, 0x09, 0x2c, 0x07, 0xe1, 0x68, 0xc9, 0x71, 0x09, 0x62, 0x58, 0x27, 0xc4,
-	0xc9, 0xc5, 0xea, 0x5a, 0x92, 0x91, 0x5a, 0x24, 0xc0, 0x60, 0x14, 0xce, 0xc5, 0x01, 0xb3, 0x4f,
-	0xc8, 0x9b, 0x8b, 0x0f, 0xd5, 0x7a, 0x21, 0x29, 0xb0, 0x7b, 0xb1, 0x7a, 0x4d, 0x4a, 0x1a, 0xab,
-	0x1c, 0xc4, 0xbd, 0x4a, 0x0c, 0x49, 0x6c, 0xe0, 0xe0, 0x31, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff,
-	0x95, 0xc5, 0xf0, 0x23, 0x30, 0x01, 0x00, 0x00,
+	0x48, 0x29, 0x4a, 0x2c, 0xd7, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x4e, 0x2c, 0xc8, 0x94,
+	0x92, 0x49, 0xcf, 0xcf, 0x4f, 0xcf, 0x49, 0xd5, 0x4f, 0x2c, 0xc8, 0xd4, 0x4f, 0xcc, 0xcb, 0xcb,
+	0x2f, 0x49, 0x2c, 0xc9, 0xcc, 0xcf, 0x2b, 0x86, 0x28, 0x51, 0x0a, 0xe3, 0x12, 0x75, 0x4f, 0x2d,
+	0x09, 0x87, 0xea, 0x73, 0x4b, 0x4d, 0x0d, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x11, 0xb2, 0xe5,
+	0xe2, 0x4b, 0x2e, 0xaa, 0x2c, 0x28, 0xc9, 0x77, 0x2e, 0x2d, 0x2a, 0x4a, 0xcd, 0x4b, 0xae, 0x94,
+	0x60, 0x54, 0x60, 0xd4, 0xe0, 0x33, 0x12, 0xd5, 0x4b, 0x2c, 0xc8, 0xd4, 0x73, 0x46, 0x96, 0xca,
+	0x4c, 0x2d, 0x0e, 0x42, 0x53, 0xac, 0x14, 0xc0, 0x25, 0x86, 0x6e, 0x6e, 0x71, 0x41, 0x7e, 0x5e,
+	0x71, 0xaa, 0x90, 0x02, 0x17, 0x37, 0x92, 0x30, 0xd8, 0x54, 0xc6, 0x20, 0x64, 0x21, 0x21, 0x11,
+	0x2e, 0x56, 0xd7, 0xa2, 0xa2, 0xfc, 0x22, 0x09, 0x26, 0x05, 0x46, 0x0d, 0xce, 0x20, 0x08, 0x47,
+	0x4b, 0x96, 0x4b, 0x00, 0xdd, 0x56, 0x21, 0x4e, 0x2e, 0x56, 0xd7, 0x92, 0x8c, 0xd4, 0x22, 0x01,
+	0x06, 0xa3, 0x2e, 0x46, 0x2e, 0x7e, 0x98, 0x21, 0xc1, 0xa9, 0x45, 0x65, 0x99, 0xc9, 0xa9, 0x42,
+	0xe5, 0x5c, 0x7c, 0xa8, 0x8e, 0x10, 0x92, 0x02, 0xbb, 0x1e, 0xab, 0x8f, 0xa5, 0xa4, 0xb1, 0xca,
+	0x41, 0x5c, 0xad, 0xa4, 0xd3, 0x74, 0xf9, 0xc9, 0x64, 0x26, 0x35, 0x21, 0x15, 0x70, 0x38, 0xa6,
+	0xa3, 0x28, 0xd2, 0xaf, 0x46, 0xf5, 0x7c, 0x6d, 0x12, 0x1b, 0x38, 0x70, 0x8d, 0x01, 0x01, 0x00,
+	0x00, 0xff, 0xff, 0xe3, 0xb7, 0x12, 0x65, 0x91, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -163,64 +169,66 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// WithdrawClient is the client API for Withdraw service.
+// WithdrawServiceClient is the client API for WithdrawService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type WithdrawClient interface {
+type WithdrawServiceClient interface {
+	// Get data for current withdraw fee
 	GetWithdrawFee(ctx context.Context, in *GetWithdrawFeeRequest, opts ...grpc.CallOption) (*GetWithdrawFeeResponse, error)
 }
 
-type withdrawClient struct {
+type withdrawServiceClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewWithdrawClient(cc *grpc.ClientConn) WithdrawClient {
-	return &withdrawClient{cc}
+func NewWithdrawServiceClient(cc *grpc.ClientConn) WithdrawServiceClient {
+	return &withdrawServiceClient{cc}
 }
 
-func (c *withdrawClient) GetWithdrawFee(ctx context.Context, in *GetWithdrawFeeRequest, opts ...grpc.CallOption) (*GetWithdrawFeeResponse, error) {
+func (c *withdrawServiceClient) GetWithdrawFee(ctx context.Context, in *GetWithdrawFeeRequest, opts ...grpc.CallOption) (*GetWithdrawFeeResponse, error) {
 	out := new(GetWithdrawFeeResponse)
-	err := c.cc.Invoke(ctx, "/api.Withdraw/GetWithdrawFee", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.WithdrawService/GetWithdrawFee", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// WithdrawServer is the server API for Withdraw service.
-type WithdrawServer interface {
+// WithdrawServiceServer is the server API for WithdrawService service.
+type WithdrawServiceServer interface {
+	// Get data for current withdraw fee
 	GetWithdrawFee(context.Context, *GetWithdrawFeeRequest) (*GetWithdrawFeeResponse, error)
 }
 
-func RegisterWithdrawServer(s *grpc.Server, srv WithdrawServer) {
-	s.RegisterService(&_Withdraw_serviceDesc, srv)
+func RegisterWithdrawServiceServer(s *grpc.Server, srv WithdrawServiceServer) {
+	s.RegisterService(&_WithdrawService_serviceDesc, srv)
 }
 
-func _Withdraw_GetWithdrawFee_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _WithdrawService_GetWithdrawFee_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetWithdrawFeeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WithdrawServer).GetWithdrawFee(ctx, in)
+		return srv.(WithdrawServiceServer).GetWithdrawFee(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.Withdraw/GetWithdrawFee",
+		FullMethod: "/api.WithdrawService/GetWithdrawFee",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WithdrawServer).GetWithdrawFee(ctx, req.(*GetWithdrawFeeRequest))
+		return srv.(WithdrawServiceServer).GetWithdrawFee(ctx, req.(*GetWithdrawFeeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _Withdraw_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "api.Withdraw",
-	HandlerType: (*WithdrawServer)(nil),
+var _WithdrawService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "api.WithdrawService",
+	HandlerType: (*WithdrawServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetWithdrawFee",
-			Handler:    _Withdraw_GetWithdrawFee_Handler,
+			Handler:    _WithdrawService_GetWithdrawFee_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

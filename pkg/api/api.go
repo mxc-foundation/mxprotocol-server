@@ -21,7 +21,7 @@ func Setup(conf config.MxpConfig) error {
 
 	server := grpc.NewServer()
 	// register all servers here
-	api.RegisterWithdrawServer(server, withdraw.NewWithdrawServerAPI())
+	api.RegisterWithdrawServiceServer(server, withdraw.NewWithdrawServerAPI())
 	lis, err := net.Listen("tcp", bind)
 	if err != nil {
 		return errors.Wrap(err, "start mxp-server api listener error")

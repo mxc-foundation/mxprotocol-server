@@ -3,8 +3,6 @@ syntax = "proto3";
 package api;
 
 import "google/api/annotations.proto";
-import "google/protobuf/timestamp.proto";
-import "google/protobuf/empty.proto";
 
 // WithdrawService is the service managing the withdraw access.
 service WithdrawService {
@@ -27,5 +25,6 @@ enum CryptoCurrencies{
 
 message GetWithdrawFeeResponse {
 	// Withdraw object.
-	float WithdrawFee = 1;
+	double WithdrawFee = 1;
+	string Error = 2;
 }
