@@ -23,7 +23,7 @@
           "200": {
             "description": "getWithdrawFee.",
             "schema": {
-              "$ref": "#/definitions/apiListIntegrationResponse"
+              "$ref": "#/definitions/apiGetWithdrawFeeResponse"
             }
           }
         },
@@ -49,7 +49,7 @@
       "properties": {
         "withdrawFee": {
           "type": "string",
-          "format": "int64",
+          "format": "float",
           "description": "GetWithdrawFee."
         }
       }
