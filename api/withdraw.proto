@@ -1,0 +1,20 @@
+syntax = "proto3";
+package api;
+
+
+service Withdraw {
+    rpc GetWithdrawFee (GetWithdrawFeeRequest) returns (GetWithdrawFeeResponse) {}
+}
+
+enum MoneyAbbreviation{
+   Ether = 0;
+}
+
+message GetWithdrawFeeRequest {
+    MoneyAbbreviation money = 1;
+}
+
+message GetWithdrawFeeResponse {
+    string withdraw_fee = 1;
+    string error = 2;
+}
