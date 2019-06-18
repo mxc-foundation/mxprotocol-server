@@ -1,0 +1,58 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "withdraw.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/getWithdrawFee/{cryptoCurrency}": {
+      "get": {
+        "summary": "getWithdrawFee.",
+        "operationId": "getWithdrawFee",
+        "responses": {
+          "200": {
+            "description": "getWithdrawFee.",
+            "schema": {
+              "$ref": "#/definitions/apiListIntegrationResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cryptoCurrency",
+            "description": "a type of the crypto-currency.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "WithdrawService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "apiGetWithdrawFeeResponse": {
+      "type": "object",
+      "properties": {
+        "withdrawFee": {
+          "type": "string",
+          "format": "int64",
+          "description": "GetWithdrawFee."
+        }
+      }
+    }
+  }
+}
