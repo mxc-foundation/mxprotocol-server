@@ -1,0 +1,70 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "withdraw.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/getWithdrawFee/{cryptoCurrency}": {
+      "get": {
+        "summary": "Get data for current withdraw fee",
+        "operationId": "GetWithdrawFee",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetWithdrawFeeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cryptoCurrency",
+            "description": "type of crypto currency",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Ether"
+            ]
+          }
+        ],
+        "tags": [
+          "WithdrawService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "apiCryptoCurrencies": {
+      "type": "string",
+      "enum": [
+        "Ether"
+      ],
+      "default": "Ether"
+    },
+    "apiGetWithdrawFeeResponse": {
+      "type": "object",
+      "properties": {
+        "WithdrawFee": {
+          "type": "number",
+          "format": "double",
+          "description": "Withdraw object."
+        },
+        "Error": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
