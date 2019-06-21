@@ -3,28 +3,69 @@ syntax = "proto3";
 package api;
 
 import "google/api/annotations.proto";
+import "money.proto";
 
 // WithdrawService is the service managing the withdraw access.
 service WithdrawService {
-	// Get data for current withdraw fee
-	rpc GetWithdrawFee(GetWithdrawFeeRequest) returns (GetWithdrawFeeResponse) {
-		option(google.api.http) = {
-			get: "/api/getWithdrawFee/{cryptoCurrency}"
+    // Get data for current withdraw fee
+    rpc GetWithdrawFee (GetWithdrawFeeRequest) returns (GetWithdrawFeeResponse) {
+        option (google.api.http) = {
+			get: "/api/withdraw/{money_abbr}"
 		};
-	}
+    }
+
+    rpc WithdrawReq (WithdrawReqRequest) returns (WithdrawReqResponse) {
+        option (google.api.http) = {
+			post: "/api/withdraw/{money_abbr}"
+			body: "*"
+		};
+    }
+
+    rpc GetWithdrawHistory (GetWithdrawHistoryRequest) returns (GetWithdrawHistoryResponse) {
+        option (google.api.http) = {
+			get: "/api/withdraw/history"
+		};
+    }
 }
 
-enum CryptoCurrencies{
-	Ether = 0;
+message GetWithdrawFeeRequest {
+    // type of crypto currency
+    Money money_abbr = 1;
 }
- 
- message GetWithdrawFeeRequest {
-	// type of crypto currency
-	CryptoCurrencies cryptoCurrency = 1;
- }
 
 message GetWithdrawFeeResponse {
-	// Withdraw object.
-	double WithdrawFee = 1;
-	string Error = 2;
+    // Withdraw object.
+    float withdrawFee = 1;
+    string error = 2;
+}
+
+message WithdrawReqRequest {
+    int64 org_id = 1;
+    Money money_abbr = 2;
+    float amount = 3;
+}
+
+message WithdrawReqResponse {
+    bool status = 1;
+    string error = 2;
+}
+
+message GetWithdrawHistoryRequest {
+    string org_id = 1;
+    string offset = 2;
+    int64 limit = 3;
+}
+
+message WithdrawHistory {
+    string from = 1;
+    string to = 2;
+    Money money = 3;
+    float amount = 4;
+    string created_at = 5;
+}
+
+message GetWithdrawHistoryResponse {
+    int64 count = 1;
+    repeated  WithdrawHistory withdraw_history = 2;
+    string error = 3;
 }

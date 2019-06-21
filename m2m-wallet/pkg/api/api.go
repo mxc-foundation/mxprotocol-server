@@ -18,6 +18,10 @@ import (
 	"io/ioutil"
 	"mxprotocol-server/m2m-wallet/api"
 	"mxprotocol-server/m2m-wallet/pkg/config"
+	"mxprotocol-server/m2m-wallet/pkg/services/money"
+	"mxprotocol-server/m2m-wallet/pkg/services/supernode"
+	"mxprotocol-server/m2m-wallet/pkg/services/topup"
+	"mxprotocol-server/m2m-wallet/pkg/services/wallet"
 	"mxprotocol-server/m2m-wallet/pkg/services/withdraw"
 	"mxprotocol-server/m2m-wallet/pkg/static"
 	"net/http"
@@ -33,7 +37,7 @@ var (
 	corsAllowOrigin string
 )
 
-func Setup(conf config.MxpConfig) error {
+func SetupHTTPServer(conf config.MxpConfig) error {
 	bind = conf.ApplicationServer.HttpServer.Bind
 	tlsCert = conf.ApplicationServer.HttpServer.TLSCert
 	tlsKey = conf.ApplicationServer.HttpServer.TLSKey
@@ -41,8 +45,13 @@ func Setup(conf config.MxpConfig) error {
 	corsAllowOrigin = conf.ApplicationServer.HttpServer.CORSAllowOrigin
 
 	server := grpc.NewServer()
+
 	// register all servers here
 	api.RegisterWithdrawServiceServer(server, withdraw.NewWithdrawServerAPI())
+	api.RegisterMoneyServiceServer(server, money.NewMoneyServerAPI())
+	api.RegisterTopUpServiceServer(server, topup.NewTopUpServerAPI())
+	api.RegisterWalletServiceServer(server, wallet.NewWalletServerAPI())
+	api.RegisterSuperNodeServiceServer(server, supernode.NewSupernodeServerAPI())
 
 	var clientHttpHandler http.Handler
 	var err error
@@ -178,6 +187,18 @@ func getJSONGateway(ctx context.Context) (http.Handler, error) {
 	// register all services
 	if err := api.RegisterWithdrawServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register withdraw handler error")
+	}
+	if err := api.RegisterMoneyServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+		return nil, errors.Wrap(err, "register money handler error")
+	}
+	if err := api.RegisterTopUpServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+		return nil, errors.Wrap(err, "register top_up handler error")
+	}
+	if err := api.RegisterWalletServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+		return nil, errors.Wrap(err, "register top_up handler error")
+	}
+	if err := api.RegisterSuperNodeServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+		return nil, errors.Wrap(err, "register top_up handler error")
 	}
 
 	return mux, nil

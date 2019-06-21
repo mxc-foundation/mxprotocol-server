@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package api;
+
+import "google/api/annotations.proto";
+
+service MoneyService {
+    rpc ModifyMoneyAccount(ModifyMoneyAccountRequest) returns (ModifyMoneyAccountResponse){
+        option(google.api.http) = {
+			put: "/api/money/modify_account/{money_abbr}"
+			body: "*"
+		};
+    }
+
+    rpc GetChangeMoneyAccountHistory(GetMoneyAccountChangeHistoryRequest) returns (GetMoneyAccountChangeHistoryResponse){
+        option(google.api.http) = {
+			get: "/api/money/change_history/{money_abbr}"
+		};
+    }
+
+    rpc GetActiveMoneyAccount(GetActiveMoneyAccountRequest) returns (GetActiveMoneyAccountResponse) {
+        option (google.api.http) = {
+			get: "/api/money/active_account/{money_abbr}"
+		};
+    }
+}
+
+enum Money {
+    Ether = 0;
+}
+
+message ModifyMoneyAccountRequest {
+    int64 org_id = 1;
+    Money money_abbr = 2;
+    string current_account = 3;
+}
+
+message ModifyMoneyAccountResponse {
+    string error = 1;
+    bool status = 2;
+}
+
+message GetMoneyAccountChangeHistoryRequest {
+    int64 org_id = 1;
+    int64 offset = 2;
+    int64 limit = 3;
+    Money money_abbr = 4;
+}
+
+message MoneyAccountChangeHistory {
+    string from = 1;
+    string to = 2;
+    string created_at = 3;
+}
+
+message GetMoneyAccountChangeHistoryResponse {
+    string error = 1;
+    int64 count = 2;
+    repeated MoneyAccountChangeHistory change_history = 3;
+}
+
+message GetActiveMoneyAccountRequest {
+    int64 org_id = 1;
+    Money money_abbr = 2;
+}
+
+message GetActiveMoneyAccountResponse {
+    string error = 1;
+    string active_account = 2;
+}

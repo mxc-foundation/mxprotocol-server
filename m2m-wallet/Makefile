@@ -1,7 +1,7 @@
 .PHONY: build clean api pkg/static statics/swagger/api.swagger.json dev-requirements
 VERSION := "test-run"
 
-build: pkg/static
+build: api pkg/static
 	mkdir -p build
 	go build -ldflags "-s -w -X main.version=$(VERSION)" -o build/mxp-server command/main.go
 

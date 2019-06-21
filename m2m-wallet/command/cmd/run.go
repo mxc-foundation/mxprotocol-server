@@ -5,6 +5,10 @@ import (
 	"github.com/pkg/errors"
 	"mxprotocol-server/m2m-wallet/db"
 	"mxprotocol-server/m2m-wallet/pkg/api"
+	"mxprotocol-server/m2m-wallet/pkg/services/money"
+	"mxprotocol-server/m2m-wallet/pkg/services/supernode"
+	"mxprotocol-server/m2m-wallet/pkg/services/topup"
+	"mxprotocol-server/m2m-wallet/pkg/services/wallet"
 	"mxprotocol-server/m2m-wallet/pkg/services/withdraw"
 	"os"
 	"os/signal"
@@ -27,8 +31,10 @@ func run(cmd *cobra.Command, args []string) error {
 		setupDb,
 		//setupAuth,
 		setupWithdraw,
-		//setupwallet,
-		//setupTopUp,
+		setupWallet,
+		setupTopUp,
+		setupSupernode,
+		setupMoney,
 		setupAPI,
 	}
 
@@ -81,8 +87,36 @@ func setupWithdraw() error {
 	return nil
 }
 
+func setupWallet() error {
+	if err := wallet.Setup(); err != nil {
+		return errors.Wrap(err, "setup service wallet error")
+	}
+	return nil
+}
+
+func setupTopUp() error {
+	if err := topup.Setup(); err != nil {
+		return errors.Wrap(err, "setup service top_up error")
+	}
+	return nil
+}
+
+func setupSupernode() error {
+	if err := supernode.Setup(); err != nil {
+		return errors.Wrap(err, "setup service super_node error")
+	}
+	return nil
+}
+
+func setupMoney() error {
+	if err := money.Setup(); err != nil {
+		return errors.Wrap(err, "setup service money error")
+	}
+	return nil
+}
+
 func setupAPI() error {
-	if err := api.Setup(config.Cstruct); err != nil {
+	if err := api.SetupHTTPServer(config.Cstruct); err != nil {
 		return errors.Wrap(err, "setup api error")
 	}
 	return nil

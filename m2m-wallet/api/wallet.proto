@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package api;
+
+import "google/api/annotations.proto";
+
+service WalletService {
+    rpc GetWalletBalance(GetWalletBalanceRequest) returns (GetWalletBalanceResponse) {
+        option(google.api.http) = {
+			get: "/api/wallet/balance/{org_id}"
+		};
+    }
+
+    rpc GetVmxcTxHistory(GetVmxcTxHistoryRequest) returns (GetVmxcTxHistoryResponse){
+        option(google.api.http) = {
+			get: "/api/wallet/vmxc/tx_history"
+		};
+    }
+}
+
+message GetWalletBalanceRequest {
+    int64 org_id = 1;
+}
+
+message GetWalletBalanceResponse {
+    float balance = 1;
+    string error = 2;
+}
+
+message GetVmxcTxHistoryRequest {
+    int64 org_id = 1;
+    int64 offset = 2;
+    int64 limit = 3;
+}
+
+message VmxcTxHistory {
+    string from = 1;
+    string to = 2;
+    string tx_type = 3;
+    float amount = 4;
+    string created_at = 5;
+}
+
+message GetVmxcTxHistoryResponse {
+    string error = 1;
+    int64 count = 2;
+    repeated VmxcTxHistory tx_history = 3;
+}

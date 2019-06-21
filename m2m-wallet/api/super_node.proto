@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package api;
+
+import "google/api/annotations.proto";
+import "money.proto";
+
+service SuperNodeService {
+    rpc GetSuperNodeActiveMoneyAccount(GetSuperNodeActiveMoneyAccountRequest) returns (GetSuperNodeActiveMoneyAccountResponse){
+        option(google.api.http) = {
+			get: "/api/supernode/active_account/{money_abbr}"
+		};
+    }
+}
+
+message GetSuperNodeActiveMoneyAccountRequest {
+    Money money_abbr = 1;
+}
+
+message GetSuperNodeActiveMoneyAccountResponse {
+    string supernode_active_account = 1;
+    string Error = 2;
+}

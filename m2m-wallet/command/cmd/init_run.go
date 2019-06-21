@@ -35,7 +35,7 @@ func init() {
 
 	// defaults
 	viper.SetDefault("general.password_hash_iterations", 100000)
-	viper.SetDefault("general.host_server", "mxp-server-domain")
+	viper.SetDefault("general.host_server", "localhost") //"mxp-server-domain")
 
 	viper.SetDefault("postgresql.dsn", "postgres://localhost/mxp-server?sslmode=disable")
 	viper.SetDefault("postgresql.automigrate", true)

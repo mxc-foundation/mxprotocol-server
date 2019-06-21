@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "withdraw.proto",
+    "title": "money.proto",
     "version": "version not set"
   },
   "schemes": [
@@ -15,29 +15,74 @@
     "application/json"
   ],
   "paths": {
-    "/api/withdraw/history": {
+    "/api/money/active_account/{money_abbr}": {
       "get": {
-        "operationId": "GetWithdrawHistory",
+        "operationId": "GetActiveMoneyAccount",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetWithdrawHistoryResponse"
+              "$ref": "#/definitions/apiGetActiveMoneyAccountResponse"
             }
           }
         },
         "parameters": [
           {
+            "name": "money_abbr",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Ether"
+            ]
+          },
+          {
             "name": "orgId",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "MoneyService"
+        ]
+      }
+    },
+    "/api/money/change_history/{money_abbr}": {
+      "get": {
+        "operationId": "GetChangeMoneyAccountHistory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetMoneyAccountChangeHistoryResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "money_abbr",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Ether"
+            ]
+          },
+          {
+            "name": "orgId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
           },
           {
             "name": "offset",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           {
             "name": "limit",
@@ -48,45 +93,18 @@
           }
         ],
         "tags": [
-          "WithdrawService"
+          "MoneyService"
         ]
       }
     },
-    "/api/withdraw/{money_abbr}": {
-      "get": {
-        "summary": "Get data for current withdraw fee",
-        "operationId": "GetWithdrawFee",
+    "/api/money/modify_account/{money_abbr}": {
+      "put": {
+        "operationId": "ModifyMoneyAccount",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetWithdrawFeeResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "money_abbr",
-            "description": "type of crypto currency",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "enum": [
-              "Ether"
-            ]
-          }
-        ],
-        "tags": [
-          "WithdrawService"
-        ]
-      },
-      "post": {
-        "operationId": "WithdrawReq",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiWithdrawReqResponse"
+              "$ref": "#/definitions/apiModifyMoneyAccountResponse"
             }
           }
         },
@@ -105,45 +123,70 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiWithdrawReqRequest"
+              "$ref": "#/definitions/apiModifyMoneyAccountRequest"
             }
           }
         ],
         "tags": [
-          "WithdrawService"
+          "MoneyService"
         ]
       }
     }
   },
   "definitions": {
-    "apiGetWithdrawFeeResponse": {
+    "apiGetActiveMoneyAccountResponse": {
       "type": "object",
       "properties": {
-        "withdrawFee": {
-          "type": "number",
-          "format": "float",
-          "description": "Withdraw object."
-        },
         "error": {
+          "type": "string"
+        },
+        "activeAccount": {
           "type": "string"
         }
       }
     },
-    "apiGetWithdrawHistoryResponse": {
+    "apiGetMoneyAccountChangeHistoryResponse": {
       "type": "object",
       "properties": {
+        "error": {
+          "type": "string"
+        },
         "count": {
           "type": "string",
           "format": "int64"
         },
-        "withdrawHistory": {
+        "changeHistory": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/apiWithdrawHistory"
+            "$ref": "#/definitions/apiMoneyAccountChangeHistory"
           }
+        }
+      }
+    },
+    "apiModifyMoneyAccountRequest": {
+      "type": "object",
+      "properties": {
+        "orgId": {
+          "type": "string",
+          "format": "int64"
         },
+        "moneyAbbr": {
+          "$ref": "#/definitions/apiMoney"
+        },
+        "currentAccount": {
+          "type": "string"
+        }
+      }
+    },
+    "apiModifyMoneyAccountResponse": {
+      "type": "object",
+      "properties": {
         "error": {
           "type": "string"
+        },
+        "status": {
+          "type": "boolean",
+          "format": "boolean"
         }
       }
     },
@@ -154,7 +197,7 @@
       ],
       "default": "Ether"
     },
-    "apiWithdrawHistory": {
+    "apiMoneyAccountChangeHistory": {
       "type": "object",
       "properties": {
         "from": {
@@ -163,42 +206,7 @@
         "to": {
           "type": "string"
         },
-        "money": {
-          "$ref": "#/definitions/apiMoney"
-        },
-        "amount": {
-          "type": "number",
-          "format": "float"
-        },
         "createdAt": {
-          "type": "string"
-        }
-      }
-    },
-    "apiWithdrawReqRequest": {
-      "type": "object",
-      "properties": {
-        "orgId": {
-          "type": "string",
-          "format": "int64"
-        },
-        "moneyAbbr": {
-          "$ref": "#/definitions/apiMoney"
-        },
-        "amount": {
-          "type": "number",
-          "format": "float"
-        }
-      }
-    },
-    "apiWithdrawReqResponse": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "boolean",
-          "format": "boolean"
-        },
-        "error": {
           "type": "string"
         }
       }
