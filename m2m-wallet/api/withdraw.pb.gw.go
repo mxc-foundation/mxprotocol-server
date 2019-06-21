@@ -97,12 +97,33 @@ func request_WithdrawService_WithdrawReq_0(ctx context.Context, marshaler runtim
 }
 
 var (
-	filter_WithdrawService_GetWithdrawHistory_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_WithdrawService_GetWithdrawHistory_0 = &utilities.DoubleArray{Encoding: map[string]int{"money_abbr": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
 func request_WithdrawService_GetWithdrawHistory_0(ctx context.Context, marshaler runtime.Marshaler, client WithdrawServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetWithdrawHistoryRequest
 	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		e   int32
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["money_abbr"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "money_abbr")
+	}
+
+	e, err = runtime.Enum(val, Money_value)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "money_abbr", err)
+	}
+
+	protoReq.MoneyAbbr = Money(e)
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -218,11 +239,11 @@ func RegisterWithdrawServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 }
 
 var (
-	pattern_WithdrawService_GetWithdrawFee_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "withdraw", "money_abbr"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_WithdrawService_GetWithdrawFee_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "withdraw", "money_abbr", "withdrawfee"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_WithdrawService_WithdrawReq_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "withdraw", "money_abbr"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_WithdrawService_GetWithdrawHistory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "withdraw", "history"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_WithdrawService_GetWithdrawHistory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "withdraw", "money_abbr", "history"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

@@ -10,7 +10,7 @@ service WithdrawService {
     // Get data for current withdraw fee
     rpc GetWithdrawFee (GetWithdrawFeeRequest) returns (GetWithdrawFeeResponse) {
         option (google.api.http) = {
-			get: "/api/withdraw/{money_abbr}"
+			get: "/api/withdraw/{money_abbr}/withdrawfee"
 		};
     }
 
@@ -23,7 +23,7 @@ service WithdrawService {
 
     rpc GetWithdrawHistory (GetWithdrawHistoryRequest) returns (GetWithdrawHistoryResponse) {
         option (google.api.http) = {
-			get: "/api/withdraw/history"
+			get: "/api/withdraw/{money_abbr}/history"
 		};
     }
 }
@@ -54,18 +54,19 @@ message GetWithdrawHistoryRequest {
     string org_id = 1;
     string offset = 2;
     int64 limit = 3;
+    Money money_abbr = 4;
 }
 
 message WithdrawHistory {
     string from = 1;
     string to = 2;
-    Money money = 3;
+    string money_type = 3;
     float amount = 4;
     string created_at = 5;
 }
 
 message GetWithdrawHistoryResponse {
-    int64 count = 1;
-    repeated  WithdrawHistory withdraw_history = 2;
-    string error = 3;
+    string error = 1;
+    int64 count = 2;
+    repeated WithdrawHistory withdraw_history = 3;
 }

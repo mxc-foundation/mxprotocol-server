@@ -39,7 +39,7 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(context.Context, *api.GetWithdraw
 		item := api.WithdrawHistory{
 			From:"a",
 			To:"b",
-			Money:api.Money(1),
+			MoneyType: "Ether",
 			Amount:12.333,
 			CreatedAt: time.Now().UTC().String(),
 		}
