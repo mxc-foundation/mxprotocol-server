@@ -1,7 +1,7 @@
 package main
 
 import (
-	"mxprotocol-server/m2m-wallet/command/cmd"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/command/cmd"
 )
 
 var version string // set by the compiler

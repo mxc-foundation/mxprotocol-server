@@ -3,7 +3,7 @@ package supernode
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	"mxprotocol-server/m2m-wallet/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 )
 
 func Setup() error {
@@ -21,5 +21,5 @@ func NewSupernodeServerAPI() *SupernodeServerAPI {
 }
 
 func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(context.Context, *api.GetSuperNodeActiveMoneyAccountRequest) (*api.GetSuperNodeActiveMoneyAccountResponse, error) {
-	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount:"supernode_account", Error:"",}, nil
+	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "supernode_account", Error: ""}, nil
 }

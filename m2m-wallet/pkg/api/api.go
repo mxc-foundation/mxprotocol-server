@@ -11,19 +11,19 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/tmc/grpc-websocket-proxy/wsproxy"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/money"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/supernode"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/topup"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/wallet"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/withdraw"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/static"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"io/ioutil"
-	"mxprotocol-server/m2m-wallet/api"
-	"mxprotocol-server/m2m-wallet/pkg/config"
-	"mxprotocol-server/m2m-wallet/pkg/services/money"
-	"mxprotocol-server/m2m-wallet/pkg/services/supernode"
-	"mxprotocol-server/m2m-wallet/pkg/services/topup"
-	"mxprotocol-server/m2m-wallet/pkg/services/wallet"
-	"mxprotocol-server/m2m-wallet/pkg/services/withdraw"
-	"mxprotocol-server/m2m-wallet/pkg/static"
 	"net/http"
 	"strings"
 	"time"
@@ -140,7 +140,6 @@ func setupHTTPAPI(conf config.MxpConfig) (http.Handler, error) {
 	r.PathPrefix("/").Handler(http.FileServer(&assetfs.AssetFS{
 		Asset:     static.Asset,
 		AssetDir:  static.AssetDir,
-		AssetInfo: static.AssetInfo,
 		Prefix:    "",
 	}))
 

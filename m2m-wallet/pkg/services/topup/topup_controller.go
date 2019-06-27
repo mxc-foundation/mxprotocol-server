@@ -3,7 +3,7 @@ package topup
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	"mxprotocol-server/m2m-wallet/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"time"
 )
 
@@ -24,14 +24,14 @@ func NewTopUpServerAPI() *TopUpServerAPI {
 func (s *TopUpServerAPI) GetTopUpHistory(context.Context, *api.GetTopUpHistoryRequest) (*api.GetTopUpHistoryResponse, error) {
 	var count = int64(4)
 	history_list := api.GetTopUpHistoryResponse{
-		Count:count,
+		Count: count,
 	}
 
 	for i := 0; i < int(count); i++ {
 		item := api.TopUpHistory{
-			From:"a",
-			To:"b",
-			Amount:12.333,
+			From:      "a",
+			To:        "b",
+			Amount:    12.333,
 			CreatedAt: time.Now().UTC().String(),
 		}
 
