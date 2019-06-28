@@ -40,7 +40,7 @@ func init() {
 	viper.SetDefault("postgresql.dsn", "postgres://localhost/mxp-server?sslmode=disable")
 	viper.SetDefault("postgresql.automigrate", true)
 
-	viper.SetDefault("application_server.http_server.bind", "0.0.0.0:5420")
+	viper.SetDefault("application_server.http_server.bind", ":8080")
 	viper.SetDefault("application_server.http_server.tls_cert", "")
 	viper.SetDefault("application_server.http_server.tls_key", "")
 	viper.SetDefault("application_server.http_server.jwt_secret", "DOE1KiNzpQ82elRQ9HMWyxmADQ5f2B2TBAgOjL7ZZWA=")

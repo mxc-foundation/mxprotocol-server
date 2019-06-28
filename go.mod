@@ -13,7 +13,6 @@ require (
 	github.com/spf13/viper v1.4.0
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5
 	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
-	google.golang.org/appengine v1.4.0 // indirect
 	google.golang.org/genproto v0.0.0-20190627143821-621ef7fb66c1
 	google.golang.org/grpc v1.21.1
 )
