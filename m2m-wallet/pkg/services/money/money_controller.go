@@ -3,7 +3,7 @@ package money
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	"mxprotocol-server/m2m-wallet/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"time"
 )
 
@@ -33,8 +33,8 @@ func (s *MoneyServerAPI) GetChangeMoneyAccountHistory(context.Context, *api.GetM
 
 	for i := 0; i < int(count); i++ {
 		item := api.MoneyAccountChangeHistory{
-			From:"alice",
-			To:"bob",
+			From:      "alice",
+			To:        "bob",
 			CreatedAt: time.Now().UTC().String(),
 		}
 		history_list.ChangeHistory = append(history_list.ChangeHistory, &item)
@@ -43,6 +43,6 @@ func (s *MoneyServerAPI) GetChangeMoneyAccountHistory(context.Context, *api.GetM
 	return &history_list, nil
 }
 
-func (s *MoneyServerAPI) GetActiveMoneyAccount(context.Context,	*api.GetActiveMoneyAccountRequest) (*api.GetActiveMoneyAccountResponse, error) {
-	return &api.GetActiveMoneyAccountResponse{Error:"", ActiveAccount:"",}, nil
+func (s *MoneyServerAPI) GetActiveMoneyAccount(context.Context, *api.GetActiveMoneyAccountRequest) (*api.GetActiveMoneyAccountResponse, error) {
+	return &api.GetActiveMoneyAccountResponse{Error: "", ActiveAccount: ""}, nil
 }

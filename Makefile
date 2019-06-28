@@ -1,5 +1,10 @@
-.PHONY: subdirs all clean
+.PHONY: subdirs all clean m2m-wallet ui-subdirs ui-requirements dev-requirements run-compose-test
 SUBDIRS=m2m-wallet
+
+m2m-wallet:
+	@cd m2m-wallet
+	@./build/m2m-wallet
+
 
 subdirs:
 	@for subdir in $(SUBDIRS); \
@@ -10,6 +15,13 @@ subdirs:
 
 all: subdirs
 
+ui-subdirs:
+	@for subdir in $(SUBDIRS); \
+	do \
+	echo "build ui in $$subdir"; \
+	( cd $$subdir && make ui-requirements) || exit 1; \
+	done
+
 clean:
 	@for subdir in $(SUBDIRS); \
 	do \
@@ -17,3 +29,19 @@ clean:
 	( cd $$subdir && make clean) || exit 1; \
 	done
 
+# shortcuts for development
+ui-requirements: ui-subdirs
+
+dev-requirements:
+	go install golang.org/x/lint/golint
+	go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
+	go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+	go install github.com/golang/protobuf/protoc-gen-go
+	go install github.com/elazarl/go-bindata-assetfs/go-bindata-assetfs
+	go install github.com/jteeuwen/go-bindata/go-bindata
+	go install golang.org/x/tools/cmd/stringer
+	go install github.com/goreleaser/goreleaser
+	go install github.com/goreleaser/nfpm
+
+run-compose-test:
+	docker-compose run --rm appserver make test
