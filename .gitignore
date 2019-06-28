@@ -1,2 +1,4 @@
 m2m-wallet/build
 m2m-wallet/pkg/static/static_gen.go
+
+m2m-wallet/ui/node_modules

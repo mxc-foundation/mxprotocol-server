@@ -16,11 +16,14 @@ import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
 
-// user
-import Login from "./views/users/Login";
-
 // search
 //import Search from "./views/search/Search";
+
+//M2M Wallet
+import Topup from "./views/m2m-wallet/Topup"
+import Withdraw from "./views/m2m-wallet/Withdraw"
+import HistoryLayout from "./views/m2m-wallet/HistoryLayout"
+import ModifyEthAccount from "./views/m2m-wallet/ModifyEthAccount"
 
 const drawerWidth = 270;
 
@@ -30,6 +33,12 @@ const styles = {
     display: "flex",
     minHeight: "100vh",
     flexDirection: "column",
+    backgroundColor: "#090046",
+    background: "#311b92",
+    fontFamily: "Montserrat",
+  },
+  input: {
+    color: '#FFFFFF',
   },
   paper: {
     padding: theme.spacing.unit * 2,
@@ -49,6 +58,9 @@ const styles = {
   footerDrawerOpen: {
     paddingLeft: drawerWidth,
   },
+  color: {
+    backgroundColor: "#090046",
+  },
 };
 
 
@@ -57,8 +69,8 @@ class App extends Component {
     super();
 
     this.state = {
-      user: null,
-      drawerOpen: false,
+      user: true,
+      drawerOpen: true,
     };
 
     this.setDrawerOpen = this.setDrawerOpen.bind(this);
@@ -72,9 +84,12 @@ class App extends Component {
       });
     });
 
-    this.setState({
+    /* this.setState({
       user: SessionStore.getUser(),
       drawerOpen: SessionStore.getUser() != null,
+    }); */
+    this.setState({
+      drawerOpen: true,
     });
   }
 
@@ -104,8 +119,12 @@ class App extends Component {
               <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
                 <Grid container spacing={24}>
                   <Switch>
-                    <Route exact path="/" component={Login} />
-                    <Route exact path="/login" component={Login} />
+                    <Route exact path="/" component={Withdraw} />
+                    {/* <Route exact path="/withdraw/:organizationID(\d+)" component={Withdraw} /> */}
+                    <Route exact path="/withdraw" component={Withdraw} />
+                    <Route exact path="/topup" component={Topup} />
+                    <Route path="/history" component={HistoryLayout} />
+                    <Route exact path="/modify-account" component={ModifyEthAccount} />
                     
                   </Switch>
                 </Grid>
