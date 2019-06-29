@@ -28,8 +28,14 @@ import ModifyEthAccount from "./views/m2m-wallet/ModifyEthAccount"
 const drawerWidth = 270;
 
 const styles = {
+  outerRoot: {
+    width: '100%',
+    background: "#311b92",
+  },
   root: {
+    width: '1024px',
     flexGrow: 1,
+    margin: 'auto',
     display: "flex",
     minHeight: "100vh",
     flexDirection: "column",
@@ -113,6 +119,7 @@ class App extends Component {
         <React.Fragment>
           <CssBaseline />
           <MuiThemeProvider theme={theme}>
+            <div className={this.props.classes.outerRoot}>
             <div className={this.props.classes.root}>
               {topNav}
               {sideNav}
@@ -134,6 +141,7 @@ class App extends Component {
               </div>
             </div>
             <Notifications />
+            </div>
           </MuiThemeProvider>
         </React.Fragment>
       </Router>

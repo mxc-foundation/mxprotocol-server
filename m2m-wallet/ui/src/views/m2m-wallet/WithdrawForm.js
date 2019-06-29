@@ -14,9 +14,9 @@ class WithdrawForm extends FormComponent {
       return(<div>loading...</div>);
     }
 
-    const extraButtons = [
-      <Button color="primary" type="button" disabled={false}>Cancel</Button>
-    ]
+    const extraButtons = <>
+      <Button color="primary" type="button" disabled={false} >Cancel</Button>
+    </>;
 
     return(
       <Form

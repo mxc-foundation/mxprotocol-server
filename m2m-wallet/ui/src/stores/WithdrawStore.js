@@ -37,5 +37,5 @@ class WithdrawStore extends EventEmitter {
   }
 }
 
-const userStore = new WithdrawStore();
-export default userStore;
+const withdrawStore = new WithdrawStore();
+export default withdrawStore;

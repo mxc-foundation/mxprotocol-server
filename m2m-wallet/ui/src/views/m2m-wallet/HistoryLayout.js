@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Switch, Link, withRouter } from "react-router-dom";
+import { Route, Switch, Link, withRouter, Redirect } from "react-router-dom";
 
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
@@ -139,6 +139,8 @@ class HistoryLayout extends Component {
             <Route exact path={`${this.props.match.path}/${organizationID}`} render={props => <Transactions {...props} />} />
             <Route exact path={`${this.props.match.path}/${organizationID}/edit`} render={props => <EthAccount {...props} />} />
             <Route exact path={`${this.props.match.path}/${organizationID}/keys`} render={props => <Subsriptions {...props} />} />
+
+            <Redirect to={`/history/${organizationID}`} />
           </Switch>
         </Grid>
       </Grid>

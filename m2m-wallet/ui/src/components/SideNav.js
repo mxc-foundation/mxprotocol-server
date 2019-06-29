@@ -29,6 +29,7 @@ const styles = {
     width: 270,
     paddingTop: theme.spacing.unit * 9,
     backgroundColor: '#09006E',
+    left: 'inherit',
     color: '#FFFFFF',
   },
   select: {
@@ -192,7 +193,9 @@ class SideNav extends Component {
           <Card className={this.props.classes.card}>
             <CardContent>
               <List className={this.props.classes.static}>
-                <ListItem button  onClick={this.handleOpenLora}>
+                {/* <ListItem button  onClick={this.handleOpenLora}> */}
+                <ListItem button component={({children, ...otherProps}) => 
+                <a href={`http://localhost:3001`} {...otherProps}>{children}</a>}>
                   <ListItemIcon>
                     <AccessPoint />
                   </ListItemIcon>

@@ -41,6 +41,16 @@ const theme = createMuiTheme({
           }
         }
       },
+      MuiAppBar: {
+        root: {
+          width: '1024px',
+          color: '#FFFFFF'
+        },
+        positionFixed: {
+          left: 'inherit',
+          right: 'inherit'
+        }
+      },
       MuiSelect: {
         icon: {
           color: '#FFFFFF',
