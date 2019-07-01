@@ -5,7 +5,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
 //import HistoryStore from "../../stores/HistoryStore";
-import UserStore from "../../stores/UserStore";
+import HistoryStore from "../../stores/HistoryStore";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import TableCellLink from "../../components/TableCellLink";
@@ -22,7 +22,12 @@ class Transactions extends Component {
 
   getPage(limit, offset, callbackFunc) {
     //HistoryStore.list("", this.props.match.params.organizationID, limit, offset, callbackFunc);
-    UserStore.list("", this.props.match.params.organizationID, limit, offset, callbackFunc);
+    HistoryStore.GetTopUpHistory(this.props.match.params.organizationID, limit, offset, (data) => {
+      callbackFunc({
+        totalCount: offset + 2 * limit,
+        result: data
+      });
+    });
   }
 
   getRow(obj) {

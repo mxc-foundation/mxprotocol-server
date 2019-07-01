@@ -26,6 +26,28 @@ class WithdrawStore extends EventEmitter {
     });
   }
 
+  WithdrawReq(){
+    this.swagger.then(client => {
+      client.apis.WithdrawService.WithdrawReq({
+        //money_abbr
+      })
+      .then(checkStatus)
+      .then(resp => {
+        // callbackFunc(resp.obj);
+      })
+      .catch(errorHandler);
+    });
+  }
+  /* "orgId": {
+    "type": "string",
+    "format": "int64"
+  },
+  "moneyAbbr": {
+    "$ref": "#/definitions/apiMoney"
+  },
+  "amount": {
+    "type": "number",
+    "format": "float" */
   notify(action) {
     dispatcher.dispatch({
       type: "CREATE_NOTIFICATION",

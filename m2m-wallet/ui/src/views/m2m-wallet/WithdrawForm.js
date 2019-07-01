@@ -4,11 +4,21 @@ import TextField from '@material-ui/core/TextField';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
 import Button from "@material-ui/core/Button";
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import { withRouter } from "react-router-dom";
 
 class WithdrawForm extends FormComponent {
-  
+
+  onChange = (event) => {
+    const { id, value } = event.target;
+    
+    this.setState({
+      // [id]: value.replace(' MXC', '')
+      [id]: value
+    });
+  }
+
   render() {
     if (this.props.txinfo === undefined) {
       return(<div>loading...</div>);
@@ -22,7 +32,11 @@ class WithdrawForm extends FormComponent {
       <Form
         submitLabel={this.props.submitLabel}
         extraButtons={extraButtons}
-        onSubmit={this.onSubmit}
+        onSubmit={() => this.props.onSubmit({
+          amount: this.state.amount,
+          destination: this.state.destination,
+          txFee: this.props.txinfo.withdrawFee
+        })}
       >
         <TextField
           id="amount"
@@ -30,10 +44,11 @@ class WithdrawForm extends FormComponent {
           label="Amount"
           //helperText="The name may only contain words, numbers and dashes."
           margin="normal"
-          value="123"/* {this.props.organization.balance || ""} */
+          //value={this.state.amount + ' MXC'}
+          value={this.state.amount}
           onChange={this.onChange}
           className={this.props.classes.root}
-          
+
           required
           fullWidth
         />
@@ -43,7 +58,6 @@ class WithdrawForm extends FormComponent {
           label="Transaction fee"
           margin="normal"
           value={this.props.txinfo.withdrawFee || ""}
-          onChange={this.onChange}
           className={this.props.classes.root}
 
           required
@@ -55,7 +69,7 @@ class WithdrawForm extends FormComponent {
           label="Destination"
           helperText="ETH Account."
           margin="normal"
-          value="lora"/* {this.props.organization.name || ""} */
+          value={this.state.destination}
           onChange={this.onChange}
           className={this.props.classes.root}
           InputProps={{

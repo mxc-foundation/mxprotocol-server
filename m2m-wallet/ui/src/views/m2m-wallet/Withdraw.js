@@ -6,6 +6,7 @@ import TitleBarTitle from "../../components/TitleBarTitle";
 
 import WithdrawStore from "../../stores/WithdrawStore";
 import WithdrawForm from "./WithdrawForm";
+import Modal from "./Modal";
 import WithdrawBalanceInfo from "./WithdrawBalanceInfo";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
@@ -72,16 +73,6 @@ class Withdraw extends Component {
     this.state = {};
     this.loadData = this.loadData.bind(this);
   }
-  
-  componentDidMount() {
-    this.loadData();
-  }
-
-  formatNumber(number) {
-    //let balance = number.toString().replace(".", ",");
-    //balance = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
 
   loadData() {
     WithdrawStore.getWithdrawFee("Ether", 
@@ -103,6 +94,16 @@ class Withdraw extends Component {
     });
   }
   
+  componentDidMount() {
+    this.loadData();
+  }
+
+  formatNumber(number) {
+    //let balance = number.toString().replace(".", ",");
+    //balance = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  
   componentDidUpdate(prevProps) {
     if (prevProps === this.props) {
       return;
@@ -115,15 +116,20 @@ class Withdraw extends Component {
     
   }
 
-  onSubmit(organization) {
-    /* OrganizationStore.update(organization, resp => {
-    this.props.history.push(`/withdraw/${this.props.match.params.organizationID}`);
-    });  */
+  showModal (modal) {
+    this.setState({ modal });
+  }
+  
+  onSubmit = (data) => {
+    console.log('data', data)
+    this.showModal(data);
+    return false;
   }
 
   render() {
     return(
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
+        {this.state.modal && <Modal { ...this.state.modal } />}
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>

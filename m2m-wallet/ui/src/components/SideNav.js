@@ -54,6 +54,9 @@ const styles = {
   }
 };
 
+const LinkToLora = ({children, ...otherProps}) => 
+<a href={`http://localhost:3002`} {...otherProps}>{children}</a>;
+
 class SideNav extends Component {
   constructor() {
     super();
@@ -194,8 +197,7 @@ class SideNav extends Component {
             <CardContent>
               <List className={this.props.classes.static}>
                 {/* <ListItem button  onClick={this.handleOpenLora}> */}
-                <ListItem button component={({children, ...otherProps}) => 
-                <a href={`http://localhost:3001`} {...otherProps}>{children}</a>}>
+                <ListItem button component={LinkToLora}>  
                   <ListItemIcon>
                     <AccessPoint />
                   </ListItemIcon>

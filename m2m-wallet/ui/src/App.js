@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {Router} from "react-router-dom";
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import classNames from "classnames";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -70,6 +70,25 @@ const styles = {
 };
 
 
+class HandleLoraRedirect extends Component {
+  constructor(...args) {
+    super(...args);
+
+    this.state = {
+
+    }
+  }
+
+  render() {
+    const { match: { params: { data: dataString } }} = this.props;
+
+    const data = JSON.parse(decodeURIComponent(dataString) || '{}');
+    const { path, jwt } = data;
+    localStorage.setItem('lora-jwt', jwt);
+    return <Redirect to={path} />;
+  }
+}
+
 class App extends Component {
   constructor() {
     super();
@@ -113,7 +132,7 @@ class App extends Component {
       topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} />;
       sideNav = <SideNav open={this.state.drawerOpen} user={this.state.user} />
     }
-
+    
     return (
       <Router history={history}>
         <React.Fragment>
@@ -126,9 +145,10 @@ class App extends Component {
               <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
                 <Grid container spacing={24}>
                   <Switch>
+                    <Route path="/j/:data" component={HandleLoraRedirect} />
                     <Route exact path="/" component={Withdraw} />
                     {/* <Route exact path="/withdraw/:organizationID(\d+)" component={Withdraw} /> */}
-                    <Route exact path="/withdraw" component={Withdraw} />
+                    <Route path="/withdraw/:organizationID?" component={Withdraw} />
                     <Route exact path="/topup" component={Topup} />
                     <Route path="/history" component={HistoryLayout} />
                     <Route exact path="/modify-account" component={ModifyEthAccount} />
