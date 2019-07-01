@@ -25,6 +25,7 @@ pkg/static: statics/swagger/api.swagger.json
 
 statics/swagger/api.swagger.json:
 	@echo "Generating combined Swagger JSON"
+	@mkdir -p static/swagger
 	@GOOS="" GOARCH="" go run api/swagger/main.go api/swagger > static/swagger/api.swagger.json
 	@cp api/swagger/*.json static/swagger
 
