@@ -1,0 +1,12 @@
+{
+  "env": {
+    "mocha": true,
+  },
+  "globals": {
+    "chai": true,
+    "pollUntilPassing": true,
+    "RobustWebSocket": true,
+    "should": true,
+    "sinon": true
+  }
+}
