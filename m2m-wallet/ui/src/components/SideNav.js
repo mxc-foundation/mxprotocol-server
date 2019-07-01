@@ -17,6 +17,8 @@ import AccessPoint from "mdi-material-ui/AccessPoint";
 import Repeat from "mdi-material-ui/Repeat";
 import CalendarCheckOutline from "mdi-material-ui/CalendarCheckOutline";
 import CreditCard from "mdi-material-ui/CreditCard";
+import Domain from "mdi-material-ui/Domain";
+import RadioTower from "mdi-material-ui/RadioTower";
 
 import ArrowExpandLeft from "mdi-material-ui/ArrowExpandLeft";
 import ArrowExpandRight from "mdi-material-ui/ArrowExpandRight";
@@ -39,10 +41,10 @@ const styles = {
     paddingBottom: theme.spacing.unit * 1,
   },
   card: {
-    width: '100%',
-    height: 200,
+    width: '96%',
+    height: 250,
     position: 'absolute',
-    bottom: 0,
+    bottom: 5,
     backgroundColor: '#09006E',
     color: '#FFFFFF',
   },
@@ -201,7 +203,19 @@ class SideNav extends Component {
                   <ListItemIcon>
                     <AccessPoint />
                   </ListItemIcon>
-                  <ListItemText primary="Lora" />
+                  <ListItemText primary="LoRa Server" />
+                </ListItem>
+                <ListItem button >
+                  <ListItemText primary="Super Node" />
+                  <ListItemIcon>
+                    <RadioTower />
+                  </ListItemIcon>
+                </ListItem>
+                <ListItem button >
+                  <ListItemText primary="Organization" />
+                  <ListItemIcon>
+                    <Domain />
+                  </ListItemIcon>
                 </ListItem>
                 <ListItem button  onClick={this.handleOpenLora}>
                   <ListItemText primary="Account name" />

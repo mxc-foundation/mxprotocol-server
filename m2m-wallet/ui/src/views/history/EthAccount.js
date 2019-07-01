@@ -20,16 +20,20 @@ class EthAccount extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.list("", this.props.match.params.organizationID, limit, offset, callbackFunc);
+    HistoryStore.GetTopUpHistory(this.props.match.params.organizationID, limit, offset, (data) => {
+      callbackFunc({
+        totalCount: offset + 2 * limit,
+        result: data
+      });
+    });
   }
 
   getRow(obj) {
     return(
       <TableRow key={obj.id}>
-        <TableCell>{obj.id}</TableCell>
-        <TableCellLink to={`/organizations/${this.props.match.params.organizationID}/applications/${obj.id}`}>{obj.name}</TableCellLink>
-        <TableCellLink to={`/organizations/${this.props.match.params.organizationID}/service-profiles/${obj.serviceProfileID}`}>{obj.serviceProfileName}</TableCellLink>
-        <TableCell>{obj.description}</TableCell>
+        <TableCell>{obj.date}</TableCell>
+        <TableCell>{obj.newAccount}</TableCell>
+        <TableCell>{obj.oldAccount}</TableCell>
       </TableRow>
     );
   }
@@ -53,13 +57,9 @@ class EthAccount extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell>From</TableCell>
-                <TableCell>To</TableCell>
-                <TableCell>Value</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell>Balance</TableCell>
-                <TableCell>Tx hash</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>New Account</TableCell>
+                <TableCell>Old Account</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

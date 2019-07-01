@@ -20,6 +20,7 @@ const theme = createMuiTheme({
       },
     },
     typography: {
+      //useNextVariants: true,
       subheading: {
         color: '#FFFFFF'
       },
@@ -86,7 +87,8 @@ const theme = createMuiTheme({
         head: {
           background: '#0C0270',
           color: 'white',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          padding: 10, 
         }
       },
       MuiPaper: {
@@ -112,6 +114,7 @@ const theme = createMuiTheme({
         },
         text: { 
           color: 'white', 
+          padding: 6,
         },
       },
       MuiFormLabel: { 

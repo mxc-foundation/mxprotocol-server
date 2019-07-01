@@ -121,6 +121,7 @@ class Withdraw extends Component {
   }
   
   onSubmit = (data) => {
+    //e.preventDefault();
     console.log('data', data)
     this.showModal(data);
     return false;

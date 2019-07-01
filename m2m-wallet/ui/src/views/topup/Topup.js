@@ -40,6 +40,10 @@ const styles = {
   padding: {
     padding: 0,
   },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
 };
 
 class Topup extends Component {
@@ -102,14 +106,13 @@ class Topup extends Component {
               </TitleBar>
           </div>
         </Grid>
-        <Grid item xs={6}>
-          <Card>
-            <CardContent>
-              <TopupForm
-                txinfo={this.state.txinfo}
-              />
-            </CardContent>
-          </Card>
+        <Grid item xs={6} className={this.props.classes.column}>
+          <TitleBarTitle title="Send Tokens" />
+          <Divider light={true}/>
+          <TopupForm
+            txinfo={this.state.txinfo}
+          />
+            
         </Grid>
         <Grid item xs={6}>
         </Grid>

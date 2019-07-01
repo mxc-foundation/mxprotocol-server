@@ -9,6 +9,7 @@ import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import TableCellLink from "../../components/TableCellLink";
 import Divider from '@material-ui/core/Divider';
+import Modal from "./Modal";
 
 //import ApplicationStore from "../../stores/ApplicationStore";
 import ModifyEthAccountForm from "./ModifyEthAccountForm";
@@ -45,6 +46,7 @@ const styles = {
 class ModifyEthAccount extends Component {
   constructor() {
     super();
+    this.state = {};
     this.getPage = this.getPage.bind(this);
     this.getRow = this.getRow.bind(this);
   }
@@ -63,10 +65,22 @@ class ModifyEthAccount extends Component {
       </TableRow>
     );
   }
+  
+  showModal (modal) {
+    this.setState({ modal });
+  }
+  
+  onSubmit = (data) => {
+    //e.preventDefault();
+    console.log('data', data)
+    this.showModal(data);
+    return false;
+  }
 
   render() {
     return(
       <Grid container spacing={24}>
+        {this.state.modal && <Modal { ...this.state.modal } />}
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
@@ -83,12 +97,7 @@ class ModifyEthAccount extends Component {
         <Grid item xs={6}>
           <ModifyEthAccountForm
             submitLabel="Confirm"
-            //object={this.state.organization} {...props}
-            //onSubmit={this.onSubmit}
           />
-        </Grid>
-        <Grid item xs={6} className={this.props.classes.card}>
-          <Button color="primary" type="submit" disabled={this.props.disabled}>ADD TOKEN</Button>
         </Grid>
       </Grid>
     );
