@@ -7,8 +7,6 @@ import { withStyles } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import Input from "@material-ui/core/Input";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import blue from "@material-ui/core/colors/blue";
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
@@ -16,16 +14,22 @@ import Chip from '@material-ui/core/Chip';
 import MenuIcon from "mdi-material-ui/Menu";
 import Backburger from "mdi-material-ui/Backburger";
 import AccountCircle from "mdi-material-ui/AccountCircle";
-import Magnify from "mdi-material-ui/Magnify";
 import HelpCicle from "mdi-material-ui/HelpCircle";
+import Typography from '@material-ui/core/Typography';
 
 import SessionStore from "../stores/SessionStore";
 import theme from "../theme";
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Wallet from "mdi-material-ui/WalletOutline";
 
 const styles = {
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+    backgroundColor: '#09006E',
   },
   menuButton: {
     marginLeft: -12,
@@ -36,6 +40,7 @@ const styles = {
   },
   flex: {
     flex: 1,
+    paddingLeft: 40,
   },
   logo: {
     height: 32,
@@ -67,6 +72,12 @@ const styles = {
     color: theme.palette.common.white,
     marginRight: theme.spacing.unit,
   },
+  iconStyle: {
+    color: theme.palette.primary.main,
+  },
+  noPadding: {
+    padding: 0
+  }
 };
 
 
@@ -76,6 +87,7 @@ class TopNav extends Component {
 
     this.state = {
       menuAnchor: null,
+      balance: "",
       search: "",
     };
 
@@ -87,6 +99,10 @@ class TopNav extends Component {
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
   }
 
+  componentDidMount() {
+    
+  }
+  
   onMenuOpen(e) {
     this.setState({
       menuAnchor: e.currentTarget,
@@ -129,7 +145,7 @@ class TopNav extends Component {
     }
 
     const open = Boolean(this.state.menuAnchor);
-
+    const balance = "1232345.234"+"MXC";
     return(
       <AppBar className={this.props.classes.appBar}>
         <Toolbar>
@@ -143,23 +159,17 @@ class TopNav extends Component {
           </IconButton>
 
           <div className={this.props.classes.flex}>
-            <img src="/logo/logo.png" className={this.props.classes.logo} alt="LoRa Server" />
+            <Typography type="body2" style={{ color: '#FFFFFF', fontFamily: 'Montserrat', fontSize: '22px' }} >M2M Wallet</Typography>
           </div>
 
-          <form onSubmit={this.onSearchSubmit}>
-            <Input
-              placeholder="Search organization, application, gateway or device"
-              className={this.props.classes.search}
-              disableUnderline={true}
-              value={this.state.search || ""}
-              onChange={this.onSearchChange}
-              startAdornment={
-                <InputAdornment position="start">
-                  <Magnify />
-                </InputAdornment>
-              }
-            />
-          </form>
+          <List>
+            <ListItem>
+              <ListItemIcon className={this.props.classes.iconStyle}>
+                <Wallet />
+              </ListItemIcon>
+              <ListItemText primary={balance} className={this.props.classes.noPadding}/>
+            </ListItem>
+          </List>
 
           <a href="https://www.loraserver.io/lora-app-server/" target="loraserver-doc">
             <IconButton className={this.props.classes.iconButton}>

@@ -19,6 +19,10 @@ const styles = {
   link: {
     textDecoration: "none",
     color: theme.palette.primary.main,
+    opacity: 0.7,
+      "&:hover": {
+        opacity: 1,
+      }
   },
 };
 

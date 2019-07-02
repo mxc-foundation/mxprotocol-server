@@ -68,9 +68,9 @@ class DataTable extends Component {
   }
 
   render() {
-    if (this.state.rows === undefined) {
+    /* if (this.state.rows === undefined) {
       return(<div></div>);
-    }
+    } */
 
     return(
       <Paper>
