@@ -8,11 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import WithdrawStore from "../../stores/WithdrawStore";
 
 export default function AlertDialog(props) {
-  const [open, setOpen] = React.useState(true);
-
-  function handleClose() {
-    setOpen(false);
-  }
+  const { open, onClose } = props
 
   const agree = () => {
     console.log('props', props);
@@ -22,13 +18,13 @@ export default function AlertDialog(props) {
         props.history.push(`/withdraw/${props.match.params.organizationID}`);
     }); */
 
-    handleClose();
+    if (onClose) onClose();
   }
 
   return (
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={onClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -40,6 +36,9 @@ export default function AlertDialog(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
+          <Button onClick={onClose} color="primary" autoFocus>
+            Cancel
+          </Button>
           <Button onClick={agree} color="primary" autoFocus>
             Agree
           </Button>

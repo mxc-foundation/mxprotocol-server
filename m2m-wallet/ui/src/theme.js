@@ -68,6 +68,10 @@ const theme = createMuiTheme({
       MuiInputBase: {
         input: {
           color: '#FFFFFF',
+
+          "&:-webkit-autofill": {
+            WebkitBoxShadow: "0 0 0 1000px white inset"
+          }
         }
       },
       MuiTable: {

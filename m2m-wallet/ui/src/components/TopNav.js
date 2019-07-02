@@ -74,6 +74,9 @@ const styles = {
   },
   iconStyle: {
     color: theme.palette.primary.main,
+  },
+  noPadding: {
+    padding: 0
   }
 };
 
@@ -84,6 +87,7 @@ class TopNav extends Component {
 
     this.state = {
       menuAnchor: null,
+      balance: "",
       search: "",
     };
 
@@ -95,6 +99,10 @@ class TopNav extends Component {
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
   }
 
+  componentDidMount() {
+    
+  }
+  
   onMenuOpen(e) {
     this.setState({
       menuAnchor: e.currentTarget,
@@ -137,7 +145,7 @@ class TopNav extends Component {
     }
 
     const open = Boolean(this.state.menuAnchor);
-
+    const balance = "1232345.234"+"MXC";
     return(
       <AppBar className={this.props.classes.appBar}>
         <Toolbar>
@@ -159,7 +167,7 @@ class TopNav extends Component {
               <ListItemIcon className={this.props.classes.iconStyle}>
                 <Wallet />
               </ListItemIcon>
-              <ListItemText primary="MXC" />
+              <ListItemText primary={balance} className={this.props.classes.noPadding}/>
             </ListItem>
           </List>
 
