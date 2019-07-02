@@ -5,6 +5,15 @@ import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
 
 class ModifyEthAccountForm extends FormComponent {
+
+  onChange = (event) => {
+    const { id, value } = event.target;
+    
+    this.setState({
+      [id]: value
+    });
+  }
+
   render() {
     if (this.state.object === undefined) {
       return(<div></div>);
@@ -13,13 +22,16 @@ class ModifyEthAccountForm extends FormComponent {
     return(
       <Form
         submitLabel={this.props.submitLabel}
-        onSubmit={this.onSubmit}
+        onSubmit={() => this.props.onSubmit({
+          newaccount: this.state.newaccount
+        })}
       >
         <TextField
           id="newaccount"
-          label="Your current ETH account is"
+          label="New account"
           margin="normal"
-          value={this.state.object.name || ""}
+          value={this.state.newaccount}
+          placeholder="Type here" 
           onChange={this.onChange}
           inputProps={{
             pattern: "[\\w-]+",

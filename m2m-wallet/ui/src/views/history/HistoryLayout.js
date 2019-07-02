@@ -14,7 +14,7 @@ import Divider from '@material-ui/core/Divider';
 
 import Transactions from "./Transactions";
 import EthAccount from "./EthAccount";
-import Subsriptions from "./Subsriptions";
+import SubScriptions from "./SubScriptions";
 
 import theme from "../../theme";
 
@@ -128,19 +128,19 @@ class HistoryLayout extends Component {
             scrollButtons="auto"
             textColor="primary"
           >
-            <Tab label="Transactions" component={Link} to={`/history/${organizationID}`} />
-            <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/edit`} />
-            <Tab label="Subsriptions" component={Link} to={`/history/${organizationID}/keys`} />
+            <Tab label="Transactions" component={Link} to={`/history/${organizationID}/transactions`} />
+            <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth_account`} />
+            <Tab label="Subsriptions" component={Link} to={`/history/${organizationID}/sub-scription`} />
           </Tabs>
         </Grid>
 
         <Grid item xs={12}>
           <Switch>
-            <Route exact path={`${this.props.match.path}/${organizationID}`} render={props => <Transactions {...props} />} />
-            <Route exact path={`${this.props.match.path}/${organizationID}/edit`} render={props => <EthAccount {...props} />} />
-            <Route exact path={`${this.props.match.path}/${organizationID}/keys`} render={props => <Subsriptions {...props} />} />
+            <Route exact path={`${this.props.match.path}/${organizationID}/transactions`} render={props => <Transactions {...props} />} />
+            <Route exact path={`${this.props.match.path}/${organizationID}/eth_account`} render={props => <EthAccount {...props} />} />
+            <Route exact path={`${this.props.match.path}/${organizationID}/sub-scription`} render={props => <SubScriptions {...props} />} />
 
-            <Redirect to={`/history/${organizationID}`} />
+            <Redirect to={`/history/${organizationID}/transactions`} />
           </Switch>
         </Grid>
       </Grid>

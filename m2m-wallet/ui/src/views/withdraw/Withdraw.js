@@ -70,7 +70,9 @@ const styles = {
 class Withdraw extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      modal: null
+    };
     this.loadData = this.loadData.bind(this);
   }
 
@@ -121,15 +123,24 @@ class Withdraw extends Component {
   }
   
   onSubmit = (data) => {
+    //e.preventDefault();
     console.log('data', data)
     this.showModal(data);
-    return false;
+    
+    //this.setState({ modal });
   }
 
+  handleCloseModal = () => {
+    this.setState({
+      modal: null
+    })
+  }
+  
   render() {
+    console.log(this.state.modal)
     return(
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
-        {this.state.modal && <Modal { ...this.state.modal } />}
+        {this.state.modal && <Modal onClose={this.handleCloseModal} open={!!this.state.modal} { ...this.state.modal } />}
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>

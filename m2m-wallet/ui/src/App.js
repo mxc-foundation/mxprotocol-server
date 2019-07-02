@@ -20,10 +20,10 @@ import SessionStore from "./stores/SessionStore";
 //import Search from "./views/search/Search";
 
 //M2M Wallet
-import Topup from "./views/m2m-wallet/Topup"
-import Withdraw from "./views/m2m-wallet/Withdraw"
-import HistoryLayout from "./views/m2m-wallet/HistoryLayout"
-import ModifyEthAccount from "./views/m2m-wallet/ModifyEthAccount"
+import Topup from "./views/topup/Topup"
+import Withdraw from "./views/withdraw/Withdraw"
+import HistoryLayout from "./views/history/HistoryLayout"
+import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
 
 const drawerWidth = 270;
 

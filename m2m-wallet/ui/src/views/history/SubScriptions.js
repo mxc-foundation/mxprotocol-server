@@ -12,7 +12,7 @@ import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
 
-class Subsriptions extends Component {
+class SubScriptions extends Component {
   constructor() {
     super();
     this.getPage = this.getPage.bind(this);
@@ -20,16 +20,22 @@ class Subsriptions extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.list("", this.props.match.params.organizationID, limit, offset, callbackFunc);
+    HistoryStore.GetTopUpHistory(this.props.match.params.organizationID, limit, offset, (data) => {
+      callbackFunc({
+        totalCount: offset + 2 * limit,
+        result: data
+      });
+    });
   }
 
   getRow(obj) {
     return(
       <TableRow key={obj.id}>
-        <TableCell>{obj.id}</TableCell>
-        <TableCellLink to={`/organizations/${this.props.match.params.organizationID}/applications/${obj.id}`}>{obj.name}</TableCellLink>
-        <TableCellLink to={`/organizations/${this.props.match.params.organizationID}/service-profiles/${obj.serviceProfileID}`}>{obj.serviceProfileName}</TableCellLink>
-        <TableCell>{obj.description}</TableCell>
+        <TableCell>{obj.device}</TableCell>
+        <TableCell>{obj.start}</TableCell>
+        <TableCell>{obj.end}</TableCell>
+        <TableCell>{obj.price}</TableCell>
+        <TableCell>{obj.details}</TableCell>
       </TableRow>
     );
   }
@@ -53,13 +59,11 @@ class Subsriptions extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell>From</TableCell>
-                <TableCell>To</TableCell>
-                <TableCell>Value</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Balance</TableCell>
-                <TableCell>Tx hash</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Device</TableCell>
+                <TableCell>Start</TableCell>
+                <TableCell>End</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell>Details</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
@@ -71,4 +75,4 @@ class Subsriptions extends Component {
   }
 }
 
-export default Subsriptions;
+export default SubScriptions;

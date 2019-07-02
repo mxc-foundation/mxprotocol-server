@@ -13,6 +13,14 @@ class WithdrawForm extends FormComponent {
   onChange = (event) => {
     const { id, value } = event.target;
     
+    console.log(value)
+    if(!((event.keyCode > 95 && event.keyCode < 106)
+      || (event.keyCode > 47 && event.keyCode < 58) 
+      || event.keyCode == 8)) {
+        return false;
+    }
+    console.log(this.state.amount)
+
     this.setState({
       // [id]: value.replace(' MXC', '')
       [id]: value
@@ -48,17 +56,22 @@ class WithdrawForm extends FormComponent {
           value={this.state.amount}
           onChange={this.onChange}
           className={this.props.classes.root}
-
           required
           fullWidth
+          type="number"
+          inputProps={{
+            maxLength: 4,
+            min: 0,
+            max: 1000
+          }}
         />
         
         <TextField
-          id="txFee"
+        id="txFee"
           label="Transaction fee"
           margin="normal"
           value={this.props.txinfo.withdrawFee || ""}
-          className={this.props.classes.root}
+            className={this.props.classes.root}
 
           required
           fullWidth

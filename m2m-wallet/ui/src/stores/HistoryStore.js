@@ -15,7 +15,8 @@ class HistoryStore extends EventEmitter {
   }
 
   GetTopUpHistory(orgId, limit, offset, callbackFunc) {
-    this.topupSwagger.then((client) => {      client.apis.TopupService.List({
+    this.topupSwagger.then((client) => {      
+      client.apis.TopupService.List({
         orgId,
         limit,
         offset,
@@ -29,7 +30,8 @@ class HistoryStore extends EventEmitter {
   }
   
   GetWithdrawHistory(orgId, limit, offset, callbackFunc) {
-    this.withdrawSwagger.then((client) => {      client.apis.WithdrawService.List({
+    /* this.withdrawSwagger.then((client) => {      
+      client.apis.WithdrawService.List({
         orgId,
         limit,
         offset,
@@ -39,7 +41,7 @@ class HistoryStore extends EventEmitter {
         callbackFunc(resp.obj);
       })
       .catch(errorHandler);
-    });
+    }); */
   }
 
   notify(action) {

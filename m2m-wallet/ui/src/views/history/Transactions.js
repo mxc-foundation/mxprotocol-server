@@ -33,10 +33,13 @@ class Transactions extends Component {
   getRow(obj) {
     return(
       <TableRow key={obj.id}>
-        <TableCell>{obj.id}</TableCell>
-        <TableCellLink to={`/organizations/${this.props.match.params.organizationID}/applications/${obj.id}`}>{obj.name}</TableCellLink>
-        <TableCellLink to={`/organizations/${this.props.match.params.organizationID}/service-profiles/${obj.serviceProfileID}`}>{obj.serviceProfileName}</TableCellLink>
-        <TableCell>{obj.description}</TableCell>
+        <TableCell>{obj.date}</TableCell>
+        <TableCell>{obj.from}</TableCell>
+        <TableCell>{obj.to}</TableCell>
+        <TableCell>{obj.value}</TableCell>
+        <TableCell>{obj.balance}</TableCell>
+        <TableCell>{obj.txHash}</TableCell>
+        <TableCell>{obj.status}</TableCell>
       </TableRow>
     );
   }

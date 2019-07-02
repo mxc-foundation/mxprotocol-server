@@ -4,18 +4,24 @@ import TextField from '@material-ui/core/TextField';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
 import TitleBarButton from "../../components/TitleBarButton";
-import LinkI from "mdi-material-ui/Link";
-import { withRouter } from "react-router-dom";
+import TitleBarTitle from "../../components/TitleBarTitle";
+import { withRouter, Link  } from "react-router-dom";
+import Button from "@material-ui/core/Button";
 
 class TopupForm extends FormComponent {
   render() {
     if (this.props.txinfo === undefined) {
       return(<div></div>);
     }
+    
+    const extraButtons = <>
+      <Button color="primary" type="button" disabled={false} >USE AXS WALLET</Button>
+    </>;
 
     return(
       <Form
         submitLabel={this.props.submitLabel}
+        extraButtons={extraButtons}
         onSubmit={this.onSubmit}
       >
         <TextField
@@ -49,13 +55,7 @@ class TopupForm extends FormComponent {
           required
           fullWidth
         />
-        <TitleBarButton
-            key={1}
-            label="CHANGE ETH ACCOUNT"
-            icon={<LinkI />}
-            color="secondary"
-            /* onClick={this.deleteOrganization} */
-        />
+        <TitleBarTitle to="/#" title="CHANGE ETH ACCOUNT" />
           
       </Form>
     );

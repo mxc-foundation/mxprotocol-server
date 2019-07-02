@@ -19,7 +19,7 @@ class SessionStore extends EventEmitter {
       this.client = client;
 
       if (this.getToken() !== null) {
-        this.fetchProfile(() => {});
+        //this.fetchProfile(() => {});
       }
     });
   }
@@ -86,7 +86,7 @@ class SessionStore extends EventEmitter {
         .then(checkStatus)
         .then(resp => {
           this.setToken(resp.obj.jwt);
-          this.fetchProfile(callBackFunc);
+          //this.fetchProfile(callBackFunc);
         })
         .catch(errorHandlerLogin);
     });
