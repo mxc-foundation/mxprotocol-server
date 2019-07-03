@@ -3,6 +3,7 @@ syntax = "proto3";
 package api;
 
 import "google/api/annotations.proto";
+import "internal.proto";
 
 service WalletService {
     rpc GetWalletBalance(GetWalletBalanceRequest) returns (GetWalletBalanceResponse) {
@@ -25,6 +26,7 @@ message GetWalletBalanceRequest {
 message GetWalletBalanceResponse {
     float balance = 1;
     string error = 2;
+    ProfileResponse user_profile = 3;
 }
 
 message GetVmxcTxHistoryRequest {
@@ -45,4 +47,5 @@ message GetVmxcTxHistoryResponse {
     string error = 1;
     int64 count = 2;
     repeated VmxcTxHistory tx_history = 3;
+    ProfileResponse user_profile = 4;
 }

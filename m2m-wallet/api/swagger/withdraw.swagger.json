@@ -137,6 +137,9 @@
         },
         "error": {
           "type": "string"
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
         }
       }
     },
@@ -155,6 +158,9 @@
           "items": {
             "$ref": "#/definitions/apiWithdrawHistory"
           }
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
         }
       }
     },
@@ -164,6 +170,102 @@
         "Ether"
       ],
       "default": "Ether"
+    },
+    "apiOrganizationLink": {
+      "type": "object",
+      "properties": {
+        "organizationID": {
+          "type": "string",
+          "format": "int64",
+          "description": "Organization ID."
+        },
+        "organizationName": {
+          "type": "string",
+          "description": "Organization name."
+        },
+        "isAdmin": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "User is admin within the context of this organization."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Created at timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp."
+        }
+      }
+    },
+    "apiProfileResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/apiUser",
+          "description": "User object."
+        },
+        "organizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiOrganizationLink"
+          },
+          "description": "Organizations to which the user is associated."
+        },
+        "settings": {
+          "$ref": "#/definitions/apiProfileSettings",
+          "description": "Profile settings."
+        }
+      }
+    },
+    "apiProfileSettings": {
+      "type": "object",
+      "properties": {
+        "disableAssignExistingUsers": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "Existing users in the system can not be assigned to organizations and\napplication and can not be listed by non global admin users."
+        }
+      }
+    },
+    "apiUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "User ID.\nWill be set automatically on create."
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the user."
+        },
+        "sessionTTL": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The session timeout, in minutes."
+        },
+        "isAdmin": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "Set to true to make the user a global administrator."
+        },
+        "isActive": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "Set to false to disable the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "E-mail of the user."
+        },
+        "note": {
+          "type": "string",
+          "description": "Optional note to store with the user."
+        }
+      }
     },
     "apiWithdrawHistory": {
       "type": "object",
@@ -211,6 +313,9 @@
         },
         "error": {
           "type": "string"
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
         }
       }
     }

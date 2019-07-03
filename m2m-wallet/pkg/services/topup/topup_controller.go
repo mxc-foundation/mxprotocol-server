@@ -2,8 +2,12 @@ package topup
 
 import (
 	"context"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"time"
 )
 
@@ -14,18 +18,24 @@ func Setup() error {
 }
 
 type TopUpServerAPI struct {
-	//todo
+	serviceName string
 }
 
 func NewTopUpServerAPI() *TopUpServerAPI {
-	return &TopUpServerAPI{}
+	return &TopUpServerAPI{serviceName: "top up"}
 }
 
-func (s *TopUpServerAPI) GetTopUpHistory(context.Context, *api.GetTopUpHistoryRequest) (*api.GetTopUpHistoryResponse, error) {
-	var count = int64(4)
-	history_list := api.GetTopUpHistoryResponse{
-		Count: count,
+func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpHistoryRequest) (*api.GetTopUpHistoryResponse, error) {
+	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
+
+	//Todo: userInfo should be the information of users eg.id,name,org,etc. Use it to get data from DB.
+	fmt.Println("username = ", userProfile.User.Username)
+
+	var count = int64(4)
+	history_list := []*api.TopUpHistory{}
 
 	for i := 0; i < int(count); i++ {
 		item := api.TopUpHistory{
@@ -35,8 +45,8 @@ func (s *TopUpServerAPI) GetTopUpHistory(context.Context, *api.GetTopUpHistoryRe
 			CreatedAt: time.Now().UTC().String(),
 		}
 
-		history_list.TopupHistory = append(history_list.TopupHistory, &item)
+		history_list = append(history_list, &item)
 	}
 
-	return &history_list, nil
+	return &api.GetTopUpHistoryResponse{Error: "", Count: count, TopupHistory: history_list, UserProfile: &userProfile}, nil
 }

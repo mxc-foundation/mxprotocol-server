@@ -21,6 +21,8 @@ log_level={{ .General.LogLevel }}
 password_hash_iterations={{ .General.PasswordHashIterations }}
 
 host_server={{ .General.HostServer }}
+auth_server={{ .General.AuthServer }}
+auth_url={{ .General.AuthServer }}
 
 
 # PostgreSQL settings.

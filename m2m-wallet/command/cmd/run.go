@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/money"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/supernode"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/topup"
@@ -29,7 +30,7 @@ func run(cmd *cobra.Command, args []string) error {
 		setLogLevel,
 		printStartMessage,
 		setupDb,
-		//setupAuth,
+		setupAuth,
 		setupWithdraw,
 		setupWallet,
 		setupTopUp,
@@ -73,6 +74,13 @@ func printStartMessage() error {
 	return nil
 }
 
+func setupAuth() error {
+	if err := auth.Setup(config.Cstruct); err != nil {
+		return errors.Wrap(err, "Setup auth error")
+	}
+	return nil
+}
+
 func setupDb() error {
 	if err := db.Setup(config.Cstruct); err != nil {
 		return errors.Wrap(err, "setup db error")
@@ -88,7 +96,7 @@ func setupWithdraw() error {
 }
 
 func setupWallet() error {
-	if err := wallet.Setup(); err != nil {
+	if err := wallet.Setup(config.Cstruct); err != nil {
 		return errors.Wrap(err, "setup service wallet error")
 	}
 	return nil

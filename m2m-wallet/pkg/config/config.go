@@ -6,6 +6,8 @@ type MxpConfig struct {
 		LogLevel               int    `mapstructure:"log_level"`
 		PasswordHashIterations int    `mapstructure:"password_hash_iterations"`
 		HostServer             string `mapstructure:"host_server"`
+		AuthServer			   string `mapstructure:"auth_server"`
+		AuthUrl                string `mapstructure:"auth_url"`
 	}
 
 	PostgreSQL struct {
