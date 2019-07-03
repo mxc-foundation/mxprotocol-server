@@ -1,10 +1,5 @@
-.PHONY: subdirs all clean m2m-wallet ui-subdirs ui-requirements dev-requirements run-compose-test
+.PHONY: subdirs all clean ui-subdirs ui-requirements dev-requirements run-compose-test
 SUBDIRS=m2m-wallet
-
-m2m-wallet:
-	@cd m2m-wallet
-	@./build/m2m-wallet
-
 
 subdirs:
 	@for subdir in $(SUBDIRS); \

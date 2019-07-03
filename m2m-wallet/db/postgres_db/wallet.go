@@ -78,6 +78,7 @@ func (pgDbp DbSpec) GetWalletId(orgIdLora int) int {
 	if err != nil {
 		fmt.Println(err)
 		log.WithError(err).Warning("storage: ping PostgreSQL database error, will retry in 2s")
+		// log.WithError(err).Warning("storage: ping PostgreSQL database error, will retry in 2s")
 
 	}
 

@@ -16,9 +16,7 @@ services:
       - TEST_MQTT_SERVER=tcp://mosquitto:1883
     tty: true
     ports:
-      - 3000:5420
-    depends_on:
-      - postgres
+      - 3000:3000
   postgres:
     image: postgres:9.6-alpine
     volumes:

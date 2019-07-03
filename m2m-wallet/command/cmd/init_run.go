@@ -41,11 +41,11 @@ func init() {
 
 	viper.SetDefault("postgresql.automigrate", true)
 
-	viper.SetDefault("application_server.http_server.bind", "0.0.0.0:5420")
+	viper.SetDefault("application_server.http_server.bind", ":3000")
 	viper.SetDefault("application_server.http_server.tls_cert", "")
 	viper.SetDefault("application_server.http_server.tls_key", "")
 	viper.SetDefault("application_server.http_server.jwt_secret", "DOE1KiNzpQ82elRQ9HMWyxmADQ5f2B2TBAgOjL7ZZWA=")
-	viper.SetDefault("application_server.http_server.cors_allow_origin", "http://localhost:5420")
+	viper.SetDefault("application_server.http_server.cors_allow_origin", "http://localhost:3000")
 	viper.SetDefault("application_server.http_server.disable_assign_existing_users", false)
 
 	cmdMXP.AddCommand(cmdConfig)

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {Router} from "react-router-dom";
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import classNames from "classnames";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -16,20 +16,35 @@ import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
 
-// user
-import Login from "./views/users/Login";
-
 // search
 //import Search from "./views/search/Search";
+
+//M2M Wallet
+import Topup from "./views/topup/Topup"
+import Withdraw from "./views/withdraw/Withdraw"
+import HistoryLayout from "./views/history/HistoryLayout"
+import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
 
 const drawerWidth = 270;
 
 const styles = {
+  outerRoot: {
+    width: '100%',
+    background: "#311b92",
+  },
   root: {
+    width: '1024px',
     flexGrow: 1,
+    margin: 'auto',
     display: "flex",
     minHeight: "100vh",
     flexDirection: "column",
+    backgroundColor: "#090046",
+    background: "#311b92",
+    fontFamily: "Montserrat",
+  },
+  input: {
+    color: '#FFFFFF',
   },
   paper: {
     padding: theme.spacing.unit * 2,
@@ -49,16 +64,38 @@ const styles = {
   footerDrawerOpen: {
     paddingLeft: drawerWidth,
   },
+  color: {
+    backgroundColor: "#090046",
+  },
 };
 
+
+class HandleLoraRedirect extends Component {
+  constructor(...args) {
+    super(...args);
+
+    this.state = {
+
+    }
+  }
+
+  render() {
+    const { match: { params: { data: dataString } }} = this.props;
+
+    const data = JSON.parse(decodeURIComponent(dataString) || '{}');
+    const { path, jwt } = data;
+    localStorage.setItem('lora-jwt', jwt);
+    return <Redirect to={path} />;
+  }
+}
 
 class App extends Component {
   constructor() {
     super();
 
     this.state = {
-      user: null,
-      drawerOpen: false,
+      user: true,
+      drawerOpen: true,
     };
 
     this.setDrawerOpen = this.setDrawerOpen.bind(this);
@@ -72,9 +109,12 @@ class App extends Component {
       });
     });
 
-    this.setState({
+    /* this.setState({
       user: SessionStore.getUser(),
       drawerOpen: SessionStore.getUser() != null,
+    }); */
+    this.setState({
+      drawerOpen: true,
     });
   }
 
@@ -92,20 +132,26 @@ class App extends Component {
       topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} />;
       sideNav = <SideNav open={this.state.drawerOpen} user={this.state.user} />
     }
-
+    
     return (
       <Router history={history}>
         <React.Fragment>
           <CssBaseline />
           <MuiThemeProvider theme={theme}>
+            <div className={this.props.classes.outerRoot}>
             <div className={this.props.classes.root}>
               {topNav}
               {sideNav}
               <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
                 <Grid container spacing={24}>
                   <Switch>
-                    <Route exact path="/" component={Login} />
-                    <Route exact path="/login" component={Login} />
+                    <Route path="/j/:data" component={HandleLoraRedirect} />
+                    <Route exact path="/" component={Withdraw} />
+                    {/* <Route exact path="/withdraw/:organizationID(\d+)" component={Withdraw} /> */}
+                    <Route path="/withdraw/:organizationID?" component={Withdraw} />
+                    <Route exact path="/topup" component={Topup} />
+                    <Route path="/history" component={HistoryLayout} />
+                    <Route exact path="/modify-account" component={ModifyEthAccount} />
                     
                   </Switch>
                 </Grid>
@@ -115,6 +161,7 @@ class App extends Component {
               </div>
             </div>
             <Notifications />
+            </div>
           </MuiThemeProvider>
         </React.Fragment>
       </Router>
