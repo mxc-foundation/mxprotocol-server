@@ -6,10 +6,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/spf13/viper"
-
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 )
 
@@ -37,7 +36,9 @@ func init() {
 	viper.SetDefault("general.password_hash_iterations", 100000)
 	viper.SetDefault("general.host_server", "localhost") //"mxp-server-domain")
 
-	viper.SetDefault("postgresql.dsn", "postgres://localhost/mxp-server?sslmode=disable")
+	// viper.SetDefault("postgresql.dsn", "postgres://localhost/mxp-server?sslmode=disable")
+	viper.SetDefault("postgresql.dsn", "postgres://m2m_db@postgres:5432/m2m_database?sslmode=disable") // changed by Aslan
+
 	viper.SetDefault("postgresql.automigrate", true)
 
 	viper.SetDefault("application_server.http_server.bind", "0.0.0.0:5420")
