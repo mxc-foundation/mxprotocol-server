@@ -107,7 +107,7 @@
       "properties": {
         "balance": {
           "type": "number",
-          "format": "float"
+          "format": "double"
         },
         "error": {
           "type": "string"
@@ -227,7 +227,7 @@
         },
         "amount": {
           "type": "number",
-          "format": "float"
+          "format": "double"
         },
         "createdAt": {
           "type": "string"

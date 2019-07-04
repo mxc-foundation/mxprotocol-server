@@ -22,7 +22,7 @@ message GetTopUpHistoryRequest {
 message TopUpHistory {
     string from = 1;
     string to = 2;
-    float amount = 3;
+    double amount = 3;
     string created_at = 4;
 }
 

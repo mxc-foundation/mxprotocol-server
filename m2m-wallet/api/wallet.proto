@@ -24,7 +24,7 @@ message GetWalletBalanceRequest {
 }
 
 message GetWalletBalanceResponse {
-    float balance = 1;
+    double balance = 1;
     string error = 2;
     ProfileResponse user_profile = 3;
 }
@@ -39,7 +39,7 @@ message VmxcTxHistory {
     string from = 1;
     string to = 2;
     string tx_type = 3;
-    float amount = 4;
+    double amount = 4;
     string created_at = 5;
 }
 
