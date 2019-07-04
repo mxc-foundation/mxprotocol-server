@@ -147,7 +147,7 @@
         },
         "amount": {
           "type": "number",
-          "format": "float"
+          "format": "double"
         },
         "createdAt": {
           "type": "string"

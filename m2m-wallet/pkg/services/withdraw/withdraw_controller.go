@@ -11,10 +11,16 @@ import (
 	"time"
 )
 
+var ctxWithdraw = struct {
+	withdrawFee float64
+}{
+	withdrawFee: 200,
+}
+
 func Setup() error {
-	//todo
-	//check database and update ctxWithdraw.withdrawFee
-	log.Info(fmt.Sprintf("setup withdraw service( current withdraw fee = %f", ctxWithdraw.withdrawFee))
+	log.Info("setup withdraw service")
+
+
 	return nil
 }
 

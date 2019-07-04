@@ -6,6 +6,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/money"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/supernode"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/topup"
@@ -17,8 +18,6 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 )
 
 func run(cmd *cobra.Command, args []string) error {

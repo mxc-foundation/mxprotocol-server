@@ -36,7 +36,7 @@ message GetWithdrawFeeRequest {
 
 message GetWithdrawFeeResponse {
     // Withdraw object.
-    float withdrawFee = 1;
+    double withdrawFee = 1;
     string error = 2;
     ProfileResponse user_profile = 3;
 }
@@ -44,7 +44,7 @@ message GetWithdrawFeeResponse {
 message WithdrawReqRequest {
     int64 org_id = 1;
     Money money_abbr = 2;
-    float amount = 3;
+    double amount = 3;
 }
 
 message WithdrawReqResponse {
@@ -64,7 +64,7 @@ message WithdrawHistory {
     string from = 1;
     string to = 2;
     string money_type = 3;
-    float amount = 4;
+    double amount = 4;
     string created_at = 5;
 }
 

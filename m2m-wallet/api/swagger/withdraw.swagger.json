@@ -132,7 +132,7 @@
       "properties": {
         "withdrawFee": {
           "type": "number",
-          "format": "float",
+          "format": "double",
           "description": "Withdraw object."
         },
         "error": {
@@ -281,7 +281,7 @@
         },
         "amount": {
           "type": "number",
-          "format": "float"
+          "format": "double"
         },
         "createdAt": {
           "type": "string"
@@ -300,7 +300,7 @@
         },
         "amount": {
           "type": "number",
-          "format": "float"
+          "format": "double"
         }
       }
     },
