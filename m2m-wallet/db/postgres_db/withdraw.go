@@ -49,5 +49,5 @@ func (pgDbp DbSpec) CreateWithdrawTable() error {
 		tx_hash varchar (128)
 		);
 	`)
-	return errors.Wrap(err, "storage: PostgreSQL connection error")
+	return errors.Wrap(err, "db: PostgreSQL connection error")
 }

@@ -29,5 +29,5 @@ func (pgDbp DbSpec) CreateTopupTable() error {
 		tx_hash varchar (128) NOT NULL
 		);
 	`)
-	return errors.Wrap(err, "storage: PostgreSQL connection error")
+	return errors.Wrap(err, "db: PostgreSQL connection error")
 }

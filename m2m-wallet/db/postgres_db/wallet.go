@@ -8,9 +8,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type WalletType string // db:wallet_type
+
 const (
-	USER        = "USER"
-	SUPER_ADMIN = "SUPER_ADMIN"
+	USER        WalletType = "USER"
+	SUPER_ADMIN WalletType = "SUPER_ADMIN"
 )
 
 type Wallet struct {
@@ -22,6 +24,9 @@ type Wallet struct {
 
 func (pgDbp DbSpec) CreateWalletTable() error {
 	_, err := pgDbp.Db.Exec(`
+
+	
+
 		DO $$
 		BEGIN
 			IF NOT EXISTS 
@@ -32,20 +37,22 @@ func (pgDbp DbSpec) CreateWalletTable() error {
  					'USER'
 		);
 		END IF;
-		END$$;
-
-		CREATE TABLE IF NOT EXISTS wallet (
+			CREATE TABLE IF NOT EXISTS wallet (
+	
 			id SERIAL PRIMARY KEY,
 			fk_org_la INT UNIQUE NOT NULL, -- foreign_key LoRa app server DB
 			type WALLET_TYPE NOT NULL,
 			balance NUMERIC(28,18) NOT NULL   
 		);
+
+		END$$;
+		
 	`)
-	return errors.Wrap(err, "storage: PostgreSQL connection error")
+	return errors.Wrap(err, "db: query error CreateWalletTable()")
 }
 
 func (pgDbp DbSpec) InsertWallet(w Wallet) error {
-	val, err := pgDbp.Db.Exec(`
+	_, err := pgDbp.Db.Exec(`
 		INSERT INTO wallet (
 			fk_org_la ,
 			type,
@@ -58,13 +65,13 @@ func (pgDbp DbSpec) InsertWallet(w Wallet) error {
 		w.TypeW,
 		w.Balance)
 
-	fmt.Println(val, err)
-	return errors.Wrap(err, "storage: PostgreSQL connection error")
+	// fmt.Println(val, err)
+	return errors.Wrap(err, "db: query error InsertWallet()")
 }
 
-func (pgDbp DbSpec) GetWalletId(orgIdLora int) int {
-
+func (pgDbp DbSpec) GetWalletIdFromOrgId(orgIdLora int) (int, error) {
 	var w Wallet
+	w.Id = 0
 	query := pgDbp.Db.QueryRow(
 		`SELECT id
 		FROM wallet
@@ -76,45 +83,55 @@ func (pgDbp DbSpec) GetWalletId(orgIdLora int) int {
 		&w.Id,
 	)
 	if err != nil {
-		fmt.Println(err)
-		log.WithError(err).Warning("storage: ping PostgreSQL database error, will retry in 2s")
-		// log.WithError(err).Warning("storage: ping PostgreSQL database error, will retry in 2s")
+		// fmt.Println(err)
+		log.WithError(err).Warning("db: query error GetWalletIdFromOrgId()")
 
 	}
-
-	// fmt.Println("errSelect:", errIns)
-
-	if w.Id > 0 {
-		return w.Id
-	} else {
-		return 0
-	}
-
+	return w.Id, err
 }
 
-func (pgDbp DbSpec) GetWallet(wp *Wallet, orgIdLora int) error {
+func (pgDbp DbSpec) GetWallet(wp *Wallet, walletId int) error {
 
 	query := pgDbp.Db.QueryRow(
 		`SELECT *
 		FROM wallet
 		WHERE
-			fk_org_la = $1;`,
-		orgIdLora)
+			id = $1;`,
+		walletId)
 
 	err := query.Scan(
-		wp.Id,
-		wp.FkOrgLa,
-		wp.TypeW,
-		wp.Balance,
+		&wp.Id,
+		&wp.FkOrgLa,
+		&wp.TypeW,
+		&wp.Balance,
 	)
 
 	if err != nil {
 		fmt.Println("error getWallet: ", err)
 		fmt.Println("query res: ", query)
-		log.WithError(err).Warning("storage: ping PostgreSQL database error, will retry in 2s")
+		log.WithError(err).Warning("db:  query error GetWallet()") //@@ should be changed
 
 	}
 
 	return err
+}
 
+func (pgDbp DbSpec) GetWalletBalance(walletId int) (float64, error) {
+	var w Wallet
+	w.Id = 0
+	query := pgDbp.Db.QueryRow(
+		`SELECT balance
+		FROM wallet
+		WHERE
+			id = $1;`,
+		walletId)
+
+	err := query.Scan(
+		&w.Balance,
+	)
+	if err != nil {
+		fmt.Println("GetWalletBalance error. wallet id: "+string(walletId)+"error: ", err)
+		log.WithError(err).Warning("GetWalletBalance error. wallet id: "+string(walletId)+"error: ", err)
+	}
+	return w.Balance, err
 }

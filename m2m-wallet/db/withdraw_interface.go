@@ -1,5 +1,5 @@
 package db
 
-func DbCreateWithdrawTable() {
-	pgDb.CreateWithdrawTable()
+func DbCreateWithdrawTable() error {
+	return pgDb.CreateWithdrawTable()
 }
