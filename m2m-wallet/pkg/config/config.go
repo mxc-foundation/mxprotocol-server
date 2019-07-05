@@ -25,6 +25,12 @@ type MxpConfig struct {
 			DisableAssignExistingUsers bool   `mapstructure:"disable_assign_existing_users"`
 		} `mapstructure:"http_server"`
 	} `mapstructure:"application_server"`
+
+	SuperNode struct {
+		ContractAddress string `mapstructure:"contract_address"`
+		SuperNodeAddress string `mapstructure:"supernode_address"`
+		APIKey	string `mapstructure:"api_key"`
+	}
 }
 
 // C holds the global configuration.

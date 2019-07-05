@@ -7,7 +7,6 @@
 
 // time format
 
-
 syntax = "proto3";
 package grpc_api;
 
@@ -16,7 +15,6 @@ service Payment {
     rpc TokenTxReq (TxReqType) returns (TxReqReplyType) {}
     rpc CheckTxStatus (CheckTxStatusType) returns (CheckTxStatusReplyType) {}
 }
-
 
 message TxReqType {
     enum PaymentClient {

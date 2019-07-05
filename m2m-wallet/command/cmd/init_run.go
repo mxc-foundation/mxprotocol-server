@@ -49,6 +49,10 @@ func init() {
 	viper.SetDefault("application_server.http_server.cors_allow_origin", "http://localhost:3000")
 	viper.SetDefault("application_server.http_server.disable_assign_existing_users", false)
 
+	viper.SetDefault("supernode.contract_address", "0x5Ca381bBfb58f0092df149bD3D243b08B9a8386e")
+	viper.SetDefault("supernode.supernode_address", "0x8a96E17d85Bd897a88B547718865de990D2Fcb80")
+	viper.SetDefault("supernode.api_key", "W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4")
+
 	cmdMXP.AddCommand(cmdConfig)
 	cmdMXP.AddCommand(cmdVersion)
 }
