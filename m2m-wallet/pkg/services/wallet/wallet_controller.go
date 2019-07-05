@@ -20,18 +20,29 @@ func Setup(conf config.MxpConfig) error {
 	return nil
 }
 
-func userHasWallet(orgId int64) bool {
-	// check from table wallet with: username, orgId, wallet_type=normal_user
-	return false
+func userHasWallet(orgId int64) (int64, bool) {
+	walletId, err := db.DbGetWalletIdFromOrgId(orgId)
+	if err != nil {
+		return walletId, false
+	}
+
+	return walletId, true
 }
 
 func createWallet(orgId int64) (int64, error) {
-	// create wallet with: username, orgId, wallet type = normal user
-	return 0, nil
+	walletId, err := db.DbInsertWallet(orgId, db.USER)
+	if err != nil {
+		return walletId, err
+	}
+
+	return walletId, nil
 }
 
 func GetWalletId(orgId int64) (walletId int64, err error) {
-	if false == userHasWallet(orgId) {
+	var res bool
+
+	walletId, res = userHasWallet(orgId)
+	if false == res {
 		if walletId, err = createWallet(orgId); err != nil {
 			return 0, err
 		}
@@ -46,12 +57,12 @@ func GetBalance(orgId int64) (float64, error) {
 		return 0, err
 	}
 
-	res, err := db.DbWalletGetBalanceByWalletId(walletId)
+	balance, err := db.DbGetWalletBalance(walletId)
 	if err != nil {
 		return 0, err
 	}
 
-	return res, nil
+	return balance, nil
 }
 
 func UpdateBalance(orgId int64, oper PaymentCategory, deviceType DeviceType, amount float64) error {
@@ -60,7 +71,7 @@ func UpdateBalance(orgId int64, oper PaymentCategory, deviceType DeviceType, amo
 		return err
 	}
 
-	balance, err := db.DbWalletGetBalanceByWalletId(walletId)
+	balance, err := db.DbGetWalletBalance(walletId)
 	if err != nil {
 		return err
 	}
@@ -71,7 +82,7 @@ func UpdateBalance(orgId int64, oper PaymentCategory, deviceType DeviceType, amo
 		}
 	}
 
-	err = db.DbWalletUpdateBalanceByWalletId(walletId, balance)
+	err = db.DbUpdateBalanceByWalletId(walletId, balance)
 	if err != nil {
 		return err
 	}
@@ -100,7 +111,7 @@ func (s *WalletServerAPI) GetWalletBalance(ctx context.Context, req *api.GetWall
 		return &api.GetWalletBalanceResponse{}, err
 	}
 
-	balance, err := db.DbWalletGetBalanceByWalletId(walletId)
+	balance, err := db.DbGetWalletBalance(walletId)
 	if err != nil {
 		return &api.GetWalletBalanceResponse{}, err
 	}

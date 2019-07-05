@@ -71,11 +71,11 @@ func initConfig() {
 			log.WithError(err).WithField("config", cfgFile).Fatal("error loading config file")
 		}
 	} else {
-		viper.SetConfigName("mxp-server")
+		viper.SetConfigName("mxprotocol-server")
 		// search in order: "."  "$HOME/.config/mxp-server"  "/etc/mxp-server"
 		viper.AddConfigPath(".")
-		viper.AddConfigPath("$HOME/.config/mxp-server")
-		viper.AddConfigPath("/etc/mxp-server")
+		viper.AddConfigPath("$HOME/.config/mxprotocol-server")
+		viper.AddConfigPath("/etc/mxprotocol-server")
 		if err := viper.ReadInConfig(); err != nil {
 			switch err.(type) {
 			case viper.ConfigFileNotFoundError:

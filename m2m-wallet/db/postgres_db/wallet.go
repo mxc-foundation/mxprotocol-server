@@ -8,16 +8,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type WalletType string // db:wallet_type
-
-const (
-	USER        WalletType = "USER"
-	SUPER_ADMIN WalletType = "SUPER_ADMIN"
-)
-
 type Wallet struct {
-	Id      int     `db:"id"`
-	FkOrgLa int     `db:"fk_org_la"`
+	Id      int64     `db:"id"`
+	FkOrgLa int64     `db:"fk_org_la"`
 	TypeW   string  `db:"type"`
 	Balance float64 `db:"balance"`
 }
@@ -51,7 +44,7 @@ func (pgDbp DbSpec) CreateWalletTable() error {
 	return errors.Wrap(err, "db: query error CreateWalletTable()")
 }
 
-func (pgDbp DbSpec) InsertWallet(w Wallet) (insertIndex int, err error) {
+func (pgDbp DbSpec) InsertWallet(w Wallet) (insertIndex int64, err error) {
 	err = pgDbp.Db.QueryRow(`
 		INSERT INTO wallet (
 			fk_org_la ,
@@ -69,7 +62,7 @@ func (pgDbp DbSpec) InsertWallet(w Wallet) (insertIndex int, err error) {
 	return insertIndex, errors.Wrap(err, "db: query error InsertWallet()")
 }
 
-func (pgDbp DbSpec) GetWalletIdFromOrgId(orgIdLora int) (int, error) {
+func (pgDbp DbSpec) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
 	var w Wallet
 	w.Id = 0
 	query := pgDbp.Db.QueryRow(
@@ -90,7 +83,7 @@ func (pgDbp DbSpec) GetWalletIdFromOrgId(orgIdLora int) (int, error) {
 	return w.Id, err
 }
 
-func (pgDbp DbSpec) GetWallet(wp *Wallet, walletId int) error {
+func (pgDbp DbSpec) GetWallet(wp *Wallet, walletId int64) error {
 
 	query := pgDbp.Db.QueryRow(
 		`SELECT *
@@ -116,7 +109,7 @@ func (pgDbp DbSpec) GetWallet(wp *Wallet, walletId int) error {
 	return err
 }
 
-func (pgDbp DbSpec) GetWalletBalance(walletId int) (float64, error) {
+func (pgDbp DbSpec) GetWalletBalance(walletId int64) (float64, error) {
 	var w Wallet
 	w.Id = 0
 	query := pgDbp.Db.QueryRow(

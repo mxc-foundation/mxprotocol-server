@@ -112,7 +112,7 @@ func testExtAccount() {
 		Status:             string(pstgDb.ARC),
 		LatestCheckedBlock: 123}
 
-	_, errIns := DBInsertExtAccount(ea)
+	_, errIns := DBInsertExtAccount(int64(ea.FkWallet), ea.Account_adr, int64(ea.FkExtCurrency))
 	fmt.Println("err DBInsertExtAccount(): ", errIns)
 
 }

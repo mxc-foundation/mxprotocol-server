@@ -32,11 +32,18 @@ func Setup(conf config.MxpConfig) error {
 		}
 	}
 
-	err2 := dbInit()
-	if err2 != nil {
-		log.Fatal("Unable to init DB!", err2)
+	// create tables if not exist
+	err = dbInit()
+	if err != nil {
+		log.Fatal("Unable to init DB!", err)
 	}
-	testDb()
+	//testDb()
+
+	// init data if applys
+	err = initExtCurrencyTable()
+	if err != nil {
+		log.WithError(err).Fatal("Create init data in ext_currency failed.")
+	}
 
 	return nil
 }

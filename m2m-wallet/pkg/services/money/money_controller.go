@@ -19,13 +19,13 @@ func Setup() error {
 	return nil
 }
 
-func updateActiveMoneyAccount(orgId int64, newAccount string, mType db.MoneyType) error {
+func updateActiveMoneyAccount(orgId int64, newAccount string, currencyAbbr string) error {
 	walletId, err := wallet.GetWalletId(orgId)
 	if err != nil {
 		return err
 	}
 
-	err = db.DbMoneyUpdateAccountByWalletIdMoneyType(walletId, newAccount, mType)
+	_, err = db.DBInsertExtAccount(walletId, newAccount, currencyAbbr)
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func (s *MoneyServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.Modify
 			status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	err = updateActiveMoneyAccount(req.OrgId, req.CurrentAccount, db.MoneyType(req.MoneyAbbr))
+	err = updateActiveMoneyAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
 	if err != nil {
 		return &api.ModifyMoneyAccountResponse{Error: "", Status: false, UserProfile: &userProfile}, err
 	}

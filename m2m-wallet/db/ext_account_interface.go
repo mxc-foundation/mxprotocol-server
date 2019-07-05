@@ -1,12 +1,27 @@
 package db
 
-import pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
+import (
+	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
+	"time"
+)
 
 func DbCreateExtAccountTable() error {
 	return pgDb.CreateExtAccountTable()
 }
 
-func DBInsertExtAccount(ea pstgDb.ExtAccount) (insertIndex int, err error) {
+func DBInsertExtAccount(walletId int64, newAccount string, currencyAbbr string) (insertIndex int, err error) {
+	// get extCurrencyId from currencyAbbr
+	extCurrencyId, err := DbGetExtCurrencyIdByAbbr(currencyAbbr)
+	if err != nil {
+		return 0, err
+	}
+
+	ea := pstgDb.ExtAccount{
+		FkWallet: walletId,
+		FkExtCurrency:extCurrencyId,
+		Account_adr: newAccount,
+		Insert_time: time.Now().UTC(),
+	}
 	return pgDb.InsertExtAccount(ea)
 }
 
