@@ -1,12 +1,14 @@
 package config
 
+import "time"
+
 // Config defines the configuration structure.
 type MxpConfig struct {
 	General struct {
 		LogLevel               int    `mapstructure:"log_level"`
 		PasswordHashIterations int    `mapstructure:"password_hash_iterations"`
 		HostServer             string `mapstructure:"host_server"`
-		AuthServer			   string `mapstructure:"auth_server"`
+		AuthServer             string `mapstructure:"auth_server"`
 		AuthUrl                string `mapstructure:"auth_url"`
 	}
 
@@ -26,10 +28,16 @@ type MxpConfig struct {
 		} `mapstructure:"http_server"`
 	} `mapstructure:"application_server"`
 
+	PaymentServer struct{
+		PaymentServiceAddress string `mapstructure:"payment_service_address"`
+		PaymentServicePort string `mapstructure:"payment_service_port"`
+	}
+
 	SuperNode struct {
-		ContractAddress string `mapstructure:"contract_address"`
-		SuperNodeAddress string `mapstructure:"supernode_address"`
-		APIKey	string `mapstructure:"api_key"`
+		ContractAddress  string        `mapstructure:"contract_address"`
+		SuperNodeAddress string        `mapstructure:"supernode_address"`
+		APIKey           string        `mapstructure:"api_key"`
+		RequestSeconds   time.Duration `mapstructure:"request_seconds"`
 	}
 }
 

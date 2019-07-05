@@ -14,7 +14,7 @@ import (
 
 func Setup() error {
 	//todo
-	ticker := time.NewTicker(5 * time.Second)
+	ticker := time.NewTicker(config.Cstruct.SuperNode.RequestSeconds * time.Second)
 	go func() {
 		log.Info("start supernode goroutine")
 		for range ticker.C{
