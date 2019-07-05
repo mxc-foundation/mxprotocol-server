@@ -51,8 +51,8 @@ func (pgDbp DbSpec) CreateWalletTable() error {
 	return errors.Wrap(err, "db: query error CreateWalletTable()")
 }
 
-func (pgDbp DbSpec) InsertWallet(w Wallet) error {
-	_, err := pgDbp.Db.Exec(`
+func (pgDbp DbSpec) InsertWallet(w Wallet) (insertIndex int, err error) {
+	err = pgDbp.Db.QueryRow(`
 		INSERT INTO wallet (
 			fk_org_la ,
 			type,
@@ -63,10 +63,10 @@ func (pgDbp DbSpec) InsertWallet(w Wallet) error {
 	`,
 		w.FkOrgLa,
 		w.TypeW,
-		w.Balance)
+		w.Balance).Scan(&insertIndex)
 
 	// fmt.Println(val, err)
-	return errors.Wrap(err, "db: query error InsertWallet()")
+	return insertIndex, errors.Wrap(err, "db: query error InsertWallet()")
 }
 
 func (pgDbp DbSpec) GetWalletIdFromOrgId(orgIdLora int) (int, error) {
@@ -134,4 +134,28 @@ func (pgDbp DbSpec) GetWalletBalance(walletId int) (float64, error) {
 		log.WithError(err).Warning("GetWalletBalance error. wallet id: "+string(walletId)+"error: ", err)
 	}
 	return w.Balance, err
+}
+
+func (pgDbp DbSpec) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int, err error) {
+
+	err = pgDbp.Db.QueryRow(
+		`select 
+			w.id as wallet_id 
+			from
+			wallet w,ext_account ea,ext_currency ec
+		WHERE
+			w.id = ea.fk_wallet AND
+			w.type = 'USER' AND
+			ea.fk_ext_currency = ec.id AND
+			ea.status = 'ACTIVE' AND
+			account_adr = $1 AND
+			ec.abv = $2 
+		ORDER BY ea.id DESC 
+		LIMIT 1 
+		;`, acntAdr, externalCur).Scan(&walletId)
+
+	// if err != nil {
+	// 	log.WithError(err).Warning("GetWalletIdofActiveAcnt error. wallet id: "+string(walletId)+"error: ", err)
+	// }
+	return walletId, err
 }

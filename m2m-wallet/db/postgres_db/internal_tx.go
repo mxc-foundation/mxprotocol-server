@@ -8,8 +8,8 @@ import (
 
 type FieldStatus string // db:field_status
 const (
-	PENDING    FieldStatus = "PENDING"
-	SUCCESSFUL FieldStatus = "SUCCESSFUL"
+	ACTIVE FieldStatus = "ACTIVE"
+	ARC    FieldStatus = "ARC"
 )
 
 type PaymentCategory string // db:payment_category
@@ -73,8 +73,8 @@ func (pgDbp DbSpec) CreateInternalTxTable() error {
 	return errors.Wrap(err, "storage: PostgreSQL error CreateInternalTxTable()")
 }
 
-func (pgDbp DbSpec) InsertInternalTx(it InternalTx) error {
-	_, err := pgDbp.Db.Exec(`
+func (pgDbp DbSpec) InsertInternalTx(it InternalTx) (insertIndex int, err error) {
+	err = pgDbp.Db.QueryRow(`
 	INSERT INTO internal_tx (
 		fk_wallet_sernder,
 		fk_wallet_receiver,
@@ -96,37 +96,7 @@ func (pgDbp DbSpec) InsertInternalTx(it InternalTx) error {
 		it.PaymentCat,
 		it.TxInternalRef,
 		it.Value,
-		it.TimeTx)
+		it.TimeTx).Scan(&insertIndex)
 
-	return errors.Wrap(err, "storage: query error InsertInternalTx()")
+	return insertIndex, errors.Wrap(err, "storage: query error InsertInternalTx()")
 }
-
-// func (pgDbp DbSpec) InsertInternalTx(it InternalTx) error {
-// 	err := pgDbp.Db.QueryRow(`
-// 	INSERT INTO internal_tx (
-// 		fk_wallet_sernder,
-// 		fk_wallet_receiver,
-// 		payment_cat,
-// 		tx_internal_ref,
-// 		value,
-// 		time_tx )
-// 		VALUES (
-// 		$1,
-// 		$2,
-// 		$3,
-// 		$4,
-// 		$5,
-// 		$6)
-// 		RETURNING id;
-// 	`,
-// 		it.FkWalletSender,
-// 		it.FkWalletRcvr,
-// 		it.PaymentCat,
-// 		it.TxInternalRef,
-// 		it.Value,
-// 		it.TimeTx).Scan(&it.Id)
-
-// 	fmt.Println("it.id: ", it.Id)
-
-// 	return errors.Wrap(err, "storage: query error InsertInternalTx()")
-// }

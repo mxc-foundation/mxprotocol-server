@@ -19,11 +19,11 @@ func Setup(conf config.MxpConfig) error {
 
 	fmt.Println("The DB url: " + conf.PostgreSQL.DSN)
 	pingCheck(conf)
-
-	dbp, err := sql.Open("postgres", "postgres://m2m_db@postgres:5432/m2m_database?sslmode=disable")
+	dbp, err := sql.Open("postgres", conf.PostgreSQL.DSN)
+	// dbp, err := sql.Open("postgres", "postgres://m2m_db@postgres:5432/m2m_database?sslmode=disable")
 
 	if err != nil {
-		// to add
+		log.Fatal("No DB accessable!", err)
 	} else {
 		pgDb = pstgDb.DbSpec{
 			Db:         dbp,
@@ -32,11 +32,11 @@ func Setup(conf config.MxpConfig) error {
 		}
 	}
 
-	// fmt.Println("setupDb called CC   !!", pgDb)
-
+	err2 := dbInit()
+	if err2 != nil {
+		log.Fatal("Unable to init DB!", err2)
+	}
 	testDb()
-
-	// dbInit()
 
 	return nil
 }
@@ -58,11 +58,11 @@ func pingCheck(conf config.MxpConfig) error {
 	return nil
 }
 
-func dbInit() {
-	db, err := sql.Open("postgres", "postgres://m2m_db@postgres:5432/m2m_database?sslmode=disable")
-	fmt.Println(db, err)
+func dbInit() error {
+	// db, err := sql.Open("postgres", "postgres://m2m_db@postgres:5432/m2m_database?sslmode=disable")
+	// fmt.Println(db, err)
 
-	queries, err3 := db.Exec(`
+	_, err := pgDb.Db.Exec(`
 		DO $$
 		BEGIN
 			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tx_status') THEN
@@ -139,12 +139,13 @@ func dbInit() {
 		);
 
 		CREATE TABLE IF NOT EXISTS ext_account (
-		id SERIAL PRIMARY KEY,
-		fk_wallet INT REFERENCES wallet(id) NOT NULL,
-		fk_ext_currency INT REFERENCES ext_currency (id) NOT NULL,
-		account_adr varchar(128) NOT NULL,
-		insert_time TIMESTAMP NOT NULL,
-		status FIELD_STATUS NOT NULL
+			id SERIAL PRIMARY KEY,
+			fk_wallet INT REFERENCES wallet(id) NOT NULL,
+			fk_ext_currency INT REFERENCES ext_currency (id) NOT NULL,
+			account_adr varchar(128) NOT NULL UNIQUE,
+			insert_time TIMESTAMP NOT NULL,
+			status FIELD_STATUS NOT NULL,
+			latest_checked_block INT DEFAULT 0
 		);
 
 		CREATE TABLE IF NOT EXISTS withdraw_fee (
@@ -183,8 +184,7 @@ func dbInit() {
 
 	`,
 	)
-	fmt.Println("queries:", queries)
-	fmt.Println("err3:", err3)
+	return err
 }
 
 // db holds the PostgreSQL connection pool.

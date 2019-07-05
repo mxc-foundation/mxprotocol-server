@@ -8,7 +8,7 @@ func DbCreateWalletTable() error {
 	return pgDb.CreateWalletTable()
 }
 
-func DbInsertWallet(w pstgDb.Wallet) error {
+func DbInsertWallet(w pstgDb.Wallet) (insertIndex int, err error) {
 	return pgDb.InsertWallet(w)
 }
 

@@ -23,8 +23,8 @@ func (pgDbp DbSpec) CreateExtCurrencyTable() error {
 	return errors.Wrap(err, "storage: query error CreateWalletTable()")
 }
 
-func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) error {
-	_, err := pgDbp.Db.Exec(`
+func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int, err error) {
+	err = pgDbp.Db.QueryRow(`
 
 
 	INSERT INTO ext_currency (
@@ -37,8 +37,8 @@ func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) error {
 		RETURNING id;
 	`,
 		ec.Name,
-		ec.Abv)
+		ec.Abv).Scan(&insertIndex)
 
 	// fmt.Println(val, err)
-	return errors.Wrap(err, "storage: query error InsertExtCurr()")
+	return insertIndex, errors.Wrap(err, "storage: query error InsertExtCurr()")
 }

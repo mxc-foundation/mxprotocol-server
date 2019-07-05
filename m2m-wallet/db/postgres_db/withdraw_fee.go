@@ -31,8 +31,8 @@ func (pgDbp DbSpec) CreateWithdrawFeeTable() error {
 	return errors.Wrap(err, "db: query error CreateWalletTable()")
 }
 
-func (pgDbp DbSpec) InsertWithdrawFee(wf *WithdrawFee) error {
-	err := pgDbp.Db.QueryRow(`
+func (pgDbp DbSpec) InsertWithdrawFee(wf WithdrawFee) (insertIndex int, err error) {
+	err = pgDbp.Db.QueryRow(`
 		INSERT INTO withdraw_fee (
 			fk_ext_currency,
 			fee,
@@ -50,7 +50,26 @@ func (pgDbp DbSpec) InsertWithdrawFee(wf *WithdrawFee) error {
 		wf.Fee,
 		wf.InsertTime,
 		wf.Status,
-	).Scan(&wf.Id)
+	).Scan(&insertIndex)
 
-	return errors.Wrap(err, "db: query error InsertWithdrawFee()")
+	return insertIndex, errors.Wrap(err, "db: query error InsertWithdrawFee()")
+}
+
+func (pgDbp DbSpec) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
+	err = pgDbp.Db.QueryRow(`
+		SELECT 
+			wf.fee
+		FROM
+			withdraw_fee wf, ext_currency ec
+		WHERE
+			wf.fk_ext_currency = ec.id	AND
+			ec.abv = $1 	AND
+			status = 'ACTIVE'
+		ORDER BY ec.id DESC 
+		LIMIT 1 
+		;
+	`,
+		extCurrAbv).Scan(&withdrawFee)
+
+	return withdrawFee, errors.Wrap(err, "db: query error InsertWithdrawFee()")
 }
