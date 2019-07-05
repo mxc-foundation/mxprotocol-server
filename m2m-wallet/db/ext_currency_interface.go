@@ -8,11 +8,12 @@ import (
 var CurrencyList = []pstgDb.ExtCurrency{}
 
 func initExtCurrencyTable() error {
-
-	for i, v := range api.Money_name {
-		CurrencyList[i].Id = 0
-		CurrencyList[i].Name = v
-		CurrencyList[i].Abv = v
+	currency := pstgDb.ExtCurrency{}
+	for _, v := range api.Money_name {
+		currency.Id = 0
+		currency.Name = v
+		currency.Abv = v
+		CurrencyList = append(CurrencyList, currency)
 	}
 
 	for _, element := range CurrencyList {

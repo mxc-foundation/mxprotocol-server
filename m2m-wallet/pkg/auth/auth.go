@@ -133,7 +133,7 @@ func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*
 		return &api.LoginResponse{}, err
 	}
 
-	request, err := http.NewRequest("POST", ctxAuth.authServer+"api/internal/login", bytes.NewBuffer(requestBody))
+	request, err := http.NewRequest("POST", ctxAuth.authServer+"/api/internal/login", bytes.NewBuffer(requestBody))
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "application/json")
 

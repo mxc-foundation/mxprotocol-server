@@ -1,4 +1,4 @@
-`[general]
+[general]
 # Log level
 #
 # debug=5, info=4, warning=3, error=2, fatal=1, panic=0
@@ -9,8 +9,8 @@ log_level=4
 password_hash_iterations=100000
 
 host_server="localhost"
-auth_server="http://appserver:8080/"
-auth_url="api/internal/profile"
+auth_server="http://appserver:8080"
+auth_url="/api/internal/profile"
 
 
 # PostgreSQL settings.

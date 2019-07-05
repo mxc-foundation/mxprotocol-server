@@ -3,6 +3,7 @@ package postgres_db
 import (
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 )
 
 type ExtCurrency struct {
@@ -24,6 +25,10 @@ func (pgDbp DbSpec) CreateExtCurrencyTable() error {
 }
 
 func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int, err error) {
+	log.WithFields(log.Fields{
+		"name": ec.Name,
+		"abbr": ec.Abv,
+	}).Info("/db/ext_currency_interface: insert ext_currency")
 	err = pgDbp.Db.QueryRow(`
 
 
