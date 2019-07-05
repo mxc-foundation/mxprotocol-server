@@ -8,7 +8,7 @@
 // time format
 
 syntax = "proto3";
-package grpc_api;
+package api;
 
 
 service Payment {
