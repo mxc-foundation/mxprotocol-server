@@ -1,7 +1,5 @@
 package wallet
 
-
-
 type PaymentCategory string
 
 const (

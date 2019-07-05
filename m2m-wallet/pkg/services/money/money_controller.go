@@ -20,7 +20,7 @@ func Setup() error {
 }
 
 func updateActiveMoneyAccount(orgId int64, newAccount string, mType db.MoneyType) error {
-	walletId ,err := wallet.GetWalletId(orgId)
+	walletId, err := wallet.GetWalletId(orgId)
 	if err != nil {
 		return err
 	}
@@ -46,13 +46,13 @@ func NewMoneyServerAPI() *MoneyServerAPI {
 func (s *MoneyServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.ModifyMoneyAccountRequest) (*api.ModifyMoneyAccountResponse, error) {
 	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
-		return &api.ModifyMoneyAccountResponse{Error:"", Status: false, UserProfile: &userProfile},
-		status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
+		return &api.ModifyMoneyAccountResponse{Error: "", Status: false, UserProfile: &userProfile},
+			status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
 	err = updateActiveMoneyAccount(req.OrgId, req.CurrentAccount, db.MoneyType(req.MoneyAbbr))
 	if err != nil {
-		return &api.ModifyMoneyAccountResponse{Error:"", Status: false, UserProfile: &userProfile}, err
+		return &api.ModifyMoneyAccountResponse{Error: "", Status: false, UserProfile: &userProfile}, err
 	}
 
 	return &api.ModifyMoneyAccountResponse{Error: "", Status: true, UserProfile: &userProfile}, nil
@@ -78,7 +78,7 @@ func (s *MoneyServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, req *
 		history_list = append(history_list, &item)
 	}
 
-	return &api.GetMoneyAccountChangeHistoryResponse{Error:"", Count: count, ChangeHistory: history_list, UserProfile: &userProfile}, nil
+	return &api.GetMoneyAccountChangeHistoryResponse{Error: "", Count: count, ChangeHistory: history_list, UserProfile: &userProfile}, nil
 }
 
 func (s *MoneyServerAPI) GetActiveMoneyAccount(ctx context.Context, req *api.GetActiveMoneyAccountRequest) (*api.GetActiveMoneyAccountResponse, error) {

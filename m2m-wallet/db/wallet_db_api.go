@@ -1,6 +1,5 @@
 package db
 
-
 func DbWalletGetBalanceByWalletId(walletId int64) (float64, error) {
 	// get wallet balance with: wallet id
 	// only normal user calls DbWalletGetBalanceByWalletId

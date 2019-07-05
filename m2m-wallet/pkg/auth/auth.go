@@ -122,7 +122,7 @@ func NewInternalServerAPI() *InternalServerAPI {
 	return &InternalServerAPI{serviceName: "internal get jwt"}
 }
 
-func (s *InternalServerAPI)Login(ctx context.Context, req *api.LoginRequest) (*api.LoginResponse, error){
+func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*api.LoginResponse, error) {
 	requestBody, err := json.Marshal(map[string]string{
 		"password": req.Password,
 		"username": req.Username,

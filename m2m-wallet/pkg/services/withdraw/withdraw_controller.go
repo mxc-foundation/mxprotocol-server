@@ -20,7 +20,6 @@ var ctxWithdraw = struct {
 func Setup() error {
 	log.Info("setup withdraw service")
 
-
 	return nil
 }
 
