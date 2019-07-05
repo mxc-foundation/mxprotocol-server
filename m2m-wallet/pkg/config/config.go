@@ -1,5 +1,7 @@
 package config
 
+import "time"
+
 // Config defines the configuration structure.
 type MxpConfig struct {
 	General struct {
@@ -25,6 +27,18 @@ type MxpConfig struct {
 			DisableAssignExistingUsers bool   `mapstructure:"disable_assign_existing_users"`
 		} `mapstructure:"http_server"`
 	} `mapstructure:"application_server"`
+
+	PaymentServer struct{
+		PaymentServiceAddress string `mapstructure:"payment_service_address"`
+		PaymentServicePort string `mapstructure:"payment_service_port"`
+	}
+
+	SuperNode struct {
+		ContractAddress  string        `mapstructure:"contract_address"`
+		SuperNodeAddress string        `mapstructure:"supernode_address"`
+		APIKey           string        `mapstructure:"api_key"`
+		RequestSeconds   time.Duration `mapstructure:"request_seconds"`
+	}
 }
 
 // C holds the global configuration.

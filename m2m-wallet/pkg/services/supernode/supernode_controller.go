@@ -6,12 +6,22 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"time"
 )
 
 func Setup() error {
 	//todo
+	ticker := time.NewTicker(config.Cstruct.SuperNode.RequestSeconds * time.Second)
+	go func() {
+		log.Info("start supernode goroutine")
+		for range ticker.C{
+			//TODO: should change the super node address.
+			checkTokenTx(config.Cstruct.SuperNode.ContractAddress,config.Cstruct.SuperNode.SuperNodeAddress)
+		}
+	}()
 	log.Info("setup supernode service")
 	return nil
 }

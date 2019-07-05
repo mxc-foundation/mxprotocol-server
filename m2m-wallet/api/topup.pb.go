@@ -9,6 +9,8 @@ import (
 	proto "github.com/golang/protobuf/proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -274,6 +276,14 @@ func (c *topUpServiceClient) GetTopUpHistory(ctx context.Context, in *GetTopUpHi
 // TopUpServiceServer is the server API for TopUpService service.
 type TopUpServiceServer interface {
 	GetTopUpHistory(context.Context, *GetTopUpHistoryRequest) (*GetTopUpHistoryResponse, error)
+}
+
+// UnimplementedTopUpServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedTopUpServiceServer struct {
+}
+
+func (*UnimplementedTopUpServiceServer) GetTopUpHistory(ctx context.Context, req *GetTopUpHistoryRequest) (*GetTopUpHistoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTopUpHistory not implemented")
 }
 
 func RegisterTopUpServiceServer(s *grpc.Server, srv TopUpServiceServer) {
