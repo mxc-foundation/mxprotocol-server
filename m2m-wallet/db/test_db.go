@@ -131,14 +131,6 @@ func testWithdraw() {
 		TxHash: "0x556664",
 	}
 
-	it := pstgDb.InternalTx{
-		FkWalletSender: 1,
-		FkWalletRcvr:   35,
-		PaymentCat:     string(pstgDb.WITHDRAW),
-		TxInternalRef:  4,
-		Value:          65.23,
-		TimeTx:         time.Now().UTC()}
-
 	fmt.Println("err DbUpdateWithdrawSuccessful(): ", DbUpdateWithdrawSuccessful(11))
 
 	fmt.Println("err DbCreateWithdrawSuccessfulFunction(): ", DbCreateWithdrawSuccessfulFunction())
@@ -148,7 +140,15 @@ func testWithdraw() {
 	_, errIns := DbInsertWithdraw(wdr)
 	fmt.Println("err DbInsertWithdraw(): ", errIns)
 
-	fmt.Println("err DbApplyWithdrawReq(): ", DbApplyWithdrawReq(wdr, it))
+	// it := pstgDb.InternalTx{
+	// 	FkWalletSender: 1,
+	// 	FkWalletRcvr:   35,
+	// 	PaymentCat:     string(pstgDb.WITHDRAW),
+	// 	TxInternalRef:  4,
+	// 	Value:          65.23,
+	// 	TimeTx:         time.Now().UTC()}
+
+	// fmt.Println("err DbApplyWithdrawReq(): ", DbApplyWithdrawReq(wdr, it))
 }
 
 func testTopup() {
