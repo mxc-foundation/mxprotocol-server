@@ -3,6 +3,7 @@ VERSION := "test-run"
 
 build: ui/build pkg/static
 	mkdir -p build
+	git submodule update
 	go build $(GO_EXTRA_BUILD_ARGS) -ldflags "-s -w -X main.version=$(VERSION)" -o build/m2m-wallet command/main.go
 
 clean:
