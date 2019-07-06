@@ -3,6 +3,7 @@ syntax = "proto3";
 package api;
 
 import "google/api/annotations.proto";
+import "internal.proto";
 
 service MoneyService {
     rpc ModifyMoneyAccount(ModifyMoneyAccountRequest) returns (ModifyMoneyAccountResponse){
@@ -38,6 +39,7 @@ message ModifyMoneyAccountRequest {
 message ModifyMoneyAccountResponse {
     string error = 1;
     bool status = 2;
+    ProfileResponse user_profile = 3;
 }
 
 message GetMoneyAccountChangeHistoryRequest {
@@ -57,6 +59,7 @@ message GetMoneyAccountChangeHistoryResponse {
     string error = 1;
     int64 count = 2;
     repeated MoneyAccountChangeHistory change_history = 3;
+    ProfileResponse user_profile = 4;
 }
 
 message GetActiveMoneyAccountRequest {
@@ -67,4 +70,5 @@ message GetActiveMoneyAccountRequest {
 message GetActiveMoneyAccountResponse {
     string error = 1;
     string active_account = 2;
+    ProfileResponse user_profile = 3;
 }

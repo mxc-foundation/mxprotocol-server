@@ -2,8 +2,14 @@ package money
 
 import (
 	"context"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/wallet"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"time"
 )
 
@@ -13,36 +19,75 @@ func Setup() error {
 	return nil
 }
 
+func updateActiveMoneyAccount(orgId int64, newAccount string, currencyAbbr string) error {
+	walletId, err := wallet.GetWalletId(orgId)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.DBInsertExtAccount(walletId, newAccount, currencyAbbr)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// grpc apis
+
 type MoneyServerAPI struct {
-	//todo
+	serviceName string
 }
 
 func NewMoneyServerAPI() *MoneyServerAPI {
-	return &MoneyServerAPI{}
+	return &MoneyServerAPI{serviceName: "money"}
 }
 
-func (s *MoneyServerAPI) ModifyMoneyAccount(context.Context, *api.ModifyMoneyAccountRequest) (*api.ModifyMoneyAccountResponse, error) {
-	return &api.ModifyMoneyAccountResponse{Error: "test", Status: true}, nil
-}
-
-func (s *MoneyServerAPI) GetChangeMoneyAccountHistory(context.Context, *api.GetMoneyAccountChangeHistoryRequest) (*api.GetMoneyAccountChangeHistoryResponse, error) {
-	var count = int64(3)
-	history_list := api.GetMoneyAccountChangeHistoryResponse{
-		Count: count,
+func (s *MoneyServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.ModifyMoneyAccountRequest) (*api.ModifyMoneyAccountResponse, error) {
+	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
+	if err != nil {
+		return &api.ModifyMoneyAccountResponse{Error: "", Status: false, UserProfile: &userProfile},
+			status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
+	err = updateActiveMoneyAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
+	if err != nil {
+		return &api.ModifyMoneyAccountResponse{Error: "", Status: false, UserProfile: &userProfile}, err
+	}
+
+	return &api.ModifyMoneyAccountResponse{Error: "", Status: true, UserProfile: &userProfile}, nil
+}
+
+func (s *MoneyServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, req *api.GetMoneyAccountChangeHistoryRequest) (*api.GetMoneyAccountChangeHistoryResponse, error) {
+	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
+	}
+
+	//Todo: userInfo should be the information of users eg.id,name,org,etc. Use it to get data from DB.
+	fmt.Println("username = ", userProfile.User.Username)
+	var count = int64(3)
+
+	history_list := []*api.MoneyAccountChangeHistory{}
 	for i := 0; i < int(count); i++ {
 		item := api.MoneyAccountChangeHistory{
 			From:      "alice",
 			To:        "bob",
 			CreatedAt: time.Now().UTC().String(),
 		}
-		history_list.ChangeHistory = append(history_list.ChangeHistory, &item)
+		history_list = append(history_list, &item)
 	}
 
-	return &history_list, nil
+	return &api.GetMoneyAccountChangeHistoryResponse{Error: "", Count: count, ChangeHistory: history_list, UserProfile: &userProfile}, nil
 }
 
-func (s *MoneyServerAPI) GetActiveMoneyAccount(context.Context, *api.GetActiveMoneyAccountRequest) (*api.GetActiveMoneyAccountResponse, error) {
-	return &api.GetActiveMoneyAccountResponse{Error: "", ActiveAccount: ""}, nil
+func (s *MoneyServerAPI) GetActiveMoneyAccount(ctx context.Context, req *api.GetActiveMoneyAccountRequest) (*api.GetActiveMoneyAccountResponse, error) {
+	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
+	}
+
+	//Todo: userInfo should be the information of users eg.id,name,org,etc. Use it to get data from DB.
+	fmt.Println("username = ", userProfile.User.Username)
+	return &api.GetActiveMoneyAccountResponse{Error: "", ActiveAccount: "", UserProfile: &userProfile}, nil
 }

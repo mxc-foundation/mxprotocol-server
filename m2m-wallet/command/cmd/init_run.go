@@ -2,11 +2,10 @@ package cmd
 
 import (
 	"bytes"
+	"github.com/spf13/viper"
 	"io/ioutil"
 	"reflect"
 	"strings"
-
-	"github.com/spf13/viper"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -35,7 +34,9 @@ func init() {
 
 	// defaults
 	viper.SetDefault("general.password_hash_iterations", 100000)
-	viper.SetDefault("general.host_server", "localhost") //"mxp-server-domain")
+	viper.SetDefault("general.host_server", "localhost")
+	viper.SetDefault("general.auth_server", "http://appserver:8080")
+	viper.SetDefault("general.auth_url", "/api/internal/profile")
 
 	viper.SetDefault("postgresql.dsn", "postgres://postgres@postgres:5432/postgres?sslmode=disable")
 	viper.SetDefault("postgresql.automigrate", true)
@@ -46,6 +47,15 @@ func init() {
 	viper.SetDefault("application_server.http_server.jwt_secret", "DOE1KiNzpQ82elRQ9HMWyxmADQ5f2B2TBAgOjL7ZZWA=")
 	viper.SetDefault("application_server.http_server.cors_allow_origin", "http://localhost:3000")
 	viper.SetDefault("application_server.http_server.disable_assign_existing_users", false)
+
+	viper.SetDefault("supernode.contract_address", "0x5Ca381bBfb58f0092df149bD3D243b08B9a8386e")
+	viper.SetDefault("supernode.supernode_address", "0x8a96E17d85Bd897a88B547718865de990D2Fcb80")
+	viper.SetDefault("supernode.api_key", "W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4")
+	viper.SetDefault("supernode.check_account_seconds", 30)
+	viper.SetDefault("supernode.check_payment_seconds", 60)
+
+	viper.SetDefault("paymentserver.payment_service_address", "localhost")
+	viper.SetDefault("paymentserver.payment_service_port", ":8081")
 
 	cmdMXP.AddCommand(cmdConfig)
 	cmdMXP.AddCommand(cmdVersion)
@@ -69,11 +79,11 @@ func initConfig() {
 			log.WithError(err).WithField("config", cfgFile).Fatal("error loading config file")
 		}
 	} else {
-		viper.SetConfigName("mxp-server")
+		viper.SetConfigName("mxprotocol-server")
 		// search in order: "."  "$HOME/.config/mxp-server"  "/etc/mxp-server"
 		viper.AddConfigPath(".")
-		viper.AddConfigPath("$HOME/.config/mxp-server")
-		viper.AddConfigPath("/etc/mxp-server")
+		viper.AddConfigPath("$HOME/.config/mxprotocol-server")
+		viper.AddConfigPath("/etc/mxprotocol-server")
 		if err := viper.ReadInConfig(); err != nil {
 			switch err.(type) {
 			case viper.ConfigFileNotFoundError:

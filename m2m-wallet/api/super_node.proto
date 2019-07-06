@@ -4,6 +4,7 @@ package api;
 
 import "google/api/annotations.proto";
 import "money.proto";
+import "internal.proto";
 
 service SuperNodeService {
     rpc GetSuperNodeActiveMoneyAccount(GetSuperNodeActiveMoneyAccountRequest) returns (GetSuperNodeActiveMoneyAccountResponse){
@@ -20,4 +21,5 @@ message GetSuperNodeActiveMoneyAccountRequest {
 message GetSuperNodeActiveMoneyAccountResponse {
     string supernode_active_account = 1;
     string Error = 2;
+    ProfileResponse user_profile = 3;
 }

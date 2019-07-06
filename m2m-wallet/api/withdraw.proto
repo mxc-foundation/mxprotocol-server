@@ -4,6 +4,7 @@ package api;
 
 import "google/api/annotations.proto";
 import "money.proto";
+import "internal.proto";
 
 // WithdrawService is the service managing the withdraw access.
 service WithdrawService {
@@ -35,19 +36,21 @@ message GetWithdrawFeeRequest {
 
 message GetWithdrawFeeResponse {
     // Withdraw object.
-    float withdrawFee = 1;
+    double withdrawFee = 1;
     string error = 2;
+    ProfileResponse user_profile = 3;
 }
 
 message WithdrawReqRequest {
     int64 org_id = 1;
     Money money_abbr = 2;
-    float amount = 3;
+    double amount = 3;
 }
 
 message WithdrawReqResponse {
     bool status = 1;
     string error = 2;
+    ProfileResponse user_profile = 3;
 }
 
 message GetWithdrawHistoryRequest {
@@ -61,7 +64,7 @@ message WithdrawHistory {
     string from = 1;
     string to = 2;
     string money_type = 3;
-    float amount = 4;
+    double amount = 4;
     string created_at = 5;
 }
 
@@ -69,4 +72,5 @@ message GetWithdrawHistoryResponse {
     string error = 1;
     int64 count = 2;
     repeated WithdrawHistory withdraw_history = 3;
+    ProfileResponse user_profile = 4;
 }

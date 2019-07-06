@@ -9,6 +9,7 @@ clean:
 	@echo "Cleaning up workspace"
 	@rm -rf build pkg/static/static_gen.go ui/build static/static
 	@rm -f static/index.html static/icon.png static/manifest.json static/asset-manifest.json static/service-worker.js
+	@rm -f static/swagger/*.json
 	@rm -rf static/logo
 
 ui/build:
