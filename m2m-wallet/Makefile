@@ -1,5 +1,5 @@
 .PHONY: build clean api pkg/static statics/swagger/api.swagger.json dev-requirements
-VERSION := "test-run"
+VERSION := $(shell git describe --always |sed -e "s/^v//")
 
 build: ui/build pkg/static
 	mkdir -p build
