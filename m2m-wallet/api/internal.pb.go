@@ -10,8 +10,6 @@ import (
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -471,14 +469,6 @@ func (c *internalServiceClient) Login(ctx context.Context, in *LoginRequest, opt
 type InternalServiceServer interface {
 	// Log in a user
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
-}
-
-// UnimplementedInternalServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedInternalServiceServer struct {
-}
-
-func (*UnimplementedInternalServiceServer) Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 
 func RegisterInternalServiceServer(s *grpc.Server, srv InternalServiceServer) {

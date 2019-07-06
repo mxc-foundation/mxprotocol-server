@@ -1,0 +1,3 @@
+[submodule "grpc_api-paymemt_service"]
+	path = grpc_api-paymemt_service
+	url = git@gitlab.com:MXCFoundation/grpc_api-paymemt_service.git

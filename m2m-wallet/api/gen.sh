@@ -9,8 +9,7 @@ protoc -I. -I${GRPC_GW_PATH} --go_out=plugins=grpc:. \
     super_node.proto \
     topup.proto \
     wallet.proto \
-    withdraw.proto \
-    grpc_payment_service.proto
+    withdraw.proto
 
 # generate the JSON interface code
 protoc -I. -I${GRPC_GW_PATH} --grpc-gateway_out=logtostderr=true:. \

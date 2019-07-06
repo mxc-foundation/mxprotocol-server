@@ -4,7 +4,9 @@ go 1.12
 
 require (
 	github.com/allegro/bigcache v1.2.1 // indirect
+	github.com/aristanetworks/goarista v0.0.0-20190704150520-f44d68189fd7 // indirect
 	github.com/btcsuite/btcd v0.0.0-20190629003639-c26ffa870fd8 // indirect
+	github.com/deckarep/golang-set v1.7.1 // indirect
 	github.com/elazarl/go-bindata-assetfs v1.0.0
 	github.com/ethereum/go-ethereum v1.8.27
 	github.com/golang/protobuf v1.3.1
@@ -14,6 +16,7 @@ require (
 	github.com/lib/pq v1.0.0
 	github.com/nanmu42/etherscan-api v1.0.4
 	github.com/pkg/errors v0.8.1
+	github.com/rs/cors v1.6.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.5
@@ -27,4 +30,5 @@ require (
 	google.golang.org/appengine v1.6.1 // indirect
 	google.golang.org/genproto v0.0.0-20190627203621-eb59cef1c072
 	google.golang.org/grpc v1.21.1
+	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 )

@@ -9,8 +9,6 @@ import (
 	proto "github.com/golang/protobuf/proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -539,20 +537,6 @@ type WithdrawServiceServer interface {
 	GetWithdrawFee(context.Context, *GetWithdrawFeeRequest) (*GetWithdrawFeeResponse, error)
 	WithdrawReq(context.Context, *WithdrawReqRequest) (*WithdrawReqResponse, error)
 	GetWithdrawHistory(context.Context, *GetWithdrawHistoryRequest) (*GetWithdrawHistoryResponse, error)
-}
-
-// UnimplementedWithdrawServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedWithdrawServiceServer struct {
-}
-
-func (*UnimplementedWithdrawServiceServer) GetWithdrawFee(ctx context.Context, req *GetWithdrawFeeRequest) (*GetWithdrawFeeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetWithdrawFee not implemented")
-}
-func (*UnimplementedWithdrawServiceServer) WithdrawReq(ctx context.Context, req *WithdrawReqRequest) (*WithdrawReqResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method WithdrawReq not implemented")
-}
-func (*UnimplementedWithdrawServiceServer) GetWithdrawHistory(ctx context.Context, req *GetWithdrawHistoryRequest) (*GetWithdrawHistoryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetWithdrawHistory not implemented")
 }
 
 func RegisterWithdrawServiceServer(s *grpc.Server, srv WithdrawServiceServer) {

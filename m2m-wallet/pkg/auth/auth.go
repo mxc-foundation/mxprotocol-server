@@ -157,7 +157,7 @@ func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*
 	errInfo := errStruct{}
 	err = json.Unmarshal(body, &errInfo)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("unmarshal err",err)
 	}
 
 	if errInfo.Error != "" {
@@ -167,7 +167,7 @@ func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*
 	var output map[string]string
 	err = json.Unmarshal(body, &output)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("unmarshal response",err)
 	}
 	return &api.LoginResponse{Jwt: output["jwt"]}, nil
 }

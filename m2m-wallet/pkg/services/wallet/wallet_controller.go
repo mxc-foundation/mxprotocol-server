@@ -2,7 +2,6 @@ package wallet
 
 import (
 	"context"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
@@ -124,9 +123,6 @@ func (s *WalletServerAPI) GetVmxcTxHistory(ctx context.Context, req *api.GetVmxc
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
-
-	//Todo: userInfo should be the information of users eg.id,name,org,etc. Use it to get data from DB.
-	fmt.Println("username = ", userProfile.User.Username)
 
 	var count = int64(6)
 	history_list := []*api.VmxcTxHistory{}
