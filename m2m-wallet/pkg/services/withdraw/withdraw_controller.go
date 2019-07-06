@@ -2,6 +2,7 @@ package withdraw
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
@@ -18,8 +19,16 @@ var ctxWithdraw = struct {
 	withdrawFee: 200,
 }
 
-func Setup() error {
+func Setup(conf config.MxpConfig) error {
 	log.Info("setup withdraw service")
+	// check if payment service is available
+	if false == paymentServiceAvailable(conf) {
+		err := errors.New("Setup withdraw failed: payment service not available.")
+		log.WithError(err).Error()
+		return err
+	}
+
+	// update withdraw fee
 
 	return nil
 }
@@ -84,7 +93,7 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 
 	amount := fmt.Sprintf("%f", req.Amount)
 	reply, err := paymentReq(ctx, &config.Cstruct, amount)
-	if err != nil{
+	if err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, "send payment request failed: %s", err)
 	}
 

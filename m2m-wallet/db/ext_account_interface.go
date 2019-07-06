@@ -17,10 +17,10 @@ func DBInsertExtAccount(walletId int64, newAccount string, currencyAbbr string) 
 	}
 
 	ea := pstgDb.ExtAccount{
-		FkWallet: walletId,
-		FkExtCurrency:extCurrencyId,
-		Account_adr: newAccount,
-		Insert_time: time.Now().UTC(),
+		FkWallet:      walletId,
+		FkExtCurrency: extCurrencyId,
+		Account_adr:   newAccount,
+		Insert_time:   time.Now().UTC(),
 	}
 	return pgDb.InsertExtAccount(ea)
 }

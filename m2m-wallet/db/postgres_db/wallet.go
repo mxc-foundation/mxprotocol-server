@@ -9,8 +9,8 @@ import (
 )
 
 type Wallet struct {
-	Id      int64     `db:"id"`
-	FkOrgLa int64     `db:"fk_org_la"`
+	Id      int64   `db:"id"`
+	FkOrgLa int64   `db:"fk_org_la"`
 	TypeW   string  `db:"type"`
 	Balance float64 `db:"balance"`
 }

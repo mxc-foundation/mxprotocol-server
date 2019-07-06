@@ -8,9 +8,9 @@ import (
 )
 
 type ExtAccount struct {
-	Id                 int64       `db:"id"`
-	FkWallet           int64       `db:"fk_wallet"`
-	FkExtCurrency      int64       `db:"fk_ext_currency"`
+	Id                 int64     `db:"id"`
+	FkWallet           int64     `db:"fk_wallet"`
+	FkExtCurrency      int64     `db:"fk_ext_currency"`
 	Account_adr        string    `db:"account_adr"`
 	Insert_time        time.Time `db:"insert_time"`
 	Status             string    `db:"status"`

@@ -18,22 +18,22 @@ func Setup() error {
 	ticker_superAccount := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckAccountSeconds) * time.Second)
 	go func() {
 		log.Info("start supernode goroutine")
-		for range ticker_superAccount.C{
+		for range ticker_superAccount.C {
 			//TODO: should change the super node address.
-			checkTokenTx(config.Cstruct.SuperNode.ContractAddress,config.Cstruct.SuperNode.SuperNodeAddress)
+			checkTokenTx(config.Cstruct.SuperNode.ContractAddress, config.Cstruct.SuperNode.SuperNodeAddress)
 		}
 	}()
 
 	ticker_checkPayment := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckPaymentSecond) * time.Second)
 	go func() {
 		log.Info("start checkPay goroutine")
-		for range ticker_checkPayment.C{
+		for range ticker_checkPayment.C {
 			//TODO: should change the super node address.
 			reply, err := withdraw.CheckTxStatus(&config.Cstruct, 1)
-			if err != nil{
+			if err != nil {
 				//TODO
 			}
-			if reply.TxPaymentStatusEnum == 1{
+			if reply.TxPaymentStatusEnum == 1 {
 				//ToDo: resend the query
 			}
 		}

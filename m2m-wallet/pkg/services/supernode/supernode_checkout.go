@@ -17,8 +17,8 @@ func checkTokenTx(contractAddress, address string) {
 		log.Panic(err)
 	}
 
-	for _, tx := range transfers{
-		if strings.EqualFold(tx.To, address) && tx.BlockNumber > currentBlockNo{
+	for _, tx := range transfers {
+		if strings.EqualFold(tx.To, address) && tx.BlockNumber > currentBlockNo {
 			fmt.Println("From:", tx.From)
 			fmt.Println("TxHash: ", tx.Hash)
 			fmt.Println("Amount: ", tx.Value.Int())

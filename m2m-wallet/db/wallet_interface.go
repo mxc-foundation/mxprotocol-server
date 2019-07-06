@@ -4,7 +4,6 @@ import (
 	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
-
 type WalletType string // db:wallet_type
 
 const (
@@ -19,7 +18,7 @@ func DbCreateWalletTable() error {
 func DbInsertWallet(orgId int64, walletType WalletType) (insertIndex int64, err error) {
 	w := pstgDb.Wallet{
 		FkOrgLa: orgId,
-		TypeW: string(walletType),
+		TypeW:   string(walletType),
 		Balance: 0.0,
 	}
 	return pgDb.InsertWallet(w)
