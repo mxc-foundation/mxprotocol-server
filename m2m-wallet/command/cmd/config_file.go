@@ -91,6 +91,16 @@ cors_allow_origin="{{ .ApplicationServer.HttpServer.CORSAllowOrigin }}"
 # when set, existing users can't be re-assigned (to avoid exposure of all users to an organization admin)"
 disable_assign_existing_users={{ .ApplicationServer.HttpServer.DisableAssignExistingUsers }}
 
+[supernode]
+contract_address={{ .SuperNode.ContractAddress }}
+supernode_address={{ .SuperNode.SuperNodeAddress }}
+api_key={{ .SuperNode.APIKey }}
+check_account_seconds={{ .SuperNode.CheckAccountSeconds }}
+check_payment_seconds={{ .SuperNode.CheckPaymentSecond }}
+
+[paymentserver]
+payment_service_address={{ .PaymentServer.PaymentServiceAddress }}
+payment_service_port={{ .PaymentServer.PaymentServicePort }}
 `
 
 var cmdConfig = &cobra.Command{

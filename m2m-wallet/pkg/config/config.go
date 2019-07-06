@@ -1,7 +1,5 @@
 package config
 
-import "time"
-
 // Config defines the configuration structure.
 type MxpConfig struct {
 	General struct {
@@ -28,16 +26,17 @@ type MxpConfig struct {
 		} `mapstructure:"http_server"`
 	} `mapstructure:"application_server"`
 
-	PaymentServer struct{
+	PaymentServer struct {
 		PaymentServiceAddress string `mapstructure:"payment_service_address"`
-		PaymentServicePort string `mapstructure:"payment_service_port"`
+		PaymentServicePort    string `mapstructure:"payment_service_port"`
 	}
 
 	SuperNode struct {
-		ContractAddress  string        `mapstructure:"contract_address"`
-		SuperNodeAddress string        `mapstructure:"supernode_address"`
-		APIKey           string        `mapstructure:"api_key"`
-		RequestSeconds   time.Duration `mapstructure:"request_seconds"`
+		ContractAddress     string        `mapstructure:"contract_address"`
+		SuperNodeAddress    string        `mapstructure:"supernode_address"`
+		APIKey              string        `mapstructure:"api_key"`
+		CheckAccountSeconds int `mapstructure:"check_account_seconds"`
+		CheckPaymentSecond  int `mapstructure:"check_payment_seconds"`
 	}
 }
 
