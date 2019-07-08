@@ -16,6 +16,7 @@ func paymentServiceAvailable(conf config.MxpConfig) bool {
 		log.WithError(err).Error("/withdraw: payment service is not available.")
 		return false
 	}
+
 	defer conn.Close()
 
 	return false
