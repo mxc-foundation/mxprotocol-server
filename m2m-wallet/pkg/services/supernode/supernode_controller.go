@@ -5,7 +5,6 @@ import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"google.golang.org/grpc/codes"
@@ -19,14 +18,16 @@ func Setup() error {
 	go func() {
 		log.Info("start supernode goroutine")
 		for range ticker_superAccount.C {
-			//TODO: should change the currAbv
+			//ToDo: should change the currAbv
 
-			supernodeAccount, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
+			/*supernodeAccount, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
+
 			if err != nil {
 				log.Error("Cannot get supernode account: ", err)
-			}
+			}*/
 
-			checkTokenTx(config.Cstruct.SuperNode.ContractAddress, supernodeAccount)
+			//ToDo: change the supernodeAccount address from db
+			checkTokenTx(config.Cstruct.SuperNode.ContractAddress, config.Cstruct.SuperNode.SuperNodeAddress)
 		}
 	}()
 

@@ -19,7 +19,7 @@ func paymentServiceAvailable(conf config.MxpConfig) bool {
 
 	defer conn.Close()
 
-	return false
+	return true
 }
 
 func paymentReq(ctx context.Context, conf *config.MxpConfig, amount string) (*ps.TxReqReplyType, error) {
