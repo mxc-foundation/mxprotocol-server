@@ -122,6 +122,12 @@ func (pgDbp DbSpec) UpdateWithdrawSuccessful(withdrawId int) error {
 	return errors.Wrap(err, "db: PostgreSQL connection error")
 }
 
+// DO $$
+// BEGIN
+// select withdraw_success($1);
+// END;
+// $$;
+
 func (pgDbp DbSpec) ApplyWithdrawReq(wdr Withdraw, it InternalTx) (err error) {
 	err = pgDbp.Db.QueryRow(`
 		DO $$
@@ -199,4 +205,113 @@ func (pgDbp DbSpec) ApplyWithdrawReq(wdr Withdraw, it InternalTx) (err error) {
 		it.FkWalletRcvr).Scan()
 
 	return errors.Wrap(err, "db: query error ApplyWithdrawReq()")
+}
+
+func (pgDbp DbSpec) ApplyWithdrawReq2(wdr Withdraw, it InternalTx) (err error) {
+	// err = pgDbp.Db.QueryRow(`
+	// 	DO $$
+	// 	BEGIN
+	// 	INSERT INTO withdraw (
+	// 		fk_ext_account_sender,
+	// 		fk_ext_account_receiver,
+	// 		fk_ext_currency,
+	// 		value,
+	// 		fk_withdraw_fee,
+	// 		tx_sent_time,
+	// 		tx_stat,
+	// 		tx_approved_time,
+	// 		fk_query_id_payment_service,
+	// 		tx_hash )
+	// 	VALUES (
+	// 		$1,	$2,	$3,	$4,	$5,	$6,	$7,	$8,	$9,	$10
+	// 		)
+	// 		;
+
+	// 	INSERT INTO internal_tx (
+	// 		fk_wallet_sernder,
+	// 		fk_wallet_receiver,
+	// 		payment_cat,
+	// 		tx_internal_ref,
+	// 		value,
+	// 		time_tx )
+	// 		VALUES (
+	// 		$11,
+	// 		$12,
+	// 		$13,
+	// 		$14,
+	// 		$15,
+	// 		$16)
+	// 		;
+
+	// 		UPDATE wallet
+	// 		SET
+	// 			balance = balance - $17
+	// 		WHERE
+	// 			id = $18
+	// 			;
+
+	// 		UPDATE wallet
+	// 		SET
+	// 			balance = balance + $17
+	// 		WHERE
+	// 			id = $19
+	// 			;
+
+	// END;
+	// $$;
+	// `,
+	// 	wdr.FkExtAcntSender,
+	// 	wdr.FkExtAcntRcvr,
+	// 	wdr.FkExtCurr,
+	// 	wdr.Value,
+	// 	wdr.FkWithdrawFee,
+	// 	wdr.TxSentTime,
+	// 	wdr.TxStatus,
+	// 	wdr.TxAprvdTime,
+	// 	wdr.FkQueryIdePaymentService,
+	// 	wdr.TxHash,
+	// 	it.FkWalletSender,
+	// 	it.FkWalletRcvr,
+	// 	it.PaymentCat,
+	// 	it.TxInternalRef,
+	// 	it.Value,
+	// 	it.TimeTx,
+	// 	it.Value,
+	// 	it.FkWalletSender,
+	// 	it.FkWalletRcvr).Scan()
+	// return errors.Wrap(err, "db: query error ApplyWithdrawReq()")
+
+	_, err = pgDbp.Db.Exec(`
+
+		CREATE OR REPLACE FUNCTION withdraw_success_2 (a INT, b INT) RETURNS void
+		declare wlt_id INT;
+			LANGUAGE plpgsql
+				AS $$
+				BEGIN
+				UPDATE withdraw
+					SET	tx_stat = 'SUCCESSFUL',
+					tx_approved_time = NOW()
+				WHERE
+					id = a RETURNING id; 
+
+					UPDATE withdraw
+					SET	tx_stat = 'PENDING',
+					tx_approved_time = NOW()
+				WHERE
+					id = b ;
+
+				
+				END;
+			$$;
+		`)
+
+	/*_, err2 := */
+	pgDbp.Db.Exec(`
+		
+		select withdraw_success_2($1,$2);
+		
+	`, 1, 2)
+
+	return errors.Wrap(err, "db: PostgreSQL connection error")
+
 }

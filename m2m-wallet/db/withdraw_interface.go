@@ -28,3 +28,7 @@ func DbUpdateWithdrawSuccessful(withdrawId int) error {
 func DbApplyWithdrawReq(wdr pstgDb.Withdraw, it pstgDb.InternalTx) error {
 	return pgDb.ApplyWithdrawReq(wdr, it)
 }
+
+func DbApplyWithdrawReq2(wdr pstgDb.Withdraw, it pstgDb.InternalTx) error {
+	return pgDb.ApplyWithdrawReq2(wdr, it)
+}
