@@ -93,7 +93,6 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 	//ToDo: Sum then check if the money is enough in supernode
 
 	amount := fmt.Sprintf("%f", req.Amount)
-	paymentReq(ctx, &config.Cstruct, amount)
 
 	//ToDo: wait (for get the withdrawID)
 	//walletID, err := db.DbGetWalletIdFromOrgId(req.OrgId)
