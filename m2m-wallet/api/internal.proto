@@ -31,7 +31,7 @@ message ProfileResponse {
 message User {
 	// User ID.
 	// Will be set automatically on create.
-	int64 id = 1;
+	string id = 1;
 
 	// Username of the user.
 	string username = 2;

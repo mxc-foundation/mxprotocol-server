@@ -87,5 +87,5 @@ check_account_seconds=30
 check_payment_seconds=60
 
 [paymentserver]
-payment_service_address="localhost"
-payment_service_port=":8081"
+payment_service_address="payment"
+payment_service_port=":5432"

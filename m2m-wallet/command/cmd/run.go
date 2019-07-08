@@ -34,7 +34,7 @@ func run(cmd *cobra.Command, args []string) error {
 		setupWallet,
 		setupWithdraw,
 		setupTopUp,
-		setupSupernode,
+		//setupSupernode,
 		setupAPI,
 	}
 

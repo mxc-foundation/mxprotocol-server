@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	github.com/allegro/bigcache v1.2.1 // indirect
+	github.com/apex/log v1.1.1
 	github.com/aristanetworks/goarista v0.0.0-20190704150520-f44d68189fd7 // indirect
 	github.com/btcsuite/btcd v0.0.0-20190629003639-c26ffa870fd8 // indirect
 	github.com/deckarep/golang-set v1.7.1 // indirect
@@ -22,7 +23,6 @@ require (
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/viper v1.4.0
-	github.com/stretchr/testify v1.3.0 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5
 	golang.org/x/net v0.0.0-20190628185345-da137c7871d7

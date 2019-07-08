@@ -1,6 +1,7 @@
 package postgres_db
 
 import (
+	"github.com/apex/log"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -43,7 +44,7 @@ func (pgDbp DbSpec) InsertExtAccount(ea ExtAccount) (insertIndex int, err error)
 			status,
 			latest_checked_block)
 		VALUES (
-			$1, $2,	$3,	$4,	$5,	$6
+			$1, $2,	$3,	$4,	'ACTIVE',	$5
 		)
 		RETURNING id;
 	`,
@@ -51,10 +52,12 @@ func (pgDbp DbSpec) InsertExtAccount(ea ExtAccount) (insertIndex int, err error)
 		ea.FkExtCurrency,
 		ea.Account_adr,
 		ea.Insert_time,
-		ea.Status,
 		ea.LatestCheckedBlock).Scan(&insertIndex)
 
-	return insertIndex, errors.Wrap(err, "db: query error InsertWithdrawFee()")
+	if err != nil {
+		log.WithError(err).Error("/db/InsertExtAccount")
+	}
+	return insertIndex, err
 }
 
 func (pgDbp DbSpec) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error) {

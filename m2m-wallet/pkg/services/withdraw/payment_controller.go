@@ -10,6 +10,8 @@ import (
 )
 
 func paymentServiceAvailable(conf config.MxpConfig) bool {
+	log.Info("/withdraw: try to connect to payment service: ",
+		conf.PaymentServer.PaymentServiceAddress+conf.PaymentServer.PaymentServicePort)
 	conn, err := grpc.Dial(conf.PaymentServer.PaymentServiceAddress+conf.PaymentServer.PaymentServicePort,
 		grpc.WithInsecure())
 	if err != nil {
@@ -18,7 +20,7 @@ func paymentServiceAvailable(conf config.MxpConfig) bool {
 	}
 	defer conn.Close()
 
-	return false
+	return true
 }
 
 func paymentReq(ctx context.Context, conf *config.MxpConfig, amount string) (*ps.TxReqReplyType, error) {
