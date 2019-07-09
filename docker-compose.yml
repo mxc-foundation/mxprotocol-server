@@ -1,6 +1,6 @@
 version: "2"
 services:
-  mxprotocol-sever:
+  mxprotocol-server:
     build: 
       context: .
       dockerfile: Dockerfile-devel
