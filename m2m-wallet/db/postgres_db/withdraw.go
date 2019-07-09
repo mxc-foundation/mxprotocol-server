@@ -136,7 +136,8 @@ func (pgDbp DbSpec) CreateWithdrawFunctions() error {
 		v_tx_stat tx_status,
 		v_fk_wallet_sernder INT,
 		v_fk_wallet_receiver INT,
-		v_payment_cat PAYMENT_CATEGORY
+		v_payment_cat PAYMENT_CATEGORY,
+		v_value_fee_included NUMERIC(28,18)
 		) RETURNS INT
 	LANGUAGE plpgsql
 	AS $$
@@ -175,7 +176,7 @@ func (pgDbp DbSpec) CreateWithdrawFunctions() error {
 			v_fk_wallet_receiver,
 			v_payment_cat,
 			wdr_id,
-			v_value,
+			v_value_fee_included,
 			v_tx_sent_time)
 		;
 
@@ -183,7 +184,7 @@ func (pgDbp DbSpec) CreateWithdrawFunctions() error {
 		UPDATE
 			wallet 
 		SET
-			balance = balance - v_value
+			balance = balance - v_value_fee_included
 		WHERE
 			id = v_fk_wallet_sernder
 		;
@@ -201,7 +202,7 @@ func (pgDbp DbSpec) CreateWithdrawFunctions() error {
 func (pgDbp DbSpec) InitWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err error) {
 
 	err = pgDbp.Db.QueryRow(`
-		select withdraw_req_init($1,$2,$3,$4,$5,$6,$7,$8,$9,$10);
+		select withdraw_req_init($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);
 		
 	`, wdr.FkExtAcntSender,
 		wdr.FkExtAcntRcvr,
@@ -212,7 +213,8 @@ func (pgDbp DbSpec) InitWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawI
 		wdr.TxStatus,
 		it.FkWalletSender,
 		it.FkWalletRcvr,
-		it.PaymentCat).Scan(&withdrawId)
+		it.PaymentCat,
+		it.Value).Scan(&withdrawId)
 
 	return withdrawId, errors.Wrap(err, "db/InitWithdrawReqApply")
 
@@ -246,9 +248,17 @@ func (pgDbp DbSpec) InitWithdrawReq(walletId int64, value float64, extCurrencyAb
 		return withdrawId, errors.Wrap(err, "db: InitWithdrawReq query error GetActiveWithdrawFeeId()")
 	}
 
+	var withdrawFeeAmnt float64
+	withdrawFeeAmnt, err = pgDbp.GetActiveWithdrawFee(extCurrencyAbbr)
+	if err != nil {
+		return withdrawId, errors.Wrap(err, "db: InitWithdrawReq query error GetActiveWithdrawFee()")
+	}
+
 	it := InternalTx{
 		FkWalletSender: walletId,
-		PaymentCat:     string(WITHDRAW)}
+		PaymentCat:     string(WITHDRAW),
+		Value:          value + withdrawFeeAmnt,
+	}
 
 	it.FkWalletRcvr, err = pgDbp.GetWalletIdSuperNode()
 	if err != nil {
