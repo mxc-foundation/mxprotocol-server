@@ -1,9 +1,5 @@
 import React, { Component } from "react";
-<<<<<<< HEAD
-import { withRouter } from 'react-router-dom';
-=======
 import { withRouter, Link } from 'react-router-dom';
->>>>>>> nam/fr-b-logic
 import { withStyles } from "@material-ui/core/styles";
 
 import Grid from '@material-ui/core/Grid';
@@ -46,8 +42,6 @@ const styles = {
   column: {
     display: 'flex',
     flexDirection: 'column',
-<<<<<<< HEAD
-=======
   },
   link: {
     textDecoration: "none",
@@ -58,7 +52,6 @@ const styles = {
       "&:hover": {
         opacity: 1,
       }
->>>>>>> nam/fr-b-logic
   },
 };
 
@@ -107,18 +100,6 @@ class ModifyEthAccount extends Component {
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
-<<<<<<< HEAD
-              <TitleBar className={this.props.classes.padding}>
-                <TitleBarTitle title="ETH Account" />
-              </TitleBar>
-{/*               <Divider light={true}/>
-              <TitleBar>
-                <TitleBarTitle title="M2M Wallet" className={this.props.classes.navText}/>
-                <TitleBarTitle title="/" className={this.props.classes.navText}/>
-                <TitleBarTitle title="ETH Account" className={this.props.classes.navText}/>
-              </TitleBar> */}
-          </div>
-=======
                 <TitleBar className={this.props.classes.padding}>
                   <TitleBarTitle title="Eth Account" />
                 </TitleBar>
@@ -131,7 +112,6 @@ class ModifyEthAccount extends Component {
                 </TitleBar>
                 </div>
             </div>
->>>>>>> nam/fr-b-logic
         </Grid>
         <Grid item xs={6} className={this.props.classes.column}>
           <ModifyEthAccountForm

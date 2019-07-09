@@ -78,18 +78,6 @@ class Topup extends Component {
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
-<<<<<<< HEAD
-              <TitleBar className={this.props.classes.padding}>
-                <TitleBarTitle title="Topup" />
-              </TitleBar>
-             {/* <Divider light={true}/>
-              <TitleBar>
-                <TitleBarTitle title="M2M Wallet" className={this.props.classes.navText}/>
-                <TitleBarTitle title="/" className={this.props.classes.navText}/>
-                <TitleBarTitle title="Topup" className={this.props.classes.navText}/>
-              </TitleBar> */}
-          </div>
-=======
                 <TitleBar className={this.props.classes.padding}>
                   <TitleBarTitle title="Top up" />
                 </TitleBar>
@@ -102,7 +90,6 @@ class Topup extends Component {
                 </TitleBar>
                 </div>
             </div>
->>>>>>> nam/fr-b-logic
         </Grid>
         <Grid item xs={6} className={this.props.classes.column}>
           <TitleBarTitle title="Send Tokens" />

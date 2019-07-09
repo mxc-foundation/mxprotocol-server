@@ -99,50 +99,81 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	//withdrawfee, err := db.DbGetActiveWithdrawFee(req.MoneyAbbr.String())
-	//balance, err := db.DbGetWalletBalance(walletID)
-	//ToDo: Sum then check if the money is enough in supernode
+	withdrawfee, err := db.DbGetActiveWithdrawFee(req.MoneyAbbr.String())
+	if err != nil {
+		return nil, status.Errorf(codes.DataLoss, "Cannot get withdrawfee from DB: %s", err)
+	}
 
+	walletID, err := db.DbGetWalletIdFromOrgId(req.OrgId)
+	if err != nil {
+		return nil, status.Errorf(codes.DataLoss, "Cannot get walletID from DB: %s", err)
+	}
+
+	balance, err := db.DbGetWalletBalance(walletID)
+	if err != nil {
+		return nil, status.Errorf(codes.DataLoss, "Cannot get wallet balance from DB: %s", err)
+	}
+
+	//check if the money is enough in supernode
+	if withdrawfee >= balance {
+		return nil, status.Errorf(codes.Unavailable, "Not enough money in super node")
+	}
+
+	withdrawID, err := db.DbInitWithdrawReq(walletID, req.Amount, req.MoneyAbbr.String())
+	if err != nil {
+		return nil, status.Errorf(codes.DataLoss, "Cannot get wallet withdrawID from DB: %s", err)
+	}
+
+	receiverAdd, err := db.DbGetUserExtAccountAdr(walletID, req.MoneyAbbr.String())
+	if err != nil {
+		return nil, status.Errorf(codes.DataLoss, "Cannot get user address from DB: %s", err)
+	}
+	reqIdClient, err := db.DbInitWithdrawReq(walletID, req.Amount, req.MoneyAbbr.String())
 	amount := fmt.Sprintf("%f", req.Amount)
-
-	//ToDo: wait (for get the withdrawID)
-	//walletID, err := db.DbGetWalletIdFromOrgId(req.OrgId)
-	//withdrawID, err := db.DbInitWithdrawReq(walletID, amount, req.MoneyAbbr.String())
-
-	reply, err := paymentReq(ctx, &config.Cstruct, amount)
+	reply, err := paymentReq(ctx, &config.Cstruct, amount, receiverAdd, reqIdClient)
 	if err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, "send payment request failed: %s", err)
 	}
 
-	reqId_paymentsev := reply.ReqQueryRef
+	// save reqqeryref to db
+	err = db.DbUpdateWithdrawPaymentQueryId(walletID, reply.ReqQueryRef)
+	if err != nil {
+		return nil, status.Errorf(codes.DataLoss, "Cannot update queryID to DB: %s", err)
+	}
 
-	//ToDo: wait (save reqqeryref to db)
-	//err := db.DbUpdateWithdrawPaymentQueryId(walletID, reqId_paymentsev)
-
+	// make a new goroutine for checking the payment service
 	go func() {
-		reply, err := CheckTxStatus(&config.Cstruct, reqId_paymentsev)
-		if err != nil {
-			log.Error("Cannot get the reply from paymentService: ", err)
-		}
+		for {
+			time.Sleep(30 * time.Second)
 
-		if reply.Error != "" {
-			log.Error("CheckTxStatusReply Error: ", reply.Error)
-		}
+			reply, err := CheckTxStatus(&config.Cstruct, reply.ReqQueryRef)
+			if err != nil {
+				log.Error("Cannot get the reply from paymentService: ", err)
+				continue
+			}
 
-		if reply.TxPaymentStatusEnum != 2 {
-			log.Info("Pending...")
-		} else {
-			//reply.TxHash
-			//reply.TxSentTime
-			//reply.TxPaymentStatusEnum
+			if reply.Error != "" {
+				log.Error("CheckTxStatusReply Error: ", reply.Error)
+				continue
+			}
 
-			//ToDo: update withdrawID it into db
-			//db.DbUpdateWithdrawSuccessful(withdrawID)
+			if reply.TxPaymentStatusEnum != 2 {
+				log.Info("Still pending...")
+				continue
+			} else {
+				timeStamp, err := time.Parse(reply.TxSentTime, "Mon Jan 2 15:04:05 -0700 MST 2006")
+				if err != nil {
+					log.Error("Time format error: ", err)
+				}
 
-			//for test!
-			fmt.Println("Update to DB successful")
-
-			return
+				//Update withdrawID it into db
+				err = db.DbUpdateWithdrawSuccessful(withdrawID, reply.TxHash, timeStamp)
+				if err != nil {
+					log.Error("Cannot update withdrawID to db: ", err)
+					continue
+				}
+				return
+			}
 		}
 	}()
 

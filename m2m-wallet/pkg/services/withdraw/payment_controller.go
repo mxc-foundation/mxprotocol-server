@@ -24,7 +24,7 @@ func paymentServiceAvailable(conf config.MxpConfig) bool {
 	return true
 }
 
-func paymentReq(ctx context.Context, conf *config.MxpConfig, amount string) (*ps.TxReqReplyType, error) {
+func paymentReq(ctx context.Context, conf *config.MxpConfig, amount, receiverAdd string, reqId int64) (*ps.TxReqReplyType, error) {
 
 	address := conf.PaymentServer.PaymentServiceAddress + conf.PaymentServer.PaymentServicePort
 
@@ -36,8 +36,8 @@ func paymentReq(ctx context.Context, conf *config.MxpConfig, amount string) (*ps
 
 	client := ps.NewPaymentClient(conn)
 
-	//ToDo: set the correct para
-	reply, err := client.TokenTxReq(ctx, &ps.TxReqType{PaymentClientEnum: 3, ReqIdClient: 1, ReceiverAdr: "Read from DB!",
+	//ToDo: set the correct ReqId and ReceverAdr
+	reply, err := client.TokenTxReq(ctx, &ps.TxReqType{PaymentClientEnum: 3, ReqIdClient: reqId, ReceiverAdr: receiverAdd,
 		Amount: amount, TokenNameEnum: 0})
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot get reply from payment service")

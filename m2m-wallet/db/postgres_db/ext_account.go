@@ -163,6 +163,26 @@ func (pgDbp DbSpec) GetUserExtAccountId(walletId int64, extCurrAbv string) (int6
 	return res, errors.Wrap(err, "db: query error GetUserExtAccountId()")
 }
 
+func (pgDbp DbSpec) GetExtAccountIdByAdr(acntAdr string) (int64, error) {
+
+	var res int64
+
+	err := pgDbp.Db.QueryRow(`
+		select 
+			id
+		from
+		ext_account
+		WHERE
+			account_adr = $1
+		ORDER BY id DESC 
+		LIMIT 1 
+		;
+	
+	`, acntAdr).Scan(&res)
+
+	return res, errors.Wrap(err, "db: query error GetExtAccountIdByAdr()")
+}
+
 func (pgDbp DbSpec) GetLatestCheckedBlock(extAcntId int64) (int64, error) {
 
 	var res int64

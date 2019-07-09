@@ -5,6 +5,7 @@ import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"google.golang.org/grpc/codes"
@@ -19,44 +20,19 @@ func Setup() error {
 		log.Info("start supernode goroutine")
 		for range ticker_superAccount.C {
 			//ToDo: should change the currAbv
-
-			/*supernodeAccount, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
-
+			supernodeAccount, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
 			if err != nil {
-				log.Error("Cannot get supernode account: ", err)
-			}*/
+				log.WithError(err).Warning("Storage: Cannot get supernode account from DB, restarting...")
+				continue
+			}
 
-			//ToDo: change the supernodeAccount address from db
-			checkTokenTx(config.Cstruct.SuperNode.ContractAddress, config.Cstruct.SuperNode.SuperNodeAddress)
+			err = checkTokenTx(config.Cstruct.SuperNode.ContractAddress, supernodeAccount, config.Cstruct.SuperNode.ExtCurrAbv)
+			if err != nil {
+				log.Warning("Restarting...")
+				continue
+			}
 		}
 	}()
-
-	/*ticker_checkPayment := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckPaymentSecond) * time.Second)
-	go func(reqID_paymentservice, withdrawId) {
-		log.Info("start checkPay goroutine")
-		for range ticker_checkPayment.C {
-
-			reply, err := withdraw.CheckTxStatus(&config.Cstruct, reqID_paymentservice)
-			if err != nil {
-				//TODO
-			}
-
-			if reply.Error != "" {
-				log.Error("CheckTxStatusReply Error: ", reply.Error)
-			}
-
-			if reply.TxPaymentStatusEnum != 2 {
-				//ToDo: save it into db and check in next round
-			} else {
-				//ToDo: save it into db
-				reply.TxHash
-				reply.TxSentTime
-				reply.TxPaymentStatusEnum
-				db.DbUpdateWithdrawSuccessful(withdrawId)
-				return
-			}
-		}
-	}()*/
 
 	log.Info("setup supernode service")
 	return nil

@@ -74,7 +74,7 @@ jwt_secret="DOE1KiNzpQ82elRQ9HMWyxmADQ5f2B2TBAgOjL7ZZWA="
 # Set this to allows cross-domain communication from the browser (CORS).
 # Example value: https://example.com.
 # When left blank (default), CORS will not be used.
-cors_allow_origin="http://localhost:3000"
+cors_allow_origin="appserver:3000"
 
 # when set, existing users can't be re-assigned (to avoid exposure of all users to an organization admin)"
 disable_assign_existing_users=false

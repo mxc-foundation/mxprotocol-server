@@ -49,3 +49,7 @@ func DbGetLatestCheckedBlock(extAcntId int64) (int64, error) {
 func DbUpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum int64) error {
 	return pgDb.UpdateLatestCheckedBlock(extAcntId, updatedBlockNum)
 }
+
+func DbGetExtAccountIdByAdr(acntAdr string) (int64, error) {
+	return pgDb.GetExtAccountIdByAdr(acntAdr)
+}

@@ -93,5 +93,5 @@ func (pgDbp DbSpec) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64
 	`,
 		extCurrAbv).Scan(&withdrawFee)
 
-	return withdrawFee, errors.Wrap(err, "db: query error GetActiveWithdrawFeeId()")
+	return withdrawFee, errors.Wrap(err, "db: query error GetActiveWithdrawFee()")
 }

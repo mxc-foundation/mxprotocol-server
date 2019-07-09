@@ -111,18 +111,6 @@ class HistoryLayout extends Component {
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
-<<<<<<< HEAD
-              <TitleBar className={this.props.classes.padding}>
-                <TitleBarTitle title="History" />
-              </TitleBar>
-{/*               <Divider light={true}/>
-              <TitleBar>
-                <TitleBarTitle title="M2M Wallet" className={this.props.classes.navText}/>
-                <TitleBarTitle title="/" className={this.props.classes.navText}/>
-                <TitleBarTitle title="History" className={this.props.classes.navText}/>
-              </TitleBar> */}
-          </div>
-=======
                 <TitleBar className={this.props.classes.padding}>
                   <TitleBarTitle title="History" />
                 </TitleBar>
@@ -135,7 +123,6 @@ class HistoryLayout extends Component {
                 </TitleBar>
                 </div>
             </div>
->>>>>>> nam/fr-b-logic
         </Grid>
 
         <Grid item xs={12}>

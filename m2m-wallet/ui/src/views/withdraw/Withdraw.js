@@ -200,15 +200,9 @@ class Withdraw extends Component {
               <Divider light={true}/>
               <div className={this.props.classes.breadcrumb}>
               <TitleBar>
-<<<<<<< HEAD
-                <TitleBarTitle title="M2M Wallet" className={this.props.classes.link}/> 
-                <TitleBarTitle title="/" className={this.props.classes.navText}/>
-                <TitleBarTitle title="Withdraw" className={this.props.classes.link}/>
-=======
                 <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
                 <TitleBarTitle title="/" className={this.props.classes.navText}/>
                 <TitleBarTitle component={Link} to="#" title="Withdraw" className={this.props.classes.link}/>
->>>>>>> nam/fr-b-logic
               </TitleBar>
               </div>
           </div>
