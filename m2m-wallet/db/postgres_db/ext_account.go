@@ -8,13 +8,13 @@ import (
 )
 
 type ExtAccount struct {
-	Id                 int       `db:"id"`
-	FkWallet           int       `db:"fk_wallet"`
-	FkExtCurrency      int       `db:"fk_ext_currency"`
+	Id                 int64     `db:"id"`
+	FkWallet           int64     `db:"fk_wallet"`
+	FkExtCurrency      int64     `db:"fk_ext_currency"`
 	Account_adr        string    `db:"account_adr"`
 	Insert_time        time.Time `db:"insert_time"`
 	Status             string    `db:"status"`
-	LatestCheckedBlock int       `db:"latest_checked_block"`
+	LatestCheckedBlock int64     `db:"latest_checked_block"`
 }
 
 func (pgDbp DbSpec) CreateExtAccountTable() error {
@@ -33,7 +33,7 @@ func (pgDbp DbSpec) CreateExtAccountTable() error {
 	return errors.Wrap(err, "db: query error CreateExtAccountTable()")
 }
 
-func (pgDbp DbSpec) InsertExtAccount(ea ExtAccount) (insertIndex int, err error) {
+func (pgDbp DbSpec) InsertExtAccount(ea ExtAccount) (insertIndex int64, err error) {
 	err = pgDbp.Db.QueryRow(`
 	INSERT INTO ext_account (
 			fk_wallet,
@@ -69,7 +69,7 @@ func (pgDbp DbSpec) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error)
 		WHERE
 			w.id = ea.fk_wallet
 			AND
-			w.type = 'SUPER_ADMIN' -- @change 
+			w.type = 'SUPER_ADMIN'
 			AND
 			ea.fk_ext_currency = ec.id
 			AND
@@ -84,7 +84,33 @@ func (pgDbp DbSpec) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error)
 	return res, errors.Wrap(err, "db: query error GetSuperNodeExtAccountAdr()")
 }
 
-func (pgDbp DbSpec) GetUserExtAccountAdr(walletId int, extCurrAbv string) (string, error) {
+func (pgDbp DbSpec) GetSuperNodeExtAccountId(extCurrAbv string) (int64, error) {
+	var res int64
+
+	err := pgDbp.Db.QueryRow(`
+		select 
+			ea.id
+		from
+			wallet w ,ext_account ea,ext_currency ec
+		WHERE
+			w.id = ea.fk_wallet
+			AND
+			w.type = 'SUPER_ADMIN' 
+			AND
+			ea.fk_ext_currency = ec.id
+			AND
+			ea.status = 'ACTIVE'
+			AND
+			ec.abv = $1
+		ORDER BY ea.id DESC  
+		LIMIT 1 
+		;
+	`, extCurrAbv).Scan(&res)
+
+	return res, errors.Wrap(err, "db: query error GetSuperNodeExtAccountAdr()")
+}
+
+func (pgDbp DbSpec) GetUserExtAccountAdr(walletId int64, extCurrAbv string) (string, error) {
 
 	var res string
 
@@ -109,9 +135,34 @@ func (pgDbp DbSpec) GetUserExtAccountAdr(walletId int, extCurrAbv string) (strin
 	return res, errors.Wrap(err, "db: query error GetUserExtAccountAdr()")
 }
 
-func (pgDbp DbSpec) GetLatestCheckedBlock(extAcntId int) (int, error) {
+func (pgDbp DbSpec) GetUserExtAccountId(walletId int64, extCurrAbv string) (int64, error) {
 
-	var res int
+	var res int64
+
+	err := pgDbp.Db.QueryRow(`
+		select 
+			ea.id
+		from
+			wallet w,ext_account ea,ext_currency ec
+		WHERE
+			w.id = ea.fk_wallet AND
+			w.type = 'USER' AND
+			ea.fk_ext_currency = ec.id AND
+			ea.status = 'ACTIVE' AND
+			w.id = $1 AND
+			ec.abv = $2
+		ORDER BY ea.id DESC 
+		LIMIT 1 
+		;
+	
+	`, walletId, extCurrAbv).Scan(&res)
+
+	return res, errors.Wrap(err, "db: query error GetUserExtAccountId()")
+}
+
+func (pgDbp DbSpec) GetLatestCheckedBlock(extAcntId int64) (int64, error) {
+
+	var res int64
 
 	err := pgDbp.Db.QueryRow(`
 		SELECT 
@@ -126,7 +177,7 @@ func (pgDbp DbSpec) GetLatestCheckedBlock(extAcntId int) (int, error) {
 	return res, errors.Wrap(err, "db: query error GetLatestCheckedBlock()")
 }
 
-func (pgDbp DbSpec) UpdateLatestCheckedBlock(extAcntId int, updatedBlockNum int) error {
+func (pgDbp DbSpec) UpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum int64) error {
 
 	_, err := pgDbp.Db.Exec(`
 		UPDATE ext_account 

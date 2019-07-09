@@ -6,6 +6,6 @@ func DbCreateInternalTxTable() error {
 	return pgDb.CreateInternalTxTable()
 }
 
-func DbInsertInternalTx(it pstgDb.InternalTx) (insertIndex int, err error) {
+func DbInsertInternalTx(it pstgDb.InternalTx) (insertIndex int64, err error) {
 	return pgDb.InsertInternalTx(it)
 }

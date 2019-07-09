@@ -8,10 +8,10 @@ import (
 )
 
 type Topup struct {
-	Id              int       `db:"id"`
-	FkExtAcntSender int       `db:"fk_ext_account_sender"`
-	FkExtAcntRcvr   int       `db:"fk_ext_account_receiver"`
-	FkExtCurr       int       `db:"fk_ext_currency"`
+	Id              int64     `db:"id"`
+	FkExtAcntSender int64     `db:"fk_ext_account_sender"`
+	FkExtAcntRcvr   int64     `db:"fk_ext_account_receiver"`
+	FkExtCurr       int64     `db:"fk_ext_currency"`
 	Value           float64   `db:"value"`
 	TxAprvdTime     time.Time `db:"tx_approved_time"`
 	TxHash          string    `db:"tx_hash"`
@@ -32,7 +32,7 @@ func (pgDbp DbSpec) CreateTopupTable() error {
 	return errors.Wrap(err, "db: PostgreSQL connection error")
 }
 
-func (pgDbp DbSpec) InsertTopup(tu Topup) (insertIndex int, err error) {
+func (pgDbp DbSpec) InsertTopup(tu Topup) (insertIndex int64, err error) {
 	err = pgDbp.Db.QueryRow(`
 		INSERT INTO topup (
 			fk_ext_account_sender,

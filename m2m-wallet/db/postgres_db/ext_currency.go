@@ -3,10 +3,11 @@ package postgres_db
 import (
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 )
 
 type ExtCurrency struct {
-	Id   int    `db:"id"`
+	Id   int64  `db:"id"`
 	Name string `db:"name"`
 	Abv  string `db:"abv"`
 }
@@ -23,7 +24,11 @@ func (pgDbp DbSpec) CreateExtCurrencyTable() error {
 	return errors.Wrap(err, "storage: query error CreateWalletTable()")
 }
 
-func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int, err error) {
+func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
+	log.WithFields(log.Fields{
+		"name": ec.Name,
+		"abbr": ec.Abv,
+	}).Info("/db/ext_currency_interface: insert ext_currency")
 	err = pgDbp.Db.QueryRow(`
 
 
@@ -41,4 +46,16 @@ func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int, err error) {
 
 	// fmt.Println(val, err)
 	return insertIndex, errors.Wrap(err, "storage: query error InsertExtCurr()")
+}
+
+func (pgDbp DbSpec) GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
+	var exCurId int64
+	err := pgDbp.Db.QueryRow(
+		`
+		SELECT id
+		FROM
+			ext_currency
+		WHERE
+			abv = $1 ;`, extCurrencyAbbr).Scan(&exCurId)
+	return exCurId, errors.Wrap(err, "storage: query error CreateWalletTable()")
 }

@@ -8,8 +8,8 @@ import (
 )
 
 type WithdrawFee struct {
-	Id         int       `db:"id"`
-	FkExtCurr  int       `db:"fk_ext_currency"`
+	Id         int64     `db:"id"`
+	FkExtCurr  int64     `db:"fk_ext_currency"`
 	Fee        float64   `db:"fee"`
 	InsertTime time.Time `db:"insert_time"`
 	Status     string    `db:"status"`
@@ -31,7 +31,7 @@ func (pgDbp DbSpec) CreateWithdrawFeeTable() error {
 	return errors.Wrap(err, "db: query error CreateWalletTable()")
 }
 
-func (pgDbp DbSpec) InsertWithdrawFee(wf WithdrawFee) (insertIndex int, err error) {
+func (pgDbp DbSpec) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
 	err = pgDbp.Db.QueryRow(`
 		INSERT INTO withdraw_fee (
 			fk_ext_currency,
@@ -71,5 +71,24 @@ func (pgDbp DbSpec) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64
 	`,
 		extCurrAbv).Scan(&withdrawFee)
 
-	return withdrawFee, errors.Wrap(err, "db: query error InsertWithdrawFee()")
+	return withdrawFee, errors.Wrap(err, "db: query error GetActiveWithdrawFee()")
+}
+
+func (pgDbp DbSpec) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
+	err = pgDbp.Db.QueryRow(`
+		SELECT 
+			wf.id
+		FROM
+			withdraw_fee wf, ext_currency ec
+		WHERE
+			wf.fk_ext_currency = ec.id	AND
+			ec.abv = $1 	AND
+			status = 'ACTIVE'
+		ORDER BY ec.id DESC 
+		LIMIT 1 
+		;
+	`,
+		extCurrAbv).Scan(&withdrawFee)
+
+	return withdrawFee, errors.Wrap(err, "db: query error GetActiveWithdrawFeeId()")
 }

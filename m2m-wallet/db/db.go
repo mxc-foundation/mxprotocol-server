@@ -20,7 +20,6 @@ func Setup(conf config.MxpConfig) error {
 	fmt.Println("The DB url: " + conf.PostgreSQL.DSN)
 	pingCheck(conf)
 	dbp, err := sql.Open("postgres", conf.PostgreSQL.DSN)
-	// dbp, err := sql.Open("postgres", "postgres://m2m_db@postgres:5432/m2m_database?sslmode=disable")
 
 	if err != nil {
 		log.Fatal("No DB accessable!", err)
@@ -32,11 +31,15 @@ func Setup(conf config.MxpConfig) error {
 		}
 	}
 
-	err2 := dbInit()
-	if err2 != nil {
-		log.Fatal("Unable to init DB!", err2)
+	// create tables if not exist
+	dbInit()
+	// testDb()
+
+	// init data if applys
+	err = initExtCurrencyTable()
+	if err != nil {
+		log.WithError(err).Fatal("Create init data in ext_currency failed.")
 	}
-	testDb()
 
 	return nil
 }
@@ -58,133 +61,39 @@ func pingCheck(conf config.MxpConfig) error {
 	return nil
 }
 
-func dbInit() error {
-	// db, err := sql.Open("postgres", "postgres://m2m_db@postgres:5432/m2m_database?sslmode=disable")
-	// fmt.Println(db, err)
+func dbInit() {
+	if err := DbCreateWalletTable(); err != nil {
+		log.Fatal("Unable to create table wallet!", err)
+	}
 
-	_, err := pgDb.Db.Exec(`
-		DO $$
-		BEGIN
-			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tx_status') THEN
-		CREATE TYPE TX_STATUS AS ENUM (
-		'PENDING',
-		'SUCCESSFUL'
-		);
-		END IF;
-		END$$;
+	if err := DbCreateInternalTxTable(); err != nil {
+		log.Fatal("Unable to create table internal_tx!", err)
+	}
 
-		DO $$
-		BEGIN
-			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'field_status') THEN
-		CREATE TYPE FIELD_STATUS AS ENUM (
-		'ACTIVE', 'ARC');
-		END IF;
-		END$$;
+	if err := DbCreateExtCurrencyTable(); err != nil {
+		log.Fatal("Unable to create table ext_currency!", err)
+	}
 
+	if err := DbCreateExtAccountTable(); err != nil {
+		log.Fatal("Unable to create table ext_account!", err)
+	}
 
-		DO $$
-		BEGIN
-			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'ext_url_type') THEN
-		CREATE TYPE EXT_URL_TYPE AS ENUM (
-		'ACCOUNT_BALANCE_CHECK',
-		'TX_STATUS_CHECK'
-		);
-		END IF;
-		END$$;
+	if err := DbCreateWithdrawTable(); err != nil {
+		log.Fatal("Unable to create table withdraw!", err)
+	}
 
+	if err := DbCreateWithdrawFunctions(); err != nil {
+		log.Fatal("Unable to create table withdraw!", err)
+	}
 
-		DO $$
-		BEGIN
-			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'payment_category') THEN
-		CREATE TYPE PAYMENT_CATEGORY AS ENUM (
-		'UPLINK',
-		'DOWNLINK',
-		'PURCHASE_SUBSCRIPTION',
-		'gateway_income',
-		'TOP_UP',
-		'WITHDRAW'
-		);
-		END IF;
-		END$$;
+	if err := DbCreateTopupTable(); err != nil {
+		log.Fatal("Unable to create table top_up!", err)
+	}
 
+	if err := DbCreateWithdrawFeeTable(); err != nil {
+		log.Fatal("Unable to create table withdraw_fee!", err)
+	}
 
-		-- CREATE tables:
-
-
-
-		CREATE TABLE IF NOT EXISTS internal_tx (
-		id SERIAL PRIMARY KEY,
-		fk_wallet_sernder INT REFERENCES wallet(id) NOT NULL,
-		fk_wallet_receiver INT REFERENCES wallet(id) NOT NULL,
-		payment_cat PAYMENT_CATEGORY,
-		tx_internal_ref INT NOT NULL,
-		value NUMERIC(28,18),
-		CONSTRAINT payment_cat_tx_internal_ref UNIQUE (payment_cat, tx_internal_ref)
-		);
-
-
-		CREATE TABLE IF NOT EXISTS ext_currency (
-		id SERIAL PRIMARY KEY,
-		name VARCHAR(64),
-		abv VARCHAR(16) UNIQUE NOT NULL
-		);
-
-		-- can be handeled independant of the DB (simply we can drop this table):
-		CREATE TABLE IF NOT EXISTS api_url_ext_curr (
-		id SERIAL PRIMARY KEY,
-		fk_external_currency INT REFERENCES ext_currency (id) NOT NULL,
-		url VARCHAR(256) NOT NULL,
-		status FIELD_STATUS NOT NULL,
-		type EXT_URL_TYPE NOT NULL
-		);
-
-		CREATE TABLE IF NOT EXISTS ext_account (
-			id SERIAL PRIMARY KEY,
-			fk_wallet INT REFERENCES wallet(id) NOT NULL,
-			fk_ext_currency INT REFERENCES ext_currency (id) NOT NULL,
-			account_adr varchar(128) NOT NULL UNIQUE,
-			insert_time TIMESTAMP NOT NULL,
-			status FIELD_STATUS NOT NULL,
-			latest_checked_block INT DEFAULT 0
-		);
-
-		CREATE TABLE IF NOT EXISTS withdraw_fee (
-		id SERIAL PRIMARY KEY,
-		fk_ext_currency INT REFERENCES ext_currency (id) NOT NULL,
-		fee NUMERIC(28,18) NOT NULL,
-		insert_time TIMESTAMP NOT NULL,
-		status FIELD_STATUS NOT NULL
-		);
-
-		CREATE TABLE IF NOT EXISTS withdraw (
-		id SERIAL PRIMARY KEY,
-		fk_ext_account_sender INT REFERENCES  ext_account(id) NOT NULL,
-		fk_ext_account_receiver INT REFERENCES  ext_account(id) NOT NULL,
-		fk_ext_currency INT REFERENCES  ext_currency(id) NOT NULL,
-		value NUMERIC(28,18) NOT NULL,
-		fk_withdraw_fee INT REFERENCES  withdraw(id) NOT NULL,
-		tx_sent_time TIMESTAMP NOT NULL,
-		tx_stat tx_status NOT NULL,
-		tx_approved_time TIMESTAMP,
-		fk_query_id_payment_service INT NOT NULL,
-		tx_hash varchar (128)
-		);
-
-
-		CREATE TABLE IF NOT EXISTS topup (
-		id SERIAL PRIMARY KEY,
-		fk_ext_account_sender INT REFERENCES  ext_account(id) NOT NULL,
-		fk_ext_account_receiver INT REFERENCES  ext_account(id) NOT NULL,
-		fk_ext_currency INT REFERENCES ext_currency(id) NOT NULL,
-		value NUMERIC(28,18) NOT NULL,
-		tx_approved_time TIMESTAMP,
-		tx_hash varchar (128) NOT NULL
-		);
-
-
-	`,
-	)
-	return err
 }
 
 // db holds the PostgreSQL connection pool.

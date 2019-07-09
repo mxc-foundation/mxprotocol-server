@@ -12,6 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/tmc/grpc-websocket-proxy/wsproxy"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/money"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/supernode"
@@ -52,6 +53,7 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	api.RegisterTopUpServiceServer(server, topup.NewTopUpServerAPI())
 	api.RegisterWalletServiceServer(server, wallet.NewWalletServerAPI())
 	api.RegisterSuperNodeServiceServer(server, supernode.NewSupernodeServerAPI())
+	api.RegisterInternalServiceServer(server, auth.NewInternalServerAPI())
 
 	var clientHttpHandler http.Handler
 	var err error
@@ -138,9 +140,9 @@ func setupHTTPAPI(conf config.MxpConfig) (http.Handler, error) {
 
 	// setup static file server
 	r.PathPrefix("/").Handler(http.FileServer(&assetfs.AssetFS{
-		Asset:     static.Asset,
-		AssetDir:  static.AssetDir,
-		Prefix:    "",
+		Asset:    static.Asset,
+		AssetDir: static.AssetDir,
+		Prefix:   "",
 	}))
 
 	return wsproxy.WebsocketProxy(r), nil
@@ -198,6 +200,9 @@ func getJSONGateway(ctx context.Context) (http.Handler, error) {
 	}
 	if err := api.RegisterSuperNodeServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register top_up handler error")
+	}
+	if err := api.RegisterInternalServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+		return nil, errors.Wrap(err, "register auth get jwt handler error")
 	}
 
 	return mux, nil

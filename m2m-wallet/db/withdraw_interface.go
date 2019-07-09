@@ -1,6 +1,8 @@
 package db
 
 import (
+	"time"
+
 	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
@@ -8,27 +10,33 @@ func DbCreateWithdrawTable() error {
 	return pgDb.CreateWithdrawTable()
 }
 
-func DbInsertWithdraw(wdr pstgDb.Withdraw) (insertIndex int, err error) {
+func DbInsertWithdraw(wdr pstgDb.Withdraw) (insertIndex int64, err error) {
 	return pgDb.InsertWithdraw(wdr)
 }
 
 // should be use for topup
-func DbGetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int, err error) {
+func DbGetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
 	return pgDb.GetWalletIdofActiveAcnt(acntAdr, externalCur)
 }
 
-func DbCreateWithdrawSuccessfulFunction() error {
-	return pgDb.CreateWithdrawSuccessfulFunction()
+func DbCreateWithdrawFunctions() error {
+	return pgDb.CreateWithdrawFunctions()
 }
 
-func DbUpdateWithdrawSuccessful(withdrawId int) error {
-	return pgDb.UpdateWithdrawSuccessful(withdrawId)
+func DbUpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
+	return pgDb.UpdateWithdrawSuccessful(withdrawId, txHash, txApprovedTime)
 }
 
-func DbApplyWithdrawReq(wdr pstgDb.Withdraw, it pstgDb.InternalTx) error {
-	return pgDb.ApplyWithdrawReq(wdr, it)
+func DbInitWithdrawReqApply(wdr pstgDb.Withdraw, it pstgDb.InternalTx) (withdrawId int64, err error) {
+	return pgDb.InitWithdrawReqApply(wdr, it)
 }
 
-func DbApplyWithdrawReq2(wdr pstgDb.Withdraw, it pstgDb.InternalTx) error {
-	return pgDb.ApplyWithdrawReq2(wdr, it)
+func DbInitWithdrawReq(walletId int64, amount float64, extCurAbv string) (withdrawId int64, err error) {
+	return pgDb.InitWithdrawReq(walletId, amount, extCurAbv)
 }
+
+func DbUpdateWithdrawPaymentQueryId(walletId int64, reqIdPaymentServ int64) error {
+	return pgDb.UpdateWithdrawPaymentQueryId(walletId, reqIdPaymentServ)
+}
+
+//db.DbUpdateWithdrawPaymentQueryId(walletID, reqId_paymentsev)

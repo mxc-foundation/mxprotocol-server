@@ -1,28 +1,16 @@
-package cmd
-
-import (
-	"os"
-	"text/template"
-
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
-)
-
-// when updating this template, don't forget to update config.md!
-const configTemplate = `[general]
+[general]
 # Log level
 #
 # debug=5, info=4, warning=3, error=2, fatal=1, panic=0
-log_level={{ .General.LogLevel }}
+log_level=4
 
 # The number of times passwords must be hashed. A higher number is safer as
 # an attack takes more time to perform.
-password_hash_iterations={{ .General.PasswordHashIterations }}
+password_hash_iterations=100000
 
-host_server={{ .General.HostServer }}
-auth_server={{ .General.AuthServer }}
-auth_url={{ .General.AuthServer }}
+host_server="localhost"
+auth_server="http://appserver:8080"
+auth_url="/api/internal/profile"
 
 
 # PostgreSQL settings.
@@ -55,7 +43,7 @@ auth_url={{ .General.AuthServer }}
 # * require - Always SSL (skip verification)
 # * verify-ca - Always SSL (verify that the certificate presented by the server was signed by a trusted CA)
 # * verify-full - Always SSL (verify that the certification presented by the server was signed by a trusted CA and the server host name matches the one in the certificate)
-dsn="{{ .PostgreSQL.DSN }}"
+dsn="postgres://postgres@postgres:5432/postgres?sslmode=disable"
 
 # Automatically apply database migrations.
 #
@@ -64,54 +52,40 @@ dsn="{{ .PostgreSQL.DSN }}"
 # or let LoRa App Server migrate to the latest state automatically, by using
 # this setting. Make sure that you always make a backup when upgrading Lora
 # App Server and / or applying migrations.
-automigrate={{ .PostgreSQL.Automigrate }}
+automigrate=true
 
 # This is the API and web-interface exposed to the end-user.
 [application_server.http_server]
 # ip:port to bind the (user facing) http server to (web-interface and REST / gRPC api)
-bind="{{ .ApplicationServer.HttpServer.Bind }}"
+bind=":3000"
 
 # http server TLS certificate (optional)
-tls_cert="{{ .ApplicationServer.HttpServer.TLSCert }}"
+tls_cert=""
 
 # http server TLS key (optional)
-tls_key="{{ .ApplicationServer.HttpServer.TLSKey }}"
+tls_key=""
 
 # JWT secret used for api authentication / authorization
 # You could generate this by executing 'openssl rand -base64 32' for example
-jwt_secret="{{ .ApplicationServer.HttpServer.JWTSecret }}"
+jwt_secret="DOE1KiNzpQ82elRQ9HMWyxmADQ5f2B2TBAgOjL7ZZWA="
 
 # Allow origin header (CORS).
 #
 # Set this to allows cross-domain communication from the browser (CORS).
 # Example value: https://example.com.
 # When left blank (default), CORS will not be used.
-cors_allow_origin="{{ .ApplicationServer.HttpServer.CORSAllowOrigin }}"
+cors_allow_origin="http://localhost:3000"
 
 # when set, existing users can't be re-assigned (to avoid exposure of all users to an organization admin)"
-disable_assign_existing_users={{ .ApplicationServer.HttpServer.DisableAssignExistingUsers }}
+disable_assign_existing_users=false
 
 [supernode]
-contract_address={{ .SuperNode.ContractAddress }}
-supernode_address={{ .SuperNode.SuperNodeAddress }}
-api_key={{ .SuperNode.APIKey }}
-check_account_seconds={{ .SuperNode.CheckAccountSeconds }}
-check_payment_seconds={{ .SuperNode.CheckPaymentSecond }}
+contract_address="0x5Ca381bBfb58f0092df149bD3D243b08B9a8386e"
+supernode_address="0x8a96E17d85Bd897a88B547718865de990D2Fcb80"
+api_key="W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4"
+check_account_seconds=30
+check_payment_seconds=60
 
 [paymentserver]
-payment_service_address={{ .PaymentServer.PaymentServiceAddress }}
-payment_service_port={{ .PaymentServer.PaymentServicePort }}
-`
-
-var cmdConfig = &cobra.Command{
-	Use:   "configfile",
-	Short: "Print mxp-server configuration file",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		t := template.Must(template.New("config").Parse(configTemplate))
-		err := t.Execute(os.Stdout, config.Cstruct)
-		if err != nil {
-			return errors.Wrap(err, "execute config template error")
-		}
-		return nil
-	},
-}
+payment_service_address="localhost"
+payment_service_port=":8081"

@@ -17,28 +17,62 @@ service InternalService {
 	}
 }
 
+message ProfileResponse {
+	// User object.
+	User user = 1;
+
+	// Organizations to which the user is associated.
+	repeated OrganizationLink organizations = 3;
+
+	// Profile settings.
+	ProfileSettings settings = 4;
+}
+
+message User {
+	// User ID.
+	// Will be set automatically on create.
+	int64 id = 1;
+
+	// Username of the user.
+	string username = 2;
+
+	// The session timeout, in minutes.
+	int32 session_ttl = 3 [json_name = "sessionTTL"];
+
+	// Set to true to make the user a global administrator.
+	bool is_admin = 4;
+
+	// Set to false to disable the user.
+	bool is_active = 5;
+
+	// E-mail of the user.
+	string email = 6;
+
+	// Optional note to store with the user.
+	string note = 7;
+}
+
+message OrganizationLink {
+	// Organization ID.
+	int64 organization_id = 1 [json_name = "organizationID"];
+
+	// Organization name.
+	string organization_name = 2;
+
+	// User is admin within the context of this organization.
+	bool is_admin = 3;
+
+	// Created at timestamp.
+	google.protobuf.Timestamp created_at = 4;
+
+	// Last update timestamp.
+	google.protobuf.Timestamp updated_at = 5;
+}
+
 message ProfileSettings {
 	// Existing users in the system can not be assigned to organizations and
 	// application and can not be listed by non global admin users.
 	bool disable_assign_existing_users = 1;
-}
-
-// Defines an organization to which an user is associated.
-message OrganizationLink {
-    // Organization ID.
-    int64 organization_id = 1 [json_name = "organizationID"];
-    
-    // Organization name.
-    string organization_name = 2;
-    
-    // User is admin within the context of this organization.
-    bool is_admin = 3;
-    
-    // Created at timestamp.
-    google.protobuf.Timestamp created_at = 4;
-    
-    // Last update timestamp.
-	google.protobuf.Timestamp updated_at = 5;
 }
 
 message LoginRequest {

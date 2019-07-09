@@ -1,95 +1,81 @@
 package auth
 
 import (
+	"bytes"
 	"context"
-	"github.com/golang/protobuf/ptypes/timestamp"
+	"encoding/json"
+	"fmt"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"google.golang.org/grpc/metadata"
 	"io/ioutil"
 	"net/http"
 	"regexp"
 )
 
-type Err struct {
+type errStruct struct {
 	Error   string `json:"error,omitempty"`
-	Message string    `json:"message,omitempty"`
-	Code    int64 `json:"code,omitempty"`
-	Details []byte   `json:"details,omitempty"`
+	Message string `json:"message,omitempty"`
+	Code    int64  `json:"code,omitempty"`
+	Details []byte `json:"details,omitempty"`
 }
 
-type ProfileResponse struct {
-	User *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	// Organizations to which the user is associated.
-	Organizations []*OrganizationLink `protobuf:"bytes,3,rep,name=organizations,proto3" json:"organizations,omitempty"`
-	// Profile settings.
-	Settings *ProfileSettings `protobuf:"bytes,4,opt,name=settings,proto3" json:"settings,omitempty"`
+var ctxAuth struct {
+	authServer string
+	authUrl    string
 }
 
-type User struct {
-	// User ID.
-	// Will be set automatically on create.
-	Id string `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Username of the user.
-	Username string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	// The session timeout, in minutes.
-	SessionTtl int32 `protobuf:"varint,3,opt,name=session_ttl,json=sessionTTL,proto3" json:"session_ttl,omitempty"`
-	// Set to true to make the user a global administrator.
-	IsAdmin bool `protobuf:"varint,4,opt,name=is_admin,json=isAdmin,proto3" json:"is_admin,omitempty"`
-	// Set to false to disable the user.
-	IsActive bool `protobuf:"varint,5,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
-	// E-mail of the user.
-	Email string `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`
-	// Optional note to store with the user.
-	Note string `protobuf:"bytes,7,opt,name=note,proto3" json:"note,omitempty"`
+func Setup(conf config.MxpConfig) error {
+	log.Info("setup auth service")
+
+	ctxAuth.authServer = conf.General.AuthServer
+	ctxAuth.authUrl = conf.General.AuthUrl
+	return nil
 }
 
-type OrganizationLink struct {
-	// Organization ID.
-	OrganizationId int64 `protobuf:"varint,1,opt,name=organization_id,json=organizationID,proto3" json:"organization_id,omitempty"`
-	// Organization name.
-	OrganizationName string `protobuf:"bytes,2,opt,name=organization_name,json=organizationName,proto3" json:"organization_name,omitempty"`
-	// User is admin within the context of this organization.
-	IsAdmin bool `protobuf:"varint,3,opt,name=is_admin,json=isAdmin,proto3" json:"is_admin,omitempty"`
-	// Created at timestamp.
-	CreatedAt *timestamp.Timestamp `protobuf:"bytes,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	// Last update timestamp.
-	UpdatedAt *timestamp.Timestamp `protobuf:"bytes,5,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string) (api.ProfileResponse, error) {
+	log.WithField("request service", requestServiceName).Info()
+
+	info, err := tokenMiddleware(ctx)
+	if err != nil {
+		return api.ProfileResponse{}, err
+	}
+
+	errInfo := errStruct{}
+	err = json.Unmarshal(*info, &errInfo)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	if errInfo.Error != "" {
+		return api.ProfileResponse{}, errors.New(errInfo.Error)
+	}
+
+	userInfo := api.ProfileResponse{}
+	err = json.Unmarshal(*info, &userInfo)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return userInfo, nil
 }
 
-type ProfileSettings struct {
-	// Existing users in the system can not be assigned to organizations and
-	// application and can not be listed by non global admin users.
-	DisableAssignExistingUsers bool `protobuf:"varint,1,opt,name=disable_assign_existing_users,json=disableAssignExistingUsers,proto3" json:"disable_assign_existing_users,omitempty"`
-}
-
-var validAuthorizationRegexp = regexp.MustCompile(`(?i)^bearer (.*)$`)
-
-func TokenMiddleware(ctx context.Context, url string) (*[]byte, error) {
+func tokenMiddleware(ctx context.Context) (*[]byte, error) {
 	tokenStr, err := getTokenFromContext(ctx)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "get token from context error")
 	} else {
-		/*//only if we need to verify jwt in M2M!!!
-		token, _ := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("not authorization")
-			}
-			return []byte("secret"), nil
-		})
-		if !token.Valid {
-		} else {
-		}
-		*/
-
-		res, err := getRequest(url, tokenStr)
+		res, err := getRequest(ctxAuth.authServer+ctxAuth.authUrl, tokenStr)
 		if err != nil {
 			return nil, errors.Wrap(err, "no response from lora app server")
 		}
 		return res, nil
 	}
 }
+
+var validAuthorizationRegexp = regexp.MustCompile(`(?i)^bearer (.*)$`)
 
 func getTokenFromContext(ctx context.Context) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
@@ -126,4 +112,62 @@ func getRequest(url, jwtToken string) (*[]byte, error) {
 
 	body, _ := ioutil.ReadAll(res.Body)
 	return &body, nil
+}
+
+type InternalServerAPI struct {
+	serviceName string
+}
+
+func NewInternalServerAPI() *InternalServerAPI {
+	return &InternalServerAPI{serviceName: "internal get jwt"}
+}
+
+func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*api.LoginResponse, error) {
+	requestBody, err := json.Marshal(map[string]string{
+		"password": req.Password,
+		"username": req.Username,
+	})
+
+	if err != nil {
+		log.Warn(err)
+		return &api.LoginResponse{}, err
+	}
+
+	request, err := http.NewRequest("POST", ctxAuth.authServer+"/api/internal/login", bytes.NewBuffer(requestBody))
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Accept", "application/json")
+
+	if err != nil {
+		log.Warn(err)
+		return &api.LoginResponse{}, err
+	}
+
+	res, err := http.DefaultClient.Do(request)
+	if err != nil {
+		return &api.LoginResponse{}, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return &api.LoginResponse{}, err
+	}
+
+	// parse response
+	errInfo := errStruct{}
+	err = json.Unmarshal(body, &errInfo)
+	if err != nil {
+		fmt.Println("unmarshal err", err)
+	}
+
+	if errInfo.Error != "" {
+		return &api.LoginResponse{}, err
+	}
+
+	var output map[string]string
+	err = json.Unmarshal(body, &output)
+	if err != nil {
+		fmt.Println("unmarshal response", err)
+	}
+	return &api.LoginResponse{Jwt: output["jwt"]}, nil
 }
