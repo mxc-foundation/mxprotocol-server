@@ -17,7 +17,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/supernode"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/topup"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/wallet"
-	// "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/withdraw"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/withdraw"
 )
 
 func run(cmd *cobra.Command, args []string) error {
@@ -88,9 +88,9 @@ func setupDb() error {
 }
 
 func setupWithdraw() error {
-	// if err := withdraw.Setup(config.Cstruct); err != nil {
-	// 	return errors.Wrap(err, "setup service withdraw error")
-	// }
+	if err := withdraw.Setup(config.Cstruct); err != nil {
+	 	return errors.Wrap(err, "setup service withdraw error")
+	}
 	return nil
 }
 
