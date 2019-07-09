@@ -46,6 +46,12 @@ func NewSupernodeServerAPI() *SupernodeServerAPI {
 	return &SupernodeServerAPI{serviceName: "supernode"}
 }
 
+func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *api.AddSuperNodeMoneyAccountRequest) (*api.AddSuperNodeMoneyAccountResponse, error) {
+	// todo
+	return &api.AddSuperNodeMoneyAccountResponse{}, nil
+}
+
+
 func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context, req *api.GetSuperNodeActiveMoneyAccountRequest) (*api.GetSuperNodeActiveMoneyAccountResponse, error) {
 	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {

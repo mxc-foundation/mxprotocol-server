@@ -55,6 +55,11 @@ func NewWithdrawServerAPI() *WithdrawServerAPI {
 	return &WithdrawServerAPI{serviceName: "withdraw"}
 }
 
+func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *api.ModifyWithdrawFeeRequest) (*api.ModifyWithdrawFeeResponse, error) {
+	// todo
+	return &api.ModifyWithdrawFeeResponse{}, nil
+}
+
 func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWithdrawFeeRequest) (*api.GetWithdrawFeeResponse, error) {
 	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
