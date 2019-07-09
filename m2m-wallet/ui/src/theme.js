@@ -117,16 +117,15 @@ const theme = createMuiTheme({
       },
       MuiButton: { 
         root: {
-          //background: teal['A200'],
           backgroundColor: '#00FFD9',
           boxShadow: '0 8px 6px -6px #00000050',
           width: 135,
           height: 50,
           fontWeight: 'bolder',
           marginRight: 5,
-        },
-        "&:hover": {
-          backgroundColor: '#00CCAE',
+          "&:hover": {
+            backgroundColor: '#00CCAE',
+          },
         },
         label: {
           color: blueMxcBrand

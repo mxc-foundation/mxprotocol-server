@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import Grid from '@material-ui/core/Grid';
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
-
+import theme from "../theme";
 
 const styles = {
   formControl: {
@@ -20,7 +20,7 @@ class Form extends Component {
 
         <Grid container justify="flex-end" className={this.props.classes.formControl}>
           {this.props.extraButtons}
-          {this.props.submitLabel && <Button color="primary" type="submit" disabled={this.props.disabled}>{this.props.submitLabel}</Button>}
+          {this.props.submitLabel && <Button type="submit" disabled={this.props.disabled}>{this.props.submitLabel}</Button>}
         </Grid>
       </form>
     );
