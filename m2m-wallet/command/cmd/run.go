@@ -32,9 +32,9 @@ func run(cmd *cobra.Command, args []string) error {
 		setupAuth,
 		setupMoney,
 		setupWallet,
-		//setupWithdraw,
+		setupWithdraw,
 		setupTopUp,
-		//setupSupernode,
+		setupSupernode,
 		setupAPI,
 	}
 
