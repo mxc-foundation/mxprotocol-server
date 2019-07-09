@@ -7,7 +7,6 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/withdraw"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"time"
@@ -19,25 +18,45 @@ func Setup() error {
 	go func() {
 		log.Info("start supernode goroutine")
 		for range ticker_superAccount.C {
-			//TODO: should change the super node address.
+			//ToDo: should change the currAbv
+
+			/*supernodeAccount, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
+
+			if err != nil {
+				log.Error("Cannot get supernode account: ", err)
+			}*/
+
+			//ToDo: change the supernodeAccount address from db
 			checkTokenTx(config.Cstruct.SuperNode.ContractAddress, config.Cstruct.SuperNode.SuperNodeAddress)
 		}
 	}()
 
-	ticker_checkPayment := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckPaymentSecond) * time.Second)
-	go func() {
+	/*ticker_checkPayment := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckPaymentSecond) * time.Second)
+	go func(reqID_paymentservice, withdrawId) {
 		log.Info("start checkPay goroutine")
 		for range ticker_checkPayment.C {
-			//TODO: should change the super node address.
-			reply, err := withdraw.CheckTxStatus(&config.Cstruct, 1)
+
+			reply, err := withdraw.CheckTxStatus(&config.Cstruct, reqID_paymentservice)
 			if err != nil {
 				//TODO
 			}
-			if reply.TxPaymentStatusEnum == 1 {
-				//ToDo: resend the query
+
+			if reply.Error != "" {
+				log.Error("CheckTxStatusReply Error: ", reply.Error)
+			}
+
+			if reply.TxPaymentStatusEnum != 2 {
+				//ToDo: save it into db and check in next round
+			} else {
+				//ToDo: save it into db
+				reply.TxHash
+				reply.TxSentTime
+				reply.TxPaymentStatusEnum
+				db.DbUpdateWithdrawSuccessful(withdrawId)
+				return
 			}
 		}
-	}()
+	}()*/
 
 	log.Info("setup supernode service")
 	return nil

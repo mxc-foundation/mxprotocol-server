@@ -97,17 +97,52 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	//Todo: userInfo should be the information of users eg.id,name,org,etc. Use it to get data from DB.
-	fmt.Println("username = ", userProfile.User.Username)
+	//withdrawfee, err := db.DbGetActiveWithdrawFee(req.MoneyAbbr.String())
+	//balance, err := db.DbGetWalletBalance(walletID)
+	//ToDo: Sum then check if the money is enough in supernode
 
 	amount := fmt.Sprintf("%f", req.Amount)
+
+	//ToDo: wait (for get the withdrawID)
+	//walletID, err := db.DbGetWalletIdFromOrgId(req.OrgId)
+	//withdrawID, err := db.DbInitWithdrawReq(walletID, amount, req.MoneyAbbr.String())
+
 	reply, err := paymentReq(ctx, &config.Cstruct, amount)
 	if err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, "send payment request failed: %s", err)
 	}
 
-	//Todo: save reqqueryref info into db
-	fmt.Println(reply.ReqQueryRef)
+	reqId_paymentsev := reply.ReqQueryRef
+
+	//ToDo: wait (save reqqeryref to db)
+	//err := db.DbUpdateWithdrawPaymentQueryId(walletID, reqId_paymentsev)
+
+	go func() {
+		reply, err := CheckTxStatus(&config.Cstruct, reqId_paymentsev)
+		if err != nil {
+			log.Error("Cannot get the reply from paymentService: ", err)
+		}
+
+		if reply.Error != "" {
+			log.Error("CheckTxStatusReply Error: ", reply.Error)
+		}
+
+		if reply.TxPaymentStatusEnum != 2 {
+			log.Info("Pending...")
+		} else {
+			//reply.TxHash
+			//reply.TxSentTime
+			//reply.TxPaymentStatusEnum
+
+			//ToDo: update withdrawID it into db
+			//db.DbUpdateWithdrawSuccessful(withdrawID)
+
+			//for test!
+			fmt.Println("Update to DB successful")
+
+			return
+		}
+	}()
 
 	return &api.WithdrawReqResponse{Status: true, Error: "", UserProfile: &userProfile}, nil
 }

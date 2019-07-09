@@ -84,7 +84,7 @@ contract_address="0x5Ca381bBfb58f0092df149bD3D243b08B9a8386e"
 supernode_address="0x8a96E17d85Bd897a88B547718865de990D2Fcb80"
 api_key="W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4"
 check_account_seconds=30
-check_payment_seconds=60
+external_currency_abv="MXC"
 
 [paymentserver]
 payment_service_address="payment"
