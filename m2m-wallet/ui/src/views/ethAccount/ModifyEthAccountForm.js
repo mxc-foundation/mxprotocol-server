@@ -15,7 +15,7 @@ class ModifyEthAccountForm extends FormComponent {
   }
 
   render() {
-    if (this.state.object === undefined) {
+    if (this.props.activeAccount === undefined) {
       return(<div></div>);
     }
 
@@ -23,11 +23,25 @@ class ModifyEthAccountForm extends FormComponent {
       <Form
         submitLabel={this.props.submitLabel}
         onSubmit={() => this.props.onSubmit({
-          newaccount: this.state.newaccount
+          currentAccount: this.state.newaccount,
+          username: this.state.username,
+          password: this.state.password
         })}
       >
         <TextField
-          id="newaccount"
+        id="activeAccount"
+          label="Current account"
+          margin="normal"
+          value={this.props.activeAccount || ""}
+
+          InputProps={{
+            readOnly: true,
+          }}
+          fullWidth
+        />
+
+        <TextField
+          id="currentAccount"//it is defined current account in swagger
           label="New account"
           margin="normal"
           value={this.state.newaccount}
@@ -36,6 +50,38 @@ class ModifyEthAccountForm extends FormComponent {
           inputProps={{
             pattern: "[\\w-]+",
           }}
+          autoComplete='off'
+          required
+          fullWidth
+        />
+
+        <TextField
+          id="username"//it is defined current account in swagger
+          label="User name"
+          margin="normal"
+          value={this.state.username}
+          placeholder="Type here" 
+          onChange={this.onChange}
+          inputProps={{
+            pattern: "[\\w-]+",
+          }}
+          autoComplete='off'
+          required
+          fullWidth
+        />
+
+        <TextField
+          id="password"//it is defined current account in swagger
+          label="Pass word"
+          margin="normal"
+          value={this.state.password}
+          placeholder="Type here" 
+          onChange={this.onChange}
+          inputProps={{
+            pattern: "[\\w-]+",
+          }}
+          type="password"
+          autoComplete="off"
           required
           fullWidth
         />

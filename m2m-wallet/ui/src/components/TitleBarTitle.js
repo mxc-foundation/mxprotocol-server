@@ -14,11 +14,17 @@ const styles = {
     marginBottom: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     float: "left",
+    fontSize: 16,
+/*     h2: {
+      fontSize: 14,
+    }, */
   },
 
   link: {
     textDecoration: "none",
-    color: theme.palette.primary.main,
+    fontWeight: "bold",
+    fontSize: 12,
+    color: theme.palette.textSecondary.main,
     opacity: 0.7,
       "&:hover": {
         opacity: 1,

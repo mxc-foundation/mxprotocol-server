@@ -1,31 +1,35 @@
 import { createMuiTheme } from "@material-ui/core/styles";
-import teal from "@material-ui/core/colors/teal";
+
+const tealHighLight = '#00FFD9';
+const blueMxcBrand = '#09006E';
+const white = '#F9FAFC';
+const linkTextColor = '#CAFCF5';
 
 const theme = createMuiTheme({
     palette: {
-      primary: { main: teal['A200'] },
-      secondary: { main: '#11cb5f' }, 
-      textPrimary: {main: '#FFFFFF'},
-      textSecondary: {main: '#FFFFFF'}
+      primary: { main: tealHighLight }, 
+      secondary: { main: blueMxcBrand }, 
+      textPrimary: {main: white}, 
+      textSecondary: {main: linkTextColor} 
     },
     MuiListItemIcon: {
       root: {
-        color: '#FFFFFF'
+        color: white
       }
     },
     //tab 
     MuiTypography: {
       root: {
-        color: '#FFFFFF',
+        color: white,
       },
     },
     typography: {
       //useNextVariants: true,
       subheading: {
-        color: '#FFFFFF'
+        color: white
       },
       title: {
-        color: '#FFFFFF'
+        color: white
       },
       fontFamily: [
         'Montserrat',
@@ -34,18 +38,18 @@ const theme = createMuiTheme({
     overrides: {
       MuiInput: {
         root: {
-          color: '#FFFFFF'
+          color: white
         },
         underline: {
           "&:before": {
-            borderBottom: `1px solid white`
+            borderBottom: `1px solid #F9FAFC`
           }
         }
       },
       MuiAppBar: {
         root: {
-          width: '1024px',
-          color: '#FFFFFF'
+          //width: '1024px',
+          color: white
         },
         positionFixed: {
           left: 'inherit',
@@ -54,7 +58,7 @@ const theme = createMuiTheme({
       },
       MuiSelect: {
         icon: {
-          color: '#FFFFFF',
+          color: white,
           right: 0,
           position: 'absolute',
           pointerEvents: 'none',
@@ -62,37 +66,41 @@ const theme = createMuiTheme({
       },
       MuiIconButton: {
         root: {
-          color: '#FFFFFF',
+          color: white,
         }
       },
       MuiInputBase: {
         input: {
-          color: '#FFFFFF',
-
+          color: white,
           "&:-webkit-autofill": {
-            WebkitBoxShadow: "0 0 0 1000px white inset"
+            WebkitBoxShadow: "0 0 0 1000px #F9FAFC inset"
           }
         }
       },
       MuiTable: {
         root: {
-          background: '#0C0270',
+          background: white,
         }
       },
       MuiDivider: {
-        root: {
-          backgroundColor: '#FFFFFF50',
-        },
         light: {
           backgroundColor: '#FFFFFF50',
-        }
+        },
+        /* dark: {
+          backgroundColor: '#1C147870',
+          padding: 500, 
+        } */
       },
       MuiTableCell: {
         head: {
           background: '#0C0270',
-          color: 'white',
+          color: white,
           fontWeight: 'bold',
           padding: 10, 
+        },
+        body: {
+          background: '#0C0270',
+          color: white,
         }
       },
       MuiPaper: {
@@ -103,32 +111,39 @@ const theme = createMuiTheme({
       },
       MuiTablePagination: {
         root: {
-          color: 'white',
+          color: white,
           background: '#0C0270',
         }
       },
       MuiButton: { 
         root: {
           //background: teal['A200'],
-          background: '#311b92',
+          backgroundColor: '#00FFD9',
+          boxShadow: '0 8px 6px -6px #00000050',
           width: 135,
           height: 50,
-          fontWeight: 'bold',
+          fontWeight: 'bolder',
           marginRight: 5,
         },
+        "&:hover": {
+          backgroundColor: '#00CCAE',
+        },
+        label: {
+          color: blueMxcBrand
+        },
         text: { 
-          color: 'white', 
+          color: white, 
           padding: 6,
         },
       },
       MuiFormLabel: { 
         root: { 
-          color: 'white', 
+          color: white, 
         },
       },
       MuiFormHelperText: { 
         root: { 
-          color: 'white', 
+          color: white, 
         },
       },
       MuiPrivateTabScrollButton:{
@@ -138,11 +153,16 @@ const theme = createMuiTheme({
       },
       MuiTab: {
         root: {
-          color: 'white',
+          color: white,
         },
         textColorPrimary: {
-          color: 'white'
+          color: white
         }
+      },
+      MuiSvgIcon: {
+        root: {
+          fill: '#F9FAFC',
+        },
       },
     },
 });

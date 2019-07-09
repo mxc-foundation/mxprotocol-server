@@ -36,7 +36,7 @@ type MxpConfig struct {
 		SuperNodeAddress    string `mapstructure:"supernode_address"`
 		APIKey              string `mapstructure:"api_key"`
 		CheckAccountSeconds int    `mapstructure:"check_account_seconds"`
-		CheckPaymentSecond  int    `mapstructure:"check_payment_seconds"`
+		ExtCurrAbv          string `mapstructure:"external_currency_abv"`
 	}
 }
 

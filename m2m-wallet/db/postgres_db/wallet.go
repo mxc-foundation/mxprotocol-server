@@ -35,7 +35,7 @@ func (pgDbp DbSpec) CreateWalletTable() error {
 			id SERIAL PRIMARY KEY,
 			fk_org_la INT UNIQUE NOT NULL, -- foreign_key LoRa app server DB
 			type WALLET_TYPE NOT NULL,
-			balance NUMERIC(28,18) NOT NULL   
+			balance NUMERIC(28,18) NOT NULL CHECK (balance >= 0)
 		);
 
 		END$$;
@@ -76,8 +76,7 @@ func (pgDbp DbSpec) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
 		&w.Id,
 	)
 	if err != nil {
-		// fmt.Println(err)
-		log.WithError(err).Warning("db: query error GetWalletIdFromOrgId()")
+		log.WithError(err).Warning(fmt.Sprintf("db: query error GetWalletIdFromOrgId(%d)", orgIdLora))
 
 	}
 	return w.Id, err
@@ -129,7 +128,7 @@ func (pgDbp DbSpec) GetWalletBalance(walletId int64) (float64, error) {
 	return w.Balance, err
 }
 
-func (pgDbp DbSpec) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int, err error) {
+func (pgDbp DbSpec) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
 
 	err = pgDbp.Db.QueryRow(
 		`select 
@@ -151,4 +150,37 @@ func (pgDbp DbSpec) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) 
 	// 	log.WithError(err).Warning("GetWalletIdofActiveAcnt error. wallet id: "+string(walletId)+"error: ", err)
 	// }
 	return walletId, err
+}
+
+func (pgDbp DbSpec) GetWalletIdSuperNode() (walletId int64, err error) {
+
+	err = pgDbp.Db.QueryRow(
+		`SELECT
+			id
+		FROM
+			wallet 
+		WHERE
+			type = 'SUPER_ADMIN' 
+			ORDER BY id DESC 
+			LIMIT 1  -- altough only one super node exists
+		;`).Scan(&walletId)
+
+	// if err != nil {
+	// 	log.WithError(err).Warning("GetWalletIdofActiveAcnt error. wallet id: "+string(walletId)+"error: ", err)
+	// }
+	return walletId, err
+}
+
+func (pgDbp DbSpec) UpdateBalanceByWalletId(walletId int64, newBalance float64) error {
+	_, err := pgDbp.Db.Exec(`
+	UPDATE
+		wallet 
+	SET
+		balance = $1
+	WHERE
+		id = $2
+	;
+	`, newBalance, walletId)
+
+	return errors.Wrap(err, "db: query error UpdateBalanceByWalletId()")
 }

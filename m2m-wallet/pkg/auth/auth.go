@@ -111,6 +111,7 @@ func getRequest(url, jwtToken string) (*[]byte, error) {
 	defer res.Body.Close()
 
 	body, _ := ioutil.ReadAll(res.Body)
+	log.WithField("body", string(body)).Info("getRequest response")
 	return &body, nil
 }
 

@@ -1,12 +1,12 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .default-text {
-  color: white !important;
-  font-family: 'Montserrat' !important;
+  color: #F9FAFC !important;
+  font-family: 'Montserrat', sans-serif !important;
 }
 .nav-text {
   font-size: 14 ;
@@ -29,4 +29,9 @@ body {
 }
 .fix-padding {
   margin-left: -125px;
+}
+
+.iconStyle {
+  max-height: 20px;
+  background-size: contain;
 }

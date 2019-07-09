@@ -2,13 +2,13 @@ package cmd
 
 import (
 	"bytes"
-	"github.com/spf13/viper"
 	"io/ioutil"
 	"reflect"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 )
 
@@ -38,7 +38,9 @@ func init() {
 	viper.SetDefault("general.auth_server", "http://appserver:8080")
 	viper.SetDefault("general.auth_url", "/api/internal/profile")
 
-	viper.SetDefault("postgresql.dsn", "postgres://postgres@postgres:5432/postgres?sslmode=disable")
+	// viper.SetDefault("postgresql.dsn", "postgres://localhost/mxp-server?sslmode=disable")
+	viper.SetDefault("postgresql.dsn", "postgres://m2m_db@postgres:5432/m2m_database?sslmode=disable") // changed by Aslan
+
 	viper.SetDefault("postgresql.automigrate", true)
 
 	viper.SetDefault("application_server.http_server.bind", ":3000")
@@ -52,7 +54,7 @@ func init() {
 	viper.SetDefault("supernode.supernode_address", "0x8a96E17d85Bd897a88B547718865de990D2Fcb80")
 	viper.SetDefault("supernode.api_key", "W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4")
 	viper.SetDefault("supernode.check_account_seconds", 30)
-	viper.SetDefault("supernode.check_payment_seconds", 60)
+	viper.SetDefault("supernode.external_currency_abv", "MXC")
 
 	viper.SetDefault("paymentserver.payment_service_address", "localhost")
 	viper.SetDefault("paymentserver.payment_service_port", ":8081")

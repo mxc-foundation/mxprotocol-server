@@ -37,6 +37,10 @@ func DbGetWalletBalance(walletId int64) (float64, error) {
 }
 
 func DbUpdateBalanceByWalletId(walletId int64, newBalance float64) error {
-	// todo: update balance with walletid
-	return nil
+
+	return pgDb.UpdateBalanceByWalletId(walletId, newBalance)
+}
+
+func DbGetWalletIdSuperNode() (walletId int64, err error) {
+	return pgDb.GetWalletIdSuperNode()
 }

@@ -7,7 +7,6 @@ import TableRow from "@material-ui/core/TableRow";
 import HistoryStore from "../../stores/HistoryStore";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
-import TableCellLink from "../../components/TableCellLink";
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
@@ -20,20 +19,21 @@ class EthAccount extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.GetTopUpHistory(this.props.match.params.organizationID, limit, offset, (data) => {
+    HistoryStore.getChangeMoneyAccountHistory("Ether",this.props.match.params.organizationID, limit, offset, (data) => {
+      console.log("data",data);
       callbackFunc({
         totalCount: offset + 2 * limit,
-        result: data
+        result: data.changeHistory
       });
     });
   }
 
-  getRow(obj) {
+  getRow(obj, index) {
     return(
-      <TableRow key={obj.id}>
-        <TableCell>{obj.date}</TableCell>
-        <TableCell>{obj.newAccount}</TableCell>
-        <TableCell>{obj.oldAccount}</TableCell>
+      <TableRow key={index}>
+        <TableCell>{obj.from}</TableCell>
+        <TableCell>{obj.to}</TableCell>
+        <TableCell>{obj.createdAt}</TableCell>
       </TableRow>
     );
   }
@@ -57,9 +57,9 @@ class EthAccount extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell>New Account</TableCell>
                 <TableCell>Old Account</TableCell>
+                <TableCell>New Account</TableCell>
+                <TableCell>Date</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

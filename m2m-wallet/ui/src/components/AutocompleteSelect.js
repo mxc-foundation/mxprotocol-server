@@ -31,7 +31,7 @@ const styles = theme => ({
       alignItems: 'center',
       border: 0,
       height: 'auto',
-      background: 'transparent',
+      background: '#090046',
       '&:hover': {
         boxShadow: 'none',
       },
@@ -40,6 +40,7 @@ const styles = theme => ({
       flexGrow: 1,
       display: 'flex',
       flexWrap: 'wrap',
+      background: '#090046',
     },
     '.Select--multi .Select-input': {
       margin: 0,
@@ -56,7 +57,7 @@ const styles = theme => ({
       height: 'auto',
     },
     '.Select-input input': {
-      background: 'transparent',
+      //background: '#09004670',
       border: 0,
       padding: 0,
       cursor: 'default',
@@ -81,14 +82,15 @@ const styles = theme => ({
     '.Select-value': {
       color: "black !important",
       paddingLeft: "0 !important",
+      color: theme.palette.textPrimary.main,
     },
     '.Select-placeholder': {
       opacity: 0.42,
-      color: theme.palette.common.black,
+      color: theme.palette.textPrimary.main,
     },
     '.Select-menu-outer': {
-      backgroundColor: theme.palette.background.paper,
-      boxShadow: theme.shadows[2],
+      backgroundColor: '#090046',
+      //boxShadow: theme.shadows[2],
       position: 'absolute',
       left: 0,
       top: `calc(100% + ${theme.spacing.unit}px)`,
@@ -108,7 +110,8 @@ const styles = theme => ({
       boxSizing: 'content-box',
     },
     '.Select-arrow-zone, .Select-clear-zone': {
-      color: theme.palette.action.active,
+      color: theme.palette.textPrimary.main,
+      background: '#090046',
       cursor: 'pointer',
       height: 21,
       width: 21,
@@ -219,6 +222,7 @@ class AutocompleteSelect extends Component {
 
   setInitialOptions(callbackFunc) {
     this.props.getOptions("", options => {
+      //console.log('options', this.props, options);
       this.setState({
         options: options,
       }, callbackFunc);

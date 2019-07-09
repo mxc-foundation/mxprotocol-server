@@ -80,12 +80,27 @@ class SessionStore extends EventEmitter {
     }
   }
 
+  initProfile(data) {
+    const { jwt, org_id } = data;
+    
+    if(jwt === "" && org_id === ""){
+      console.log("invalid parameters");
+    }
+    
+    this.setToken(jwt);
+    this.setOrganizationID(org_id);
+  }
+
   login(login, callBackFunc) {
     this.swagger.then(client => {
       client.apis.InternalService.Login({body: login})
         .then(checkStatus)
         .then(resp => {
-          this.setToken(resp.obj.jwt);
+          if(resp.body.jwt === ""){
+            callBackFunc("fail");  
+          }else{
+            callBackFunc("ok");
+          }
           //this.fetchProfile(callBackFunc);
         })
         .catch(errorHandlerLogin);

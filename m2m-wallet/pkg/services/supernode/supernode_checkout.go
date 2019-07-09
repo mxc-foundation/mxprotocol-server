@@ -1,30 +1,49 @@
 package supernode
 
 import (
-	"fmt"
-	"log"
+	log "github.com/sirupsen/logrus"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"strings"
 )
 
 var ethScan = connectEthScan()
 
-func checkTokenTx(contractAddress, address string) {
-	//ToDo: read lastTxNo from db
-	currentBlockNo := 20
+func checkTokenTx(contractAddress, address, currAbv string) error {
+	supernodeID, err := db.DbGetSuperNodeExtAccountId(config.Cstruct.SuperNode.ExtCurrAbv)
 
-	transfers, err := ethScan.ERC20Transfers(&contractAddress, &address, &currentBlockNo, nil, 0, 0)
+	currentBlockNo, err := db.DbGetLatestCheckedBlock(supernodeID)
 	if err != nil {
-		log.Panic(err)
+		log.WithError(err).Warning("storage: Cannot get currentBlockNo from DB")
+		return err
+	}
+
+	incurBlockNo := int(currentBlockNo)
+
+	transfers, err := ethScan.ERC20Transfers(&contractAddress, &address, &incurBlockNo, nil, 0, 0)
+	if err != nil {
+		log.WithError(err).Warning("Etherscan: Cannot get reply from Etherscan")
+		return err
 	}
 
 	for _, tx := range transfers {
-		if strings.EqualFold(tx.To, address) && tx.BlockNumber > currentBlockNo {
-			fmt.Println("From:", tx.From)
-			fmt.Println("TxHash: ", tx.Hash)
-			fmt.Println("Amount: ", tx.Value.Int())
-			fmt.Println("TimeStemp:", tx.TimeStamp.Time())
-			//ToDo: rewrite the last block to db
-			fmt.Println("BlockNo: ", tx.BlockNumber)
+		if strings.EqualFold(tx.To, address) && tx.BlockNumber > incurBlockNo {
+
+			amount := float64(tx.Value.Int().Int64())
+			_, err := db.DbAddTopUpRequest(tx.From, tx.To, tx.Hash, amount, currAbv)
+			if err != nil {
+				log.WithError(err).Warning("Storage: Cannot update TopUpRequest to DB")
+				return err
+			}
+
+			// Update the last block to db
+			err = db.DbUpdateLatestCheckedBlock(supernodeID, int64(tx.BlockNumber))
+			if err != nil {
+				log.WithError(err).Warning("Storage: Cannot update lastBlockNo to DB")
+				return err
+			}
+			return nil
 		}
 	}
+	return nil
 }
