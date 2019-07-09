@@ -23,11 +23,11 @@ const (
 )
 
 type InternalTx struct {
-	Id             int       `db:"id"`
-	FkWalletSender int       `db:"fk_wallet_sernder"`
-	FkWalletRcvr   int       `db:"fk_wallet_receiver"`
+	Id             int64     `db:"id"`
+	FkWalletSender int64     `db:"fk_wallet_sernder"`
+	FkWalletRcvr   int64     `db:"fk_wallet_receiver"`
 	PaymentCat     string    `db:"payment_cat"`
-	TxInternalRef  int       `db:"tx_internal_ref"` // reference to the id of corresponding table to PaymentCat
+	TxInternalRef  int64     `db:"tx_internal_ref"` // reference to the id of corresponding table to PaymentCat
 	Value          float64   `db:"value"`
 	TimeTx         time.Time `db:"timestamp"`
 }
@@ -73,7 +73,7 @@ func (pgDbp DbSpec) CreateInternalTxTable() error {
 	return errors.Wrap(err, "storage: PostgreSQL error CreateInternalTxTable()")
 }
 
-func (pgDbp DbSpec) InsertInternalTx(it InternalTx) (insertIndex int, err error) {
+func (pgDbp DbSpec) InsertInternalTx(it InternalTx) (insertIndex int64, err error) {
 	err = pgDbp.Db.QueryRow(`
 	INSERT INTO internal_tx (
 		fk_wallet_sernder,

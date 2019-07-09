@@ -8,32 +8,35 @@ import (
 )
 
 func testDb() {
-	testWallet()
+	// testWallet()
 	// testInternalTx()
 	// testWithdrawFee()
 	// testExtCurrency()
-	// testWithdraw()
+	testWithdraw()
 	// testExtAccount()
 	// testTopup()
+
 }
 
 func testWallet() {
 
+	superNodeId, errsuperNodeId := DbGetWalletIdSuperNode()
+	fmt.Println("GetWalletIdSuperNode(): ", superNodeId, " || err:", errsuperNodeId)
+
+	fmt.Println("err DbUpdateBalanceByWalletId(): ", DbUpdateBalanceByWalletId(1, 654.3))
+
+	balance, err2 := DbGetWalletBalance(102)
+	fmt.Println("GetWalletBalance(): ", balance, " || err:", err2)
+
 	wi, errGetWI := DbGetWalletIdofActiveAcnt("0x7645", "MXC") //0x8347
 	fmt.Println("DbGetWalletIdofActiveAcnt(): ", wi, " || err:", errGetWI)
-
-	balance, err2 := DbGetWalletBalance(1)
-	fmt.Println("GetWalletBalance(): ", balance, " || err:", err2)
 
 	walletId, err := DbGetWalletIdFromOrgId(1)
 	fmt.Println("GetWalletId(): ", walletId, " || err:", err)
 
 	DbCreateWalletTable()
 
-	retInd, errIns := DbInsertWallet(pstgDb.Wallet{
-		FkOrgLa: 8,
-		TypeW:   string(pstgDb.USER),
-		Balance: 680.6})
+	retInd, errIns := DbInsertWallet(10, USER) //@@ balance for the super node
 
 	fmt.Println("DbInsertWallet  retInd:", retInd, "  err: ", errIns)
 
@@ -60,6 +63,9 @@ func testInternalTx() {
 
 func testExtCurrency() {
 
+	idCur, errIdCur := DbGetExtCurrencyIdByAbbr("MXC")
+	fmt.Println("DbGetExtCurrencyIdByAbbr(): ", idCur, " err:", errIdCur)
+
 	err := DbCreateExtCurrencyTable()
 	fmt.Println("err DbCreateExtCurrencyTable(): ", err)
 
@@ -71,6 +77,9 @@ func testExtCurrency() {
 }
 
 func testWithdrawFee() {
+
+	wid, errwid := DbGetActiveWithdrawFeeId("MXC")
+	fmt.Println("DbGetActiveWithdrawFeeId(): ", wid, " err:", errwid)
 
 	fee, errGetWF := DbGetActiveWithdrawFee("MXC")
 	fmt.Println("DbGetActiveWithdrawFee(): ", fee, " err:", errGetWF)
@@ -91,64 +100,74 @@ func testWithdrawFee() {
 
 func testExtAccount() {
 
+	acntId, errGetAi := DbGetUserExtAccountId(1, "MXC")
+	fmt.Println("DbGetUserExtAccountId(): ", acntId, " err:", errGetAi)
+
+	acntAdr, errGetAu := DbGetUserExtAccountAdr(1, "MXC")
+	fmt.Println("DbGetUserExtAccountAdr(): ", acntAdr, " err:", errGetAu)
+
+	valId, errGetids := DbGetSuperNodeExtAccountId("MXC")
+	fmt.Println("DbGetSuperNodeExtAccountId(): ", valId, " err:", errGetids)
+
 	fmt.Println("DbUpdateLatestCheckedBlock(): err", DbUpdateLatestCheckedBlock(2, 876))
 
 	blk, errBlk := DbGetLatestCheckedBlock(3)
 	fmt.Println("DbGetLatestCheckedBlock(): ", blk, " err:", errBlk)
-
-	acntAdr, errGetAu := DbGetUserExtAccountAdr(1, "MXC")
-	fmt.Println("DbGetUserExtAccountAdr(): ", acntAdr, " err:", errGetAu)
 
 	val, errGetAc := DbGetSuperNodeExtAccountAdr("MXC")
 	fmt.Println("DbGetSuperNodeExtAccountAdr(): ", val, " err:", errGetAc)
 
 	fmt.Println("err DbCreateExtAccountTable(): ", DbCreateExtAccountTable())
 
-	ea := pstgDb.ExtAccount{
-		FkWallet:           1,
-		FkExtCurrency:      1,
-		Account_adr:        "0x7645",
-		Insert_time:        time.Now().UTC(),
-		Status:             string(pstgDb.ARC),
-		LatestCheckedBlock: 123}
+	// ea := pstgDb.ExtAccount{   // @@ to be checked
+	// 	FkWallet:           1,
+	// 	FkExtCurrency:      1,
+	// 	Account_adr:        "0x7645",
+	// 	Insert_time:        time.Now().UTC(),
+	// 	Status:             string(pstgDb.ARC),
+	// 	LatestCheckedBlock: 123}
 
-	_, errIns := DBInsertExtAccount(int64(ea.FkWallet), ea.Account_adr, int64(ea.FkExtCurrency))
-	fmt.Println("err DBInsertExtAccount(): ", errIns)
+	// _, errIns := DBInsertExtAccount(int64(ea.FkWallet), ea.Account_adr, int64(ea.FkExtCurrency))
+	// fmt.Println("err DBInsertExtAccount(): ", errIns)
 
 }
 
 func testWithdraw() {
-	wdr := pstgDb.Withdraw{
-		FkExtAcntSender:          1,
-		FkExtAcntRcvr:            3,
-		FkExtCurr:                1,
-		Value:                    6.3,
-		FkWithdrawFee:            1,
-		TxSentTime:               time.Now().UTC(),
-		TxStatus:                 string(pstgDb.PENDING),
-		TxAprvdTime:              time.Now().UTC(),
-		FkQueryIdePaymentService: 98,
-		TxHash:                   "0x556664",
-	}
 
-	fmt.Println("err DbUpdateWithdrawSuccessful(): ", DbUpdateWithdrawSuccessful(11))
+	withId, errInitWith := DbInitWithdrawReq(2, 99, "MXC")
+	fmt.Println(" DbInitWithdrawReq()  id: ", withId, "  err:", errInitWith)
 
-	fmt.Println("err DbCreateWithdrawSuccessfulFunction(): ", DbCreateWithdrawSuccessfulFunction())
+	fmt.Println("err DbUpdateWithdrawPaymentQueryId(): ", DbUpdateWithdrawPaymentQueryId(1, 111))
 
-	fmt.Println("err DbCreateWithdrawTable(): ", DbCreateWithdrawTable())
+	// wdr := pstgDb.Withdraw{
+	// 	FkExtAcntSender:          1,
+	// 	FkExtAcntRcvr:            2,
+	// 	FkExtCurr:                1,
+	// 	Value:                    45.2,
+	// 	FkWithdrawFee:            1,
+	// 	TxSentTime:               time.Now().UTC(),
+	// 	TxStatus:                 string(pstgDb.PENDING),
+	// 	TxAprvdTime:              time.Now().UTC(),
+	// 	FkQueryIdePaymentService: 6,
+	// 	TxHash: "0x06666344",
+	// }
 
-	_, errIns := DbInsertWithdraw(wdr)
-	fmt.Println("err DbInsertWithdraw(): ", errIns)
+	fmt.Println("err DbUpdateWithdrawSuccessful(): ", DbUpdateWithdrawSuccessful(11, "0x555335", time.Now().UTC()))
 
-	// it := pstgDb.InternalTx{
-	// 	FkWalletSender: 1,
-	// 	FkWalletRcvr:   35,
-	// 	PaymentCat:     string(pstgDb.WITHDRAW),
-	// 	TxInternalRef:  4,
-	// 	Value:          65.23,
-	// 	TimeTx:         time.Now().UTC()}
+	// fmt.Println("err DbCreateWithdrawTable(): ", DbCreateWithdrawTable())
 
-	// fmt.Println("err DbApplyWithdrawReq(): ", DbApplyWithdrawReq(wdr, it))
+	// _, errIns := DbInsertWithdraw(wdr)
+	// fmt.Println("err DbInsertWithdraw(): ", errIns)
+
+	// 	it := pstgDb.InternalTx{
+	// 		FkWalletSender: 1,
+	// 		FkWalletRcvr:   2,
+	// 		PaymentCat:     string(pstgDb.WITHDRAW),
+	// 		TxInternalRef:  4,
+	// 		Value:          65.23,
+	// 		TimeTx:         time.Now().UTC()}
+
+	// 	fmt.Println("err DbApplyWithdrawReq(): ", DbInitWithdrawReqApply(wdr, it))
 }
 
 func testTopup() {

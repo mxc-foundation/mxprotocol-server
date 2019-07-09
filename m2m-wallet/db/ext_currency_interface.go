@@ -27,7 +27,7 @@ func DbCreateExtCurrencyTable() error {
 	return pgDb.CreateExtCurrencyTable()
 }
 
-func DbInsertExtCurr(ec pstgDb.ExtCurrency) (insertIndex int, err error) {
+func DbInsertExtCurr(ec pstgDb.ExtCurrency) (insertIndex int64, err error) {
 	return pgDb.InsertExtCurr(ec)
 }
 

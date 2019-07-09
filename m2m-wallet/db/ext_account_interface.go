@@ -1,17 +1,18 @@
 package db
 
 import (
-	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 	"time"
+
+	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
 func DbCreateExtAccountTable() error {
 	return pgDb.CreateExtAccountTable()
 }
 
-func DBInsertExtAccount(walletId int64, newAccount string, currencyAbbr string) (insertIndex int, err error) {
+func DBInsertExtAccount(walletId int64, newAccount string, currencyAbbr string) (insertIndex int64, err error) {
 	// get extCurrencyId from currencyAbbr
-	extCurrencyId, err := DbGetExtCurrencyIdByAbbr(currencyAbbr)
+	extCurrencyId, err := DbGetExtCurrencyIdByAbbr(currencyAbbr) // @@ should be checked
 	if err != nil {
 		return 0, err
 	}
@@ -29,14 +30,22 @@ func DbGetSuperNodeExtAccountAdr(extCurrAbv string) (acntAdr string, err error) 
 	return pgDb.GetSuperNodeExtAccountAdr(extCurrAbv)
 }
 
-func DbGetUserExtAccountAdr(walletId int, extCurrAbv string) (acntAdr string, err error) {
+func DbGetSuperNodeExtAccountId(extCurrAbv string) (acntId int64, err error) {
+	return pgDb.GetSuperNodeExtAccountId(extCurrAbv)
+}
+
+func DbGetUserExtAccountAdr(walletId int64, extCurrAbv string) (acntAdr string, err error) {
 	return pgDb.GetUserExtAccountAdr(walletId, extCurrAbv)
 }
 
-func DbGetLatestCheckedBlock(extAcntId int) (int, error) {
+func DbGetUserExtAccountId(walletId int64, extCurrAbv string) (int64, error) {
+	return pgDb.GetUserExtAccountId(walletId, extCurrAbv)
+}
+
+func DbGetLatestCheckedBlock(extAcntId int64) (int64, error) {
 	return pgDb.GetLatestCheckedBlock(extAcntId)
 }
 
-func DbUpdateLatestCheckedBlock(extAcntId int, updatedBlockNum int) error {
+func DbUpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum int64) error {
 	return pgDb.UpdateLatestCheckedBlock(extAcntId, updatedBlockNum)
 }

@@ -2,11 +2,14 @@ package cmd
 
 import (
 	"context"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/withdraw"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
@@ -15,10 +18,6 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/supernode"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/topup"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/wallet"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/withdraw"
-
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/cobra"
 )
 
 func run(cmd *cobra.Command, args []string) error {
@@ -35,7 +34,7 @@ func run(cmd *cobra.Command, args []string) error {
 		setupWallet,
 		setupWithdraw,
 		setupTopUp,
-		//setupSupernode,
+		setupSupernode,
 		setupAPI,
 	}
 
@@ -89,9 +88,9 @@ func setupDb() error {
 }
 
 func setupWithdraw() error {
-	if err := withdraw.Setup(config.Cstruct); err != nil {
-		return errors.Wrap(err, "setup service withdraw error")
-	}
+	 if err := withdraw.Setup(config.Cstruct); err != nil {
+	 	return errors.Wrap(err, "setup service withdraw error")
+	 }
 	return nil
 }
 

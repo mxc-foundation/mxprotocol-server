@@ -7,7 +7,7 @@ import (
 )
 
 type ExtCurrency struct {
-	Id   int    `db:"id"`
+	Id   int64  `db:"id"`
 	Name string `db:"name"`
 	Abv  string `db:"abv"`
 }
@@ -24,7 +24,7 @@ func (pgDbp DbSpec) CreateExtCurrencyTable() error {
 	return errors.Wrap(err, "storage: query error CreateWalletTable()")
 }
 
-func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int, err error) {
+func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
 	log.WithFields(log.Fields{
 		"name": ec.Name,
 		"abbr": ec.Abv,
@@ -59,3 +59,4 @@ func (pgDbp DbSpec) GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error
 	}
 	return extCurrencyId, nil
 }
+
