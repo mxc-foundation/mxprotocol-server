@@ -2,7 +2,6 @@ package supernode
 
 import (
 	"context"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
@@ -19,7 +18,6 @@ func Setup() error {
 	go func() {
 		log.Info("start supernode goroutine")
 		for range ticker_superAccount.C {
-			//ToDo: should change the currAbv
 			supernodeAccount, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
 			if err != nil {
 				log.WithError(err).Warning("Storage: Cannot get supernode account from DB, restarting...")
@@ -47,12 +45,15 @@ func NewSupernodeServerAPI() *SupernodeServerAPI {
 }
 
 func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context, req *api.GetSuperNodeActiveMoneyAccountRequest) (*api.GetSuperNodeActiveMoneyAccountResponse, error) {
-	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
+	_, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	//Todo: userInfo should be the information of users eg.id,name,org,etc. Use it to get data from DB.
-	fmt.Println("username = ", userProfile.User.Username)
-	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "supernode_account", Error: ""}, nil
+	superNodeAddr, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
+	if err != nil {
+		return nil, status.Errorf(codes.DataLoss, "storage: Cannot get supernode account from DB: %s", err)
+	}
+
+	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: superNodeAddr, Error: ""}, nil
 }
