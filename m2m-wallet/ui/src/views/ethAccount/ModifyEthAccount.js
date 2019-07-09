@@ -1,22 +1,21 @@
 import React, { Component } from "react";
-
-import Grid from "@material-ui/core/Grid";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-
-import Button from "@material-ui/core/Button";
-import TitleBar from "../../components/TitleBar";
-import TitleBarTitle from "../../components/TitleBarTitle";
-import TableCellLink from "../../components/TableCellLink";
-import Divider from '@material-ui/core/Divider';
-import Modal from "./Modal";
-
-//import ApplicationStore from "../../stores/ApplicationStore";
-import ModifyEthAccountForm from "./ModifyEthAccountForm";
-import { withRouter } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 
+import Grid from '@material-ui/core/Grid';
+import TitleBar from "../../components/TitleBar";
+import TitleBarTitle from "../../components/TitleBarTitle";
+import Divider from '@material-ui/core/Divider';
+import MoneyStore from "../../stores/MoneyStore";
+import SessionStore from "../../stores/SessionStore";
+import ModifyEthAccountForm from "./ModifyEthAccountForm";
+import theme from "../../theme";
+
 const styles = {
+  tabs: {
+    borderBottom: "1px solid " + theme.palette.divider,
+    height: "49px",
+  },
   navText: {
     fontSize: 14,
   },
@@ -28,10 +27,9 @@ const styles = {
     flexDirection: 'column'
   },
   card: {
-    backgroundColor: "#090046",
-    display: 'flex',
-    justifyContent: 'flex-end',
-    boxShadow: 0
+    minWidth: 180,
+    width: 220,
+    backgroundColor: "#0C0270",
   },
   divider: {
     padding: 0,
@@ -39,65 +37,78 @@ const styles = {
     width: '100%',
   },
   padding: {
-    paddingTop: 13,
+    padding: 0,
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
   },
 };
 
+const coinType = "Ether";
+
 class ModifyEthAccount extends Component {
   constructor() {
-    super();
-    this.state = {};
-    this.getPage = this.getPage.bind(this);
-    this.getRow = this.getRow.bind(this);
-  }
+      super();
+      this.state = {};
+      this.loadData = this.loadData.bind(this);
+    }
+    
+    componentDidMount() {
+      this.loadData();
+    }
+    
+    loadData() {
+      MoneyStore.getActiveMoneyAccount(coinType, this.props.match.params.organizationID, resp => {
+        this.setState({
+          activeAccount: "dummyAcount"//resp.activeAccount,
+        });
+      }); 
+    }
 
-  getPage(limit, offset, callbackFunc) {
-    //ApplicationStore.list("", this.props.match.params.organizationID, limit, offset, callbackFunc);
-  }
+    onSubmit = (resp) => {
+      resp.orgId = this.props.match.params.organizationID;
+      resp.money_abbr = coinType;
+      
+      const login = {};
+      login.username = resp.username;
+      login.password = resp.password;
 
-  getRow(obj) {
-    return(
-      <TableRow key={obj.id}>
-        <TableCell>{obj.id}</TableCell>
-        <TableCellLink to={`/organizations/${this.props.match.params.organizationID}/applications/${obj.id}`}>{obj.name}</TableCellLink>
-        <TableCellLink to={`/organizations/${this.props.match.params.organizationID}/service-profiles/${obj.serviceProfileID}`}>{obj.serviceProfileName}</TableCellLink>
-        <TableCell>{obj.description}</TableCell>
-      </TableRow>
-    );
-  }
-  
-  showModal (modal) {
-    this.setState({ modal });
-  }
-  
-  onSubmit = (data) => {
-    //e.preventDefault();
-    console.log('data', data)
-    this.showModal(data);
-    return false;
-  }
+      SessionStore.login(login, (response) => {
+        if(response === "ok"){
+          MoneyStore.modifyMoneyAccount(resp, resp => {
+            
+          })
+        }else{
+          alert("inccorect username or password.");
+        }
+      })
+    } 
 
   render() {
     return(
       <Grid container spacing={24}>
-        {this.state.modal && <Modal { ...this.state.modal } />}
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title="ETH Account" />
               </TitleBar>
-              <Divider light={true}/>
+{/*               <Divider light={true}/>
               <TitleBar>
                 <TitleBarTitle title="M2M Wallet" className={this.props.classes.navText}/>
                 <TitleBarTitle title="/" className={this.props.classes.navText}/>
                 <TitleBarTitle title="ETH Account" className={this.props.classes.navText}/>
-              </TitleBar>
+              </TitleBar> */}
           </div>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={6} className={this.props.classes.column}>
           <ModifyEthAccountForm
             submitLabel="Confirm"
+            onSubmit={this.onSubmit}
+            activeAccount={this.state.activeAccount}
           />
+        </Grid>
+        <Grid item xs={6}>
         </Grid>
       </Grid>
     );

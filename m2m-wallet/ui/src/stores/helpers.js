@@ -11,6 +11,7 @@ export function checkStatus(response) {
 };
 
 export function errorHandler(error) {
+  console.error(error);
   if(error.response === undefined) {
     dispatcher.dispatch({
       type: "CREATE_NOTIFICATION",

@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/withdraw"
+
 	"os"
 	"os/signal"
 	"syscall"
@@ -88,9 +89,9 @@ func setupDb() error {
 }
 
 func setupWithdraw() error {
-	 if err := withdraw.Setup(config.Cstruct); err != nil {
-	 	return errors.Wrap(err, "setup service withdraw error")
-	 }
+	if err := withdraw.Setup(config.Cstruct); err != nil {
+		return errors.Wrap(err, "setup service withdraw error")
+	}
 	return nil
 }
 

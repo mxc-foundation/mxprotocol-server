@@ -59,4 +59,3 @@ func (pgDbp DbSpec) GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error
 	}
 	return extCurrencyId, nil
 }
-

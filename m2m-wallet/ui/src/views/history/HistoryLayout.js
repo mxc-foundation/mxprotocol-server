@@ -82,26 +82,21 @@ class HistoryLayout extends Component {
 
   locationToTab() {
     let tab = 0;
-    if (window.location.href.endsWith("/edit")) {
+
+    if (window.location.href.endsWith("/eth_account")) {
       tab = 1;
-    } else if (window.location.href.endsWith("/keys")) {
+    } else if (window.location.href.endsWith("/Withdraw")) {
       tab = 2;
     } 
 
-    if (tab > 1 && !this.state.admin) {
-      tab = tab - 1;
-    }
-
     this.setState({
-      tab: tab,
+      tab,
     });
   }
 
   render() {
-    //const organizationID = SessionStore.getOrganizationID();
-    const organizationID = '1';
-  
-    console.log('props', this.props)
+    const organizationID = this.props.match.params.organizationID;
+    
     return(
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
@@ -109,12 +104,12 @@ class HistoryLayout extends Component {
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title="History" />
               </TitleBar>
-              <Divider light={true}/>
+{/*               <Divider light={true}/>
               <TitleBar>
                 <TitleBarTitle title="M2M Wallet" className={this.props.classes.navText}/>
                 <TitleBarTitle title="/" className={this.props.classes.navText}/>
                 <TitleBarTitle title="History" className={this.props.classes.navText}/>
-              </TitleBar>
+              </TitleBar> */}
           </div>
         </Grid>
 
@@ -130,7 +125,8 @@ class HistoryLayout extends Component {
           >
             <Tab label="Transactions" component={Link} to={`/history/${organizationID}/transactions`} />
             <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth_account`} />
-            <Tab label="Subsriptions" component={Link} to={`/history/${organizationID}/sub-scription`} />
+            <Tab label="Withdraw" component={Link} to={`/history/${organizationID}/Withdraw`} />
+            
           </Tabs>
         </Grid>
 
@@ -138,7 +134,7 @@ class HistoryLayout extends Component {
           <Switch>
             <Route exact path={`${this.props.match.path}/${organizationID}/transactions`} render={props => <Transactions {...props} />} />
             <Route exact path={`${this.props.match.path}/${organizationID}/eth_account`} render={props => <EthAccount {...props} />} />
-            <Route exact path={`${this.props.match.path}/${organizationID}/sub-scription`} render={props => <SubScriptions {...props} />} />
+            <Route exact path={`${this.props.match.path}/${organizationID}/Withdraw`} render={props => <SubScriptions {...props} />} />
 
             <Redirect to={`/history/${organizationID}/transactions`} />
           </Switch>

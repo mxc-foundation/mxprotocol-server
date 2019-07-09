@@ -48,7 +48,7 @@ class DataTable extends Component {
       this.setState({
         page: page,
         count: parseInt(result.totalCount, 10),
-        rows: result.result.map((row, i) => this.props.getRow(row)),
+        rows: result.result.map((row, i) => this.props.getRow(row, i)),
       });
     });
   }

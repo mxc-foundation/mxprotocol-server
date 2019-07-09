@@ -3,19 +3,23 @@ import React from "react";
 import TextField from '@material-ui/core/TextField';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
-import TitleBarButton from "../../components/TitleBarButton";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import { withRouter, Link  } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 
 class TopupForm extends FormComponent {
+
+  handleOpenAXS = () => {
+    window.location.replace(`http://www.google.com`);
+  } 
+
   render() {
-    if (this.props.txinfo === undefined) {
+    if (this.props.reps === undefined) {
       return(<div></div>);
     }
-    
+    //console.log('this.props.reps', this.props.reps);
     const extraButtons = <>
-      <Button color="primary" type="button" disabled={false} >USE AXS WALLET</Button>
+      <Button color="primary" onClick={this.handleOpenAXS} type="button" disabled={false}>USE AXS WALLET</Button>
     </>;
 
     return(
@@ -29,34 +33,36 @@ class TopupForm extends FormComponent {
           label="Amount"
           //helperText="Send MXC amount from."
           margin="normal"
-          value={this.props.txinfo.sendToken || ""}
-          onChange={this.onChange}
-          inputProps={{
-            pattern: "[\\w-]+",
+
+          value={this.props.reps.amount || ""}
+          InputProps={{
+            readOnly: true,
+
           }}
-          required
+
           fullWidth
         />
         <TextField
           id="to"
-          label="From Account"
+          label="From"
           margin="normal"
-          value={this.props.txinfo.from || ""}
-          onChange={this.onChange}
-          required
+          value={this.props.reps.from || ""}
+          InputProps={{
+            readOnly: true,
+          }}
           fullWidth
         />
         <TextField
           id="to"
-          label="To Account"
+          label="To"
           margin="normal"
-          value={this.props.txinfo.to || ""}
-          onChange={this.onChange}
-          required
+          value={this.props.reps.to || ""}
+          InputProps={{
+            readOnly: true,
+          }}
           fullWidth
         />
-        <TitleBarTitle to="/#" title="CHANGE ETH ACCOUNT" />
-          
+        <TitleBarTitle component={Link} to={`/modify-account/${this.props.orgId}`} title="CHANGE ETH ACCOUNT" />
       </Form>
     );
   }
