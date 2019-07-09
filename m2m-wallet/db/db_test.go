@@ -14,7 +14,7 @@ func testDb() {
 	// testExtCurrency()
 	testWithdraw()
 	// testExtAccount()
-	// testTopup()
+	testTopup()
 
 }
 
@@ -99,6 +99,16 @@ func testWithdrawFee() {
 }
 
 func testExtAccount() {
+	acntId2, errGetAi2 := DbGetExtAccountIdByAdr("0x8347")
+	fmt.Println("DbGetExtAccountIdByAdr(): ", acntId2, " err:", errGetAi2)
+
+	acntId, errGetAi := DbGetUserExtAccountId(1, "MXC")
+	fmt.Println("DbGetUserExtAccountId(): ", acntId, " err:", errGetAi)
+	acntAdr, errGetAu := DbGetUserExtAccountAdr(1, "MXC")
+	fmt.Println("DbGetUserExtAccountAdr(): ", acntAdr, " err:", errGetAu)
+
+	valId, errGetids := DbGetSuperNodeExtAccountId("MXC")
+	fmt.Println("DbGetSuperNodeExtAccountId(): ", valId, " err:", errGetids)
 
 	acntId2, errGetAi2 := DbGetExtAccountIdByAdr("0x8347")
 	fmt.Println("DbGetExtAccountIdByAdr(): ", acntId2, " err:", errGetAi2)

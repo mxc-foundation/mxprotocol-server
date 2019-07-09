@@ -3,8 +3,7 @@ import React from "react";
 import TextField from '@material-ui/core/TextField';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
-import Button from "@material-ui/core/Button";
-import InputAdornment from '@material-ui/core/InputAdornment';
+//import Button from "@material-ui/core/Button";
 
 import { withRouter } from "react-router-dom";
 
@@ -13,16 +12,7 @@ class WithdrawForm extends FormComponent {
   onChange = (event) => {
     const { id, value } = event.target;
     
-    console.log(value)
-    if(!((event.keyCode > 95 && event.keyCode < 106)
-      || (event.keyCode > 47 && event.keyCode < 58) 
-      || event.keyCode == 8)) {
-        return false;
-    }
-    console.log(this.state.amount)
-
     this.setState({
-      // [id]: value.replace(' MXC', '')
       [id]: value
     });
   }
@@ -32,47 +22,50 @@ class WithdrawForm extends FormComponent {
       return(<div>loading...</div>);
     }
 
-    const extraButtons = <>
+    /* const extraButtons = <>
       <Button color="primary" type="button" disabled={false} >Cancel</Button>
-    </>;
+    </>; */
+    
+    const w_limit = parseFloat(this.props.txinfo.balance);
+    const { txinfo } = this.props;
 
     return(
       <Form
         submitLabel={this.props.submitLabel}
-        extraButtons={extraButtons}
-        onSubmit={() => this.props.onSubmit({
+        //extraButtons={extraButtons}
+        onSubmit={(e) => this.props.onSubmit(e, {
           amount: this.state.amount,
-          destination: this.state.destination,
-          txFee: this.props.txinfo.withdrawFee
+          txFee: txinfo.withdrawFee,
+          destination: txinfo.destination,
+          moneyAbbr: txinfo.moneyAbbr
         })}
       >
         <TextField
           id="amount"
-          //bgcolor="primary.main"
           label="Amount"
-          //helperText="The name may only contain words, numbers and dashes."
           margin="normal"
-          //value={this.state.amount + ' MXC'}
           value={this.state.amount}
+          placeholder="Type here" 
           onChange={this.onChange}
-          className={this.props.classes.root}
+          autoComplete='off'
+          
           required
           fullWidth
           type="number"
           inputProps={{
-            maxLength: 4,
             min: 0,
-            max: 1000
+            max: w_limit
           }}
         />
         
         <TextField
-        id="txFee"
+          id="txFee"
           label="Transaction fee"
           margin="normal"
           value={this.props.txinfo.withdrawFee || ""}
-            className={this.props.classes.root}
-
+          InputProps={{
+            readOnly: true,
+          }}
           required
           fullWidth
         />
@@ -82,11 +75,11 @@ class WithdrawForm extends FormComponent {
           label="Destination"
           helperText="ETH Account."
           margin="normal"
-          value={this.state.destination}
+          value={this.props.txinfo.account || ""}
           onChange={this.onChange}
-          className={this.props.classes.root}
+          
           InputProps={{
-            pattern: "[\\w-]+",
+            readOnly: true,
           }}
           
           required

@@ -76,8 +76,7 @@ func (pgDbp DbSpec) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
 		&w.Id,
 	)
 	if err != nil {
-		// fmt.Println(err)
-		log.WithError(err).Warning("db: query error GetWalletIdFromOrgId()")
+		log.WithError(err).Warning(fmt.Sprintf("db: query error GetWalletIdFromOrgId(%d)", orgIdLora))
 
 	}
 	return w.Id, err

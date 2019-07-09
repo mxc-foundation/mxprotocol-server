@@ -38,6 +38,7 @@ func createWallet(orgId int64) (int64, error) {
 }
 
 func GetWalletId(orgId int64) (walletId int64, err error) {
+	log.Info("/wallet: get wallet id from orgID= ", orgId)
 	var res bool
 
 	walletId, res = userHasWallet(orgId)

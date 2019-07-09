@@ -7,20 +7,23 @@ import {checkStatus, errorHandler } from "./helpers";
 import dispatcher from "../dispatcher";
 
 
-class WithdrawStore extends EventEmitter {
+class TopupStore extends EventEmitter {
   constructor() {
     super();
-    this.swagger = new Swagger("/swagger/withdraw.swagger.json", sessionStore.getClientOpts());
+    this.swagger = new Swagger("/swagger/topup.swagger.json", sessionStore.getClientOpts());
   }
 
-  getWithdrawFee(money_abbr, callbackFunc) {
+  getTopUpHistory(orgId, offset, limit, callbackFunc) {
     this.swagger.then(client => {
-      client.apis.WithdrawService.GetWithdrawFee({
-        money_abbr,
+      client.apis.TopUpService.GetTopUpHistory({
+        orgId,
+        offset,
+        limit
       })
       .then(checkStatus)
       .then(resp => {
-        callbackFunc(resp.obj);
+        console.log('resp',resp);
+        callbackFunc(resp.body);
       })
       .catch(errorHandler);
     });
@@ -37,7 +40,6 @@ class WithdrawStore extends EventEmitter {
       .then(checkStatus)
       .then(resp => {
         this.notify("updated");
-        this.emit("withdraw");
         callbackFunc(resp.obj);
       })
       .catch(errorHandler);
@@ -49,11 +51,11 @@ class WithdrawStore extends EventEmitter {
       type: "CREATE_NOTIFICATION",
       notification: {
         type: "success",
-        message: "Withdrawal succeeded"
+        message: "user has been " + action,
       },
     });
   }
 }
 
-const withdrawStore = new WithdrawStore();
-export default withdrawStore;
+const topupStore = new TopupStore();
+export default topupStore;

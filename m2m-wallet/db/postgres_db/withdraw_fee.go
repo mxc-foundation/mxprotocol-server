@@ -68,10 +68,13 @@ func (pgDbp DbSpec) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64
 		ORDER BY ec.id DESC 
 		LIMIT 1 
 		;
-	`,
-		extCurrAbv).Scan(&withdrawFee)
+	`, extCurrAbv).Scan(&withdrawFee)
 
-	return withdrawFee, errors.Wrap(err, "db: query error GetActiveWithdrawFee()")
+	if err != nil {
+		err = errors.Wrap(err, "db/GetActiveWithdrawFee")
+	}
+
+	return withdrawFee, err
 }
 
 func (pgDbp DbSpec) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
@@ -90,5 +93,5 @@ func (pgDbp DbSpec) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64
 	`,
 		extCurrAbv).Scan(&withdrawFee)
 
-	return withdrawFee, errors.Wrap(err, "db: query error GetActiveWithdrawFeeId()")
+	return withdrawFee, errors.Wrap(err, "db: query error GetActiveWithdrawFee()")
 }

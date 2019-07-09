@@ -54,7 +54,7 @@ func init() {
 	viper.SetDefault("supernode.supernode_address", "0x8a96E17d85Bd897a88B547718865de990D2Fcb80")
 	viper.SetDefault("supernode.api_key", "W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4")
 	viper.SetDefault("supernode.check_account_seconds", 30)
-	viper.SetDefault("supernode.check_payment_seconds", 60)
+	viper.SetDefault("supernode.external_currency_abv", "MXC")
 
 	viper.SetDefault("paymentserver.payment_service_address", "localhost")
 	viper.SetDefault("paymentserver.payment_service_port", ":8081")

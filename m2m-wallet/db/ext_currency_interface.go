@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/apex/log"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
@@ -31,5 +32,10 @@ func DbInsertExtCurr(ec pstgDb.ExtCurrency) (insertIndex int64, err error) {
 }
 
 func DbGetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
-	return pgDb.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
+	id, err := pgDb.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
+	if err != nil {
+		log.WithError(err).Error("DbGetExtCurrencyIdByAbbr")
+	}
+
+	return id, err
 }

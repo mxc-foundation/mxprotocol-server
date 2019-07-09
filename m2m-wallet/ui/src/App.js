@@ -15,6 +15,7 @@ import SideNav from "./components/SideNav";
 import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
+//import WalletStore from "./stores/WalletStore";
 
 // search
 //import Search from "./views/search/Search";
@@ -33,7 +34,7 @@ const styles = {
     background: "#311b92",
   },
   root: {
-    width: '1024px',
+    //width: '1024px',
     flexGrow: 1,
     margin: 'auto',
     display: "flex",
@@ -78,13 +79,18 @@ class HandleLoraRedirect extends Component {
 
     }
   }
+  
+  formatNumber(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 
   render() {
     const { match: { params: { data: dataString } }} = this.props;
-
+    
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
-    const { path, jwt } = data;
-    localStorage.setItem('lora-jwt', jwt);
+    const { path } = data;
+    SessionStore.initProfile(data);
+  
     return <Redirect to={path} />;
   }
 }
@@ -105,6 +111,7 @@ class App extends Component {
     SessionStore.on("change", () => {
       this.setState({
         user: SessionStore.getUser(),
+        organizationID: SessionStore.getOrganizationID(),
         drawerOpen: SessionStore.getUser() != null,
       });
     });
@@ -115,6 +122,7 @@ class App extends Component {
     }); */
     this.setState({
       drawerOpen: true,
+      organizationID: SessionStore.getOrganizationID(),
     });
   }
 
@@ -130,7 +138,7 @@ class App extends Component {
 
     if (this.state.user !== null) {
       topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} />;
-      sideNav = <SideNav open={this.state.drawerOpen} user={this.state.user} />
+      sideNav = <SideNav open={this.state.drawerOpen} organizationID={this.state.organizationID} />
     }
     
     return (
@@ -147,11 +155,10 @@ class App extends Component {
                   <Switch>
                     <Route path="/j/:data" component={HandleLoraRedirect} />
                     <Route exact path="/" component={Withdraw} />
-                    {/* <Route exact path="/withdraw/:organizationID(\d+)" component={Withdraw} /> */}
                     <Route path="/withdraw/:organizationID?" component={Withdraw} />
-                    <Route exact path="/topup" component={Topup} />
-                    <Route path="/history" component={HistoryLayout} />
-                    <Route exact path="/modify-account" component={ModifyEthAccount} />
+                    <Route path="/topup/:organizationID?" component={Topup} />
+                    <Route path="/history/:organizationID?" component={HistoryLayout} />
+                    <Route path="/modify-account/:organizationID?" component={ModifyEthAccount} />
                     
                   </Switch>
                 </Grid>

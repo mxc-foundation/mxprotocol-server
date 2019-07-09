@@ -8,7 +8,6 @@ import TableRow from "@material-ui/core/TableRow";
 import HistoryStore from "../../stores/HistoryStore";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
-import TableCellLink from "../../components/TableCellLink";
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
@@ -21,25 +20,22 @@ class Transactions extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    //HistoryStore.list("", this.props.match.params.organizationID, limit, offset, callbackFunc);
-    HistoryStore.GetTopUpHistory(this.props.match.params.organizationID, limit, offset, (data) => {
+    HistoryStore.getVmxcTxHistory(this.props.match.params.organizationID, limit, offset, (data) => {
       callbackFunc({
         totalCount: offset + 2 * limit,
-        result: data
+        result: data.txHistory
       });
     });
   }
 
-  getRow(obj) {
+  getRow(obj, index) {
     return(
-      <TableRow key={obj.id}>
-        <TableCell>{obj.date}</TableCell>
+      <TableRow key={index}>
         <TableCell>{obj.from}</TableCell>
         <TableCell>{obj.to}</TableCell>
-        <TableCell>{obj.value}</TableCell>
-        <TableCell>{obj.balance}</TableCell>
-        <TableCell>{obj.txHash}</TableCell>
-        <TableCell>{obj.status}</TableCell>
+        <TableCell>{obj.txType}</TableCell>
+        <TableCell>{obj.amount}</TableCell>
+        <TableCell>{obj.createdAt}</TableCell>
       </TableRow>
     );
   }
@@ -65,11 +61,9 @@ class Transactions extends Component {
               <TableRow>
                 <TableCell>From</TableCell>
                 <TableCell>To</TableCell>
-                <TableCell>Value</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Amount</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell>Balance</TableCell>
-                <TableCell>Tx hash</TableCell>
-                <TableCell>Status</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

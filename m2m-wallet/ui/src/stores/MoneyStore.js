@@ -7,16 +7,17 @@ import {checkStatus, errorHandler } from "./helpers";
 import dispatcher from "../dispatcher";
 
 
-class WithdrawStore extends EventEmitter {
+class MoneyStore extends EventEmitter {
   constructor() {
     super();
-    this.swagger = new Swagger("/swagger/withdraw.swagger.json", sessionStore.getClientOpts());
+    this.swagger = new Swagger("/swagger/money.swagger.json", sessionStore.getClientOpts());
   }
 
-  getWithdrawFee(money_abbr, callbackFunc) {
+  getActiveMoneyAccount(money_abbr, org_id, callbackFunc) {
     this.swagger.then(client => {
-      client.apis.WithdrawService.GetWithdrawFee({
+      client.apis.MoneyService.GetActiveMoneyAccount({
         money_abbr,
+        org_id,
       })
       .then(checkStatus)
       .then(resp => {
@@ -26,34 +27,33 @@ class WithdrawStore extends EventEmitter {
     });
   }
 
-  WithdrawReq(apiWithdrawReqRequest, callbackFunc) {
+  modifyMoneyAccount(req, callbackFunc) {
     this.swagger.then(client => {
-      client.apis.WithdrawService.WithdrawReq({
-        "money_abbr": apiWithdrawReqRequest.moneyAbbr,
+      client.apis.MoneyService.ModifyMoneyAccount({
+        "money_abbr": req.money_abbr,
         body: {
-          apiWithdrawReqRequest,
+            apiModifyMoneyAccountRequest: req,
         },
       })
       .then(checkStatus)
       .then(resp => {
         this.notify("updated");
-        this.emit("withdraw");
         callbackFunc(resp.obj);
       })
       .catch(errorHandler);
     });
   }
-  
+
   notify(action) {
     dispatcher.dispatch({
       type: "CREATE_NOTIFICATION",
       notification: {
         type: "success",
-        message: "Withdrawal succeeded"
+        message: "user has been " + action,
       },
     });
   }
 }
 
-const withdrawStore = new WithdrawStore();
-export default withdrawStore;
+const moneyStore = new MoneyStore();
+export default moneyStore;

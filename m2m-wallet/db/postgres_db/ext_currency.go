@@ -30,8 +30,6 @@ func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error)
 		"abbr": ec.Abv,
 	}).Info("/db/ext_currency_interface: insert ext_currency")
 	err = pgDbp.Db.QueryRow(`
-
-
 	INSERT INTO ext_currency (
 		name ,
 		abv)
@@ -49,13 +47,15 @@ func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error)
 }
 
 func (pgDbp DbSpec) GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
-	var exCurId int64
-	err := pgDbp.Db.QueryRow(
-		`
-		SELECT id
-		FROM
-			ext_currency
-		WHERE
-			abv = $1 ;`, extCurrencyAbbr).Scan(&exCurId)
-	return exCurId, errors.Wrap(err, "storage: query error CreateWalletTable()")
+	var extCurrencyId int64
+	err := pgDbp.Db.QueryRow(`
+		select id 
+		from 
+			ext_currency 
+		where 
+			abv=$1;`, extCurrencyAbbr).Scan(&extCurrencyId)
+	if err != nil {
+		return 0, errors.Wrap(err, "/db/ext_currency: GetExtCurrencyIdByAbbr error")
+	}
+	return extCurrencyId, nil
 }

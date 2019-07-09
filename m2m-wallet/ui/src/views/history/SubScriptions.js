@@ -7,7 +7,6 @@ import TableRow from "@material-ui/core/TableRow";
 import HistoryStore from "../../stores/HistoryStore";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
-import TableCellLink from "../../components/TableCellLink";
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
@@ -20,22 +19,23 @@ class SubScriptions extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.GetTopUpHistory(this.props.match.params.organizationID, limit, offset, (data) => {
+    HistoryStore.getWithdrawHistory("Ether", this.props.match.params.organizationID, limit, offset, (data) => {
+      console.log('data', data)
       callbackFunc({
         totalCount: offset + 2 * limit,
-        result: data
+        result: data.withdrawHistory
       });
     });
   }
 
-  getRow(obj) {
+  getRow(obj, index) {
     return(
-      <TableRow key={obj.id}>
-        <TableCell>{obj.device}</TableCell>
-        <TableCell>{obj.start}</TableCell>
-        <TableCell>{obj.end}</TableCell>
-        <TableCell>{obj.price}</TableCell>
-        <TableCell>{obj.details}</TableCell>
+      <TableRow key={index}>
+        <TableCell>{obj.from}</TableCell>
+        <TableCell>{obj.to}</TableCell>
+        <TableCell>{obj.moneyType}</TableCell>
+        <TableCell>{obj.amount}</TableCell>
+        <TableCell>{obj.createdAt}</TableCell>
       </TableRow>
     );
   }
@@ -53,17 +53,17 @@ class SubScriptions extends Component {
             </Admin>
           }
         >
-          <TitleBarTitle title="Subsriptions" />
+        <TitleBarTitle title="WithDraw" />
         </TitleBar>
         <Grid item xs={12}>
           <DataTable
             header={
               <TableRow>
-                <TableCell>Device</TableCell>
-                <TableCell>Start</TableCell>
-                <TableCell>End</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>Details</TableCell>
+                <TableCell>From</TableCell>
+                <TableCell>To</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell>Date</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
