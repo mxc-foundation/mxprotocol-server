@@ -22,7 +22,9 @@ func testWallet() {
 
 	superNodeId, errsuperNodeId := DbGetWalletIdSuperNode()
 	fmt.Println("GetWalletIdSuperNode(): ", superNodeId, " || err:", errsuperNodeId)
+
 	fmt.Println("err DbUpdateBalanceByWalletId(): ", DbUpdateBalanceByWalletId(1, 654.3))
+
 	balance, err2 := DbGetWalletBalance(102)
 	fmt.Println("GetWalletBalance(): ", balance, " || err:", err2)
 
@@ -108,6 +110,18 @@ func testExtAccount() {
 	valId, errGetids := DbGetSuperNodeExtAccountId("MXC")
 	fmt.Println("DbGetSuperNodeExtAccountId(): ", valId, " err:", errGetids)
 
+	acntId2, errGetAi2 := DbGetExtAccountIdByAdr("0x8347")
+	fmt.Println("DbGetExtAccountIdByAdr(): ", acntId2, " err:", errGetAi2)
+
+	acntId, errGetAi := DbGetUserExtAccountId(1, "MXC")
+	fmt.Println("DbGetUserExtAccountId(): ", acntId, " err:", errGetAi)
+
+	acntAdr, errGetAu := DbGetUserExtAccountAdr(1, "MXC")
+	fmt.Println("DbGetUserExtAccountAdr(): ", acntAdr, " err:", errGetAu)
+
+	valId, errGetids := DbGetSuperNodeExtAccountId("MXC")
+	fmt.Println("DbGetSuperNodeExtAccountId(): ", valId, " err:", errGetids)
+
 	fmt.Println("DbUpdateLatestCheckedBlock(): err", DbUpdateLatestCheckedBlock(2, 876))
 
 	blk, errBlk := DbGetLatestCheckedBlock(3)
@@ -133,7 +147,7 @@ func testExtAccount() {
 
 func testWithdraw() {
 
-	withId, errInitWith := DbInitWithdrawReq(2, 99, "MXC")
+	withId, errInitWith := DbInitWithdrawReq(1, 99, "MXC")
 	fmt.Println(" DbInitWithdrawReq()  id: ", withId, "  err:", errInitWith)
 
 	fmt.Println("err DbUpdateWithdrawPaymentQueryId(): ", DbUpdateWithdrawPaymentQueryId(1, 111))
@@ -165,6 +179,7 @@ func testWithdraw() {
 	// 		TxInternalRef:  4,
 	// 		Value:          65.23,
 	// 		TimeTx:         time.Now().UTC()}
+
 	// 	fmt.Println("err DbApplyWithdrawReq(): ", DbInitWithdrawReqApply(wdr, it))
 }
 

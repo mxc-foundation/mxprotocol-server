@@ -89,7 +89,7 @@ func setupDb() error {
 
 func setupWithdraw() error {
 	if err := withdraw.Setup(config.Cstruct); err != nil {
-		return errors.Wrap(err, "setup service withdraw error")
+	    return errors.Wrap(err, "setup service withdraw error")
 	}
 	return nil
 }
