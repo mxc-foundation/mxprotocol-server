@@ -12,9 +12,9 @@ func testDb() {
 	// testInternalTx()
 	// testWithdrawFee()
 	// testExtCurrency()
-	// testWithdraw()
+	testWithdraw()
 	// testExtAccount()
-	testTopup()
+	// testTopup()
 
 }
 
@@ -137,7 +137,7 @@ func testExtAccount() {
 
 func testWithdraw() {
 
-	withId, errInitWith := DbInitWithdrawReq(2, 99, "MXC")
+	withId, errInitWith := DbInitWithdrawReq(1, 99, "MXC")
 	fmt.Println(" DbInitWithdrawReq()  id: ", withId, "  err:", errInitWith)
 
 	fmt.Println("err DbUpdateWithdrawPaymentQueryId(): ", DbUpdateWithdrawPaymentQueryId(1, 111))

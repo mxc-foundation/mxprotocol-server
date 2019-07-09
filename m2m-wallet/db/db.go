@@ -33,7 +33,7 @@ func Setup(conf config.MxpConfig) error {
 
 	// create tables if not exist
 	dbInit()
-	testDb()
+	// testDb()
 
 	// init data if applys
 	err = initExtCurrencyTable()
