@@ -13,11 +13,10 @@ import (
 )
 
 func Setup() error {
-	//todo
-	ticker_superAccount := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckAccountSeconds) * time.Second)
+	ticker := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckAccountSeconds) * time.Second)
 	go func() {
 		log.Info("start supernode goroutine")
-		for range ticker_superAccount.C {
+		for range ticker.C {
 			supernodeAccount, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
 			if err != nil {
 				log.WithError(err).Warning("Storage: Cannot get supernode account from DB, restarting...")

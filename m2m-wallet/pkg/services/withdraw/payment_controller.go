@@ -35,7 +35,6 @@ func paymentReq(ctx context.Context, conf *config.MxpConfig, amount, receiverAdd
 
 	client := ps.NewPaymentClient(conn)
 
-	//ToDo: set the correct ReqId and ReceverAdr
 	reply, err := client.TokenTxReq(ctx, &ps.TxReqType{PaymentClientEnum: 3, ReqIdClient: reqId, ReceiverAdr: receiverAdd,
 		Amount: amount, TokenNameEnum: 0})
 	if err != nil {
