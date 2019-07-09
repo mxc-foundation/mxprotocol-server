@@ -21,7 +21,7 @@ func (pgDbp DbSpec) CreateExtCurrencyTable() error {
 			abv VARCHAR(16) UNIQUE NOT NULL
 		);
 	`)
-	return errors.Wrap(err, "storage: query error CreateWalletTable()")
+	return errors.Wrap(err, "db/CreateExtCurrencyTable")
 }
 
 func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
@@ -43,7 +43,7 @@ func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error)
 		ec.Abv).Scan(&insertIndex)
 
 	// fmt.Println(val, err)
-	return insertIndex, errors.Wrap(err, "storage: query error InsertExtCurr()")
+	return insertIndex, errors.Wrap(err, "db/InsertExtCurr")
 }
 
 func (pgDbp DbSpec) GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
@@ -54,8 +54,6 @@ func (pgDbp DbSpec) GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error
 			ext_currency 
 		where 
 			abv=$1;`, extCurrencyAbbr).Scan(&extCurrencyId)
-	if err != nil {
-		return 0, errors.Wrap(err, "/db/ext_currency: GetExtCurrencyIdByAbbr error")
-	}
-	return extCurrencyId, nil
+
+	return extCurrencyId, errors.Wrap(err, "db/GetExtCurrencyIdByAbbr")
 }

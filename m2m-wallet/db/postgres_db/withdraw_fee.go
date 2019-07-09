@@ -28,7 +28,7 @@ func (pgDbp DbSpec) CreateWithdrawFeeTable() error {
 		);
 		
 	`)
-	return errors.Wrap(err, "db: query error CreateWalletTable()")
+	return errors.Wrap(err, "db/CreateWithdrawFeeTable")
 }
 
 func (pgDbp DbSpec) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
@@ -52,7 +52,7 @@ func (pgDbp DbSpec) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err er
 		wf.Status,
 	).Scan(&insertIndex)
 
-	return insertIndex, errors.Wrap(err, "db: query error InsertWithdrawFee()")
+	return insertIndex, errors.Wrap(err, "db/InsertWithdrawFee")
 }
 
 func (pgDbp DbSpec) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
@@ -70,11 +70,7 @@ func (pgDbp DbSpec) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64
 		;
 	`, extCurrAbv).Scan(&withdrawFee)
 
-	if err != nil {
-		err = errors.Wrap(err, "db/GetActiveWithdrawFee")
-	}
-
-	return withdrawFee, err
+	return withdrawFee, errors.Wrap(err, "db/GetActiveWithdrawFee")
 }
 
 func (pgDbp DbSpec) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
@@ -93,5 +89,5 @@ func (pgDbp DbSpec) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64
 	`,
 		extCurrAbv).Scan(&withdrawFee)
 
-	return withdrawFee, errors.Wrap(err, "db: query error GetActiveWithdrawFee()")
+	return withdrawFee, errors.Wrap(err, "db/GetActiveWithdrawFeeId")
 }

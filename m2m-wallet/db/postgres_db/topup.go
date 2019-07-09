@@ -29,7 +29,7 @@ func (pgDbp DbSpec) CreateTopupTable() error {
 		tx_hash varchar (128) NOT NULL UNIQUE
 		);
 	`)
-	return errors.Wrap(err, "db: PostgreSQL connection error")
+	return errors.Wrap(err, "db/CreateTopupTable")
 }
 
 func (pgDbp DbSpec) InsertTopup(tu Topup) (insertIndex int64, err error) {
@@ -54,7 +54,7 @@ func (pgDbp DbSpec) InsertTopup(tu Topup) (insertIndex int64, err error) {
 		tu.TxAprvdTime,
 		tu.TxHash).Scan(&insertIndex)
 
-	return insertIndex, errors.Wrap(err, "db: query error InsertWallet()")
+	return insertIndex, errors.Wrap(err, "db/InsertTopup")
 }
 
 func (pgDbp DbSpec) CreateTopupFunctions() error {
@@ -128,7 +128,7 @@ func (pgDbp DbSpec) CreateTopupFunctions() error {
 
 	`)
 
-	return err
+	return errors.Wrap(err, "db/CreateTopupFunctions")
 }
 
 func (pgDbp DbSpec) ApplyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
@@ -145,7 +145,7 @@ func (pgDbp DbSpec) ApplyTopup(tu Topup, it InternalTx) (topupId int64, err erro
 		it.FkWalletRcvr,
 		it.PaymentCat).Scan(&topupId)
 
-	return topupId, errors.Wrap(err, "db: PostgreSQL connection error ApplyTopup()")
+	return topupId, errors.Wrap(err, "db/ApplyTopup")
 
 }
 
@@ -188,5 +188,4 @@ func (pgDbp DbSpec) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string, tx
 
 	return pgDbp.ApplyTopup(tu, it)
 
-	//return 0, nil
 }

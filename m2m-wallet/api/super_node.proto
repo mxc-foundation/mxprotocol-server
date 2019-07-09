@@ -7,9 +7,16 @@ import "money.proto";
 import "internal.proto";
 
 service SuperNodeService {
-    rpc GetSuperNodeActiveMoneyAccount(GetSuperNodeActiveMoneyAccountRequest) returns (GetSuperNodeActiveMoneyAccountResponse){
+    rpc GetSuperNodeActiveMoneyAccount (GetSuperNodeActiveMoneyAccountRequest) returns (GetSuperNodeActiveMoneyAccountResponse){
         option(google.api.http) = {
 			get: "/api/supernode/active_account/{money_abbr}"
+		};
+    }
+
+    rpc AddSuperNodeMoneyAccount (AddSuperNodeMoneyAccountRequest) returns (AddSuperNodeMoneyAccountResponse) {
+        option(google.api.http) = {
+			post: "/api/supernode/{money_abbr}/add-account"
+			body: "*"
 		};
     }
 }
@@ -21,5 +28,16 @@ message GetSuperNodeActiveMoneyAccountRequest {
 message GetSuperNodeActiveMoneyAccountResponse {
     string supernode_active_account = 1;
     string Error = 2;
+    ProfileResponse user_profile = 3;
+}
+
+message AddSuperNodeMoneyAccountRequest {
+    Money money_abbr = 1;
+    string account_addr = 2;
+}
+
+message AddSuperNodeMoneyAccountResponse {
+    string error = 1;
+    bool status = 2;
     ProfileResponse user_profile = 3;
 }
