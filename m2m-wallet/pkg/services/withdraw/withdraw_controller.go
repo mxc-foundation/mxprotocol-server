@@ -18,14 +18,13 @@ var ctxWithdraw struct {
 	withdrawFee map[string]float64
 }
 
-func init() {
+func Setup(conf config.MxpConfig) error {
+	log.Info("setup withdraw service")
+
+	ctxWithdraw.withdrawFee = make(map[string]float64)
 	for _, v := range db.CurrencyList {
 		ctxWithdraw.withdrawFee[v.Abv] = 20
 	}
-}
-
-func Setup(conf config.MxpConfig) error {
-	log.Info("setup withdraw service")
 
 	if false == paymentServiceAvailable(conf) {
 		err := errors.New("Setup withdraw failed: payment service not available.")
@@ -36,7 +35,10 @@ func Setup(conf config.MxpConfig) error {
 	for _, v := range db.CurrencyList {
 		withdrawFee, err := db.DbGetActiveWithdrawFee(v.Abv)
 		if err != nil {
-			db.DbInsertWithdrawFee(v.Abv, ctxWithdraw.withdrawFee[v.Abv])
+			if _, err := db.DbInsertWithdrawFee(v.Abv, ctxWithdraw.withdrawFee[v.Abv]); err != nil {
+				log.WithError(err).Error("service/withdraw")
+				return err
+			}
 		} else {
 			ctxWithdraw.withdrawFee[v.Abv] = withdrawFee
 		}

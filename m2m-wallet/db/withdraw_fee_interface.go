@@ -9,7 +9,7 @@ func DbCreateWithdrawFeeTable() error {
 	return pgDb.CreateWithdrawFeeTable()
 }
 
-func DbInsertWithdrawFee(extCurrencyAbbr string, withdrawFee float64) (insertIndex int, err error) {
+func DbInsertWithdrawFee(extCurrencyAbbr string, withdrawFee float64) (insertIndex int64, err error) {
 	id, err := DbGetExtCurrencyIdByAbbr(extCurrencyAbbr)
 	if err != nil {
 		return 0, err
