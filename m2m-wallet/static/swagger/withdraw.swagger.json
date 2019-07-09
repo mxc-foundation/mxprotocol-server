@@ -235,7 +235,6 @@
       "properties": {
         "id": {
           "type": "string",
-          "format": "int64",
           "description": "User ID.\nWill be set automatically on create."
         },
         "username": {
