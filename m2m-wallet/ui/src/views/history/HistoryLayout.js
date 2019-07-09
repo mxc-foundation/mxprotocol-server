@@ -47,6 +47,16 @@ const styles = {
   padding: {
     padding: 0,
   },
+  link: {
+    textDecoration: "none",
+    fontWeight: "bold",
+    fontSize: 12,
+    color: theme.palette.textSecondary.main,
+    opacity: 0.7,
+      "&:hover": {
+        opacity: 1,
+      }
+  },
 };
 
 
@@ -101,6 +111,7 @@ class HistoryLayout extends Component {
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
+<<<<<<< HEAD
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title="History" />
               </TitleBar>
@@ -111,6 +122,20 @@ class HistoryLayout extends Component {
                 <TitleBarTitle title="History" className={this.props.classes.navText}/>
               </TitleBar> */}
           </div>
+=======
+                <TitleBar className={this.props.classes.padding}>
+                  <TitleBarTitle title="History" />
+                </TitleBar>
+                <Divider light={true}/>
+                <div className={this.props.classes.breadcrumb}>
+                <TitleBar>
+                  <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
+                  <TitleBarTitle title="/" className={this.props.classes.navText}/>
+                  <TitleBarTitle component={Link} to="#" title="History" className={this.props.classes.link}/>
+                </TitleBar>
+                </div>
+            </div>
+>>>>>>> nam/fr-b-logic
         </Grid>
 
         <Grid item xs={12}>

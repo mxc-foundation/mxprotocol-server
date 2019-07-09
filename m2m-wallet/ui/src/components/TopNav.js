@@ -148,7 +148,7 @@ class TopNav extends Component {
             </IconButton>
           </a> */}
 
-          <Chip
+          {/* <Chip
             avatar={
               <Avatar>
                 <AccountCircle />
@@ -177,7 +177,7 @@ class TopNav extends Component {
           >
             <MenuItem component={Link} to={`/users/${this.props.user.id}/password`}>Edit Profile</MenuItem>
             <MenuItem onClick={this.onLogout}>Logout</MenuItem>
-          </Menu>
+          </Menu> */}
         </Toolbar>
       </AppBar>
     );

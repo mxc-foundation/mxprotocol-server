@@ -171,7 +171,11 @@ class SideNav extends Component {
                   </ListItemIcon>
                 </ListItem>
                 <Divider />
+<<<<<<< HEAD
                 <ListItem button >
+=======
+                {/* <ListItem button >
+>>>>>>> nam/fr-b-logic
                   <ListItemText primary="Super Node" />
                   <ListItemIcon>
                     <RadioTower />
@@ -182,20 +186,28 @@ class SideNav extends Component {
                   <ListItemIcon>
                     <Domain />
                   </ListItemIcon>
+<<<<<<< HEAD
                 </ListItem>
+=======
+                </ListItem> */}
+>>>>>>> nam/fr-b-logic
                 <Divider />
                 <ListItem>
                   <ListItemText primary="Powered by" />
                   <ListItemIcon>
+<<<<<<< HEAD
                     
+=======
+                    <img src="/logo/mxc_logo.png" className="iconStyle" alt="LoRa Server" />
+>>>>>>> nam/fr-b-logic
                   </ListItemIcon>
                 </ListItem>
-                <ListItem button onClick={this.handleOpenM2M} >
+                {/* <ListItem button onClick={this.handleOpenM2M} >
                   <ListItemText primary="Change Account" />
                   <ListItemIcon>
                     <Repeat />
                   </ListItemIcon>
-                </ListItem>
+                </ListItem> */}
               </List>
         </List>}
       </Drawer>

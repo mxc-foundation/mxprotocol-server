@@ -1,5 +1,9 @@
 import React, { Component } from "react";
+<<<<<<< HEAD
 import { withRouter } from 'react-router-dom';
+=======
+import { withRouter, Link } from 'react-router-dom';
+>>>>>>> nam/fr-b-logic
 import { withStyles } from "@material-ui/core/styles";
 
 import Grid from '@material-ui/core/Grid';
@@ -42,6 +46,19 @@ const styles = {
   column: {
     display: 'flex',
     flexDirection: 'column',
+<<<<<<< HEAD
+=======
+  },
+  link: {
+    textDecoration: "none",
+    fontWeight: "bold",
+    fontSize: 12,
+    color: theme.palette.textSecondary.main,
+    opacity: 0.7,
+      "&:hover": {
+        opacity: 1,
+      }
+>>>>>>> nam/fr-b-logic
   },
 };
 
@@ -90,6 +107,7 @@ class ModifyEthAccount extends Component {
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
+<<<<<<< HEAD
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title="ETH Account" />
               </TitleBar>
@@ -100,6 +118,20 @@ class ModifyEthAccount extends Component {
                 <TitleBarTitle title="ETH Account" className={this.props.classes.navText}/>
               </TitleBar> */}
           </div>
+=======
+                <TitleBar className={this.props.classes.padding}>
+                  <TitleBarTitle title="Eth Account" />
+                </TitleBar>
+                <Divider light={true}/>
+                <div className={this.props.classes.breadcrumb}>
+                <TitleBar>
+                  <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
+                  <TitleBarTitle title="/" className={this.props.classes.navText}/>
+                  <TitleBarTitle component={Link} to="#" title="Eth Account" className={this.props.classes.link}/>
+                </TitleBar>
+                </div>
+            </div>
+>>>>>>> nam/fr-b-logic
         </Grid>
         <Grid item xs={6} className={this.props.classes.column}>
           <ModifyEthAccountForm

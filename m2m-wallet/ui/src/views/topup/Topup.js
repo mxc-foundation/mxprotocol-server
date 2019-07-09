@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 
 import Grid from '@material-ui/core/Grid';
@@ -42,6 +42,16 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
   },
+  link: {
+    textDecoration: "none",
+    fontWeight: "bold",
+    fontSize: 12,
+    color: theme.palette.textSecondary.main,
+    opacity: 0.7,
+      "&:hover": {
+        opacity: 1,
+      }
+  },
 };
 
 class Topup extends Component {
@@ -68,6 +78,7 @@ class Topup extends Component {
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
+<<<<<<< HEAD
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title="Topup" />
               </TitleBar>
@@ -78,6 +89,20 @@ class Topup extends Component {
                 <TitleBarTitle title="Topup" className={this.props.classes.navText}/>
               </TitleBar> */}
           </div>
+=======
+                <TitleBar className={this.props.classes.padding}>
+                  <TitleBarTitle title="Top up" />
+                </TitleBar>
+                <Divider light={true}/>
+                <div className={this.props.classes.breadcrumb}>
+                <TitleBar>
+                  <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
+                  <TitleBarTitle title="/" className={this.props.classes.navText}/>
+                  <TitleBarTitle component={Link} to="#" title="Top up" className={this.props.classes.link}/>
+                </TitleBar>
+                </div>
+            </div>
+>>>>>>> nam/fr-b-logic
         </Grid>
         <Grid item xs={6} className={this.props.classes.column}>
           <TitleBarTitle title="Send Tokens" />
