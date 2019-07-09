@@ -88,4 +88,4 @@ check_payment_seconds=60
 
 [paymentserver]
 payment_service_address="payment"
-payment_service_port=":5432"
+payment_service_port=":2333"

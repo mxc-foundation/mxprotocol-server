@@ -6,6 +6,7 @@ import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"google.golang.org/grpc/codes"
@@ -13,22 +14,33 @@ import (
 	"time"
 )
 
-var ctxWithdraw = struct {
-	withdrawFee float64
-}{
-	withdrawFee: 200,
+var ctxWithdraw struct {
+	withdrawFee map[string]float64
+}
+
+func init() {
+	for _, v := range db.CurrencyList {
+		ctxWithdraw.withdrawFee[v.Abv] = 20
+	}
 }
 
 func Setup(conf config.MxpConfig) error {
 	log.Info("setup withdraw service")
-	// check if payment service is available
+
 	if false == paymentServiceAvailable(conf) {
 		err := errors.New("Setup withdraw failed: payment service not available.")
-		log.WithError(err).Error()
+		log.WithError(err).Error("service/withdraw")
 		return err
 	}
 
-	// update withdraw fee
+	for _, v := range db.CurrencyList {
+		withdrawFee, err := db.DbGetActiveWithdrawFee(v.Abv)
+		if err != nil {
+			db.DbInsertWithdrawFee(v.Abv, ctxWithdraw.withdrawFee[v.Abv])
+		} else {
+			ctxWithdraw.withdrawFee[v.Abv] = withdrawFee
+		}
+	}
 
 	return nil
 }
@@ -42,16 +54,13 @@ func NewWithdrawServerAPI() *WithdrawServerAPI {
 }
 
 func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWithdrawFeeRequest) (*api.GetWithdrawFeeResponse, error) {
-	//todo
 	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	//Todo: userInfo should be the information of users eg.id,name,org,etc. Use it to get data from DB.
-	fmt.Println("username = ", userProfile.User.Username)
-	ctxWithdraw.withdrawFee += 2.0
-	return &api.GetWithdrawFeeResponse{WithdrawFee: ctxWithdraw.withdrawFee, Error: "", UserProfile: &userProfile}, nil
+	extCurrencyAbbr := api.Money_name[int32(req.MoneyAbbr)]
+	return &api.GetWithdrawFeeResponse{WithdrawFee: ctxWithdraw.withdrawFee[extCurrencyAbbr], Error: "", UserProfile: &userProfile}, nil
 }
 
 func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.GetWithdrawHistoryRequest) (*api.GetWithdrawHistoryResponse, error) {

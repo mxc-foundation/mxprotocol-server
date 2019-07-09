@@ -8,8 +8,8 @@ import (
 )
 
 type WithdrawFee struct {
-	Id         int       `db:"id"`
-	FkExtCurr  int       `db:"fk_ext_currency"`
+	Id         int64     `db:"id"`
+	FkExtCurr  int64     `db:"fk_ext_currency"`
 	Fee        float64   `db:"fee"`
 	InsertTime time.Time `db:"insert_time"`
 	Status     string    `db:"status"`
@@ -68,8 +68,11 @@ func (pgDbp DbSpec) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64
 		ORDER BY ec.id DESC 
 		LIMIT 1 
 		;
-	`,
-		extCurrAbv).Scan(&withdrawFee)
+	`, extCurrAbv).Scan(&withdrawFee)
 
-	return withdrawFee, errors.Wrap(err, "db: query error InsertWithdrawFee()")
+	if err != nil {
+		err = errors.Wrap(err, "db/GetActiveWithdrawFee")
+	}
+
+	return withdrawFee, err
 }

@@ -46,9 +46,14 @@ func (pgDbp DbSpec) InsertExtCurr(ec ExtCurrency) (insertIndex int, err error) {
 	return insertIndex, errors.Wrap(err, "storage: query error InsertExtCurr()")
 }
 
-func (pgDbp DbSpec) GetExtCurrencyIdByAbbr(abv string) (int64, error) {
+func (pgDbp DbSpec) GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
 	var extCurrencyId int64
-	err := pgDbp.Db.QueryRow(`select id from ext_currency where abv=$1;`, abv).Scan(&extCurrencyId)
+	err := pgDbp.Db.QueryRow(`
+		select id 
+		from 
+			ext_currency 
+		where 
+			abv=$1;`, extCurrencyAbbr).Scan(&extCurrencyId)
 	if err != nil {
 		return 0, errors.Wrap(err, "/db/ext_currency: GetExtCurrencyIdByAbbr error")
 	}
