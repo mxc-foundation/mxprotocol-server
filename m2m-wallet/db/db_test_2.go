@@ -12,9 +12,9 @@ func testDb() {
 	// testInternalTx()
 	// testWithdrawFee()
 	// testExtCurrency()
-	testWithdraw()
+	// testWithdraw()
 	// testExtAccount()
-	// testTopup()
+	testTopup()
 
 }
 
@@ -100,6 +100,9 @@ func testWithdrawFee() {
 
 func testExtAccount() {
 
+	acntId2, errGetAi2 := DbGetExtAccountIdByAdr("0x8347")
+	fmt.Println("DbGetExtAccountIdByAdr(): ", acntId2, " err:", errGetAi2)
+
 	acntId, errGetAi := DbGetUserExtAccountId(1, "MXC")
 	fmt.Println("DbGetUserExtAccountId(): ", acntId, " err:", errGetAi)
 
@@ -171,21 +174,34 @@ func testWithdraw() {
 }
 
 func testTopup() {
-	fmt.Println("err DbCreateTopupTable(): ", DbCreateTopupTable())
 
-	tu := pstgDb.Topup{
-		FkExtAcntSender: 1,
-		FkExtAcntRcvr:   2,
-		FkExtCurr:       1,
-		Value:           5.7,
-		TxAprvdTime:     time.Now().UTC(),
-		TxHash:          "0x456784",
-	}
-	retInd, err := DbInsertTopup(tu)
-	if err == nil {
-		tu.Id = retInd
-	}
+	topupId2, errAppl2 := DbAddTopUpRequest("0x8347", "0x7645", "0x5200006", 33.13, "MXC")
+	fmt.Println("DbAddTopUpRequest() id: ", topupId2, "  err: ", errAppl2)
 
-	fmt.Println("err DbInsertWithdraw(): x:", retInd, "err: ", err)
+	// tu := pstgDb.Topup{
+	// 	FkExtAcntSender: 2,
+	// 	FkExtAcntRcvr:   1,
+	// 	FkExtCurr:       1,
+	// 	Value:           99.7,
+	// 	TxAprvdTime:     time.Now().UTC(),
+	// 	TxHash:          "0x78651111",
+	// }
+
+	// it := pstgDb.InternalTx{
+	// 	FkWalletSender: 1,
+	// 	FkWalletRcvr:   2,
+	// 	PaymentCat:     string(pstgDb.TOP_UP),
+	// }
+
+	// topupId, errAppl := DbApplyTopup(tu, it)
+	// fmt.Println("DbApplyTopup() id: ", topupId, "  err: ", errAppl)
+
+	// retInd, err := DbInsertTopup(tu)
+	// if err == nil {
+	// 	tu.Id = retInd
+	// }
+
+	// fmt.Println("err DbCreateTopupTable(): ", DbCreateTopupTable())
+	// fmt.Println("err DbInsertWithdraw(): x:", retInd, "err: ", err)
 
 }

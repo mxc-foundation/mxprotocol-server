@@ -33,7 +33,7 @@ func Setup(conf config.MxpConfig) error {
 
 	// create tables if not exist
 	dbInit()
-	// testDb()
+	testDb()
 
 	// init data if applys
 	err = initExtCurrencyTable()
@@ -87,6 +87,10 @@ func dbInit() {
 	}
 
 	if err := DbCreateTopupTable(); err != nil {
+		log.Fatal("Unable to create table top_up!", err)
+	}
+
+	if err := DbCreateTopupFunctions(); err != nil {
 		log.Fatal("Unable to create table top_up!", err)
 	}
 

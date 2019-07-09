@@ -12,11 +12,15 @@ func DbInsertTopup(tu pstgDb.Topup) (insertIndex int64, err error) {
 	return pgDb.InsertTopup(tu)
 }
 
-func DbApplyTopup(tu pstgDb.Topup, it pstgDb.InternalTx) error {
-	// return pgDb.ApplyTopupReq(tu, it)  // to add
-	return nil
+func DbCreateTopupFunctions() error {
+	return pgDb.CreateTopupFunctions()
 }
 
-func DbAddTopUpRequest(acntAdrSender string, acntAdrRcvr string, txHash string, value string) (topupID int64, err error) {
-	return 0, nil
+func DbApplyTopup(tu pstgDb.Topup, it pstgDb.InternalTx) (topupID int64, err error) {
+	return pgDb.ApplyTopup(tu, it)
+
+}
+
+func DbAddTopUpRequest(acntAdrSender string, acntAdrRcvr string, txHash string, value float64, extCurAbv string) (topupID int64, err error) {
+	return pgDb.AddTopUpRequest(acntAdrSender, acntAdrRcvr, txHash, value, extCurAbv)
 }
