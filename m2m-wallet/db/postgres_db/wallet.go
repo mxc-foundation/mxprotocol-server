@@ -1,11 +1,8 @@
 package postgres_db
 
 import (
-	"fmt"
-
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
 )
 
 type Wallet struct {
@@ -41,7 +38,7 @@ func (pgDbp DbSpec) CreateWalletTable() error {
 		END$$;
 		
 	`)
-	return errors.Wrap(err, "db: query error CreateWalletTable()")
+	return errors.Wrap(err, "db/CreateWalletTable")
 }
 
 func (pgDbp DbSpec) InsertWallet(w Wallet) (insertIndex int64, err error) {
@@ -59,73 +56,33 @@ func (pgDbp DbSpec) InsertWallet(w Wallet) (insertIndex int64, err error) {
 		w.Balance).Scan(&insertIndex)
 
 	// fmt.Println(val, err)
-	return insertIndex, errors.Wrap(err, "db: query error InsertWallet()")
+	return insertIndex, errors.Wrap(err, "db/InsertWallet")
 }
 
 func (pgDbp DbSpec) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
 	var w Wallet
 	w.Id = 0
-	query := pgDbp.Db.QueryRow(
+	err := pgDbp.Db.QueryRow(
 		`SELECT id
 		FROM wallet
 		WHERE
 			fk_org_la = $1;`,
-		orgIdLora)
+		orgIdLora).Scan(&w.Id)
 
-	err := query.Scan(
-		&w.Id,
-	)
-	if err != nil {
-		log.WithError(err).Warning(fmt.Sprintf("db: query error GetWalletIdFromOrgId(%d)", orgIdLora))
-
-	}
-	return w.Id, err
-}
-
-func (pgDbp DbSpec) GetWallet(wp *Wallet, walletId int64) error {
-
-	query := pgDbp.Db.QueryRow(
-		`SELECT *
-		FROM wallet
-		WHERE
-			id = $1;`,
-		walletId)
-
-	err := query.Scan(
-		&wp.Id,
-		&wp.FkOrgLa,
-		&wp.TypeW,
-		&wp.Balance,
-	)
-
-	if err != nil {
-		fmt.Println("error getWallet: ", err)
-		fmt.Println("query res: ", query)
-		log.WithError(err).Warning("db:  query error GetWallet()") //@@ should be changed
-
-	}
-
-	return err
+	return w.Id, errors.Wrap(err, "db/GetWalletIdFromOrgId")
 }
 
 func (pgDbp DbSpec) GetWalletBalance(walletId int64) (float64, error) {
 	var w Wallet
 	w.Id = 0
-	query := pgDbp.Db.QueryRow(
+	err := pgDbp.Db.QueryRow(
 		`SELECT balance
 		FROM wallet
 		WHERE
 			id = $1;`,
-		walletId)
+		walletId).Scan(&w.Balance)
 
-	err := query.Scan(
-		&w.Balance,
-	)
-	if err != nil {
-		fmt.Println("GetWalletBalance error. wallet id: "+string(walletId)+"error: ", err)
-		log.WithError(err).Warning("GetWalletBalance error. wallet id: "+string(walletId)+"error: ", err)
-	}
-	return w.Balance, err
+	return w.Balance, errors.Wrap(err, "db/GetWalletBalance")
 }
 
 func (pgDbp DbSpec) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
@@ -146,10 +103,7 @@ func (pgDbp DbSpec) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) 
 		LIMIT 1 
 		;`, acntAdr, externalCur).Scan(&walletId)
 
-	// if err != nil {
-	// 	log.WithError(err).Warning("GetWalletIdofActiveAcnt error. wallet id: "+string(walletId)+"error: ", err)
-	// }
-	return walletId, err
+	return walletId, errors.Wrap(err, "db/GetWalletIdofActiveAcnt")
 }
 
 func (pgDbp DbSpec) GetWalletIdSuperNode() (walletId int64, err error) {
@@ -165,10 +119,7 @@ func (pgDbp DbSpec) GetWalletIdSuperNode() (walletId int64, err error) {
 			LIMIT 1  -- altough only one super node exists
 		;`).Scan(&walletId)
 
-	// if err != nil {
-	// 	log.WithError(err).Warning("GetWalletIdofActiveAcnt error. wallet id: "+string(walletId)+"error: ", err)
-	// }
-	return walletId, err
+	return walletId, errors.Wrap(err, "db/GetWalletIdSuperNode")
 }
 
 func (pgDbp DbSpec) UpdateBalanceByWalletId(walletId int64, newBalance float64) error {
@@ -182,5 +133,5 @@ func (pgDbp DbSpec) UpdateBalanceByWalletId(walletId int64, newBalance float64) 
 	;
 	`, newBalance, walletId)
 
-	return errors.Wrap(err, "db: query error UpdateBalanceByWalletId()")
+	return errors.Wrap(err, "db/UpdateBalanceByWalletId")
 }

@@ -76,9 +76,6 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	//Todo: userInfo should be the information of users eg.id,name,org,etc. Use it to get data from DB.
-	fmt.Println("username = ", userProfile.User.Username)
-
 	var count = int64(6)
 	history_list := []*api.WithdrawHistory{}
 
@@ -98,7 +95,7 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 }
 
 func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawReqRequest) (*api.WithdrawReqResponse, error) {
-	//todo
+
 	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
