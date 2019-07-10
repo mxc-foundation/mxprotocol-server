@@ -71,7 +71,7 @@ class ModifyEthAccount extends Component {
     loadData() {
       MoneyStore.getActiveMoneyAccount(coinType, this.props.match.params.organizationID, resp => {
         this.setState({
-          activeAccount: "dummyAcount"//resp.activeAccount,
+          activeAccount: resp.activeAccount,
         });
       }); 
     }

@@ -49,7 +49,7 @@ class MoneyStore extends EventEmitter {
       type: "CREATE_NOTIFICATION",
       notification: {
         type: "success",
-        message: "user has been " + action,
+        message: "account has been " + action,
       },
     });
   }
