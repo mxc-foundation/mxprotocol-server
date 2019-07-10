@@ -2,7 +2,6 @@ package money
 
 import (
 	"context"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
@@ -14,7 +13,6 @@ import (
 )
 
 func Setup() error {
-	//todo
 	log.Info("setup money service")
 	return nil
 }
@@ -33,8 +31,6 @@ func updateActiveMoneyAccount(orgId int64, newAccount string, currencyAbbr strin
 	return nil
 }
 
-// grpc apis
-
 type MoneyServerAPI struct {
 	serviceName string
 }
@@ -52,7 +48,7 @@ func (s *MoneyServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.Modify
 
 	err = updateActiveMoneyAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
 	if err != nil {
-		return &api.ModifyMoneyAccountResponse{Error: "", Status: false, UserProfile: &userProfile}, err
+		return &api.ModifyMoneyAccountResponse{Error: err.Error(), Status: false, UserProfile: &userProfile}, err
 	}
 
 	return &api.ModifyMoneyAccountResponse{Error: "", Status: true, UserProfile: &userProfile}, nil
@@ -64,8 +60,6 @@ func (s *MoneyServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, req *
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	//Todo: userInfo should be the information of users eg.id,name,org,etc. Use it to get data from DB.
-	fmt.Println("username = ", userProfile.User.Username)
 	var count = int64(3)
 
 	history_list := []*api.MoneyAccountChangeHistory{}
@@ -87,7 +81,5 @@ func (s *MoneyServerAPI) GetActiveMoneyAccount(ctx context.Context, req *api.Get
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	//Todo: userInfo should be the information of users eg.id,name,org,etc. Use it to get data from DB.
-	fmt.Println("username = ", userProfile.User.Username)
 	return &api.GetActiveMoneyAccountResponse{Error: "", ActiveAccount: "", UserProfile: &userProfile}, nil
 }

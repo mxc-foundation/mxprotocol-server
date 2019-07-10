@@ -27,6 +27,13 @@ service WithdrawService {
 			get: "/api/withdraw/{money_abbr}/history"
 		};
     }
+
+    rpc ModifyWithdrawFee (ModifyWithdrawFeeRequest) returns (ModifyWithdrawFeeResponse) {
+        option(google.api.http) = {
+			put: "/api/withdraw/{money_abbr}/withdrawfee"
+			body: "*"
+		};
+    }
 }
 
 message GetWithdrawFeeRequest {
@@ -73,4 +80,15 @@ message GetWithdrawHistoryResponse {
     int64 count = 2;
     repeated WithdrawHistory withdraw_history = 3;
     ProfileResponse user_profile = 4;
+}
+
+message ModifyWithdrawFeeRequest {
+    Money money_abbr = 1;
+    double withdraw_fee = 2;
+}
+
+message ModifyWithdrawFeeResponse {
+    bool status = 1;
+    string error = 2;
+    ProfileResponse user_profile = 3;
 }

@@ -70,7 +70,7 @@ func (pgDbp DbSpec) CreateInternalTxTable() error {
 		);
 	END$$;
 	`)
-	return errors.Wrap(err, "storage: PostgreSQL error CreateInternalTxTable()")
+	return errors.Wrap(err, "db/CreateInternalTxTable")
 }
 
 func (pgDbp DbSpec) InsertInternalTx(it InternalTx) (insertIndex int64, err error) {
@@ -98,5 +98,5 @@ func (pgDbp DbSpec) InsertInternalTx(it InternalTx) (insertIndex int64, err erro
 		it.Value,
 		it.TimeTx).Scan(&insertIndex)
 
-	return insertIndex, errors.Wrap(err, "storage: query error InsertInternalTx()")
+	return insertIndex, errors.Wrap(err, "db/InsertInternalTx")
 }
