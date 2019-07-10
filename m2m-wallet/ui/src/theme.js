@@ -117,6 +117,8 @@ const theme = createMuiTheme({
       },
       MuiButton: { 
         root: {
+
+          backgroundColor: '#00FFD9',
           boxShadow: '0 8px 6px -6px #00000050',
           width: 135,
           height: 50,

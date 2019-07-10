@@ -4,41 +4,9 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import FormComponent from "../../classes/FormComponent";
-import theme from "../../theme";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
-
-const styles = {
-  card: {
-    minWidth: 180,
-    width: 220,
-    backgroundColor: "#0C0270",
-  },
-  title: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    padding: 6,
-  },
-  balance: {
-    fontSize: 24,
-    color: '#FFFFFF',
-    textAlign: 'center',
-  },
-  newBalance: {
-    fontSize: 24,
-    textAlign: 'center',
-    color: theme.palette.primary.main,
-  },
-  pos: {
-    marginBottom: 12,
-    color: '#FFFFFF',
-    textAlign: 'right',
-  },
-  between: {
-    display: 'flex',
-    justifyContent:'spaceBetween'
-  }
-};
+import styles from "./WithdrawStyle"
 
 class WithdrawBalanceInfo extends FormComponent {
     
