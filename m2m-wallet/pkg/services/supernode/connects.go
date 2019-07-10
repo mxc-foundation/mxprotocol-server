@@ -17,6 +17,12 @@ func connectMainClient() *ethclient.Client {
 	return client
 }
 
+func connectEthTestScan() *etherscan.Client {
+	tokenEthScan := etherscan.New(etherscan.Ropsten, config.Cstruct.SuperNode.APIKey)
+
+	return tokenEthScan
+}
+
 func connectEthScan() *etherscan.Client {
 	tokenEthScan := etherscan.New(etherscan.Mainnet, config.Cstruct.SuperNode.APIKey)
 

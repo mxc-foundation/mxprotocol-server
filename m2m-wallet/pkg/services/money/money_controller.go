@@ -42,16 +42,16 @@ func NewMoneyServerAPI() *MoneyServerAPI {
 func (s *MoneyServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.ModifyMoneyAccountRequest) (*api.ModifyMoneyAccountResponse, error) {
 	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
-		return &api.ModifyMoneyAccountResponse{Error: "", Status: false, UserProfile: &userProfile},
+		return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile},
 			status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
 	err = updateActiveMoneyAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
 	if err != nil {
-		return &api.ModifyMoneyAccountResponse{Error: err.Error(), Status: false, UserProfile: &userProfile}, err
+		return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile}, err
 	}
 
-	return &api.ModifyMoneyAccountResponse{Error: "", Status: true, UserProfile: &userProfile}, nil
+	return &api.ModifyMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
 }
 
 func (s *MoneyServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, req *api.GetMoneyAccountChangeHistoryRequest) (*api.GetMoneyAccountChangeHistoryResponse, error) {
@@ -72,7 +72,7 @@ func (s *MoneyServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, req *
 		history_list = append(history_list, &item)
 	}
 
-	return &api.GetMoneyAccountChangeHistoryResponse{Error: "", Count: count, ChangeHistory: history_list, UserProfile: &userProfile}, nil
+	return &api.GetMoneyAccountChangeHistoryResponse{Count: count, ChangeHistory: history_list, UserProfile: &userProfile}, nil
 }
 
 func (s *MoneyServerAPI) GetActiveMoneyAccount(ctx context.Context, req *api.GetActiveMoneyAccountRequest) (*api.GetActiveMoneyAccountResponse, error) {
@@ -81,5 +81,5 @@ func (s *MoneyServerAPI) GetActiveMoneyAccount(ctx context.Context, req *api.Get
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	return &api.GetActiveMoneyAccountResponse{Error: "", ActiveAccount: "", UserProfile: &userProfile}, nil
+	return &api.GetActiveMoneyAccountResponse{ActiveAccount: "", UserProfile: &userProfile}, nil
 }

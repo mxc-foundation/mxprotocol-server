@@ -168,9 +168,6 @@
           "format": "double",
           "description": "Withdraw object."
         },
-        "error": {
-          "type": "string"
-        },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
         }
@@ -179,9 +176,6 @@
     "apiGetWithdrawHistoryResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "count": {
           "type": "string",
           "format": "int64"
@@ -215,9 +209,6 @@
         "status": {
           "type": "boolean",
           "format": "boolean"
-        },
-        "error": {
-          "type": "string"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
@@ -369,9 +360,6 @@
         "status": {
           "type": "boolean",
           "format": "boolean"
-        },
-        "error": {
-          "type": "string"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"

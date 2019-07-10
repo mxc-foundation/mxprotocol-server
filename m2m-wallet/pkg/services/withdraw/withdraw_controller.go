@@ -67,7 +67,7 @@ func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWith
 	}
 
 	extCurrencyAbbr := api.Money_name[int32(req.MoneyAbbr)]
-	return &api.GetWithdrawFeeResponse{WithdrawFee: ctxWithdraw.withdrawFee[extCurrencyAbbr], Error: "", UserProfile: &userProfile}, nil
+	return &api.GetWithdrawFeeResponse{WithdrawFee: ctxWithdraw.withdrawFee[extCurrencyAbbr], UserProfile: &userProfile}, nil
 }
 
 func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.GetWithdrawHistoryRequest) (*api.GetWithdrawHistoryResponse, error) {
@@ -91,7 +91,7 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 		history_list = append(history_list, &item)
 	}
 
-	return &api.GetWithdrawHistoryResponse{Error: "", Count: count, WithdrawHistory: history_list, UserProfile: &userProfile}, nil
+	return &api.GetWithdrawHistoryResponse{Count: count, WithdrawHistory: history_list, UserProfile: &userProfile}, nil
 }
 
 func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawReqRequest) (*api.WithdrawReqResponse, error) {
@@ -179,5 +179,5 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 		}
 	}()
 
-	return &api.WithdrawReqResponse{Status: true, Error: "", UserProfile: &userProfile}, nil
+	return &api.WithdrawReqResponse{Status: true, UserProfile: &userProfile}, nil
 }

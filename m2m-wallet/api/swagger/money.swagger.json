@@ -137,9 +137,6 @@
     "apiGetActiveMoneyAccountResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "activeAccount": {
           "type": "string"
         },
@@ -151,9 +148,6 @@
     "apiGetMoneyAccountChangeHistoryResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "count": {
           "type": "string",
           "format": "int64"
@@ -187,9 +181,6 @@
     "apiModifyMoneyAccountResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "status": {
           "type": "boolean",
           "format": "boolean"

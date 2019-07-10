@@ -25,7 +25,6 @@ func paymentServiceAvailable(conf config.MxpConfig) bool {
 }
 
 func paymentReq(ctx context.Context, conf *config.MxpConfig, amount, receiverAdd string, reqId int64) (*ps.TxReqReplyType, error) {
-
 	address := conf.PaymentServer.PaymentServiceAddress + conf.PaymentServer.PaymentServicePort
 
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
@@ -36,7 +35,6 @@ func paymentReq(ctx context.Context, conf *config.MxpConfig, amount, receiverAdd
 
 	client := ps.NewPaymentClient(conn)
 
-	//ToDo: set the correct ReqId and ReceverAdr
 	reply, err := client.TokenTxReq(ctx, &ps.TxReqType{PaymentClientEnum: 3, ReqIdClient: reqId, ReceiverAdr: receiverAdd,
 		Amount: amount, TokenNameEnum: 0})
 	if err != nil {

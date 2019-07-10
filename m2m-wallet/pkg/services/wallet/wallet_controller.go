@@ -112,7 +112,7 @@ func (s *WalletServerAPI) GetWalletBalance(ctx context.Context, req *api.GetWall
 		return &api.GetWalletBalanceResponse{}, err
 	}
 
-	return &api.GetWalletBalanceResponse{Balance: balance, Error: "", UserProfile: &userProfile}, nil
+	return &api.GetWalletBalanceResponse{Balance: balance, UserProfile: &userProfile}, nil
 }
 
 func (s *WalletServerAPI) GetVmxcTxHistory(ctx context.Context, req *api.GetVmxcTxHistoryRequest) (*api.GetVmxcTxHistoryResponse, error) {
@@ -135,5 +135,5 @@ func (s *WalletServerAPI) GetVmxcTxHistory(ctx context.Context, req *api.GetVmxc
 		history_list = append(history_list, &item)
 	}
 
-	return &api.GetVmxcTxHistoryResponse{Error: "", Count: count, TxHistory: history_list, UserProfile: &userProfile}, nil
+	return &api.GetVmxcTxHistoryResponse{Count: count, TxHistory: history_list, UserProfile: &userProfile}, nil
 }
