@@ -28,10 +28,6 @@ func DbGetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
 	return pgDb.GetWalletIdFromOrgId(orgIdLora)
 }
 
-func DbGetWallet(wp *pstgDb.Wallet, walletId int64) error {
-	return pgDb.GetWallet(wp, walletId)
-}
-
 func DbGetWalletBalance(walletId int64) (float64, error) {
 	return pgDb.GetWalletBalance(walletId)
 }

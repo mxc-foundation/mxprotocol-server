@@ -13,7 +13,6 @@ import (
 )
 
 func Setup(conf config.MxpConfig) error {
-	//todo
 	log.Info("setup wallet service")
 
 	return nil
@@ -38,7 +37,6 @@ func createWallet(orgId int64) (int64, error) {
 }
 
 func GetWalletId(orgId int64) (walletId int64, err error) {
-	log.Info("/wallet: get wallet id from orgID= ", orgId)
 	var res bool
 
 	walletId, res = userHasWallet(orgId)
@@ -89,8 +87,6 @@ func UpdateBalance(orgId int64, oper PaymentCategory, deviceType DeviceType, amo
 
 	return nil
 }
-
-// grpc APIs
 
 type WalletServerAPI struct {
 	serviceName string

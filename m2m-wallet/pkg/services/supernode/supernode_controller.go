@@ -13,13 +13,13 @@ import (
 )
 
 func Setup() error {
-	ticker := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckAccountSeconds) * time.Second)
+	ticker_superAccount := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckAccountSeconds) * time.Second)
 	go func() {
 		log.Info("start supernode goroutine")
-		for range ticker.C {
+		for range ticker_superAccount.C {
 			supernodeAccount, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
 			if err != nil {
-				log.WithError(err).Warning("Storage: Cannot get supernode account from DB, restarting...")
+				log.WithError(err).Warning("service/supernode")
 				continue
 			}
 
@@ -43,16 +43,35 @@ func NewSupernodeServerAPI() *SupernodeServerAPI {
 	return &SupernodeServerAPI{serviceName: "supernode"}
 }
 
+func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *api.AddSuperNodeMoneyAccountRequest) (*api.AddSuperNodeMoneyAccountResponse, error) {
+	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
+	}
+
+	walletId, err := db.DbInsertWallet(0, db.SUPER_ADMIN)
+	if err != nil {
+		return &api.AddSuperNodeMoneyAccountResponse{Error: "", Status: false, UserProfile: &userProfile}, err
+	}
+
+	_, err = db.DBInsertExtAccount(walletId, in.AccountAddr, api.Money_name[int32(in.MoneyAbbr)])
+	if err != nil {
+		return &api.AddSuperNodeMoneyAccountResponse{Error: err.Error(), Status: false, UserProfile: &userProfile}, err
+	}
+
+	return &api.AddSuperNodeMoneyAccountResponse{Error: "", Status: true, UserProfile: &userProfile}, nil
+}
+
 func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context, req *api.GetSuperNodeActiveMoneyAccountRequest) (*api.GetSuperNodeActiveMoneyAccountResponse, error) {
 	_, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	superNodeAddr, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
+	accountAddr, err := db.DbGetSuperNodeExtAccountAdr(api.Money_name[int32(req.MoneyAbbr)])
 	if err != nil {
-		return nil, status.Errorf(codes.DataLoss, "storage: Cannot get supernode account from DB: %s", err)
+		return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "", Error: err.Error(), UserProfile: &userProfile}, err
 	}
 
-	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: superNodeAddr, Error: ""}, nil
+	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: accountAddr, Error: "", UserProfile: &userProfile}, nil
 }
