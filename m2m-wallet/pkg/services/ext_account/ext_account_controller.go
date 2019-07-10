@@ -1,4 +1,4 @@
-package money
+package ext_account
 
 import (
 	"context"
@@ -13,11 +13,11 @@ import (
 )
 
 func Setup() error {
-	log.Info("setup money service")
+	log.Info("Setup ext_account service")
 	return nil
 }
 
-func updateActiveMoneyAccount(orgId int64, newAccount string, currencyAbbr string) error {
+func updateActiveExtAccount(orgId int64, newAccount string, currencyAbbr string) error {
 	walletId, err := wallet.GetWalletId(orgId)
 	if err != nil {
 		return err
@@ -31,22 +31,21 @@ func updateActiveMoneyAccount(orgId int64, newAccount string, currencyAbbr strin
 	return nil
 }
 
-type MoneyServerAPI struct {
+type ExtAccountServerAPI struct {
 	serviceName string
 }
 
-func NewMoneyServerAPI() *MoneyServerAPI {
-	return &MoneyServerAPI{serviceName: "money"}
+func NewMoneyServerAPI() *ExtAccountServerAPI {
+	return &ExtAccountServerAPI{serviceName: "ext_account"}
 }
 
-func (s *MoneyServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.ModifyMoneyAccountRequest) (*api.ModifyMoneyAccountResponse, error) {
+func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.ModifyMoneyAccountRequest) (*api.ModifyMoneyAccountResponse, error) {
 	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
-		return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile},
-			status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	err = updateActiveMoneyAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
+	err = updateActiveExtAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
 	if err != nil {
 		return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile}, err
 	}
@@ -54,7 +53,7 @@ func (s *MoneyServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.Modify
 	return &api.ModifyMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
 }
 
-func (s *MoneyServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, req *api.GetMoneyAccountChangeHistoryRequest) (*api.GetMoneyAccountChangeHistoryResponse, error) {
+func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, req *api.GetMoneyAccountChangeHistoryRequest) (*api.GetMoneyAccountChangeHistoryResponse, error) {
 	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
@@ -75,11 +74,21 @@ func (s *MoneyServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, req *
 	return &api.GetMoneyAccountChangeHistoryResponse{Count: count, ChangeHistory: history_list, UserProfile: &userProfile}, nil
 }
 
-func (s *MoneyServerAPI) GetActiveMoneyAccount(ctx context.Context, req *api.GetActiveMoneyAccountRequest) (*api.GetActiveMoneyAccountResponse, error) {
+func (s *ExtAccountServerAPI) GetActiveMoneyAccount(ctx context.Context, req *api.GetActiveMoneyAccountRequest) (*api.GetActiveMoneyAccountResponse, error) {
 	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	return &api.GetActiveMoneyAccountResponse{ActiveAccount: "", UserProfile: &userProfile}, nil
+	walletId, err := db.DbGetWalletIdFromOrgId(req.OrgId)
+	if err != nil {
+		return &api.GetActiveMoneyAccountResponse{ActiveAccount: "", UserProfile: &userProfile}, err
+	}
+
+	accountAddr, err := db.DbGetUserExtAccountAdr(walletId, api.Money_name[int32(req.MoneyAbbr)])
+	if err != nil {
+		return &api.GetActiveMoneyAccountResponse{ActiveAccount: "", UserProfile: &userProfile}, err
+	}
+
+	return &api.GetActiveMoneyAccountResponse{ActiveAccount: accountAddr, UserProfile: &userProfile}, nil
 }

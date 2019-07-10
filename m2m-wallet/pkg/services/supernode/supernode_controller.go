@@ -13,10 +13,10 @@ import (
 )
 
 func Setup() error {
-	ticker := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckAccountSeconds) * time.Second)
+	ticker_superAccount := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckAccountSeconds) * time.Second)
 	go func() {
-		log.Info("start supernode goroutine")
-		for range ticker.C {
+		log.Info("Start supernode goroutine")
+		for range ticker_superAccount.C {
 			supernodeAccount, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
 			if err != nil {
 				log.WithError(err).Warning("service/supernode")
@@ -63,15 +63,15 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 }
 
 func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context, req *api.GetSuperNodeActiveMoneyAccountRequest) (*api.GetSuperNodeActiveMoneyAccountResponse, error) {
-	_, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
+	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	superNodeAddr, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
+	accountAddr, err := db.DbGetSuperNodeExtAccountAdr(api.Money_name[int32(req.MoneyAbbr)])
 	if err != nil {
-		return nil, status.Errorf(codes.DataLoss, "storage: Cannot get supernode account from DB: %s", err)
+		return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "", UserProfile: &userProfile}, err
 	}
 
-	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: superNodeAddr}, nil
+	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: accountAddr, UserProfile: &userProfile}, nil
 }

@@ -9,6 +9,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+var PaymentServiceAvailable bool
+
 func paymentServiceAvailable(conf config.MxpConfig) bool {
 	log.Info("/withdraw: try to connect to payment service: ",
 		conf.PaymentServer.PaymentServiceAddress+conf.PaymentServer.PaymentServicePort)

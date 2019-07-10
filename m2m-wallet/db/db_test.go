@@ -28,13 +28,13 @@ func testWallet() {
 	balance, err2 := DbGetWalletBalance(102)
 	fmt.Println("GetWalletBalance(): ", balance, " || err:", err2)
 
-	wi, errGetWI := DbGetWalletIdofActiveAcnt("0x7645", "MXC") //0x8347
-	fmt.Println("DbGetWalletIdofActiveAcnt(): ", wi, " || err:", errGetWI)
+	wi, errGetWI := DbGetWalletIdByActiveAcnt("0x7645", "MXC") //0x8347
+	fmt.Println("DbGetWalletIdByActiveAcnt(): ", wi, " || err:", errGetWI)
 
 	walletId, err := DbGetWalletIdFromOrgId(1)
 	fmt.Println("GetWalletId(): ", walletId, " || err:", err)
 
-	DbCreateWalletTable()
+	dbCreateWalletTable()
 
 	retInd, errIns := DbInsertWallet(10, USER) //@@ balance for the super node
 
@@ -47,7 +47,7 @@ func testWallet() {
 }
 
 func testInternalTx() {
-	DbCreateInternalTxTable()
+	dbCreateInternalTxTable()
 
 	retInd, errIns := DbInsertInternalTx(
 		pstgDb.InternalTx{
@@ -66,8 +66,8 @@ func testExtCurrency() {
 	idCur, errIdCur := DbGetExtCurrencyIdByAbbr("MXC")
 	fmt.Println("DbGetExtCurrencyIdByAbbr(): ", idCur, " err:", errIdCur)
 
-	err := DbCreateExtCurrencyTable()
-	fmt.Println("err DbCreateExtCurrencyTable(): ", err)
+	err := dbCreateExtCurrencyTable()
+	fmt.Println("err dbCreateExtCurrencyTable(): ", err)
 
 	_, err = DbInsertExtCurr(
 		pstgDb.ExtCurrency{
@@ -84,8 +84,8 @@ func testWithdrawFee() {
 	fee, errGetWF := DbGetActiveWithdrawFee("MXC")
 	fmt.Println("DbGetActiveWithdrawFee(): ", fee, " err:", errGetWF)
 
-	err := DbCreateWithdrawFeeTable()
-	fmt.Println("err DbCreateWithdrawFeeTable(): ", err)
+	err := dbCreateWithdrawFeeTable()
+	fmt.Println("err dbCreateWithdrawFeeTable(): ", err)
 
 	wf := pstgDb.WithdrawFee{
 		FkExtCurr:  1,
@@ -130,7 +130,7 @@ func testExtAccount() {
 	val, errGetAc := DbGetSuperNodeExtAccountAdr("MXC")
 	fmt.Println("DbGetSuperNodeExtAccountAdr(): ", val, " err:", errGetAc)
 
-	fmt.Println("err DbCreateExtAccountTable(): ", DbCreateExtAccountTable())
+	fmt.Println("err dbCreateExtAccountTable(): ", dbCreateExtAccountTable())
 
 	// ea := pstgDb.ExtAccount{   // @@ to be checked
 	// 	FkWallet:           1,
@@ -167,7 +167,7 @@ func testWithdraw() {
 
 	fmt.Println("err DbUpdateWithdrawSuccessful(): ", DbUpdateWithdrawSuccessful(11, "0x555335", time.Now().UTC()))
 
-	// fmt.Println("err DbCreateWithdrawTable(): ", DbCreateWithdrawTable())
+	// fmt.Println("err dbCreateWithdrawTable(): ", dbCreateWithdrawTable())
 
 	// _, errIns := DbInsertWithdraw(wdr)
 	// fmt.Println("err DbInsertWithdraw(): ", errIns)
@@ -211,7 +211,7 @@ func testTopup() {
 	// 	tu.Id = retInd
 	// }
 
-	// fmt.Println("err DbCreateTopupTable(): ", DbCreateTopupTable())
+	// fmt.Println("err dbCreateTopupTable(): ", dbCreateTopupTable())
 	// fmt.Println("err DbInsertWithdraw(): x:", retInd, "err: ", err)
 
 }

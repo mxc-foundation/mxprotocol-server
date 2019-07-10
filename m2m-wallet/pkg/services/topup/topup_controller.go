@@ -11,8 +11,7 @@ import (
 )
 
 func Setup() error {
-	//todo
-	log.Info("setup top_up service")
+	log.Info("Setup top_up service")
 	return nil
 }
 

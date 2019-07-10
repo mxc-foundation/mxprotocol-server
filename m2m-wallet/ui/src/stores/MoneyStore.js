@@ -10,7 +10,7 @@ import dispatcher from "../dispatcher";
 class MoneyStore extends EventEmitter {
   constructor() {
     super();
-    this.swagger = new Swagger("/swagger/money.swagger.json", sessionStore.getClientOpts());
+    this.swagger = new Swagger("/swagger/ext_account.swagger.json", sessionStore.getClientOpts());
   }
 
   getActiveMoneyAccount(money_abbr, org_id, callbackFunc) {

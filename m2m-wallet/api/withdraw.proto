@@ -3,7 +3,7 @@ syntax = "proto3";
 package api;
 
 import "google/api/annotations.proto";
-import "money.proto";
+import "ext_account.proto";
 import "internal.proto";
 
 // WithdrawService is the service managing the withdraw access.
