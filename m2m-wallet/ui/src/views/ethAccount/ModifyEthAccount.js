@@ -32,7 +32,7 @@ class ModifyEthAccount extends Component {
       }); 
     }
 
-    onSubmit = (resp) => {
+    onSubmit = (e, resp) => {
       resp.orgId = this.props.match.params.organizationID;
       resp.moneyAbbr = coinType;
       
