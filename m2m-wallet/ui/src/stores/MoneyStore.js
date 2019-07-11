@@ -14,7 +14,6 @@ class MoneyStore extends EventEmitter {
   }
 
   getActiveMoneyAccount(money_abbr, orgId, callbackFunc) {
-    console.log(money_abbr, orgId)
     this.swagger.then(client => {
       client.apis.MoneyService.GetActiveMoneyAccount({
         money_abbr,
@@ -33,13 +32,13 @@ class MoneyStore extends EventEmitter {
       client.apis.MoneyService.ModifyMoneyAccount({
         "money_abbr": req.moneyAbbr,
         body: {
-            apiModifyMoneyAccountRequest: req,
+          currentAccount: req.currentAccount,
+          orgId: req.orgId,
+          moneyAbbr: req.moneyAbbr
         },
       })
       .then(checkStatus)
       .then(resp => {
-        console.log('assdfadsf');
-        console.log(resp);
         this.notify("updated");
         callbackFunc(resp.obj);
       })

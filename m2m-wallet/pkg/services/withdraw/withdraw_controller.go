@@ -3,6 +3,8 @@ package withdraw
 import (
 	"context"
 	"fmt"
+	"time"
+
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
@@ -10,7 +12,6 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"time"
 )
 
 var ctxWithdraw struct {
@@ -60,7 +61,7 @@ func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *api.Modif
 	}
 
 	log.WithFields(log.Fields{
-		"moneyAbbr": api.Money_name[int32(in.MoneyAbbr)],
+		"moneyAbbr":   api.Money_name[int32(in.MoneyAbbr)],
 		"withdrawFee": in.WithdrawFee,
 	}).Debug("grpc_api/ModifyWithdrawFee")
 
@@ -117,9 +118,9 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 	}
 
 	log.WithFields(log.Fields{
-		"orgId": req.OrgId,
+		"orgId":     req.OrgId,
 		"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
-		"amount": req.Amount,
+		"amount":    req.Amount,
 	}).Debug("grpc_api/WithdrawReq")
 
 	withdrawfee, err := db.DbGetActiveWithdrawFee(req.MoneyAbbr.String())

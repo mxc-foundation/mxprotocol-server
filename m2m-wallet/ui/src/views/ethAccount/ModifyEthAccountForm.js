@@ -14,6 +14,27 @@ class ModifyEthAccountForm extends FormComponent {
     });
   }
 
+  clear() {
+    const newaccount = '';
+    this.setState({
+      newaccount
+    });
+  }
+
+  submit = () => {
+    this.props.onSubmit({
+      currentAccount: this.state.newaccount,
+      username: this.state.username,
+      password: this.state.password
+    })
+
+    this.setState({
+      username: '',
+      password: '',
+      newaccount: ''
+    })
+  }
+
   render() {
     if (this.props.activeAccount === undefined) {
       return(<div></div>);
@@ -22,14 +43,10 @@ class ModifyEthAccountForm extends FormComponent {
     return(
       <Form
         submitLabel={this.props.submitLabel}
-        onSubmit={() => this.props.onSubmit({
-          currentAccount: this.state.newAccount,
-          username: this.state.username,
-          password: this.state.password
-        })}
+        onSubmit={this.submit}
       >
         <TextField
-        id="activeAccount"
+          id="activeAccount"
           label="Current account"
           margin="normal"
           value={this.props.activeAccount || ""}
@@ -41,7 +58,7 @@ class ModifyEthAccountForm extends FormComponent {
         />
 
         <TextField
-          id="newAccount"//it is defined current account in swagger
+          id="newaccount"//it is defined current account in swagger
           label="New account"
           margin="normal"
           value={this.state.newaccount}
