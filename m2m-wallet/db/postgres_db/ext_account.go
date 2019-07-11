@@ -62,7 +62,7 @@ func (pgDbp DbSpec) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error)
 
 	err := pgDbp.Db.QueryRow(`
 		select 
-			account_adr
+			ea.account_adr
 		from
 			wallet w ,ext_account ea,ext_currency ec
 		WHERE
@@ -115,7 +115,7 @@ func (pgDbp DbSpec) GetUserExtAccountAdr(walletId int64, extCurrAbv string) (str
 
 	err := pgDbp.Db.QueryRow(`
 		select 
-			account_adr
+			ea.account_adr
 		from
 			wallet w,ext_account ea,ext_currency ec
 		WHERE
