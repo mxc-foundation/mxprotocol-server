@@ -22,6 +22,12 @@ const theme = createMuiTheme({
       root: {
         color: white,
       },
+      body1: {
+        color: white,
+      },
+      colorTextSecondary: {
+        color: white,
+      },
     },
     typography: {
       //useNextVariants: true,
@@ -71,7 +77,8 @@ const theme = createMuiTheme({
       },
       MuiInputBase: {
         input: {
-          color: white,
+          color: '#F9FAFC',
+          fontWeight: "bolder",
           "&:-webkit-autofill": {
             WebkitBoxShadow: "0 0 0 1000px #F9FAFC inset"
           }
@@ -117,18 +124,16 @@ const theme = createMuiTheme({
       },
       MuiButton: { 
         root: {
-
+          //background: teal['A200'],
           backgroundColor: '#00FFD9',
           boxShadow: '0 8px 6px -6px #00000050',
           width: 135,
           height: 50,
           fontWeight: 'bolder',
           marginRight: 5,
-          boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
-          backgroundColor: '#00FFD9',
-            "&:hover": {
-              backgroundColor: '#00CCAE',
-            }
+        },
+        "&:hover": {
+          backgroundColor: '#00CCAE',
         },
         label: {
           color: blueMxcBrand
@@ -159,7 +164,7 @@ const theme = createMuiTheme({
         },
         textColorPrimary: {
           color: white
-        }
+        },
       },
       MuiSvgIcon: {
         root: {
