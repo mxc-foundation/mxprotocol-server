@@ -46,6 +46,12 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
+	log.WithFields(log.Fields{
+		"orgID":      req.OrgId,
+		"moneyAbbr":  api.Money_name[int32(req.MoneyAbbr)],
+		"newAccount": req.CurrentAccount,
+	}).Debug("grpc_api/ModifyMoneyAccount")
+
 	err = updateActiveExtAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
 	if err != nil {
 		return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile}, err
@@ -80,6 +86,11 @@ func (s *ExtAccountServerAPI) GetActiveMoneyAccount(ctx context.Context, req *ap
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
+
+	log.WithFields(log.Fields{
+		"orgId":     req.OrgId,
+		"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
+	}).Debug("grpc_api/GetActiveMoneyAccount")
 
 	walletId, err := db.DbGetWalletIdFromOrgId(req.OrgId)
 	if err != nil {
