@@ -27,14 +27,14 @@ class ModifyEthAccount extends Component {
     loadData() {
       MoneyStore.getActiveMoneyAccount(coinType, this.props.match.params.organizationID, resp => {
         this.setState({
-          activeAccount: "dummyAcount"//resp.activeAccount,
+          activeAccount: resp.activeAccount,
         });
       }); 
     }
 
     onSubmit = (resp) => {
       resp.orgId = this.props.match.params.organizationID;
-      resp.money_abbr = coinType;
+      resp.moneyAbbr = coinType;
       
       const login = {};
       login.username = resp.username;
@@ -42,6 +42,10 @@ class ModifyEthAccount extends Component {
 
       SessionStore.login(login, (response) => {
         if(response === "ok"){
+          delete resp.username;
+          delete resp.password;
+          console.log("resp modify ok");
+          console.log(resp);
           MoneyStore.modifyMoneyAccount(resp, resp => {
             
           })
