@@ -14,7 +14,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/money"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/ext_account"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/supernode"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/topup"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/wallet"
@@ -49,7 +49,7 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 
 	// register all servers here
 	api.RegisterWithdrawServiceServer(server, withdraw.NewWithdrawServerAPI())
-	api.RegisterMoneyServiceServer(server, money.NewMoneyServerAPI())
+	api.RegisterMoneyServiceServer(server, ext_account.NewMoneyServerAPI())
 	api.RegisterTopUpServiceServer(server, topup.NewTopUpServerAPI())
 	api.RegisterWalletServiceServer(server, wallet.NewWalletServerAPI())
 	api.RegisterSuperNodeServiceServer(server, supernode.NewSupernodeServerAPI())
@@ -107,12 +107,6 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	if err != nil {
 		return err
 	}
-
-	/*	lis, err := net.Listen("tcp", bind)
-		if err != nil {
-			return errors.Wrap(err, "start mxp-server api listener error")
-		}
-		go server.Serve(lis)*/
 
 	return nil
 }
@@ -190,7 +184,7 @@ func getJSONGateway(ctx context.Context) (http.Handler, error) {
 		return nil, errors.Wrap(err, "register withdraw handler error")
 	}
 	if err := api.RegisterMoneyServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
-		return nil, errors.Wrap(err, "register money handler error")
+		return nil, errors.Wrap(err, "register ext_account handler error")
 	}
 	if err := api.RegisterTopUpServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register top_up handler error")

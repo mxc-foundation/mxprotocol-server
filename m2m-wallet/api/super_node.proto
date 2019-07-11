@@ -3,7 +3,7 @@ syntax = "proto3";
 package api;
 
 import "google/api/annotations.proto";
-import "money.proto";
+import "ext_account.proto";
 import "internal.proto";
 
 service SuperNodeService {
@@ -27,8 +27,7 @@ message GetSuperNodeActiveMoneyAccountRequest {
 
 message GetSuperNodeActiveMoneyAccountResponse {
     string supernode_active_account = 1;
-    string Error = 2;
-    ProfileResponse user_profile = 3;
+    ProfileResponse user_profile = 2;
 }
 
 message AddSuperNodeMoneyAccountRequest {
@@ -37,7 +36,6 @@ message AddSuperNodeMoneyAccountRequest {
 }
 
 message AddSuperNodeMoneyAccountResponse {
-    string error = 1;
-    bool status = 2;
-    ProfileResponse user_profile = 3;
+    bool status = 1;
+    ProfileResponse user_profile = 2;
 }

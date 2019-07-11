@@ -1,7 +1,6 @@
 package db
 
 import (
-	"github.com/apex/log"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
@@ -11,6 +10,10 @@ var CurrencyList = []pstgDb.ExtCurrency{}
 func initExtCurrencyTable() error {
 	currency := pstgDb.ExtCurrency{}
 	for _, v := range api.Money_name {
+		if _, err := DbGetExtCurrencyIdByAbbr(v); err == nil {
+			continue
+		}
+
 		currency.Id = 0
 		currency.Name = v
 		currency.Abv = v
@@ -18,12 +21,14 @@ func initExtCurrencyTable() error {
 	}
 
 	for _, element := range CurrencyList {
-		DbInsertExtCurr(element)
+		if _, err := DbInsertExtCurr(element); err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
-func DbCreateExtCurrencyTable() error {
+func dbCreateExtCurrencyTable() error {
 	return pgDb.CreateExtCurrencyTable()
 }
 
@@ -32,10 +37,5 @@ func DbInsertExtCurr(ec pstgDb.ExtCurrency) (insertIndex int64, err error) {
 }
 
 func DbGetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
-	id, err := pgDb.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
-	if err != nil {
-		log.WithError(err).Error("DbGetExtCurrencyIdByAbbr")
-	}
-
-	return id, err
+	return pgDb.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
 }
