@@ -59,6 +59,11 @@ func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *api.Modif
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
+	log.WithFields(log.Fields{
+		"moneyAbbr": api.Money_name[int32(in.MoneyAbbr)],
+		"withdrawFee": in.WithdrawFee,
+	}).Debug("grpc_api/ModifyWithdrawFee")
+
 	if _, err := db.DbInsertWithdrawFee(api.Money_name[int32(in.MoneyAbbr)], in.WithdrawFee); err != nil {
 		return &api.ModifyWithdrawFeeResponse{Status: false, UserProfile: &userProfile}, err
 	}
@@ -71,6 +76,10 @@ func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWith
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
+
+	log.WithFields(log.Fields{
+		"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
+	}).Debug("grpc_api/GetWithdrawFee")
 
 	extCurrencyAbbr := api.Money_name[int32(req.MoneyAbbr)]
 	return &api.GetWithdrawFeeResponse{WithdrawFee: ctxWithdraw.withdrawFee[extCurrencyAbbr], UserProfile: &userProfile}, nil
@@ -106,6 +115,12 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
+
+	log.WithFields(log.Fields{
+		"orgId": req.OrgId,
+		"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
+		"amount": req.Amount,
+	}).Debug("grpc_api/WithdrawReq")
 
 	withdrawfee, err := db.DbGetActiveWithdrawFee(req.MoneyAbbr.String())
 	if err != nil {
