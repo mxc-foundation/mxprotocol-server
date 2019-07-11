@@ -69,9 +69,6 @@
             "$ref": "#/definitions/apiTopUpHistory"
           }
         },
-        "error": {
-          "type": "string"
-        },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
         }

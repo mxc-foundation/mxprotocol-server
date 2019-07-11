@@ -34,7 +34,7 @@ class ModifyEthAccount extends Component {
 
     onSubmit = (resp) => {
       resp.orgId = this.props.match.params.organizationID;
-      resp.money_abbr = coinType;
+      resp.moneyAbbr = coinType;
       
       const login = {};
       login.username = resp.username;
@@ -42,6 +42,10 @@ class ModifyEthAccount extends Component {
 
       SessionStore.login(login, (response) => {
         if(response === "ok"){
+          delete resp.username;
+          delete resp.password;
+          console.log("resp modify ok");
+          console.log(resp);
           MoneyStore.modifyMoneyAccount(resp, resp => {
             
           })

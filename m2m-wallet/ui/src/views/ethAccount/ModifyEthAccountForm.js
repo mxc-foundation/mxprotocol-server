@@ -23,7 +23,7 @@ class ModifyEthAccountForm extends FormComponent {
       <Form
         submitLabel={this.props.submitLabel}
         onSubmit={() => this.props.onSubmit({
-          currentAccount: this.state.newaccount,
+          currentAccount: this.state.newAccount,
           username: this.state.username,
           password: this.state.password
         })}
@@ -41,7 +41,7 @@ class ModifyEthAccountForm extends FormComponent {
         />
 
         <TextField
-          id="currentAccount"//it is defined current account in swagger
+          id="newAccount"//it is defined current account in swagger
           label="New account"
           margin="normal"
           value={this.state.newaccount}

@@ -27,8 +27,12 @@ func userHasWallet(orgId int64) (int64, bool) {
 	return walletId, true
 }
 
-func createWallet(orgId int64) (int64, error) {
-	walletId, err := db.DbInsertWallet(orgId, db.USER)
+func createWallet(orgId int64) (walletId int64, err error) {
+	if 0 == orgId {
+		walletId, err = db.DbInsertWallet(orgId, db.SUPER_ADMIN)
+	} else {
+		walletId, err = db.DbInsertWallet(orgId, db.USER)
+	}
 	if err != nil {
 		return walletId, err
 	}
@@ -99,20 +103,20 @@ func NewWalletServerAPI() *WalletServerAPI {
 func (s *WalletServerAPI) GetWalletBalance(ctx context.Context, req *api.GetWalletBalanceRequest) (*api.GetWalletBalanceResponse, error) {
 	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
-		return &api.GetWalletBalanceResponse{}, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
 	walletId, err := GetWalletId(req.OrgId)
 	if err != nil {
-		return &api.GetWalletBalanceResponse{}, err
+		return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, err
 	}
 
 	balance, err := db.DbGetWalletBalance(walletId)
 	if err != nil {
-		return &api.GetWalletBalanceResponse{}, err
+		return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, err
 	}
 
-	return &api.GetWalletBalanceResponse{Balance: balance, Error: "", UserProfile: &userProfile}, nil
+	return &api.GetWalletBalanceResponse{Balance: balance, UserProfile: &userProfile}, nil
 }
 
 func (s *WalletServerAPI) GetVmxcTxHistory(ctx context.Context, req *api.GetVmxcTxHistoryRequest) (*api.GetVmxcTxHistoryResponse, error) {
@@ -135,5 +139,5 @@ func (s *WalletServerAPI) GetVmxcTxHistory(ctx context.Context, req *api.GetVmxc
 		history_list = append(history_list, &item)
 	}
 
-	return &api.GetVmxcTxHistoryResponse{Error: "", Count: count, TxHistory: history_list, UserProfile: &userProfile}, nil
+	return &api.GetVmxcTxHistoryResponse{Count: count, TxHistory: history_list, UserProfile: &userProfile}, nil
 }

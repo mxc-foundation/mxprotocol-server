@@ -6,15 +6,14 @@ import (
 	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
-func DbCreateExtAccountTable() error {
+func dbCreateExtAccountTable() error {
 	return pgDb.CreateExtAccountTable()
 }
 
 func DBInsertExtAccount(walletId int64, newAccount string, currencyAbbr string) (insertIndex int64, err error) {
-	// get extCurrencyId from currencyAbbr
-	extCurrencyId, err := DbGetExtCurrencyIdByAbbr(currencyAbbr) // @@ should be checked
+	extCurrencyId, err := DbGetExtCurrencyIdByAbbr(currencyAbbr)
 	if err != nil {
-		return 0, err
+		return extCurrencyId, err
 	}
 
 	ea := pstgDb.ExtAccount{

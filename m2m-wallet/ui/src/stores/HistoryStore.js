@@ -13,7 +13,7 @@ class HistoryStore extends EventEmitter {
     this.topupSwagger = new Swagger("/swagger/topup.swagger.json", sessionStore.getClientOpts());
     this.withdrawSwagger = new Swagger("/swagger/withdraw.swagger.json", sessionStore.getClientOpts());
     this.walletSwagger = new Swagger("/swagger/wallet.swagger.json", sessionStore.getClientOpts());
-    this.moneySwagger = new Swagger("/swagger/money.swagger.json", sessionStore.getClientOpts());
+    this.moneySwagger = new Swagger("/swagger/ext_account.swagger.json", sessionStore.getClientOpts());
   }
 
   getTopUpHistory(orgId, limit, offset, callbackFunc) {

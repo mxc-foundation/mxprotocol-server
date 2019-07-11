@@ -14,9 +14,6 @@ type Wallet struct {
 
 func (pgDbp DbSpec) CreateWalletTable() error {
 	_, err := pgDbp.Db.Exec(`
-
-	
-
 		DO $$
 		BEGIN
 			IF NOT EXISTS 

@@ -4,14 +4,14 @@ import (
 	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
-type WalletType string // db:wallet_type
+type WalletType string
 
 const (
 	USER        WalletType = "USER"
 	SUPER_ADMIN WalletType = "SUPER_ADMIN"
 )
 
-func DbCreateWalletTable() error {
+func dbCreateWalletTable() error {
 	return pgDb.CreateWalletTable()
 }
 
@@ -33,7 +33,6 @@ func DbGetWalletBalance(walletId int64) (float64, error) {
 }
 
 func DbUpdateBalanceByWalletId(walletId int64, newBalance float64) error {
-
 	return pgDb.UpdateBalanceByWalletId(walletId, newBalance)
 }
 

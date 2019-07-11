@@ -10,7 +10,7 @@ import dispatcher from "../dispatcher";
 class MoneyStore extends EventEmitter {
   constructor() {
     super();
-    this.swagger = new Swagger("/swagger/money.swagger.json", sessionStore.getClientOpts());
+    this.swagger = new Swagger("/swagger/ext_account.swagger.json", sessionStore.getClientOpts());
   }
 
   getActiveMoneyAccount(money_abbr, orgId, callbackFunc) {
@@ -31,13 +31,15 @@ class MoneyStore extends EventEmitter {
   modifyMoneyAccount(req, callbackFunc) {
     this.swagger.then(client => {
       client.apis.MoneyService.ModifyMoneyAccount({
-        "money_abbr": req.money_abbr,
+        "money_abbr": req.moneyAbbr,
         body: {
             apiModifyMoneyAccountRequest: req,
         },
       })
       .then(checkStatus)
       .then(resp => {
+        console.log('assdfadsf');
+        console.log(resp);
         this.notify("updated");
         callbackFunc(resp.obj);
       })
