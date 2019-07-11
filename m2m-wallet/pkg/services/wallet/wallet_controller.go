@@ -106,6 +106,10 @@ func (s *WalletServerAPI) GetWalletBalance(ctx context.Context, req *api.GetWall
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
+	log.WithFields(log.Fields{
+		"orgId": req.OrgId,
+	}).Debug("grpc_api/GetWalletBalance")
+
 	walletId, err := GetWalletId(req.OrgId)
 	if err != nil {
 		return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, err
