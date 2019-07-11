@@ -1,21 +1,11 @@
 import React, { Component } from "react";
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
-//import { IconButton } from "@material-ui/core";
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
 
-//import MenuIcon from "mdi-material-ui/Menu";
-//import Backburger from "mdi-material-ui/Backburger";
-import AccountCircle from "mdi-material-ui/AccountCircle";
-//import HelpCicle from "mdi-material-ui/HelpCircle";
 import Typography from '@material-ui/core/Typography';
-
 import SessionStore from "../stores/SessionStore";
 
 import WithdrawStore from "../stores/WithdrawStore";
