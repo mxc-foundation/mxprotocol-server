@@ -48,7 +48,8 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 
 	err = updateActiveExtAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
 	if err != nil {
-		return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile}, err
+		log.WithError(err).Error("grpc_api/ModifyMoneyAccount")
+		return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
 	}
 
 	return &api.ModifyMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
@@ -83,12 +84,14 @@ func (s *ExtAccountServerAPI) GetActiveMoneyAccount(ctx context.Context, req *ap
 
 	walletId, err := db.DbGetWalletIdFromOrgId(req.OrgId)
 	if err != nil {
-		return &api.GetActiveMoneyAccountResponse{ActiveAccount: "", UserProfile: &userProfile}, err
+		log.WithError(err).Error("grpc_api/GetActiveMoneyAccount")
+		return &api.GetActiveMoneyAccountResponse{ActiveAccount: "", UserProfile: &userProfile}, nil
 	}
 
 	accountAddr, err := db.DbGetUserExtAccountAdr(walletId, api.Money_name[int32(req.MoneyAbbr)])
 	if err != nil {
-		return &api.GetActiveMoneyAccountResponse{ActiveAccount: "", UserProfile: &userProfile}, err
+		log.WithError(err).Error("grpc_api/GetActiveMoneyAccount")
+		return &api.GetActiveMoneyAccountResponse{ActiveAccount: "", UserProfile: &userProfile}, nil
 	}
 
 	return &api.GetActiveMoneyAccountResponse{ActiveAccount: accountAddr, UserProfile: &userProfile}, nil
