@@ -23,7 +23,7 @@ function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function loadWithdrawData(coinType) {
+function loadWithdrawFee(coinType) {
   return new Promise((resolve, reject) => {
     WithdrawStore.getWithdrawFee(coinType,
       resp => {
@@ -75,7 +75,7 @@ class Withdraw extends Component {
 
   loadData = async () => {
     try {
-      var result = await loadWithdrawData(coinType);
+      var result = await loadWithdrawFee(coinType);
       var wallet = await loadWalletBalance(this.props.match.params.organizationID);
       var account = await loadCurrentAccount(coinType, this.props.match.params.organizationID);
       
@@ -120,7 +120,7 @@ class Withdraw extends Component {
 
   onConfirm = (data) => {
     WithdrawStore.WithdrawReq(data, resp => {
-      console.log('WithdrawReq',resp)
+      //console.log('WithdrawReq',resp)
     });
   }
 

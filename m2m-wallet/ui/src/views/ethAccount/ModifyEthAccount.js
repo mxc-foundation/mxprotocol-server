@@ -32,6 +32,14 @@ class ModifyEthAccount extends Component {
       }); 
     }
 
+    componentDidUpdate(oldProps) {
+      if (this.props === oldProps) {
+        return;
+      }
+
+      this.loadData();
+    }
+
     onSubmit = (resp) => {
       resp.orgId = this.props.match.params.organizationID;
       resp.moneyAbbr = coinType;
@@ -39,17 +47,15 @@ class ModifyEthAccount extends Component {
       const login = {};
       login.username = resp.username;
       login.password = resp.password;
-
+      
       SessionStore.login(login, (response) => {
         if(response === "ok"){
           delete resp.username;
           delete resp.password;
-          console.log("resp modify ok");
-          console.log(resp);
           MoneyStore.modifyMoneyAccount(resp, resp => {
-            
+            this.props.history.push(`/modify-account/1`);
           })
-        }else{
+        } else {
           alert("inccorect username or password.");
         }
       })
