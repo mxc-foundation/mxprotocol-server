@@ -65,7 +65,8 @@ func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *api.Modif
 	}).Debug("grpc_api/ModifyWithdrawFee")
 
 	if _, err := db.DbInsertWithdrawFee(api.Money_name[int32(in.MoneyAbbr)], in.WithdrawFee); err != nil {
-		return &api.ModifyWithdrawFeeResponse{Status: false, UserProfile: &userProfile}, err
+		log.WithError(err).Error("grpc_api/ModifyWithdrawFee")
+		return &api.ModifyWithdrawFeeResponse{Status: false, UserProfile: &userProfile}, nil
 	}
 
 	return &api.ModifyWithdrawFeeResponse{Status: true, UserProfile: &userProfile}, nil

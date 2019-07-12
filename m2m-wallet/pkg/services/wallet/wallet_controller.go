@@ -112,12 +112,14 @@ func (s *WalletServerAPI) GetWalletBalance(ctx context.Context, req *api.GetWall
 
 	walletId, err := GetWalletId(req.OrgId)
 	if err != nil {
-		return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, err
+		log.WithError(err).Error("grpc_api/GetWalletBalance")
+		return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, nil
 	}
 
 	balance, err := db.DbGetWalletBalance(walletId)
 	if err != nil {
-		return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, err
+		log.WithError(err).Error("grpc_api/GetWalletBalance")
+		return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, nil
 	}
 
 	return &api.GetWalletBalanceResponse{Balance: balance, UserProfile: &userProfile}, nil
