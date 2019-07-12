@@ -4,9 +4,10 @@ const SideNavStyle = {
     drawerPaper: {
       position: "fixed",
       width: 270,
-      paddingTop: theme.spacing.unit * 9,
+      paddingTop: theme.spacing.unit * 10,
+      paddingLeft: 0,
+      paddingRight: 0,
       backgroundColor: '#1C1478',
-      left: 'inherit',
       color: '#F9FAFC',
       fontSize: 14,
     },
@@ -17,13 +18,15 @@ const SideNavStyle = {
       paddingBottom: theme.spacing.unit * 1,
     },
     card: { // lora server options
-      width: '96%',
+      width: '100%',
       height: 250,
       position: 'absolute',
       bottom: 5,
       backgroundColor: '#1C1478',
       color: '#F9FAFC',
       fontSize: 14,
+      paddingLeft: 0,
+      paddingRight: 0,
     },
     static: {
       position: 'static'

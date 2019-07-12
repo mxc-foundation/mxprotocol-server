@@ -46,6 +46,10 @@ class SideNav extends Component {
     this.getOrganizationOptions = this.getOrganizationOptions.bind(this);
   }
 
+  handleMXC = () => {
+    window.location.replace(`http://mxc.org/`);
+  } 
+
   componentDidMount() {
     //const {match: { params: { organizationID }}} = this.props;
     this.setState({
@@ -148,7 +152,7 @@ class SideNav extends Component {
             <ListItemIcon>
               <PageNextOutline />
             </ListItemIcon>
-            <ListItemText primary="Topup" />
+            <ListItemText primary="Top up" />
           </ListItem>
           <ListItem button component={Link} to={`/history/${this.state.organization.id}`}>
             <ListItemIcon>
@@ -167,8 +171,9 @@ class SideNav extends Component {
                 {/* <ListItem button  onClick={this.handleOpenLora}> */}
                 <ListItem button component={LinkToLora} className={this.props.classes.static}>  
                   <ListItemIcon>
-                    <img src="/logo/logo.png" className="iconStyle" alt="LoRa Server" />
+                    <AccessPoint />
                   </ListItemIcon>
+                  <ListItemText primary="LoRa Server" />
                 </ListItem>
                 <Divider />
                 {/* <ListItem button >
@@ -187,7 +192,7 @@ class SideNav extends Component {
                 <ListItem>
                   <ListItemText primary="Powered by" />
                   <ListItemIcon>
-                    <img src="/logo/mxc_logo.png" className="iconStyle" alt="LoRa Server" />
+                    <img src="/logo/mxc_logo.png" className="iconStyle" alt="LoRa Server" onClick={this.handleMXC} />
                   </ListItemIcon>
                 </ListItem>
                 {/* <ListItem button onClick={this.handleOpenM2M} >

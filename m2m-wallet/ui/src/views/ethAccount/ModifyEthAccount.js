@@ -57,14 +57,14 @@ class ModifyEthAccount extends Component {
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
-                  <TitleBarTitle title="Eth Account" />
+                  <TitleBarTitle title="ETH Account" />
                 </TitleBar>
                 <Divider light={true}/>
                 <div className={this.props.classes.breadcrumb}>
                 <TitleBar>
                   <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
                   <TitleBarTitle title="/" className={this.props.classes.navText}/>
-                  <TitleBarTitle component={Link} to="#" title="Eth Account" className={this.props.classes.link}/>
+                  <TitleBarTitle component={Link} to="#" title="ETH Account" className={this.props.classes.link}/>
                 </TitleBar>
                 </div>
             </div>
