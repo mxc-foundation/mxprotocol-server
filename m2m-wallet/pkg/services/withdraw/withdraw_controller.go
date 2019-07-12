@@ -69,6 +69,7 @@ func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *api.Modif
 		return &api.ModifyWithdrawFeeResponse{Status: false, UserProfile: &userProfile}, nil
 	}
 
+	ctxWithdraw.withdrawFee[api.Money_name[int32(in.MoneyAbbr)]] = in.WithdrawFee
 	return &api.ModifyWithdrawFeeResponse{Status: true, UserProfile: &userProfile}, nil
 }
 
