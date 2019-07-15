@@ -25,6 +25,8 @@ import styles from "./SideNavStyle";
 const LinkToLora = ({children, ...otherProps}) => 
 <a href={`http://localhost:8080`} {...otherProps}>{children}</a>;
 
+const coinType = 'Ether';
+
 class SideNav extends Component {
   constructor() {
     super();
@@ -32,6 +34,7 @@ class SideNav extends Component {
     this.state = {
       open: true,
       organization: {},
+      organizationID: '',
       cacheCounter: 0,
     };
 
@@ -41,36 +44,20 @@ class SideNav extends Component {
   }
 
   componentDidMount() {
-    //const {match: { params: { organizationID }}} = this.props;
     this.setState({
-      organization: {
-        id: SessionStore.getOrganizationID()
-      }
+      organizationID: this.props.organizationID
     })
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props === prevProps) {
-      return;
-    }
-
-    /* const {match: { params: { organizationID }} } = this.props;
-    this.setState({
-      organization: {
-        id: organizationID
-      }
-    }); */
   }
 
   onChange(e) {
     SessionStore.setOrganizationID(e.target.value);
-    this.setState({
-      organization: {
-        id: SessionStore.getOrganizationID()
-      }
-    })
     //console.log('this.props', this.props.location.pathname);
-    
+    this.setState({
+      organizationID: e.target.value
+    })
     this.props.history.push(`/withdraw/${e.target.value}`);
   }
 
@@ -84,7 +71,7 @@ class SideNav extends Component {
   }
 
   getOrganizationOption(id, callbackFunc) {
-    WithdrawStore.getWithdrawFee("Ether", resp => {
+    WithdrawStore.getWithdrawFee(coinType, resp => {
       const option = resp.userProfile.organizations[0];
       console.log('option', option);
       callbackFunc({label: option.organizationName, value: option.organizationID});
@@ -92,7 +79,7 @@ class SideNav extends Component {
   }
 
   getOrganizationOptions(search, callbackFunc) {
-    WithdrawStore.getWithdrawFee("Ether", resp => {
+    WithdrawStore.getWithdrawFee(coinType, resp => {
       //dummy data
       resp.userProfile.organizations[0].organizationName = 'lora';
       resp.userProfile.organizations[0].organizationID = '1';
@@ -104,12 +91,8 @@ class SideNav extends Component {
   }
 
   render() {
-    let organizationID = "";
-    
-    if (this.state.organization !== null) {
-      organizationID = this.state.organization.id;
-    }
-    
+    //let organizationID = SessionStore.getOrganizationID();
+    let organizationID = this.state.organizationID;
     return(
       <Drawer
         variant="persistent"
@@ -132,25 +115,25 @@ class SideNav extends Component {
             triggerReload={this.state.cacheCounter}
           />
         </div>
-          <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}>
+          <ListItem button component={Link} to={`/withdraw/${this.state.organizationID}`}>
             <ListItemIcon className={this.props.classes.iconStyle}>
               <PagePreviousOutline />
             </ListItemIcon>
             <ListItemText primary="Withdraw" />
           </ListItem>
-          <ListItem button component={Link} to={`/topup/${this.state.organization.id}`}>
+          <ListItem button component={Link} to={`/topup/${this.state.organizationID}`}>
             <ListItemIcon>
               <PageNextOutline />
             </ListItemIcon>
             <ListItemText primary="Topup" />
           </ListItem>
-          <ListItem button component={Link} to={`/history/${this.state.organization.id}`}>
+          <ListItem button component={Link} to={`/history/${this.state.organizationID}`}>
             <ListItemIcon>
               <CalendarCheckOutline />
             </ListItemIcon>
             <ListItemText primary="History" />
           </ListItem>
-          <ListItem button component={Link} to={`/modify-account/${this.state.organization.id}`}>
+          <ListItem button component={Link} to={`/modify-account/${this.state.organizationID}`}>
             <ListItemIcon>
               <CreditCard />
             </ListItemIcon>
