@@ -81,10 +81,11 @@ class SideNav extends Component {
   getOrganizationOptions(search, callbackFunc) {
     WithdrawStore.getWithdrawFee(coinType, resp => {
       //dummy data
-      resp.userProfile.organizations[0].organizationName = 'lora';
+      /* resp.userProfile.organizations[0].organizationName = 'lora';
       resp.userProfile.organizations[0].organizationID = '1';
-      resp.userProfile.organizations.push({organizationName: 'mxp',organizationID: '2' });
+      resp.userProfile.organizations.push({organizationName: 'mxp',organizationID: '2' }); */
       const options = resp.userProfile.organizations.map((o, i) => { 
+        console.log(o.organizationName, o.organizationID);
         return {label: o.organizationName, value: o.organizationID}});
       callbackFunc(options);
     });

@@ -103,8 +103,8 @@ class SessionStore extends EventEmitter {
     if(jwt === ""){
       redirectToLora();
     }
+    console.log('initProfile', org_id);
     this.setToken(jwt);
-
     this.validateAndSetOrganizationID(org_id);
   }
 
@@ -114,9 +114,9 @@ class SessionStore extends EventEmitter {
         .then(checkStatus)
         .then(resp => {
           if(resp.body.jwt === ""){
-            callBackFunc("fail");  
+            callBackFunc(false);  
           }else{
-            callBackFunc("ok");
+            callBackFunc(true);
           }
           //this.fetchProfile(callBackFunc);
         })

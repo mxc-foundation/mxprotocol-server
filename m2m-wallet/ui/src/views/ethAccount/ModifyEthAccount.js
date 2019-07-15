@@ -15,39 +15,39 @@ import styles from "./EthAccountStyle";
 
 const coinType = "Ether";
 
-function verifyProc (resp) {
+function verifyUser (resp) {
   const login = {};
   login.username = resp.username;
   login.password = resp.password;
 
   return new Promise((resolve, reject) => {
     SessionStore.login(login, (resp) => {
-      if(resp !== "ok"){
-        //delete resp.username;
-        //delete resp.password;
+      if(resp){
+        resolve(resp);
+      } else {
         alert("inccorect username or password.");
         return false;
-      } else {
-        resolve(resp);
       }
     })
   });
 }
 
-function modifyAccount (resp) {
+function modifyAccount (resp , organizationID, history) {
+  resp.moneyAbbr = coinType;
   return new Promise((resolve, reject) => {
     MoneyStore.modifyMoneyAccount(resp, resp => {
-      this.props.history.push(`/modify-account/1`);
+      history.push(`/modify-account/${organizationID}`);
       resolve(resp);
     })
   });
 }
 
-function createAccount (req, history) {
+function createAccount (req, organizationID, history) {
+  //console.log('req.organizationID', req);
   req.moneyAbbr = coinType;
   return new Promise((resolve, reject) => {
     SupernodeStore.addSuperNodeMoneyAccount(req, resp => {
-      history.push(`/modify-account/1`);
+      history.push(`/modify-account/${organizationID}`);
       resolve(resp);
     })
   });
@@ -61,6 +61,7 @@ class ModifyEthAccount extends Component {
     }
     
     componentDidMount() {
+      console.log("load");
       this.loadData();
     }
     
@@ -81,14 +82,14 @@ class ModifyEthAccount extends Component {
     }
 
     onSubmit = async (resp) => {
-      console.log('onSubmit',resp);
+      
       try {
-        const result = await verifyProc(resp);
+        await verifyUser(resp);
         
         if(resp.action === 'modifyAccount' ) {
-          const result = await modifyAccount(resp);
+          const result = await modifyAccount(resp, this.props.match.params.organizationID, this.props.history);
         } else {
-          const result = await createAccount(resp, this.props.history);
+          const result = await createAccount(resp, this.props.match.params.organizationID, this.props.history);
         }
       } catch (error) {
         console.error(error);
