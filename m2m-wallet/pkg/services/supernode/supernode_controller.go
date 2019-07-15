@@ -55,7 +55,7 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 	}).Debug("grpc_api/AddSuperNodeMoneyAccount")
 
 	var walletId int64
-	if walletId, err = db.DbGetWalletIdFromOrgId(0); err == nil || 0 == walletId {
+	if walletId, err = db.DbGetWalletIdFromOrgId(0); err == nil && 0 == walletId {
 		walletId, err = db.DbInsertWallet(0, db.SUPER_ADMIN)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
