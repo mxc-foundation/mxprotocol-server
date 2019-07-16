@@ -13,9 +13,9 @@ import WithdrawBalanceInfo from "./WithdrawBalanceInfo";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Divider from '@material-ui/core/Divider';
-import theme from "../../theme";
 import styles from "./WithdrawStyle"
-//import { promises } from "fs";
+
+
 
 const coinType = "Ether";
 
@@ -66,15 +66,18 @@ function loadWalletBalance(organizationID) {
 }
 
 class Withdraw extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      loading: false,
       modal: null
     };
   }
 
   loadData = async () => {
     try {
+      
+      this.setState({loading: true})
       var result = await loadWithdrawFee(coinType);
       var wallet = await loadWalletBalance(this.props.match.params.organizationID);
       var account = await loadCurrentAccount(coinType, this.props.match.params.organizationID);
@@ -87,13 +90,16 @@ class Withdraw extends Component {
       this.setState({
         txinfo
       });
+      this.setState({loading: false})
     } catch (error) {
+      this.setState({loading: false})
       console.error(error);
       this.setState({ error });
     }
   }
 
   componentDidMount() {
+    console.log('sadasf',this.props.match.params.organizationID);
     this.loadData();
   }
 
@@ -119,8 +125,9 @@ class Withdraw extends Component {
   }
 
   onConfirm = (data) => {
+    this.setState({loading: true});
     WithdrawStore.WithdrawReq(data, resp => {
-      //console.log('WithdrawReq',resp)
+      this.setState({loading: false});
     });
   }
 
@@ -157,14 +164,7 @@ class Withdraw extends Component {
           />
         </Grid>
         <Grid item xs={2}>
-
         </Grid>
-{/*         <Grid item xs={3}>
-          <WithdrawBalanceInfo
-            txinfo={this.state.txinfo} {...this.props}
-          />
-          
-        </Grid> */}
       </Grid>
     );
   }
