@@ -2,7 +2,7 @@
 # Log level
 #
 # debug=5, info=4, warning=3, error=2, fatal=1, panic=0
-log_level=4
+log_level=5
 
 # The number of times passwords must be hashed. A higher number is safer as
 # an attack takes more time to perform.
@@ -85,6 +85,7 @@ supernode_address="0x8a96E17d85Bd897a88B547718865de990D2Fcb80"
 api_key="W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4"
 check_account_seconds=30
 external_currency_abv="MXC"
+ether_net=false
 
 [paymentserver]
 payment_service_address="payment"

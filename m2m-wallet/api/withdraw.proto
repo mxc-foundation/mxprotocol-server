@@ -3,7 +3,7 @@ syntax = "proto3";
 package api;
 
 import "google/api/annotations.proto";
-import "money.proto";
+import "ext_account.proto";
 import "internal.proto";
 
 // WithdrawService is the service managing the withdraw access.
@@ -44,8 +44,7 @@ message GetWithdrawFeeRequest {
 message GetWithdrawFeeResponse {
     // Withdraw object.
     double withdrawFee = 1;
-    string error = 2;
-    ProfileResponse user_profile = 3;
+    ProfileResponse user_profile = 2;
 }
 
 message WithdrawReqRequest {
@@ -56,8 +55,7 @@ message WithdrawReqRequest {
 
 message WithdrawReqResponse {
     bool status = 1;
-    string error = 2;
-    ProfileResponse user_profile = 3;
+    ProfileResponse user_profile = 2;
 }
 
 message GetWithdrawHistoryRequest {
@@ -76,10 +74,9 @@ message WithdrawHistory {
 }
 
 message GetWithdrawHistoryResponse {
-    string error = 1;
-    int64 count = 2;
-    repeated WithdrawHistory withdraw_history = 3;
-    ProfileResponse user_profile = 4;
+    int64 count = 1;
+    repeated WithdrawHistory withdraw_history = 2;
+    ProfileResponse user_profile = 3;
 }
 
 message ModifyWithdrawFeeRequest {
@@ -89,6 +86,5 @@ message ModifyWithdrawFeeRequest {
 
 message ModifyWithdrawFeeResponse {
     bool status = 1;
-    string error = 2;
-    ProfileResponse user_profile = 3;
+    ProfileResponse user_profile = 2;
 }

@@ -8,20 +8,20 @@ import "internal.proto";
 service MoneyService {
     rpc ModifyMoneyAccount(ModifyMoneyAccountRequest) returns (ModifyMoneyAccountResponse){
         option(google.api.http) = {
-			put: "/api/money/modify_account/{money_abbr}"
+			put: "/api/ext_account/modify_account/{money_abbr}"
 			body: "*"
 		};
     }
 
     rpc GetChangeMoneyAccountHistory(GetMoneyAccountChangeHistoryRequest) returns (GetMoneyAccountChangeHistoryResponse){
         option(google.api.http) = {
-			get: "/api/money/change_history/{money_abbr}"
+			get: "/api/ext_account/change_history/{money_abbr}"
 		};
     }
 
     rpc GetActiveMoneyAccount(GetActiveMoneyAccountRequest) returns (GetActiveMoneyAccountResponse) {
         option (google.api.http) = {
-			get: "/api/money/active_account/{money_abbr}"
+			get: "/api/ext_account/active_account/{money_abbr}"
 		};
     }
 }
@@ -37,9 +37,8 @@ message ModifyMoneyAccountRequest {
 }
 
 message ModifyMoneyAccountResponse {
-    string error = 1;
-    bool status = 2;
-    ProfileResponse user_profile = 3;
+    bool status = 1;
+    ProfileResponse user_profile = 2;
 }
 
 message GetMoneyAccountChangeHistoryRequest {
@@ -56,10 +55,9 @@ message MoneyAccountChangeHistory {
 }
 
 message GetMoneyAccountChangeHistoryResponse {
-    string error = 1;
-    int64 count = 2;
-    repeated MoneyAccountChangeHistory change_history = 3;
-    ProfileResponse user_profile = 4;
+    int64 count = 1;
+    repeated MoneyAccountChangeHistory change_history = 2;
+    ProfileResponse user_profile = 3;
 }
 
 message GetActiveMoneyAccountRequest {
@@ -68,7 +66,6 @@ message GetActiveMoneyAccountRequest {
 }
 
 message GetActiveMoneyAccountResponse {
-    string error = 1;
-    string active_account = 2;
-    ProfileResponse user_profile = 3;
+    string active_account = 1;
+    ProfileResponse user_profile = 2;
 }

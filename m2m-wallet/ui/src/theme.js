@@ -1,7 +1,9 @@
 import { createMuiTheme } from "@material-ui/core/styles";
+import { teal } from "@material-ui/core/colors";
 
 const tealHighLight = '#00FFD9';
 const blueMxcBrand = '#09006E';
+const blueBG = '#090046';
 const white = '#F9FAFC';
 const linkTextColor = '#CAFCF5';
 
@@ -9,6 +11,7 @@ const theme = createMuiTheme({
     palette: {
       primary: { main: tealHighLight }, 
       secondary: { main: blueMxcBrand }, 
+      darkBG: { main: blueBG }, 
       textPrimary: {main: white}, 
       textSecondary: {main: linkTextColor} 
     },
@@ -124,16 +127,30 @@ const theme = createMuiTheme({
       },
       MuiButton: { 
         root: {
-          //background: teal['A200'],
-          backgroundColor: '#00FFD9',
-          boxShadow: '0 8px 6px -6px #00000050',
+          background: tealHighLight,
+          color: blueMxcBrand,
           width: 135,
           height: 50,
           fontWeight: 'bolder',
           marginRight: 5,
+          boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
+          "&:hover": {
+            backgroundColor: "#00CCAE",
+          },
         },
-        "&:hover": {
-          backgroundColor: '#00CCAE',
+        outlined: {
+          backgroundColor: blueBG,
+          color: tealHighLight,
+          //padding: 30,
+          fontWeight: 900,
+          lineHeight: 1.5,
+          borderWidth: 2,
+          borderColor: tealHighLight,
+          "&:hover": {
+            backgroundColor: blueBG,
+            borderColor: "#00CCAE",
+            color: "#00CCAE",
+          },
         },
         label: {
           color: blueMxcBrand

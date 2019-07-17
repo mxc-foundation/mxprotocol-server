@@ -93,9 +93,6 @@
     "apiAddSuperNodeMoneyAccountResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "status": {
           "type": "boolean",
           "format": "boolean"
@@ -109,9 +106,6 @@
       "type": "object",
       "properties": {
         "supernodeActiveAccount": {
-          "type": "string"
-        },
-        "Error": {
           "type": "string"
         },
         "userProfile": {

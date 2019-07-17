@@ -5,7 +5,7 @@ GRPC_GW_PATH="${GRPC_GW_PATH}/../third_party/googleapis"
 # generate the gRPC code
 protoc -I. -I${GRPC_GW_PATH} --go_out=plugins=grpc:. \
     internal.proto \
-    money.proto \
+    ext_account.proto \
     super_node.proto \
     topup.proto \
     wallet.proto \
@@ -14,7 +14,7 @@ protoc -I. -I${GRPC_GW_PATH} --go_out=plugins=grpc:. \
 # generate the JSON interface code
 protoc -I. -I${GRPC_GW_PATH} --grpc-gateway_out=logtostderr=true:. \
     internal.proto \
-    money.proto \
+    ext_account.proto \
     super_node.proto \
     topup.proto \
     wallet.proto \
@@ -23,7 +23,7 @@ protoc -I. -I${GRPC_GW_PATH} --grpc-gateway_out=logtostderr=true:. \
 # generate the swagger definitions
 protoc -I. -I${GRPC_GW_PATH} --swagger_out=json_names_for_fields=true:./swagger \
     internal.proto \
-    money.proto \
+    ext_account.proto \
     super_node.proto \
     topup.proto \
     wallet.proto \

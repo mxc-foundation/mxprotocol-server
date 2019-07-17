@@ -15,7 +15,7 @@ import (
 func Setup() error {
 	ticker_superAccount := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckAccountSeconds) * time.Second)
 	go func() {
-		log.Info("start supernode goroutine")
+		log.Info("Start supernode goroutine")
 		for range ticker_superAccount.C {
 			supernodeAccount, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
 			if err != nil {
@@ -49,17 +49,30 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	walletId, err := db.DbInsertWallet(0, db.SUPER_ADMIN)
-	if err != nil {
-		return &api.AddSuperNodeMoneyAccountResponse{Error: "", Status: false, UserProfile: &userProfile}, err
+	log.WithFields(log.Fields{
+		"moneyAbbr": api.Money_name[int32(in.MoneyAbbr)],
+		"accountAddr": in.AccountAddr,
+	}).Debug("grpc_api/AddSuperNodeMoneyAccount")
+
+	var walletId int64
+	if walletId, err = db.DbGetWalletIdFromOrgId(0); err == nil && 0 == walletId {
+		walletId, err = db.DbInsertWallet(0, db.SUPER_ADMIN)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
+			return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
+		}
+	} else if err != nil {
+		log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
+		return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
 	}
 
 	_, err = db.DBInsertExtAccount(walletId, in.AccountAddr, api.Money_name[int32(in.MoneyAbbr)])
 	if err != nil {
-		return &api.AddSuperNodeMoneyAccountResponse{Error: err.Error(), Status: false, UserProfile: &userProfile}, err
+		log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
+		return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
 	}
 
-	return &api.AddSuperNodeMoneyAccountResponse{Error: "", Status: true, UserProfile: &userProfile}, nil
+	return &api.AddSuperNodeMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
 }
 
 func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context, req *api.GetSuperNodeActiveMoneyAccountRequest) (*api.GetSuperNodeActiveMoneyAccountResponse, error) {
@@ -68,10 +81,15 @@ func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context,
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
+	log.WithFields(log.Fields{
+		"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
+	}).Debug("grpc_api/GetSuperNodeActiveMoneyAccount")
+
 	accountAddr, err := db.DbGetSuperNodeExtAccountAdr(api.Money_name[int32(req.MoneyAbbr)])
 	if err != nil {
-		return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "", Error: err.Error(), UserProfile: &userProfile}, err
+		log.WithError(err).Error("grpc_api/GetSuperNodeActiveMoneyAccount")
+		return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "", UserProfile: &userProfile}, nil
 	}
 
-	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: accountAddr, Error: "", UserProfile: &userProfile}, nil
+	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: accountAddr, UserProfile: &userProfile}, nil
 }

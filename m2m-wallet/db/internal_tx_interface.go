@@ -2,7 +2,7 @@ package db
 
 import pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 
-func DbCreateInternalTxTable() error {
+func dbCreateInternalTxTable() error {
 	return pgDb.CreateInternalTxTable()
 }
 

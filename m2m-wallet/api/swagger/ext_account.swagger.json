@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "money.proto",
+    "title": "ext_account.proto",
     "version": "version not set"
   },
   "schemes": [
@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/money/active_account/{money_abbr}": {
+    "/api/ext_account/active_account/{money_abbr}": {
       "get": {
         "operationId": "GetActiveMoneyAccount",
         "responses": {
@@ -49,7 +49,7 @@
         ]
       }
     },
-    "/api/money/change_history/{money_abbr}": {
+    "/api/ext_account/change_history/{money_abbr}": {
       "get": {
         "operationId": "GetChangeMoneyAccountHistory",
         "responses": {
@@ -97,7 +97,7 @@
         ]
       }
     },
-    "/api/money/modify_account/{money_abbr}": {
+    "/api/ext_account/modify_account/{money_abbr}": {
       "put": {
         "operationId": "ModifyMoneyAccount",
         "responses": {
@@ -137,9 +137,6 @@
     "apiGetActiveMoneyAccountResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "activeAccount": {
           "type": "string"
         },
@@ -151,9 +148,6 @@
     "apiGetMoneyAccountChangeHistoryResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "count": {
           "type": "string",
           "format": "int64"
@@ -187,9 +181,6 @@
     "apiModifyMoneyAccountResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "status": {
           "type": "boolean",
           "format": "boolean"
