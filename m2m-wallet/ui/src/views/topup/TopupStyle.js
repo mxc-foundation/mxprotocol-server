@@ -42,7 +42,6 @@ const TopupStyle = {
             opacity: 1,
           }
       },
-      MuiButton: {},
   };
   
 export default TopupStyle;

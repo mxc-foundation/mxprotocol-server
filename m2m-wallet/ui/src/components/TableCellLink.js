@@ -12,6 +12,14 @@ const styles = {
     textDecoration: "none",
     color: theme.palette.primary.main,
     cursor: "pointer",
+    textDecoration: "none",
+    padding: 0,
+    fontWeight: "bold",
+    fontSize: 14,
+    opacity: 0.7,
+      "&:hover": {
+        opacity: 1,
+      }
   },
 };
 

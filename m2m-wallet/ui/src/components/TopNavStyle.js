@@ -1,5 +1,6 @@
 import blue from "@material-ui/core/colors/blue";
 import theme from "../theme";
+import { teal } from "@material-ui/core/colors";
 
 const TopNavStyle = {
     appBar: {
@@ -40,6 +41,9 @@ const TopNavStyle = {
             background: blue[400],
         },
         "&:active": {
+            background: teal,
+        },
+        "&:visited": {
             background: blue[400],
         },
     },
@@ -47,9 +51,9 @@ const TopNavStyle = {
         color: theme.palette.common.white,
         marginRight: theme.spacing.unit,
     },
-    iconStyle: {
+/*     iconStyle: {
         color: theme.palette.primary.main,
-    },
+    }, */
     noPadding: {
         padding: 0
     }
