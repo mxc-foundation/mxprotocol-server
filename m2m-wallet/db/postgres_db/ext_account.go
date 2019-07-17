@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/apex/log"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 )
@@ -32,7 +31,7 @@ func (pgDbp DbSpec) CreateExtAccountTable() error {
 		);
 		
 	`)
-	return errors.Wrap(err, "db: query error CreateExtAccountTable()")
+	return errors.Wrap(err, "db/CreateExtAccountTable")
 }
 
 func (pgDbp DbSpec) InsertExtAccount(ea ExtAccount) (insertIndex int64, err error) {
@@ -55,10 +54,7 @@ func (pgDbp DbSpec) InsertExtAccount(ea ExtAccount) (insertIndex int64, err erro
 		ea.Insert_time,
 		ea.LatestCheckedBlock).Scan(&insertIndex)
 
-	if err != nil {
-		log.WithError(err).Error("/db/InsertExtAccount")
-	}
-	return insertIndex, err
+	return insertIndex, errors.Wrap(err, "db/InsertExtAccount")
 }
 
 func (pgDbp DbSpec) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error) {
@@ -67,7 +63,7 @@ func (pgDbp DbSpec) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error)
 
 	err := pgDbp.Db.QueryRow(`
 		select 
-			account_adr
+			ea.account_adr
 		from
 			wallet w ,ext_account ea,ext_currency ec
 		WHERE
@@ -89,7 +85,7 @@ func (pgDbp DbSpec) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error)
 		return "", nil
 	}
 
-	return res, errors.Wrap(err, "db: query error GetSuperNodeExtAccountAdr()")
+	return res, errors.Wrap(err, "db/GetSuperNodeExtAccountAdr")
 }
 
 func (pgDbp DbSpec) GetSuperNodeExtAccountId(extCurrAbv string) (int64, error) {
@@ -119,7 +115,7 @@ func (pgDbp DbSpec) GetSuperNodeExtAccountId(extCurrAbv string) (int64, error) {
 		return 0, nil
 	}
 
-	return res, errors.Wrap(err, "db: query error GetSuperNodeExtAccountAdr()")
+	return res, errors.Wrap(err, "db/GetSuperNodeExtAccountId")
 }
 
 func (pgDbp DbSpec) GetUserExtAccountAdr(walletId int64, extCurrAbv string) (string, error) {
@@ -128,7 +124,7 @@ func (pgDbp DbSpec) GetUserExtAccountAdr(walletId int64, extCurrAbv string) (str
 
 	err := pgDbp.Db.QueryRow(`
 		select 
-			account_adr
+			ea.account_adr
 		from
 			wallet w,ext_account ea,ext_currency ec
 		WHERE
@@ -148,7 +144,7 @@ func (pgDbp DbSpec) GetUserExtAccountAdr(walletId int64, extCurrAbv string) (str
 		return "", nil
 	}
 
-	return res, errors.Wrap(err, "db: query error GetUserExtAccountAdr()")
+	return res, errors.Wrap(err, "db/GetUserExtAccountAdr")
 }
 
 func (pgDbp DbSpec) GetUserExtAccountId(walletId int64, extCurrAbv string) (int64, error) {
@@ -176,7 +172,7 @@ func (pgDbp DbSpec) GetUserExtAccountId(walletId int64, extCurrAbv string) (int6
 		return 0, nil
 	}
 
-	return res, errors.Wrap(err, "db: query error GetUserExtAccountId()")
+	return res, errors.Wrap(err, "db/GetUserExtAccountId")
 }
 
 func (pgDbp DbSpec) GetExtAccountIdByAdr(acntAdr string) (int64, error) {
@@ -200,7 +196,7 @@ func (pgDbp DbSpec) GetExtAccountIdByAdr(acntAdr string) (int64, error) {
 		return 0, nil
 	}
 
-	return res, errors.Wrap(err, "db: query error GetExtAccountIdByAdr()")
+	return res, errors.Wrap(err, "db/GetExtAccountIdByAdr")
 }
 
 func (pgDbp DbSpec) GetLatestCheckedBlock(extAcntId int64) (int64, error) {
@@ -221,7 +217,7 @@ func (pgDbp DbSpec) GetLatestCheckedBlock(extAcntId int64) (int64, error) {
 		return 0, nil
 	}
 
-	return res, errors.Wrap(err, "db: query error GetLatestCheckedBlock()")
+	return res, errors.Wrap(err, "db/GetLatestCheckedBlock")
 }
 
 func (pgDbp DbSpec) UpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum int64) error {
@@ -235,5 +231,5 @@ func (pgDbp DbSpec) UpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum in
 	
 	`, updatedBlockNum, extAcntId)
 
-	return errors.Wrap(err, "db: query error InsertWithdrawFee()")
+	return errors.Wrap(err, "db/UpdateLatestCheckedBlock")
 }

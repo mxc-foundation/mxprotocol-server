@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button";
 class TopupForm extends FormComponent {
 
   handleOpenAXS = () => {
-    window.location.replace(`http://www.google.com`);
+    window.location.replace(`http://wallet.mxc.org/`);
   } 
 
   render() {

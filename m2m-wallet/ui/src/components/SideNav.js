@@ -11,14 +11,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import AutocompleteSelect from "./AutocompleteSelect";
 
-import Settings from "mdi-material-ui/Settings";
-
-import AccessPoint from "mdi-material-ui/AccessPoint";
-import Repeat from "mdi-material-ui/Repeat";
 import CalendarCheckOutline from "mdi-material-ui/CalendarCheckOutline";
 import CreditCard from "mdi-material-ui/CreditCard";
-import Domain from "mdi-material-ui/Domain";
-import RadioTower from "mdi-material-ui/RadioTower";
 
 import WithdrawStore from "../stores/WithdrawStore"
 import SessionStore from "../stores/SessionStore"
@@ -29,7 +23,7 @@ import styles from "./SideNavStyle";
 
 
 const LinkToLora = ({children, ...otherProps}) => 
-<a href={`appserver:8080`} {...otherProps}>{children}</a>;
+<a href={`http://localhost:8080`} {...otherProps}>{children}</a>;
 
 class SideNav extends Component {
   constructor() {

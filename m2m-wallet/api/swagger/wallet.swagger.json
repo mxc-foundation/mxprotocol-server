@@ -84,9 +84,6 @@
     "apiGetVmxcTxHistoryResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "count": {
           "type": "string",
           "format": "int64"
@@ -108,9 +105,6 @@
         "balance": {
           "type": "number",
           "format": "double"
-        },
-        "error": {
-          "type": "string"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"

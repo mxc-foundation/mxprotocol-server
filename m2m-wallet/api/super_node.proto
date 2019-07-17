@@ -3,13 +3,20 @@ syntax = "proto3";
 package api;
 
 import "google/api/annotations.proto";
-import "money.proto";
+import "ext_account.proto";
 import "internal.proto";
 
 service SuperNodeService {
-    rpc GetSuperNodeActiveMoneyAccount(GetSuperNodeActiveMoneyAccountRequest) returns (GetSuperNodeActiveMoneyAccountResponse){
+    rpc GetSuperNodeActiveMoneyAccount (GetSuperNodeActiveMoneyAccountRequest) returns (GetSuperNodeActiveMoneyAccountResponse){
         option(google.api.http) = {
 			get: "/api/supernode/active_account/{money_abbr}"
+		};
+    }
+
+    rpc AddSuperNodeMoneyAccount (AddSuperNodeMoneyAccountRequest) returns (AddSuperNodeMoneyAccountResponse) {
+        option(google.api.http) = {
+			post: "/api/supernode/{money_abbr}/add-account"
+			body: "*"
 		};
     }
 }
@@ -20,6 +27,15 @@ message GetSuperNodeActiveMoneyAccountRequest {
 
 message GetSuperNodeActiveMoneyAccountResponse {
     string supernode_active_account = 1;
-    string Error = 2;
-    ProfileResponse user_profile = 3;
+    ProfileResponse user_profile = 2;
+}
+
+message AddSuperNodeMoneyAccountRequest {
+    Money money_abbr = 1;
+    string account_addr = 2;
+}
+
+message AddSuperNodeMoneyAccountResponse {
+    bool status = 1;
+    ProfileResponse user_profile = 2;
 }

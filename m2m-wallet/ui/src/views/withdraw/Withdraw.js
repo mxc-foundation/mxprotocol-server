@@ -14,71 +14,8 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Divider from '@material-ui/core/Divider';
 import theme from "../../theme";
+import styles from "./WithdrawStyle"
 //import { promises } from "fs";
-
-const styles = {
-/*   card: {
-    minWidth: 180,
-    width: 220,
-    backgroundColor: "#0C0270",
-  }, */
-  flex: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  title: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    padding: 6,
-  },
-  balance: {
-    fontSize: 24,
-    color: '#FFFFFF',
-    textAlign: 'center',
-  },
-  newBalance: {
-    fontSize: 24,
-    textAlign: 'center',
-    color: theme.palette.primary.main,
-  },
-  navText: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-    color: '#FFFFFF',
-    textAlign: 'right',
-  },
-  TitleBar: {
-    height: 115,
-    width: '50%',
-    light: true,
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  divider: {
-    padding: 0,
-    color: '#FFFFFF',
-    width: '100%',
-  },
-  padding: {
-    padding: 0,
-  },
-  between: {
-    display: 'flex',
-    justifyContent:'spaceBetween'
-  },
-  link: {
-    textDecoration: "none",
-    fontWeight: "bold",
-    fontSize: 12,
-    color: theme.palette.textSecondary.main,
-    opacity: 0.7,
-      "&:hover": {
-        opacity: 1,
-      }
-  },
-};
 
 const coinType = "Ether";
 
@@ -86,7 +23,7 @@ function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function loadWithdrawData(coinType) {
+function loadWithdrawFee(coinType) {
   return new Promise((resolve, reject) => {
     WithdrawStore.getWithdrawFee(coinType,
       resp => {
@@ -138,7 +75,7 @@ class Withdraw extends Component {
 
   loadData = async () => {
     try {
-      var result = await loadWithdrawData(coinType);
+      var result = await loadWithdrawFee(coinType);
       var wallet = await loadWalletBalance(this.props.match.params.organizationID);
       var account = await loadCurrentAccount(coinType, this.props.match.params.organizationID);
       
@@ -183,7 +120,7 @@ class Withdraw extends Component {
 
   onConfirm = (data) => {
     WithdrawStore.WithdrawReq(data, resp => {
-      console.log('WithdrawReq',resp)
+      //console.log('WithdrawReq',resp)
     });
   }
 

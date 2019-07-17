@@ -123,6 +123,39 @@
         "tags": [
           "WithdrawService"
         ]
+      },
+      "put": {
+        "operationId": "ModifyWithdrawFee",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiModifyWithdrawFeeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "money_abbr",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Ether"
+            ]
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiModifyWithdrawFeeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "WithdrawService"
+        ]
       }
     }
   },
@@ -135,9 +168,6 @@
           "format": "double",
           "description": "Withdraw object."
         },
-        "error": {
-          "type": "string"
-        },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
         }
@@ -146,9 +176,6 @@
     "apiGetWithdrawHistoryResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "string"
-        },
         "count": {
           "type": "string",
           "format": "int64"
@@ -158,6 +185,30 @@
           "items": {
             "$ref": "#/definitions/apiWithdrawHistory"
           }
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
+        }
+      }
+    },
+    "apiModifyWithdrawFeeRequest": {
+      "type": "object",
+      "properties": {
+        "moneyAbbr": {
+          "$ref": "#/definitions/apiMoney"
+        },
+        "withdrawFee": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "apiModifyWithdrawFeeResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "format": "boolean"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
@@ -309,9 +360,6 @@
         "status": {
           "type": "boolean",
           "format": "boolean"
-        },
-        "error": {
-          "type": "string"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"

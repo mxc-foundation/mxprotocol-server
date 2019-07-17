@@ -3,8 +3,7 @@ VERSION := $(shell git describe --always |sed -e "s/^v//")
 
 build: ui/build pkg/static
 	mkdir -p build
-	git submodule init
-	git submodule update
+	cp ../mxprotocol-server.toml build/mxprotocol-server.toml
 	go build $(GO_EXTRA_BUILD_ARGS) -ldflags "-s -w -X main.version=$(VERSION)" -o build/m2m-wallet command/main.go
 
 clean:

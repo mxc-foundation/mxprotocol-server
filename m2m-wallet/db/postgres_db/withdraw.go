@@ -60,16 +60,8 @@ func (pgDbp DbSpec) CreateWithdrawTable() error {
 
 		
 	`)
-	pgDbp.CreateWithdrawSuccessfulFunction()
-	return errors.Wrap(err, "db: PostgreSQL connection error")
-}
 
-func (pgDbp DbSpec) CreateWithdrawSuccessfulFunction() error {
-	_, err := pgDbp.Db.Exec(`
-
-	
-	`)
-	return errors.Wrap(err, "db: PostgreSQL connection error")
+	return errors.Wrap(err, "db/CreateWithdrawTable")
 }
 
 func (pgDbp DbSpec) InsertWithdraw(wdr Withdraw) (insertIndex int64, err error) {
@@ -102,7 +94,7 @@ func (pgDbp DbSpec) InsertWithdraw(wdr Withdraw) (insertIndex int64, err error) 
 		wdr.TxHash,
 	).Scan(&insertIndex)
 
-	return insertIndex, errors.Wrap(err, "db: query error InsertWithdrawFee()")
+	return insertIndex, errors.Wrap(err, "db/InsertWithdraw")
 }
 
 func (pgDbp DbSpec) UpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
@@ -110,7 +102,7 @@ func (pgDbp DbSpec) UpdateWithdrawSuccessful(withdrawId int64, txHash string, tx
 		select withdraw_success($1,$2,$3);
 		
 	`, withdrawId, txHash, txApprovedTime)
-	return errors.Wrap(err, "db: PostgreSQL connection error UpdateWithdrawSuccessful()")
+	return errors.Wrap(err, "db/UpdateWithdrawSuccessful")
 }
 
 func (pgDbp DbSpec) CreateWithdrawFunctions() error {
@@ -204,7 +196,7 @@ func (pgDbp DbSpec) CreateWithdrawFunctions() error {
 
 	`)
 
-	return err
+	return errors.Wrap(err, "db/CreateWithdrawFunctions")
 }
 
 func (pgDbp DbSpec) InitWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err error) {
@@ -224,7 +216,7 @@ func (pgDbp DbSpec) InitWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawI
 		it.PaymentCat,
 		it.Value).Scan(&withdrawId)
 
-	return withdrawId, errors.Wrap(err, "db: PostgreSQL connection error InitWithdrawReqApply()")
+	return withdrawId, errors.Wrap(err, "db/InitWithdrawReqApply")
 
 }
 
@@ -290,5 +282,5 @@ func (pgDbp DbSpec) UpdateWithdrawPaymentQueryId(walletId int64, reqIdPaymentSer
 	`, reqIdPaymentServ,
 		walletId)
 
-	return errors.Wrap(err, "db: query error UpdateWithdrawPaymentQueryId()")
+	return errors.Wrap(err, "db/UpdateWithdrawPaymentQueryId")
 }

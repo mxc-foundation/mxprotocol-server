@@ -25,8 +25,7 @@ message GetWalletBalanceRequest {
 
 message GetWalletBalanceResponse {
     double balance = 1;
-    string error = 2;
-    ProfileResponse user_profile = 3;
+    ProfileResponse user_profile = 2;
 }
 
 message GetVmxcTxHistoryRequest {
@@ -44,8 +43,7 @@ message VmxcTxHistory {
 }
 
 message GetVmxcTxHistoryResponse {
-    string error = 1;
-    int64 count = 2;
-    repeated VmxcTxHistory tx_history = 3;
-    ProfileResponse user_profile = 4;
+    int64 count = 1;
+    repeated VmxcTxHistory tx_history = 2;
+    ProfileResponse user_profile = 3;
 }

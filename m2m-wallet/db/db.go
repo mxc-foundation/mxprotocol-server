@@ -2,10 +2,8 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 	"time"
 
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors" // register postgresql driver
 	log "github.com/sirupsen/logrus"
@@ -16,13 +14,10 @@ import (
 var pgDb pstgDb.DbSpec
 
 func Setup(conf config.MxpConfig) error {
-
-	fmt.Println("The DB url: " + conf.PostgreSQL.DSN)
-	pingCheck(conf)
-	dbp, err := sql.Open("postgres", conf.PostgreSQL.DSN)
+	dbp, err := openDBWithPing(conf)
 
 	if err != nil {
-		log.Fatal("No DB accessable!", err)
+		return err
 	} else {
 		pgDb = pstgDb.DbSpec{
 			Db:         dbp,
@@ -31,195 +26,71 @@ func Setup(conf config.MxpConfig) error {
 		}
 	}
 
-	// create tables if not exist
 	dbInit()
-
-	// init data if applys
-	err = initExtCurrencyTable()
-	if err != nil {
-		log.WithError(err).Fatal("Create init data in ext_currency failed.")
-	}
 
 	return nil
 }
 
-func pingCheck(conf config.MxpConfig) error {
-	log.Info("storage: connecting to PostgreSQL database")
+func openDBWithPing(conf config.MxpConfig) (*sql.DB, error) {
+	log.Debug("db/connect_db")
 	d, err := sql.Open("postgres", conf.PostgreSQL.DSN)
 	if err != nil {
-		return errors.Wrap(err, "storage: PostgreSQL connection error")
+		log.WithError(err).Error("db/connect_db")
+		return nil, err
 	}
-	for {
+	for i := 0; i <= 3; i++ {
 		if err := d.Ping(); err != nil {
-			log.WithError(err).Warning("storage: ping PostgreSQL database error, will retry in 2s")
+			log.WithError(err).Warning("db/ping_db")
 			time.Sleep(2 * time.Second) // to be modified
 		} else {
-			break
+			return d, nil
 		}
 	}
-	return nil
+
+	err = errors.New("db/ping_db: failed")
+	log.Error(err)
+	return nil, err
 }
 
 func dbInit() {
-	if err := DbCreateWalletTable(); err != nil {
-		log.Fatal("Unable to create table wallet!", err)
+	if err := dbCreateWalletTable(); err != nil {
+		log.WithError(err).Fatal("db/dbCreateWalletTable")
 	}
 
-	if err := DbCreateInternalTxTable(); err != nil {
-		log.Fatal("Unable to create table internal_tx!", err)
+	if err := dbCreateInternalTxTable(); err != nil {
+		log.WithError(err).Fatal("db/dbCreateInternalTxTable")
 	}
 
-	if err := DbCreateExtCurrencyTable(); err != nil {
-		log.Fatal("Unable to create table ext_currency!", err)
+	if err := dbCreateExtCurrencyTable(); err != nil {
+		log.WithError(err).Fatal("db/dbCreateExtCurrencyTable")
 	}
 
-	if err := DbCreateExtAccountTable(); err != nil {
-		log.Fatal("Unable to create table ext_account!", err)
+	if err := dbCreateExtAccountTable(); err != nil {
+		log.WithError(err).Fatal("db/dbCreateExtAccountTable")
 	}
 
-	if err := DbCreateWithdrawTable(); err != nil {
-		log.Fatal("Unable to create table withdraw!", err)
+	if err := dbCreateWithdrawTable(); err != nil {
+		log.WithError(err).Fatal("db/dbCreateWithdrawTable")
 	}
 
-	if err := DbCreateWithdrawFunctions(); err != nil {
-		log.Fatal("Unable to create table withdraw!", err)
+	if err := dbCreateWithdrawRelations(); err != nil {
+		log.WithError(err).Fatal("db/dbCreateWithdrawRelations")
 	}
 
-	if err := DbCreateTopupTable(); err != nil {
-		log.Fatal("Unable to create table top_up!", err)
+	if err := dbCreateTopupTable(); err != nil {
+		log.WithError(err).Fatal("db/dbCreateTopupTable")
 	}
 
-	if err := DbCreateTopupFunctions(); err != nil {
-		log.Fatal("Unable to create table top_up!", err)
+	if err := dbCreateTopupRelations(); err != nil {
+		log.WithError(err).Fatal("db/dbCreateTopupRelations")
 	}
 
-	if err := DbCreateWithdrawFeeTable(); err != nil {
-		log.Fatal("Unable to create table withdraw_fee!", err)
+	if err := dbCreateWithdrawFeeTable(); err != nil {
+		log.WithError(err).Fatal("db/dbCreateWithdrawFeeTable")
 	}
 
-}
-
-// db holds the PostgreSQL connection pool.
-var db *DBLogger
-
-const (
-	redisDialWriteTimeout = time.Second
-	redisDialReadTimeout  = time.Minute
-	onBorrowPingInterval  = time.Minute
-)
-
-// DBLogger is a DB wrapper which logs the executed sql queries and their
-// duration.
-type DBLogger struct {
-	*sqlx.DB
-}
-
-// Beginx returns a transaction with logging.
-func (db *DBLogger) Beginx() (*TxLogger, error) {
-	tx, err := db.DB.Beginx()
-	return &TxLogger{tx}, err
-}
-
-// Query logs the queries executed by the Query method.
-func (db *DBLogger) Query(query string, args ...interface{}) (*sql.Rows, error) {
-	start := time.Now()
-	rows, err := db.DB.Query(query, args...)
-	logQuery(query, time.Since(start), args...)
-	return rows, err
-}
-
-// Queryx logs the queries executed by the Queryx method.
-func (db *DBLogger) Queryx(query string, args ...interface{}) (*sqlx.Rows, error) {
-	start := time.Now()
-	rows, err := db.DB.Queryx(query, args...)
-	logQuery(query, time.Since(start), args...)
-	return rows, err
-}
-
-// QueryRowx logs the queries executed by the QueryRowx method.
-func (db *DBLogger) QueryRowx(query string, args ...interface{}) *sqlx.Row {
-	start := time.Now()
-	row := db.DB.QueryRowx(query, args...)
-	logQuery(query, time.Since(start), args...)
-	return row
-}
-
-// Exec logs the queries executed by the Exec method.
-func (db *DBLogger) Exec(query string, args ...interface{}) (sql.Result, error) {
-	start := time.Now()
-	res, err := db.DB.Exec(query, args...)
-	logQuery(query, time.Since(start), args...)
-	return res, err
-}
-
-// TxLogger logs the executed sql queries and their duration.
-type TxLogger struct {
-	*sqlx.Tx
-}
-
-// Query logs the queries executed by the Query method.
-func (q *TxLogger) Query(query string, args ...interface{}) (*sql.Rows, error) {
-	start := time.Now()
-	rows, err := q.Tx.Query(query, args...)
-	logQuery(query, time.Since(start), args...)
-	return rows, err
-}
-
-// Queryx logs the queries executed by the Queryx method.
-func (q *TxLogger) Queryx(query string, args ...interface{}) (*sqlx.Rows, error) {
-	start := time.Now()
-	rows, err := q.Tx.Queryx(query, args...)
-	logQuery(query, time.Since(start), args...)
-	return rows, err
-}
-
-// QueryRowx logs the queries executed by the QueryRowx method.
-func (q *TxLogger) QueryRowx(query string, args ...interface{}) *sqlx.Row {
-	start := time.Now()
-	row := q.Tx.QueryRowx(query, args...)
-	logQuery(query, time.Since(start), args...)
-	return row
-}
-
-// Exec logs the queries executed by the Exec method.
-func (q *TxLogger) Exec(query string, args ...interface{}) (sql.Result, error) {
-	start := time.Now()
-	res, err := q.Tx.Exec(query, args...)
-	logQuery(query, time.Since(start), args...)
-	return res, err
-}
-
-func logQuery(query string, duration time.Duration, args ...interface{}) {
-	log.WithFields(log.Fields{
-		"query":    query,
-		"args":     args,
-		"duration": duration,
-	}).Debug("sql query executed")
-}
-
-// DB returns the PostgreSQL database object.
-func DB() *DBLogger {
-	return db
-}
-
-// Transaction wraps the given function in a transaction. In case the given
-// functions returns an error, the transaction will be rolled back.
-func Transaction(f func(tx sqlx.Ext) error) error {
-	tx, err := db.Beginx()
-	if err != nil {
-		return errors.Wrap(err, "storage: begin transaction error")
+	if err := initExtCurrencyTable(); err != nil {
+		log.WithError(err).Fatal("db/initExtCurrencyTable")
 	}
 
-	err = f(tx)
-	if err != nil {
-		if rbErr := tx.Rollback(); rbErr != nil {
-			return errors.Wrap(rbErr, "storage: transaction rollback error")
-		}
-		return err
-	}
-
-	if err := tx.Commit(); err != nil {
-		return errors.Wrap(err, "storage: transaction commit error")
-	}
-	return nil
 }

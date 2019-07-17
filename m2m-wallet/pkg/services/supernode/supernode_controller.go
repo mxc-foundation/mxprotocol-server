@@ -2,7 +2,6 @@ package supernode
 
 import (
 	"context"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
@@ -14,15 +13,13 @@ import (
 )
 
 func Setup() error {
-	//todo
 	ticker_superAccount := time.NewTicker(time.Duration(config.Cstruct.SuperNode.CheckAccountSeconds) * time.Second)
 	go func() {
-		log.Info("start supernode goroutine")
+		log.Info("Start supernode goroutine")
 		for range ticker_superAccount.C {
-			//ToDo: should change the currAbv
 			supernodeAccount, err := db.DbGetSuperNodeExtAccountAdr(config.Cstruct.SuperNode.ExtCurrAbv)
 			if err != nil {
-				log.WithError(err).Warning("Storage: Cannot get supernode account from DB, restarting...")
+				log.WithError(err).Warning("service/supernode")
 				continue
 			}
 
@@ -46,13 +43,53 @@ func NewSupernodeServerAPI() *SupernodeServerAPI {
 	return &SupernodeServerAPI{serviceName: "supernode"}
 }
 
+func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *api.AddSuperNodeMoneyAccountRequest) (*api.AddSuperNodeMoneyAccountResponse, error) {
+	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
+	}
+
+	log.WithFields(log.Fields{
+		"moneyAbbr": api.Money_name[int32(in.MoneyAbbr)],
+		"accountAddr": in.AccountAddr,
+	}).Debug("grpc_api/AddSuperNodeMoneyAccount")
+
+	var walletId int64
+	if walletId, err = db.DbGetWalletIdFromOrgId(0); err == nil && 0 == walletId {
+		walletId, err = db.DbInsertWallet(0, db.SUPER_ADMIN)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
+			return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
+		}
+	} else if err != nil {
+		log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
+		return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
+	}
+
+	_, err = db.DBInsertExtAccount(walletId, in.AccountAddr, api.Money_name[int32(in.MoneyAbbr)])
+	if err != nil {
+		log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
+		return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
+	}
+
+	return &api.AddSuperNodeMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
+}
+
 func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context, req *api.GetSuperNodeActiveMoneyAccountRequest) (*api.GetSuperNodeActiveMoneyAccountResponse, error) {
 	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
 	}
 
-	//Todo: userInfo should be the information of users eg.id,name,org,etc. Use it to get data from DB.
-	fmt.Println("username = ", userProfile.User.Username)
-	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "supernode_account", Error: ""}, nil
+	log.WithFields(log.Fields{
+		"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
+	}).Debug("grpc_api/GetSuperNodeActiveMoneyAccount")
+
+	accountAddr, err := db.DbGetSuperNodeExtAccountAdr(api.Money_name[int32(req.MoneyAbbr)])
+	if err != nil {
+		log.WithError(err).Error("grpc_api/GetSuperNodeActiveMoneyAccount")
+		return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "", UserProfile: &userProfile}, nil
+	}
+
+	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: accountAddr, UserProfile: &userProfile}, nil
 }

@@ -6,18 +6,14 @@ import (
 	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
-func DbCreateWithdrawFeeTable() error {
+func dbCreateWithdrawFeeTable() error {
 	return pgDb.CreateWithdrawFeeTable()
 }
 
-func DbInsertWithdrawFeeType(w pstgDb.WithdrawFee) (insertIndex int64, err error) {
-
-	return pgDb.InsertWithdrawFee(w)
-}
 func DbInsertWithdrawFee(extCurrencyAbbr string, withdrawFee float64) (insertIndex int64, err error) {
 	id, err := DbGetExtCurrencyIdByAbbr(extCurrencyAbbr)
 	if err != nil {
-		return 0, err
+		return id, err
 	}
 	w := pstgDb.WithdrawFee{
 		FkExtCurr:  id,
@@ -30,8 +26,4 @@ func DbInsertWithdrawFee(extCurrencyAbbr string, withdrawFee float64) (insertInd
 
 func DbGetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
 	return pgDb.GetActiveWithdrawFee(extCurrAbv)
-}
-
-func DbGetActiveWithdrawFeeId(extCurrAbv string) (withdrawFeeId int64, err error) {
-	return pgDb.GetActiveWithdrawFeeId(extCurrAbv)
 }
