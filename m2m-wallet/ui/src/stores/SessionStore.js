@@ -3,8 +3,6 @@ import { EventEmitter } from "events";
 import Swagger from "swagger-client";
 import { checkStatus, errorHandler, errorHandlerLogin } from "./helpers";
 
-import { redirectToLora } from '../util/LoraUtil';
-
 
 class SessionStore extends EventEmitter {
   constructor() {
@@ -54,21 +52,6 @@ class SessionStore extends EventEmitter {
     return orgID;
   }
 
-  /**
-   * Make sure, id is valid, and if not, redirect to Lora.
-   */
-  async validateAndSetOrganizationID(organizationID) {
-    if (organizationID === this.getOrganizationID()) {
-      return;
-    }
-
-    if ( organizationID === "" || organizationID === undefined) {
-      redirectToLora();
-    }
-    
-    this.setOrganizationID(organizationID);  
-  }
-
   setOrganizationID(id) {
     localStorage.setItem("organizationID", id);
     this.emit("organization.change");
@@ -100,12 +83,12 @@ class SessionStore extends EventEmitter {
   initProfile(data) {
     const { jwt, org_id } = data;
     
-    if(jwt === ""){
-      redirectToLora();
+    if(jwt === "" || org_id === "" || org_id === undefined){
+      window.location.replace(`http://localhost:3002/`);
     }
-    console.log('initProfile', org_id);
+    
     this.setToken(jwt);
-    this.validateAndSetOrganizationID(org_id);
+    this.setOrganizationID(org_id);
   }
 
   login(login, callBackFunc) {
