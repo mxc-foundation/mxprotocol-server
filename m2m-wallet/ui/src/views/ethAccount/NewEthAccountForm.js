@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
 
-class ModifyEthAccountForm extends FormComponent {
+class NewEthAccountForm extends FormComponent {
 
   onChange = (event) => {
     const { id, value } = event.target;
@@ -15,54 +15,39 @@ class ModifyEthAccountForm extends FormComponent {
   }
 
   clear() {
-    const newaccount = '';
     this.setState({
-      newaccount
-    });
+        username: '',
+        password: '',
+        newaccount: ''
+      })
   }
 
-  submit = () => {
+  onSubmit = () => {
     this.props.onSubmit({
-      action: 'modifyAccount',  
-      currentAccount: this.state.newaccount,
+      action: 'createAccount',  
+      createAccount: this.state.createAccount,
       username: this.state.username,
       password: this.state.password
     })
 
-    this.setState({
-      username: '',
-      password: '',
-      newaccount: ''
-    })
+    this.clear();
   }
 
   render() {
-    if (this.props.activeAccount === undefined) {
+    /* if (this.props.activeAccount === undefined) {
       return(<div></div>);
-    }
+    } */
 
     return(
       <Form
         submitLabel={this.props.submitLabel}
-        onSubmit={this.submit}
+        onSubmit={this.onSubmit}
       >
         <TextField
-          id="activeAccount"
-          label="Current account"
-          margin="normal"
-          value={this.props.activeAccount || ""}
-
-          InputProps={{
-            readOnly: true,
-          }}
-          fullWidth
-        />
-
-        <TextField
-          id="newaccount"//it is defined current account in swagger
+          id="createAccount"//it is defined current account in swagger
           label="New account"
           margin="normal"
-          value={this.state.newaccount}
+          value={this.state.createAccount}
           placeholder="Type here" 
           onChange={this.onChange}
           /* inputProps={{
@@ -103,18 +88,10 @@ class ModifyEthAccountForm extends FormComponent {
           required
           fullWidth
         />
-        
-        {/* <TitleBarButton
-            key={1}
-            label="Go to Etherscan.io"
-            icon={<LinkI />}
-            color="secondary"
-            onClick={this.deleteOrganization}
-        /> */}
-          
+       
       </Form>
     );
   }
 }
 
-export default ModifyEthAccountForm;
+export default NewEthAccountForm;

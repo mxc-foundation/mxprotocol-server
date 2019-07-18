@@ -8,10 +8,50 @@ import TitleBarTitle from "../../components/TitleBarTitle";
 import Divider from '@material-ui/core/Divider';
 import MoneyStore from "../../stores/MoneyStore";
 import SessionStore from "../../stores/SessionStore";
+import SupernodeStore from "../../stores/SupernodeStore";
 import ModifyEthAccountForm from "./ModifyEthAccountForm";
+import NewEthAccountForm from "./NewEthAccountForm";
 import styles from "./EthAccountStyle";
 
 const coinType = "Ether";
+
+function verifyUser (resp) {
+  const login = {};
+  login.username = resp.username;
+  login.password = resp.password;
+
+  return new Promise((resolve, reject) => {
+    SessionStore.login(login, (resp) => {
+      if(resp){
+        resolve(resp);
+      } else {
+        alert("inccorect username or password.");
+        return false;
+      }
+    })
+  });
+}
+
+function modifyAccount (resp , organizationID, history) {
+  resp.moneyAbbr = coinType;
+  return new Promise((resolve, reject) => {
+    MoneyStore.modifyMoneyAccount(resp, resp => {
+      history.push(`/modify-account/${organizationID}`);
+      resolve(resp);
+    })
+  });
+}
+
+function createAccount (req, organizationID, history) {
+  //console.log('req.organizationID', req);
+  req.moneyAbbr = coinType;
+  return new Promise((resolve, reject) => {
+    SupernodeStore.addSuperNodeMoneyAccount(req, resp => {
+      history.push(`/modify-account/${organizationID}`);
+      resolve(resp);
+    })
+  });
+}
 
 class ModifyEthAccount extends Component {
   constructor() {
@@ -21,6 +61,7 @@ class ModifyEthAccount extends Component {
     }
     
     componentDidMount() {
+      console.log("load");
       this.loadData();
     }
     
@@ -40,28 +81,24 @@ class ModifyEthAccount extends Component {
       this.loadData();
     }
 
-    onSubmit = (resp) => {
-      resp.orgId = this.props.match.params.organizationID;
-      resp.moneyAbbr = coinType;
+    onSubmit = async (resp) => {
       
-      const login = {};
-      login.username = resp.username;
-      login.password = resp.password;
-      
-      SessionStore.login(login, (response) => {
-        if(response === "ok"){
-          delete resp.username;
-          delete resp.password;
-          MoneyStore.modifyMoneyAccount(resp, resp => {
-            this.props.history.push(`/modify-account/1`);
-          })
+      try {
+        await verifyUser(resp);
+        
+        if(resp.action === 'modifyAccount' ) {
+          const result = await modifyAccount(resp, this.props.match.params.organizationID, this.props.history);
         } else {
-          alert("inccorect username or password.");
+          const result = await createAccount(resp, this.props.match.params.organizationID, this.props.history);
         }
-      })
+      } catch (error) {
+        console.error(error);
+        this.setState({ error });
+      }
     } 
 
   render() {
+    console.log('activeaccount', this.state.activeAccount )
     return(
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
@@ -80,13 +117,22 @@ class ModifyEthAccount extends Component {
             </div>
         </Grid>
         <Grid item xs={6} className={this.props.classes.column}>
-          <ModifyEthAccountForm
+          {this.state.activeAccount &&  
+            <ModifyEthAccountForm
+              submitLabel="Confirm"
+              onSubmit={this.onSubmit}
+              activeAccount={this.state.activeAccount}
+            />
+          }
+          {!this.state.activeAccount &&  
+          <NewEthAccountForm
             submitLabel="Confirm"
             onSubmit={this.onSubmit}
-            activeAccount={this.state.activeAccount}
           />
+          }
         </Grid>
         <Grid item xs={6}>
+          
         </Grid>
       </Grid>
     );

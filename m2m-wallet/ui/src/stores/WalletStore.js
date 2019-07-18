@@ -7,6 +7,7 @@ import {checkStatus, errorHandler } from "./helpers";
 import dispatcher from "../dispatcher";
 
 
+
 class WalletStore extends EventEmitter {
   constructor() {
     super();
