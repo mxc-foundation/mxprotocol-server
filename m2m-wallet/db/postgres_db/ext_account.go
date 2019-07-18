@@ -1,6 +1,7 @@
 package postgres_db
 
 import (
+	"database/sql"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -80,6 +81,10 @@ func (pgDbp DbSpec) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error)
 		;
 	`, extCurrAbv).Scan(&res)
 
+	if err == sql.ErrNoRows {
+		return "", nil
+	}
+
 	return res, errors.Wrap(err, "db/GetSuperNodeExtAccountAdr")
 }
 
@@ -106,6 +111,10 @@ func (pgDbp DbSpec) GetSuperNodeExtAccountId(extCurrAbv string) (int64, error) {
 		;
 	`, extCurrAbv).Scan(&res)
 
+	if err == sql.ErrNoRows {
+		return 0, nil
+	}
+
 	return res, errors.Wrap(err, "db/GetSuperNodeExtAccountId")
 }
 
@@ -131,6 +140,10 @@ func (pgDbp DbSpec) GetUserExtAccountAdr(walletId int64, extCurrAbv string) (str
 	
 	`, walletId, extCurrAbv).Scan(&res)
 
+	if err == sql.ErrNoRows {
+		return "", nil
+	}
+
 	return res, errors.Wrap(err, "db/GetUserExtAccountAdr")
 }
 
@@ -155,6 +168,9 @@ func (pgDbp DbSpec) GetUserExtAccountId(walletId int64, extCurrAbv string) (int6
 		;
 	
 	`, walletId, extCurrAbv).Scan(&res)
+	if err == sql.ErrNoRows {
+		return 0, nil
+	}
 
 	return res, errors.Wrap(err, "db/GetUserExtAccountId")
 }
@@ -176,6 +192,10 @@ func (pgDbp DbSpec) GetExtAccountIdByAdr(acntAdr string) (int64, error) {
 	
 	`, acntAdr).Scan(&res)
 
+	if err == sql.ErrNoRows {
+		return 0, nil
+	}
+
 	return res, errors.Wrap(err, "db/GetExtAccountIdByAdr")
 }
 
@@ -192,6 +212,10 @@ func (pgDbp DbSpec) GetLatestCheckedBlock(extAcntId int64) (int64, error) {
 			 id = $1
 	
 	`, extAcntId).Scan(&res)
+
+	if err == sql.ErrNoRows {
+		return 0, nil
+	}
 
 	return res, errors.Wrap(err, "db/GetLatestCheckedBlock")
 }
