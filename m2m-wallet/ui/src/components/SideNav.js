@@ -23,7 +23,7 @@ import styles from "./SideNavStyle";
 
 
 const LinkToLora = ({children, ...otherProps}) => 
-<a href={`http://localhost:8080`} {...otherProps}>{children}</a>;
+<a href={`http://localhost:3002`} {...otherProps}>{children}</a>;
 
 class SideNav extends Component {
   constructor() {

@@ -19,7 +19,7 @@ class WithdrawForm extends FormComponent {
 
   render() {
     if (this.props.txinfo === undefined) {
-      return(<Spinner on={true/* this.state.loading */}/>);
+      return(<Spinner on={this.state.loading}/>);
     }
 
     /* const extraButtons = <>

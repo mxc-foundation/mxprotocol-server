@@ -23,7 +23,7 @@ class TopupStore extends EventEmitter {
       .then(checkStatus)
       .then(resp => {
         console.log('resp',resp);
-        callbackFunc(resp.body);
+        callbackFunc(resp);
       })
       .catch(errorHandler);
     });
