@@ -34,26 +34,26 @@ const TopNavStyle = {
         color: theme.palette.common.white,
     },
     chip: {
-        background: blue[600],
+        background: theme.palette.secondary.main,
         color: theme.palette.common.white,
         marginRight: theme.spacing.unit,
         "&:hover": {
-            background: blue[400],
+          background: theme.palette.primary.secondary,
         },
         "&:active": {
-            background: teal,
+          background: theme.palette.primary.main,
         },
         "&:visited": {
-            background: blue[400],
+            background: theme.palette.primary.main,
         },
-    },
+      },
     iconButton: {
         color: theme.palette.common.white,
         marginRight: theme.spacing.unit,
     },
-/*     iconStyle: {
+    iconStyle: {
         color: theme.palette.primary.main,
-    }, */
+    },
     noPadding: {
         padding: 0
     }

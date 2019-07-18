@@ -2,6 +2,7 @@ import { createMuiTheme } from "@material-ui/core/styles";
 import { teal } from "@material-ui/core/colors";
 
 const tealHighLight = '#00FFD9';
+const tealHighLight20 = '#00FFD920';
 const blueMxcBrand = '#09006E';
 const blueBG = '#090046';
 const white = '#F9FAFC';
@@ -9,7 +10,7 @@ const linkTextColor = '#CAFCF5';
 
 const theme = createMuiTheme({
     palette: {
-      primary: { main: tealHighLight }, 
+      primary: { main: tealHighLight, secondary: tealHighLight20 }, 
       secondary: { main: blueMxcBrand }, 
       darkBG: { main: blueBG }, 
       textPrimary: {main: white}, 
@@ -147,7 +148,7 @@ const theme = createMuiTheme({
           borderWidth: 2,
           borderColor: tealHighLight,
           "&:hover": {
-            backgroundColor: blueBG,
+            backgroundColor: tealHighLight20,
             borderColor: "#00CCAE",
             color: "#00CCAE",
           },
