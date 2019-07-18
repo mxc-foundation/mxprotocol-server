@@ -153,6 +153,15 @@ const theme = createMuiTheme({
             color: "#00CCAE",
           },
         },
+/*         link: {
+          color: tealHighLight,
+          //padding: 30,
+          fontWeight: 900,
+          lineHeight: 1.5,
+          "&:hover": {
+            color: "#00CCAE",
+          },
+        }, */
         label: {
           color: blueMxcBrand
         },
@@ -187,6 +196,13 @@ const theme = createMuiTheme({
       MuiSvgIcon: {
         root: {
           fill: '#F9FAFC',
+        },
+      },
+      MuiDialog: {
+        color: white,
+        root: {
+          color: white,
+          boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
         },
       },
     },
