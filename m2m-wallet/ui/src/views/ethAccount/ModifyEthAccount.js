@@ -61,7 +61,6 @@ class ModifyEthAccount extends Component {
     }
     
     componentDidMount() {
-      console.log("load");
       this.loadData();
     }
     
@@ -98,7 +97,6 @@ class ModifyEthAccount extends Component {
     } 
 
   render() {
-    console.log('activeaccount', this.state.activeAccount )
     return(
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
