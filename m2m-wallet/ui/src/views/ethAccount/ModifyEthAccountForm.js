@@ -90,7 +90,7 @@ class ModifyEthAccountForm extends FormComponent {
 
         <TextField
           id="password"//it is defined current account in swagger
-          label="Pass word"
+          label="Password"
           margin="normal"
           value={this.state.password}
           placeholder="Type here" 
