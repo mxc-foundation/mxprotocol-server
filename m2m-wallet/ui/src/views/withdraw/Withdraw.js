@@ -6,6 +6,7 @@ import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import MoneyStore from "../../stores/MoneyStore";
 import WithdrawStore from "../../stores/WithdrawStore";
+import SupernodeStore from "../../stores/SupernodeStore";
 import WalletStore from "../../stores/WalletStore";
 import WithdrawForm from "./WithdrawForm";
 import Modal from "./Modal";
@@ -41,14 +42,23 @@ function loadWithdrawFee(coinType) {
 }
 
 function loadCurrentAccount(coinType, organizationID) {
+  
   return new Promise((resolve, reject) => {
-    MoneyStore.getActiveMoneyAccount(coinType, organizationID, 
-      resp => {
-        resolve(resp);
-      })
+    if (organizationID == 0) {
+      SupernodeStore.getSuperNodeActiveMoneyAccount(coinType, resp => {
+        resolve(resp.supernodeActiveAccount);
+        
+      });
+    }else{
+      MoneyStore.getActiveMoneyAccount(coinType, organizationID, resp => {
+        resolve(resp.activeAccount);
+        
+      });
+    }
   });
 }
 
+      
 function loadWalletBalance(organizationID) {
   return new Promise((resolve, reject) => {
     WalletStore.getWalletBalance(organizationID,
@@ -79,10 +89,14 @@ class Withdraw extends Component {
       var wallet = await loadWalletBalance(this.props.match.params.organizationID);
       var account = await loadCurrentAccount(coinType, this.props.match.params.organizationID);
       
+      /* this.setState({
+        activeAccount: resp.supernodeActiveAccount,
+      }); */
+
       const txinfo = {};
       txinfo.withdrawFee = result.withdrawFee;
       txinfo.balance = wallet.balance;
-      txinfo.account = account.activeAccount;
+      txinfo.account = account;
 
       this.setState({
         txinfo
