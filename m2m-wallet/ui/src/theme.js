@@ -54,7 +54,10 @@ const theme = createMuiTheme({
           "&:before": {
             borderBottom: `1px solid #F9FAFC`
           }
-        }
+        },
+        required: {
+          backgroundColor: tealHighLight20,
+        },
       },
       MuiAppBar: {
         root: {
@@ -79,7 +82,7 @@ const theme = createMuiTheme({
           color: white,
         }
       },
-      MuiInputBase: {
+/*       MuiInputBase: {
         input: {
           color: '#F9FAFC',
           fontWeight: "bolder",
@@ -87,7 +90,7 @@ const theme = createMuiTheme({
             WebkitBoxShadow: "0 0 0 1000px #F9FAFC inset"
           }
         }
-      },
+      }, */
       MuiTable: {
         root: {
           background: white,
