@@ -15,7 +15,7 @@ import SideNav from "./components/SideNav";
 import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
-//import WalletStore from "./stores/WalletStore";
+import WalletStore from "./stores/WalletStore";
 
 // search
 //import Search from "./views/search/Search";
@@ -25,6 +25,7 @@ import Topup from "./views/topup/Topup"
 import Withdraw from "./views/withdraw/Withdraw"
 import HistoryLayout from "./views/history/HistoryLayout"
 import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
+import { redirectToLora } from "./util/LoraUtil";
 
 const drawerWidth = 270;
 
@@ -70,8 +71,7 @@ const styles = {
   },
 };
 
-
-class HandleLoraRedirect extends Component {
+class RedirectedFromLora extends Component {
   constructor(...args) {
     super(...args);
 
@@ -89,11 +89,20 @@ class HandleLoraRedirect extends Component {
     
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
     const { path } = data;
-    SessionStore.initProfile(data);
+
+    WalletStore.getWalletBalance(SessionStore.getOrganizationID(), resp => {
+      if(resp.userProfile.organizations.length > 0){
+        SessionStore.initProfile(data);
+      }else{
+        redirectToLora();
+      }
+    }); 
   
     return <Redirect to={path} />;
   }
 }
+
+
 
 class App extends Component {
   constructor() {
@@ -111,18 +120,12 @@ class App extends Component {
     SessionStore.on("change", () => {
       this.setState({
         user: SessionStore.getUser(),
-        organizationID: SessionStore.getOrganizationID(),
         drawerOpen: SessionStore.getUser() != null,
       });
     });
 
-    /* this.setState({
-      user: SessionStore.getUser(),
-      drawerOpen: SessionStore.getUser() != null,
-    }); */
     this.setState({
-      drawerOpen: true,
-      organizationID: SessionStore.getOrganizationID(),
+      drawerOpen: true
     });
   }
 
@@ -132,13 +135,17 @@ class App extends Component {
     });
   }
 
+  rerenderApp = () => {
+    this.forceUpdate();
+  }
+
   render() {
     let topNav = null;
     let sideNav = null;
 
     if (this.state.user !== null) {
       topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} />;
-      sideNav = <SideNav open={this.state.drawerOpen} organizationID={this.state.organizationID} />
+      sideNav = <SideNav open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
     }
     
     return (
@@ -153,13 +160,13 @@ class App extends Component {
               <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
                 <Grid container spacing={24}>
                   <Switch>
-                    <Route path="/j/:data" component={HandleLoraRedirect} />
-                    <Route exact path="/" component={Withdraw} />
-                    <Route path="/withdraw/:organizationID?" component={Withdraw} />
-                    <Route path="/topup/:organizationID?" component={Topup} />
-                    <Route path="/history/:organizationID?" component={HistoryLayout} />
-                    <Route path="/modify-account/:organizationID?" component={ModifyEthAccount} />
-                    
+                    <Route path="/j/:data" component={RedirectedFromLora} />
+                    <Route path="/withdraw/:organizationID" component={Withdraw} />
+                    <Route path="/topup/:organizationID" component={Topup} />
+                    <Route path="/history/:organizationID" component={HistoryLayout} />
+                    <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
+
+                    {/* <Route render={redirectToLora} /> */}
                   </Switch>
                 </Grid>
               </div>

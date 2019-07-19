@@ -19,6 +19,10 @@ import styles from "./TopNavStyle"
 
 
 function getWalletBalance() {
+  if (SessionStore.getOrganizationID() === undefined) {
+    
+    return null;
+  }
   return new Promise((resolve, reject) => {
     WalletStore.getWalletBalance(SessionStore.getOrganizationID(), resp => {
       return resolve(resp);
@@ -32,7 +36,7 @@ class TopNav extends Component {
 
     this.state = {
       menuAnchor: null,
-      balance: "",
+      balance: null,
       search: "",
     };
 
@@ -47,6 +51,9 @@ class TopNav extends Component {
   componentDidMount() {
     this.loadData();
 
+    SessionStore.on("organization.change", () => {
+      this.loadData();
+    });
     WithdrawStore.on("withdraw", () => {
       this.loadData();
     });
@@ -103,9 +110,14 @@ class TopNav extends Component {
     } else {
       drawerIcon = <Backburger />;
     } */
+    const { balance } = this.state;
 
     const open = Boolean(this.state.menuAnchor);
-    const balance = this.state.balance + " MXC";
+     ;
+
+    const balanceEl = balance === null ? 
+      <span className="color-gray">(no org selected)</span> : 
+      balance + " MXC";
 
     return (
       <AppBar className={this.props.classes.appBar}>
@@ -128,7 +140,7 @@ class TopNav extends Component {
               <ListItemIcon className={this.props.classes.iconStyle}>
                 <Wallet />
               </ListItemIcon>
-              <ListItemText primary={balance} className={this.props.classes.noPadding} />
+              <ListItemText primary={ balanceEl } className={this.props.classes.noPadding} />
             </ListItem>
           </List>
 
