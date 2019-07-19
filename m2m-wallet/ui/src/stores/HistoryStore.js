@@ -60,6 +60,7 @@ class HistoryStore extends EventEmitter {
       .then(checkStatus)
       .then(updateOrganizations)
       .then(resp => {
+        console.log('getVmxcTxHistory',resp);
         callbackFunc(resp.obj);
       })
       .catch(errorHandler);
