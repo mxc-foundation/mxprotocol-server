@@ -65,11 +65,20 @@ class ModifyEthAccount extends Component {
     }
     
     loadData() {
-      MoneyStore.getActiveMoneyAccount(coinType, this.props.match.params.organizationID, resp => {
-        this.setState({
-          activeAccount: resp.activeAccount,
+      const org_id = this.props.match.params.organizationID;
+      if (org_id == 0) {
+        SupernodeStore.getSuperNodeActiveMoneyAccount(coinType, resp => {
+          this.setState({
+            activeAccount: resp.supernodeActiveAccount,
+          });
         });
-      }); 
+      }else{
+        MoneyStore.getActiveMoneyAccount(coinType, org_id, resp => {
+          this.setState({
+            activeAccount: resp.activeAccount,
+          });
+        });
+      }
     }
 
     componentDidUpdate(oldProps) {
