@@ -28,6 +28,10 @@ var _ status.Status
 var _ = runtime.String
 var _ = utilities.NewDoubleArray
 
+var (
+	filter_WithdrawService_GetWithdrawFee_0 = &utilities.DoubleArray{Encoding: map[string]int{"money_abbr": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+)
+
 func request_WithdrawService_GetWithdrawFee_0(ctx context.Context, marshaler runtime.Marshaler, client WithdrawServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetWithdrawFeeRequest
 	var metadata runtime.ServerMetadata
@@ -52,6 +56,13 @@ func request_WithdrawService_GetWithdrawFee_0(ctx context.Context, marshaler run
 	}
 
 	protoReq.MoneyAbbr = Money(e)
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_WithdrawService_GetWithdrawFee_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
 
 	msg, err := client.GetWithdrawFee(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
