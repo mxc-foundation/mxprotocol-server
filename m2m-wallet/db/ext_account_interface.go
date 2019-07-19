@@ -22,7 +22,10 @@ func DBInsertExtAccount(walletId int64, newAccount string, currencyAbbr string) 
 		Account_adr:   newAccount,
 		Insert_time:   time.Now().UTC(),
 	}
-	return pgDb.InsertExtAccount(ea)
+
+	extAcntId, errInsert := pgDb.InsertExtAccount(ea)
+
+	return extAcntId, errInsert
 }
 
 func DbGetSuperNodeExtAccountAdr(extCurrAbv string) (acntAdr string, err error) {

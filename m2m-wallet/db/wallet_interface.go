@@ -4,7 +4,7 @@ import (
 	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
-type WalletType string
+type WalletType string // db:wallet_type
 
 const (
 	USER        WalletType = "USER"
@@ -28,11 +28,16 @@ func DbGetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
 	return pgDb.GetWalletIdFromOrgId(orgIdLora)
 }
 
+// func DbGetWallet(wp *pstgDb.Wallet, walletId int64) error {
+// 	return pgDb.GetWallet(wp, walletId)
+// }
+
 func DbGetWalletBalance(walletId int64) (float64, error) {
 	return pgDb.GetWalletBalance(walletId)
 }
 
 func DbUpdateBalanceByWalletId(walletId int64, newBalance float64) error {
+
 	return pgDb.UpdateBalanceByWalletId(walletId, newBalance)
 }
 

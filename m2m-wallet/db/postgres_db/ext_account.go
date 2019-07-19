@@ -1,7 +1,6 @@
 package postgres_db
 
 import (
-	"database/sql"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -54,7 +53,36 @@ func (pgDbp DbSpec) InsertExtAccount(ea ExtAccount) (insertIndex int64, err erro
 		ea.Insert_time,
 		ea.LatestCheckedBlock).Scan(&insertIndex)
 
+	if err == nil {
+		ea.Id = insertIndex
+		err2 := pgDbp.changeStatus2ArcOldRowExtAcnt(ea)
+		if err2 != nil {
+			return insertIndex, errors.Wrap(err, "db/InsertExtAccount")
+		}
+	}
+
 	return insertIndex, errors.Wrap(err, "db/InsertExtAccount")
+}
+
+func (pgDbp DbSpec) changeStatus2ArcOldRowExtAcnt(ea ExtAccount) (err error) {
+	_, err = pgDbp.Db.Exec(`
+	UPDATE 
+		ext_account 
+	SET 
+		status = 'ARC'
+	WHERE
+		fk_wallet = $1 
+		AND
+		fk_ext_currency = $2
+		AND
+		id <> $3   
+	;
+	`,
+		ea.FkWallet,
+		ea.FkExtCurrency,
+		ea.Id)
+
+	return errors.Wrap(err, "db/changeStatus2ArcOldRowExtAcnt")
 }
 
 func (pgDbp DbSpec) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error) {
@@ -80,10 +108,6 @@ func (pgDbp DbSpec) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error)
 		LIMIT 1 
 		;
 	`, extCurrAbv).Scan(&res)
-
-	if err == sql.ErrNoRows {
-		return "", nil
-	}
 
 	return res, errors.Wrap(err, "db/GetSuperNodeExtAccountAdr")
 }
@@ -111,10 +135,6 @@ func (pgDbp DbSpec) GetSuperNodeExtAccountId(extCurrAbv string) (int64, error) {
 		;
 	`, extCurrAbv).Scan(&res)
 
-	if err == sql.ErrNoRows {
-		return 0, nil
-	}
-
 	return res, errors.Wrap(err, "db/GetSuperNodeExtAccountId")
 }
 
@@ -140,10 +160,6 @@ func (pgDbp DbSpec) GetUserExtAccountAdr(walletId int64, extCurrAbv string) (str
 	
 	`, walletId, extCurrAbv).Scan(&res)
 
-	if err == sql.ErrNoRows {
-		return "", nil
-	}
-
 	return res, errors.Wrap(err, "db/GetUserExtAccountAdr")
 }
 
@@ -168,9 +184,6 @@ func (pgDbp DbSpec) GetUserExtAccountId(walletId int64, extCurrAbv string) (int6
 		;
 	
 	`, walletId, extCurrAbv).Scan(&res)
-	if err == sql.ErrNoRows {
-		return 0, nil
-	}
 
 	return res, errors.Wrap(err, "db/GetUserExtAccountId")
 }
@@ -192,10 +205,6 @@ func (pgDbp DbSpec) GetExtAccountIdByAdr(acntAdr string) (int64, error) {
 	
 	`, acntAdr).Scan(&res)
 
-	if err == sql.ErrNoRows {
-		return 0, nil
-	}
-
 	return res, errors.Wrap(err, "db/GetExtAccountIdByAdr")
 }
 
@@ -212,10 +221,6 @@ func (pgDbp DbSpec) GetLatestCheckedBlock(extAcntId int64) (int64, error) {
 			 id = $1
 	
 	`, extAcntId).Scan(&res)
-
-	if err == sql.ErrNoRows {
-		return 0, nil
-	}
 
 	return res, errors.Wrap(err, "db/GetLatestCheckedBlock")
 }
