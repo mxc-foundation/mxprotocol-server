@@ -15,7 +15,7 @@ import SideNav from "./components/SideNav";
 import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
-//import WalletStore from "./stores/WalletStore";
+import WalletStore from "./stores/WalletStore";
 
 // search
 //import Search from "./views/search/Search";
@@ -71,7 +71,6 @@ const styles = {
   },
 };
 
-
 class RedirectedFromLora extends Component {
   constructor(...args) {
     super(...args);
@@ -90,7 +89,14 @@ class RedirectedFromLora extends Component {
     
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
     const { path } = data;
-    SessionStore.initProfile(data);
+
+    WalletStore.getWalletBalance(SessionStore.getOrganizationID(), resp => {
+      if(resp.userProfile.organizations.length > 0){
+        SessionStore.initProfile(data);
+      }else{
+        redirectToLora();
+      }
+    }); 
   
     return <Redirect to={path} />;
   }

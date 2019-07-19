@@ -34,6 +34,7 @@ class SideNav extends Component {
     this.state = {
       open: true,
       organization: {},
+      options: [],
       organizationID: '',
       cacheCounter: 0,
     };
@@ -44,17 +45,30 @@ class SideNav extends Component {
   }
 
   componentDidMount() {
+    const organizationID = SessionStore.getOrganizationID();
+    const options = SessionStore.getOrganizationList();
     this.setState({
-      organizationID: this.props.organizationID
+      organizationID,
+      options
     })
-  }
-
-  componentDidUpdate(prevProps) {
+    SessionStore.on("organizationList.change", () => {
+      const organizationID = SessionStore.getOrganizationID();
+      const options = SessionStore.getOrganizationList();
+      
+      this.setState({
+        organizationID: '',
+        options:[]
+      });
+      this.setState({
+        organizationID,
+        options
+      })
+    });
   }
 
   onChange(e) {
     SessionStore.setOrganizationID(e.target.value);
-    //console.log('this.props', this.props.location.pathname);
+    
     this.setState({
       organizationID: e.target.value
     })
@@ -73,26 +87,25 @@ class SideNav extends Component {
   getOrganizationOption(id, callbackFunc) {
     WithdrawStore.getWithdrawFee(coinType, resp => {
       const option = resp.userProfile.organizations[0];
-      console.log('option', option);
       callbackFunc({label: option.organizationName, value: option.organizationID});
     }); 
   }
 
+  /* getOrganizationOptions(search, callbackFunc) {
+    let options = SessionStore.getOrganizationList();
+    //options.push({label: 'mxp',value: '1' });
+    return callbackFunc(options);
+
+    //return callbackFunc(SessionStore.getOrganizationList());
+  } */
+
   getOrganizationOptions(search, callbackFunc) {
-    WithdrawStore.getWithdrawFee(coinType, resp => {
-      //dummy data
-      /* resp.userProfile.organizations[0].organizationName = 'lora';
-      resp.userProfile.organizations[0].organizationID = '1';
-      resp.userProfile.organizations.push({organizationName: 'mxp',organizationID: '2' }); */
-      const options = resp.userProfile.organizations.map((o, i) => { 
-        console.log(o.organizationName, o.organizationID);
-        return {label: o.organizationName, value: o.organizationID}});
-      callbackFunc(options);
-    });
+    let options = this.state.options;
+    return callbackFunc(options);
   }
 
   render() {
-    //let organizationID = SessionStore.getOrganizationID();
+    
     let organizationID = this.state.organizationID;
     return(
       <Drawer
@@ -110,7 +123,6 @@ class SideNav extends Component {
             margin="none"
             value={organizationID}
             onChange={this.onChange}
-            //getOption={this.getOrganizationOption}
             getOptions={this.getOrganizationOptions}
             className={this.props.classes.select}
             triggerReload={this.state.cacheCounter}
