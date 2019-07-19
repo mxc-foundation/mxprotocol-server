@@ -75,7 +75,8 @@
             "name": "orgId",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           {
             "name": "offset",
@@ -118,6 +119,13 @@
             "enum": [
               "Ether"
             ]
+          },
+          {
+            "name": "orgId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -200,6 +208,10 @@
         "withdrawFee": {
           "type": "number",
           "format": "double"
+        },
+        "orgId": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },

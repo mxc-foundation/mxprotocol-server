@@ -9,6 +9,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/ext_account"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -45,52 +46,60 @@ func NewSupernodeServerAPI() *SupernodeServerAPI {
 }
 
 func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *api.AddSuperNodeMoneyAccountRequest) (*api.AddSuperNodeMoneyAccountResponse, error) {
-	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
-	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
-	}
+	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
 
-	log.WithFields(log.Fields{
-		"moneyAbbr":   api.Money_name[int32(in.MoneyAbbr)],
-		"accountAddr": in.AccountAddr,
-	}).Debug("grpc_api/AddSuperNodeMoneyAccount")
+	switch res.Type {
+	case auth.JsonParseError:
+	case auth.ErrorInfoNotNull:
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	var walletId int64
-	if walletId, err = db.DbGetWalletIdFromOrgId(0); err == nil && 0 == walletId {
-		walletId, err = db.DbInsertWallet(0, db.SUPER_ADMIN)
+	case auth.OrganizationIdDeleted:
+		return &api.AddSuperNodeMoneyAccountResponse{UserProfile: &userProfile},
+			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
+	case auth.OK:
+		log.WithFields(log.Fields{
+			"moneyAbbr":   api.Money_name[int32(in.MoneyAbbr)],
+			"accountAddr": in.AccountAddr,
+		}).Debug("grpc_api/AddSuperNodeMoneyAccount")
+
+		err := ext_account.UpdateActiveExtAccount(0, in.AccountAddr, api.Money_name[int32(in.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
 			return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
 		}
-	} else if err != nil {
-		log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
-		return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
+
+		return &api.AddSuperNodeMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
 	}
 
-	_, err = db.DBInsertExtAccount(walletId, in.AccountAddr, api.Money_name[int32(in.MoneyAbbr)])
-	if err != nil {
-		log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
-		return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
-	}
-
-	return &api.AddSuperNodeMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
+	return nil, status.Errorf(codes.Unknown, "")
 }
 
 func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context, req *api.GetSuperNodeActiveMoneyAccountRequest) (*api.GetSuperNodeActiveMoneyAccountResponse, error) {
-	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
-	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
+	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
+
+	switch res.Type {
+	case auth.JsonParseError:
+	case auth.ErrorInfoNotNull:
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
+
+	case auth.OrganizationIdDeleted:
+		return &api.GetSuperNodeActiveMoneyAccountResponse{UserProfile: &userProfile},
+			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
+
+	case auth.OK:
+
+		log.WithFields(log.Fields{
+			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
+		}).Debug("grpc_api/GetSuperNodeActiveMoneyAccount")
+
+		accountAddr, err := db.DbGetSuperNodeExtAccountAdr(api.Money_name[int32(req.MoneyAbbr)])
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetSuperNodeActiveMoneyAccount")
+			return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "", UserProfile: &userProfile}, nil
+		}
+
+		return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: accountAddr, UserProfile: &userProfile}, nil
 	}
 
-	log.WithFields(log.Fields{
-		"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
-	}).Debug("grpc_api/GetSuperNodeActiveMoneyAccount")
-
-	accountAddr, err := db.DbGetSuperNodeExtAccountAdr(api.Money_name[int32(req.MoneyAbbr)])
-	if err != nil {
-		log.WithError(err).Error("grpc_api/GetSuperNodeActiveMoneyAccount")
-		return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "", UserProfile: &userProfile}, nil
-	}
-
-	return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: accountAddr, UserProfile: &userProfile}, nil
+	return nil, status.Errorf(codes.Unknown, "")
 }

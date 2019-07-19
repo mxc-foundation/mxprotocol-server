@@ -35,30 +35,52 @@ func Setup(conf config.MxpConfig) error {
 	return nil
 }
 
-func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string) (api.ProfileResponse, error) {
+type resCode int32
+
+const (
+	OK                    resCode = 0
+	ErrorInfoNotNull      resCode = 1
+	OrganizationIdDeleted resCode = 2
+	JsonParseError        resCode = 3
+)
+
+type VerifyResult struct {
+	Err     error
+	Type    resCode
+}
+
+func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, reqOrgId int64) (api.ProfileResponse, VerifyResult) {
 	log.WithField("request service", requestServiceName).Info()
 
 	info, err := tokenMiddleware(ctx)
 	if err != nil {
-		return api.ProfileResponse{}, err
+		log.WithError(err).Error("auth/VerifyRequestViaAuthServer")
+		return api.ProfileResponse{}, VerifyResult{err, JsonParseError}
 	}
 
 	errInfo := errStruct{}
 	err = json.Unmarshal(*info, &errInfo)
 	if err != nil {
-		fmt.Println(err)
+		log.WithError(err).Error("auth/VerifyRequestViaAuthServer")
 	}
 
 	if errInfo.Error != "" {
-		return api.ProfileResponse{}, errors.New(errInfo.Error)
+		return api.ProfileResponse{}, VerifyResult{errors.New(errInfo.Error), ErrorInfoNotNull}
 	}
 
 	userInfo := api.ProfileResponse{}
 	err = json.Unmarshal(*info, &userInfo)
 	if err != nil {
-		fmt.Println(err)
+		log.WithError(err).Error("auth/VerifyRequestViaAuthServer")
 	}
-	return userInfo, nil
+
+	for _, v := range userInfo.Organizations {
+		if v.OrganizationId == reqOrgId {
+			return userInfo, VerifyResult{nil, OK}
+		}
+	}
+
+	return userInfo, VerifyResult{nil, OrganizationIdDeleted}
 }
 
 func tokenMiddleware(ctx context.Context) (*[]byte, error) {
