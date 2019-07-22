@@ -28,7 +28,7 @@ class NewEthAccountForm extends FormComponent {
       createAccount: this.state.createAccount,
       username: this.state.username,
       password: this.state.password
-    })
+    });
 
     this.clear();
   }
@@ -65,9 +65,9 @@ class NewEthAccountForm extends FormComponent {
           value={this.state.username}
           placeholder="Type here" 
           onChange={this.onChange}
-          inputProps={{
+          /* inputProps={{
             pattern: "[\\w-]+",
-          }}
+          }} */
           autoComplete='off'
           required
           fullWidth
@@ -80,9 +80,9 @@ class NewEthAccountForm extends FormComponent {
           value={this.state.password}
           placeholder="Type here" 
           onChange={this.onChange}
-          inputProps={{
+          /* inputProps={{
             pattern: "[\\w-]+",
-          }}
+          }} */
           type="password"
           autoComplete="off"
           required

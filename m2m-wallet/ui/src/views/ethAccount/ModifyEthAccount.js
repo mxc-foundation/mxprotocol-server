@@ -66,6 +66,7 @@ class ModifyEthAccount extends Component {
     
     loadData() {
       const org_id = this.props.match.params.organizationID;
+
       if (org_id == 0) {
         SupernodeStore.getSuperNodeActiveMoneyAccount(coinType, resp => {
           this.setState({
@@ -90,13 +91,13 @@ class ModifyEthAccount extends Component {
     }
 
     onSubmit = async (resp) => {
-      
       try {
-        await verifyUser(resp);
+        const isOK = await verifyUser(resp);
         
-        if(resp.action === 'modifyAccount' ) {
+        if(resp.action === 'modifyAccount' && isOK) {
           const result = await modifyAccount(resp, this.props.match.params.organizationID, this.props.history);
-        } else {
+        } 
+        if(resp.action === 'createAccount' && isOK) {
           const result = await createAccount(resp, this.props.match.params.organizationID, this.props.history);
         }
       } catch (error) {

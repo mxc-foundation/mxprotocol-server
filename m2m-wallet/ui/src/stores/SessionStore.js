@@ -17,9 +17,9 @@ class SessionStore extends EventEmitter {
     this.swagger.then(client => {
       this.client = client;
 
-      if (this.getToken() !== null) {
-        //this.fetchProfile(() => {});
-      }
+      /* if (this.getToken() !== null) {
+        this.fetchProfile(() => {});
+      } */
     });
   }
 
@@ -103,6 +103,7 @@ class SessionStore extends EventEmitter {
 
   initProfile(data) {
     const { jwt, org_id } = data;
+    
     if(jwt === "" || org_id === "" || org_id === undefined){
       window.location.replace(`http://localhost:3002/`);
     }

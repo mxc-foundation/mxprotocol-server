@@ -36,7 +36,10 @@ const theme = createMuiTheme({
     typography: {
       //useNextVariants: true,
       subheading: {
-        color: white
+        color: '#F9FAFC70',
+        "&:hover": {
+          color: white,
+        },
       },
       title: {
         color: white

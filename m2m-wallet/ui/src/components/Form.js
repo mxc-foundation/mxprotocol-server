@@ -10,7 +10,6 @@ const styles = {
   },
 }
 
-
 class Form extends Component {
   render() {
     return(
@@ -19,7 +18,8 @@ class Form extends Component {
 
         <Grid container justify="flex-end" className={this.props.classes.formControl}>
           {this.props.extraButtons}
-          {this.props.submitLabel && <Button type="submit" disabled={this.props.disabled}>{this.props.submitLabel}</Button>}
+          {this.props.submitLabel &&
+            <Button type="submit" disabled={this.props.disabled}>{this.props.submitLabel}</Button>}
         </Grid>
       </form>
     );
