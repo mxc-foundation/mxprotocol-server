@@ -58,9 +58,6 @@ const theme = createMuiTheme({
             borderBottom: `1px solid #00FFD9`
           }
         },
-        required: {
-          backgroundColor: tealHighLight20,
-        },
       },
       MuiAppBar: {
         root: {
