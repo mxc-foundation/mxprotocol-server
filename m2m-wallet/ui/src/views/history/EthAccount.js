@@ -20,7 +20,6 @@ class EthAccount extends Component {
 
   getPage(limit, offset, callbackFunc) {
     HistoryStore.getChangeMoneyAccountHistory("Ether",this.props.match.params.organizationID, limit, offset, (data) => {
-      console.log("data",data);
       callbackFunc({
         totalCount: offset + 2 * limit,
         result: data.changeHistory

@@ -3,7 +3,6 @@ import { EventEmitter } from "events";
 import Swagger from "swagger-client";
 import { checkStatus, errorHandler, errorHandlerLogin } from "./helpers";
 
-
 class SessionStore extends EventEmitter {
   constructor() {
     super();
@@ -57,6 +56,28 @@ class SessionStore extends EventEmitter {
     this.emit("organization.change");
   }
 
+  setOrganizationList(organizations) {
+    let organizationList = null;
+    
+    if(organizations.length > 0){
+      organizationList = organizations.map((o, i) => { 
+      return {label: o.organizationName, value: o.organizationID}});
+    }
+    
+    localStorage.setItem("organizationList", JSON.stringify(organizationList));
+    this.emit("organizationList.change");
+    //this.emit("organizationList.change");
+  }
+
+  getOrganizationList() {
+    const organizationList = localStorage.getItem("organizationList");
+    if (organizationList.length == 0) {
+      return null;
+    }
+
+    return JSON.parse(organizationList);
+  }
+
   getUser() {
     return this.user;
   }
@@ -82,7 +103,6 @@ class SessionStore extends EventEmitter {
 
   initProfile(data) {
     const { jwt, org_id } = data;
-    
     if(jwt === "" || org_id === "" || org_id === undefined){
       window.location.replace(`http://localhost:3002/`);
     }
@@ -97,9 +117,9 @@ class SessionStore extends EventEmitter {
         .then(checkStatus)
         .then(resp => {
           if(resp.body.jwt === ""){
-            callBackFunc("fail");  
+            callBackFunc(false);  
           }else{
-            callBackFunc("ok");
+            callBackFunc(true);
           }
           //this.fetchProfile(callBackFunc);
         })

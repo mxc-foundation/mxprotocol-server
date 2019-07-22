@@ -4,6 +4,7 @@ import Swagger from "swagger-client";
 
 import sessionStore from "./SessionStore";
 import {checkStatus, errorHandler } from "./helpers";
+import updateOrganizations from "./SetUserProfile";
 import dispatcher from "../dispatcher";
 
 
@@ -21,9 +22,9 @@ class TopupStore extends EventEmitter {
         limit
       })
       .then(checkStatus)
+      .then(updateOrganizations)
       .then(resp => {
-        console.log('resp',resp);
-        callbackFunc(resp);
+        callbackFunc(resp.body);
       })
       .catch(errorHandler);
     });
@@ -38,8 +39,9 @@ class TopupStore extends EventEmitter {
         },
       })
       .then(checkStatus)
+      .then(updateOrganizations)
       .then(resp => {
-        this.notify("updated");
+        this.notify("completed");
         callbackFunc(resp.obj);
       })
       .catch(errorHandler);
@@ -51,7 +53,7 @@ class TopupStore extends EventEmitter {
       type: "CREATE_NOTIFICATION",
       notification: {
         type: "success",
-        message: "user has been " + action,
+        message: "Transaction has been " + action,
       },
     });
   }

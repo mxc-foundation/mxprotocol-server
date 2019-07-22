@@ -1,14 +1,18 @@
 import { createMuiTheme } from "@material-ui/core/styles";
+import { teal } from "@material-ui/core/colors";
 
 const tealHighLight = '#00FFD9';
+const tealHighLight20 = '#00FFD920';
 const blueMxcBrand = '#09006E';
+const blueBG = '#090046';
 const white = '#F9FAFC';
 const linkTextColor = '#CAFCF5';
 
 const theme = createMuiTheme({
     palette: {
-      primary: { main: tealHighLight }, 
+      primary: { main: tealHighLight, secondary: tealHighLight20 }, 
       secondary: { main: blueMxcBrand }, 
+      darkBG: { main: blueBG }, 
       textPrimary: {main: white}, 
       textSecondary: {main: linkTextColor} 
     },
@@ -20,6 +24,12 @@ const theme = createMuiTheme({
     //tab 
     MuiTypography: {
       root: {
+        color: white,
+      },
+      body1: {
+        color: white,
+      },
+      colorTextSecondary: {
         color: white,
       },
     },
@@ -44,7 +54,10 @@ const theme = createMuiTheme({
           "&:before": {
             borderBottom: `1px solid #F9FAFC`
           }
-        }
+        },
+        required: {
+          backgroundColor: tealHighLight20,
+        },
       },
       MuiAppBar: {
         root: {
@@ -69,14 +82,15 @@ const theme = createMuiTheme({
           color: white,
         }
       },
-      MuiInputBase: {
+/*       MuiInputBase: {
         input: {
-          color: white,
+          color: '#F9FAFC',
+          fontWeight: "bolder",
           "&:-webkit-autofill": {
             WebkitBoxShadow: "0 0 0 1000px #F9FAFC inset"
           }
         }
-      },
+      }, */
       MuiTable: {
         root: {
           background: white,
@@ -117,17 +131,40 @@ const theme = createMuiTheme({
       },
       MuiButton: { 
         root: {
-          backgroundColor: '#00FFD9',
+          background: tealHighLight,
+          color: blueMxcBrand,
           width: 135,
           height: 50,
           fontWeight: 'bolder',
           marginRight: 5,
           boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
-          backgroundColor: '#00FFD9',
-            "&:hover": {
-              backgroundColor: '#00CCAE',
-            }
+          "&:hover": {
+            backgroundColor: "#00CCAE",
+          },
         },
+        outlined: {
+          backgroundColor: blueBG,
+          color: tealHighLight,
+          //padding: 30,
+          fontWeight: 900,
+          lineHeight: 1.5,
+          borderWidth: 2,
+          borderColor: tealHighLight,
+          "&:hover": {
+            backgroundColor: tealHighLight20,
+            borderColor: "#00CCAE",
+            color: "#00CCAE",
+          },
+        },
+/*         link: {
+          color: tealHighLight,
+          //padding: 30,
+          fontWeight: 900,
+          lineHeight: 1.5,
+          "&:hover": {
+            color: "#00CCAE",
+          },
+        }, */
         label: {
           color: blueMxcBrand
         },
@@ -157,11 +194,18 @@ const theme = createMuiTheme({
         },
         textColorPrimary: {
           color: white
-        }
+        },
       },
       MuiSvgIcon: {
         root: {
           fill: '#F9FAFC',
+        },
+      },
+      MuiDialog: {
+        color: white,
+        root: {
+          color: white,
+          boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
         },
       },
     },

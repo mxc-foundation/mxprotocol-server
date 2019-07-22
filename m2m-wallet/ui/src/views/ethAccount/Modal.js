@@ -15,7 +15,6 @@ export default function AlertDialog(props) {
   }
 
   const agree = () => {
-    console.log('props', props);
     const data = props;
 
     /* WithdrawStore.update(data, resp => {

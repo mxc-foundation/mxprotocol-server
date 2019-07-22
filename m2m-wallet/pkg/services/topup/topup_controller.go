@@ -7,7 +7,6 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"time"
 )
 
 func Setup() error {
@@ -24,24 +23,28 @@ func NewTopUpServerAPI() *TopUpServerAPI {
 }
 
 func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpHistoryRequest) (*api.GetTopUpHistoryResponse, error) {
-	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
-	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
+	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
+
+	switch res.Type {
+	case auth.JsonParseError:
+	case auth.ErrorInfoNotNull:
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
+
+	case auth.OrganizationIdDeleted:
+		return &api.GetTopUpHistoryResponse{UserProfile: &userProfile},
+			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
+
+	case auth.OK:
+
+		log.WithFields(log.Fields{
+			"orgId": req.OrgId,
+			"offset": req.Offset,
+			"limit": req.Limit,
+		}).Debug("grpc_api/GetTopUpHistory")
+
+		return &api.GetTopUpHistoryResponse{UserProfile: &userProfile}, nil
+
 	}
 
-	var count = int64(4)
-	history_list := []*api.TopUpHistory{}
-
-	for i := 0; i < int(count); i++ {
-		item := api.TopUpHistory{
-			From:      "a",
-			To:        "b",
-			Amount:    12.333,
-			CreatedAt: time.Now().UTC().String(),
-		}
-
-		history_list = append(history_list, &item)
-	}
-
-	return &api.GetTopUpHistoryResponse{Count: count, TopupHistory: history_list, UserProfile: &userProfile}, nil
+	return nil, status.Errorf(codes.Unknown, "")
 }

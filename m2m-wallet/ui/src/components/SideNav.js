@@ -13,6 +13,7 @@ import AutocompleteSelect from "./AutocompleteSelect";
 
 import CalendarCheckOutline from "mdi-material-ui/CalendarCheckOutline";
 import CreditCard from "mdi-material-ui/CreditCard";
+import AccessPoint from "mdi-material-ui/AccessPoint";
 
 import WithdrawStore from "../stores/WithdrawStore"
 import SessionStore from "../stores/SessionStore"
@@ -25,6 +26,8 @@ import styles from "./SideNavStyle";
 const LinkToLora = ({children, ...otherProps}) => 
 <a href={`http://localhost:3002`} {...otherProps}>{children}</a>;
 
+const coinType = 'Ether';
+
 class SideNav extends Component {
   constructor() {
     super();
@@ -32,6 +35,8 @@ class SideNav extends Component {
     this.state = {
       open: true,
       organization: {},
+      options: [],
+      organizationID: '',
       cacheCounter: 0,
     };
 
@@ -40,37 +45,38 @@ class SideNav extends Component {
     this.getOrganizationOptions = this.getOrganizationOptions.bind(this);
   }
 
+  handleMXC = () => {
+    window.location.replace(`http://mxc.org/`);
+  } 
+
   componentDidMount() {
-    //const {match: { params: { organizationID }}} = this.props;
+    const organizationID = SessionStore.getOrganizationID();
+    const options = SessionStore.getOrganizationList();
     this.setState({
-      organization: {
-        id: SessionStore.getOrganizationID()
-      }
+      organizationID,
+      options
     })
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props === prevProps) {
-      return;
-    }
-
-    /* const {match: { params: { organizationID }} } = this.props;
-    this.setState({
-      organization: {
-        id: organizationID
-      }
-    }); */
+    SessionStore.on("organizationList.change", () => {
+      const organizationID = SessionStore.getOrganizationID();
+      const options = SessionStore.getOrganizationList();
+      
+      this.setState({
+        organizationID: '',
+        options:[]
+      });
+      this.setState({
+        organizationID,
+        options
+      })
+    });
   }
 
   onChange(e) {
     SessionStore.setOrganizationID(e.target.value);
-    this.setState({
-      organization: {
-        id: SessionStore.getOrganizationID()
-      }
-    })
-    //console.log('this.props', this.props.location.pathname);
     
+    this.setState({
+      organizationID: e.target.value
+    })
     this.props.history.push(`/withdraw/${e.target.value}`);
   }
 
@@ -84,32 +90,28 @@ class SideNav extends Component {
   }
 
   getOrganizationOption(id, callbackFunc) {
-    WithdrawStore.getWithdrawFee("Ether", resp => {
+    WithdrawStore.getWithdrawFee(coinType, resp => {
       const option = resp.userProfile.organizations[0];
-      console.log('option', option);
       callbackFunc({label: option.organizationName, value: option.organizationID});
     }); 
   }
 
+  /* getOrganizationOptions(search, callbackFunc) {
+    let options = SessionStore.getOrganizationList();
+    //options.push({label: 'mxp',value: '1' });
+    return callbackFunc(options);
+
+    //return callbackFunc(SessionStore.getOrganizationList());
+  } */
+
   getOrganizationOptions(search, callbackFunc) {
-    WithdrawStore.getWithdrawFee("Ether", resp => {
-      //dummy data
-      resp.userProfile.organizations[0].organizationName = 'lora';
-      resp.userProfile.organizations[0].organizationID = '1';
-      resp.userProfile.organizations.push({organizationName: 'mxp',organizationID: '2' });
-      const options = resp.userProfile.organizations.map((o, i) => { 
-        return {label: o.organizationName, value: o.organizationID}});
-      callbackFunc(options);
-    });
+    let options = this.state.options;
+    return callbackFunc(options);
   }
 
   render() {
-    let organizationID = "";
     
-    if (this.state.organization !== null) {
-      organizationID = this.state.organization.id;
-    }
-    
+    let organizationID = this.state.organizationID;
     return(
       <Drawer
         variant="persistent"
@@ -126,31 +128,30 @@ class SideNav extends Component {
             margin="none"
             value={organizationID}
             onChange={this.onChange}
-            //getOption={this.getOrganizationOption}
             getOptions={this.getOrganizationOptions}
             className={this.props.classes.select}
             triggerReload={this.state.cacheCounter}
           />
         </div>
-          <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}>
+          <ListItem button component={Link} to={`/withdraw/${this.state.organizationID}`}>
             <ListItemIcon className={this.props.classes.iconStyle}>
               <PagePreviousOutline />
             </ListItemIcon>
             <ListItemText primary="Withdraw" />
           </ListItem>
-          <ListItem button component={Link} to={`/topup/${this.state.organization.id}`}>
+          <ListItem button component={Link} to={`/topup/${this.state.organizationID}`}>
             <ListItemIcon>
               <PageNextOutline />
             </ListItemIcon>
-            <ListItemText primary="Topup" />
+            <ListItemText primary="Top up" />
           </ListItem>
-          <ListItem button component={Link} to={`/history/${this.state.organization.id}`}>
+          <ListItem button component={Link} to={`/history/${this.state.organizationID}`}>
             <ListItemIcon>
               <CalendarCheckOutline />
             </ListItemIcon>
             <ListItemText primary="History" />
           </ListItem>
-          <ListItem button component={Link} to={`/modify-account/${this.state.organization.id}`}>
+          <ListItem button component={Link} to={`/modify-account/${this.state.organizationID}`}>
             <ListItemIcon>
               <CreditCard />
             </ListItemIcon>
@@ -161,8 +162,9 @@ class SideNav extends Component {
                 {/* <ListItem button  onClick={this.handleOpenLora}> */}
                 <ListItem button component={LinkToLora} className={this.props.classes.static}>  
                   <ListItemIcon>
-                    <img src="/logo/logo.png" className="iconStyle" alt="LoRa Server" />
+                    <AccessPoint />
                   </ListItemIcon>
+                  <ListItemText primary="LoRa Server" />
                 </ListItem>
                 <Divider />
                 {/* <ListItem button >
@@ -181,7 +183,7 @@ class SideNav extends Component {
                 <ListItem>
                   <ListItemText primary="Powered by" />
                   <ListItemIcon>
-                    <img src="/logo/mxc_logo.png" className="iconStyle" alt="LoRa Server" />
+                    <img src="/logo/mxc_logo.png" className="iconStyle" alt="LoRa Server" onClick={this.handleMXC} />
                   </ListItemIcon>
                 </ListItem>
                 {/* <ListItem button onClick={this.handleOpenM2M} >

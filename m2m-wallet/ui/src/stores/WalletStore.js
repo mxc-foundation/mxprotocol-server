@@ -4,6 +4,7 @@ import Swagger from "swagger-client";
 
 import sessionStore from "./SessionStore";
 import {checkStatus, errorHandler } from "./helpers";
+import updateOrganizations from "./SetUserProfile";
 import dispatcher from "../dispatcher";
 
 
@@ -19,6 +20,7 @@ class WalletStore extends EventEmitter {
         org_id,
       })
       .then(checkStatus)
+      .then(updateOrganizations)
       .then(resp => {
         callbackFunc(resp.obj);
       })
@@ -31,7 +33,7 @@ class WalletStore extends EventEmitter {
       type: "CREATE_NOTIFICATION",
       notification: {
         type: "success",
-        message: "user has been " + action,
+        message: "Balance has been " + action,
       },
     });
   }

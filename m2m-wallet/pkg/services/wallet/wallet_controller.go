@@ -9,7 +9,6 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"time"
 )
 
 func Setup(conf config.MxpConfig) error {
@@ -101,49 +100,64 @@ func NewWalletServerAPI() *WalletServerAPI {
 }
 
 func (s *WalletServerAPI) GetWalletBalance(ctx context.Context, req *api.GetWalletBalanceRequest) (*api.GetWalletBalanceResponse, error) {
-	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
-	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
+	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
+
+	switch res.Type {
+	case auth.JsonParseError:
+	case auth.ErrorInfoNotNull:
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
+
+	case auth.OrganizationIdDeleted:
+		return &api.GetWalletBalanceResponse{UserProfile: &userProfile},
+			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
+
+	case auth.OK:
+
+		log.WithFields(log.Fields{
+			"orgId": req.OrgId,
+		}).Debug("grpc_api/GetWalletBalance")
+
+		walletId, err := GetWalletId(req.OrgId)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetWalletBalance")
+			return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, nil
+		}
+
+		balance, err := db.DbGetWalletBalance(walletId)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetWalletBalance")
+			return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, nil
+		}
+
+		return &api.GetWalletBalanceResponse{Balance: balance, UserProfile: &userProfile}, nil
+
 	}
 
-	log.WithFields(log.Fields{
-		"orgId": req.OrgId,
-	}).Debug("grpc_api/GetWalletBalance")
-
-	walletId, err := GetWalletId(req.OrgId)
-	if err != nil {
-		log.WithError(err).Error("grpc_api/GetWalletBalance")
-		return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, nil
-	}
-
-	balance, err := db.DbGetWalletBalance(walletId)
-	if err != nil {
-		log.WithError(err).Error("grpc_api/GetWalletBalance")
-		return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, nil
-	}
-
-	return &api.GetWalletBalanceResponse{Balance: balance, UserProfile: &userProfile}, nil
+	return nil, status.Errorf(codes.Unknown, "")
 }
 
 func (s *WalletServerAPI) GetVmxcTxHistory(ctx context.Context, req *api.GetVmxcTxHistoryRequest) (*api.GetVmxcTxHistoryResponse, error) {
-	userProfile, err := auth.VerifyRequestViaAuthServer(ctx, s.serviceName)
-	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", err)
+	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
+
+	switch res.Type {
+	case auth.JsonParseError:
+	case auth.ErrorInfoNotNull:
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
+
+	case auth.OrganizationIdDeleted:
+		return &api.GetVmxcTxHistoryResponse{UserProfile: &userProfile},
+			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
+
+	case auth.OK:
+
+		log.WithFields(log.Fields{
+			"orgId": req.OrgId,
+			"offset": req.Offset,
+			"limit": req.Limit,
+		})
+
+		return &api.GetVmxcTxHistoryResponse{UserProfile: &userProfile}, nil
 	}
 
-	var count = int64(6)
-	history_list := []*api.VmxcTxHistory{}
-	for i := 0; i < int(count); i++ {
-		item := api.VmxcTxHistory{
-			From:      "a",
-			To:        "b",
-			TxType:    "subscription",
-			Amount:    12.333,
-			CreatedAt: time.Now().UTC().String(),
-		}
-
-		history_list = append(history_list, &item)
-	}
-
-	return &api.GetVmxcTxHistoryResponse{Count: count, TxHistory: history_list, UserProfile: &userProfile}, nil
+	return nil, status.Errorf(codes.Unknown, "")
 }
