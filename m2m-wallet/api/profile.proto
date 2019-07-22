@@ -5,7 +5,6 @@ package api;
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
-
 // InternalService is the service providing API endpoints for internal usage.
 service InternalService {
 	// Log in a user
@@ -31,7 +30,7 @@ message ProfileResponse {
 message User {
 	// User ID.
 	// Will be set automatically on create.
-	string id = 1;
+	int64 id = 1;
 
 	// Username of the user.
 	string username = 2;
@@ -52,6 +51,13 @@ message User {
 	string note = 7;
 }
 
+message ProfileSettings {
+	// Existing users in the system can not be assigned to organizations and
+	// application and can not be listed by non global admin users.
+	bool disable_assign_existing_users = 1;
+}
+
+// Defines an organization to which an user is associated.
 message OrganizationLink {
 	// Organization ID.
 	int64 organization_id = 1 [json_name = "organizationID"];
@@ -67,12 +73,6 @@ message OrganizationLink {
 
 	// Last update timestamp.
 	google.protobuf.Timestamp updated_at = 5;
-}
-
-message ProfileSettings {
-	// Existing users in the system can not be assigned to organizations and
-	// application and can not be listed by non global admin users.
-	bool disable_assign_existing_users = 1;
 }
 
 message LoginRequest {
