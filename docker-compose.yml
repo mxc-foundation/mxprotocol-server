@@ -17,6 +17,10 @@ services:
     tty: true
     ports:
       - 3000:3000
+    security_opt:
+      - seccomp:unconfined
+    cap_add:
+      - SYS_PTRACE
   postgres:
     image: postgres:9.6-alpine
     volumes:

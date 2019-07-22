@@ -13,6 +13,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
+	"runtime"
+	"strconv"
 )
 
 type errStruct struct {
@@ -45,8 +47,51 @@ const (
 )
 
 type VerifyResult struct {
-	Err     error
-	Type    resCode
+	Err  error
+	Type resCode
+}
+
+type User struct {
+	// User ID.
+	// Will be set automatically on create.
+	Id string `json:"id,omitempty"`
+	// Username of the user.
+	Username string `json:"username,omitempty"`
+	// The session timeout, in minutes.
+	SessionTtl int32 `json:"sessionTTL,omitempty"`
+	// Set to true to make the user a global administrator.
+	IsAdmin bool `json:"isAdmin,omitempty"`
+	// Set to false to disable the user.
+	IsActive bool `json:"isActive,omitempty"`
+	// E-mail of the user.
+	Email string `json:"email,omitempty"`
+	Note  string `json:"note,omitempty"`
+}
+
+type Settings struct {
+	DisableAssignExistingUsers bool `json:"disableAssignExistingUsers,omitempty"`
+}
+
+type OrganizationLink struct {
+	// Organization ID.
+	OrganizationId string `json:"organizationID,omitempty"`
+	// Organization name.
+	OrganizationName string `json:"organizationName,omitempty"`
+	// User is admin within the context of this organization.
+	IsAdmin bool `json:"isAdmin,omitempty"`
+	// Created at timestamp.
+	CreatedAt string `json:"createdAt,omitempty"`
+	// Last update timestamp.
+	UpdatedAt string `json:"updatedAt,omitempty"`
+}
+
+type ProfileResponse struct {
+	// User object.
+	User User `json:"user,omitempty"`
+	// Profile settings.
+	Settings Settings `json:"settings,omitempty"`
+	// Organizations to which the user is associated.
+	Organizations []OrganizationLink `json:"organizations,omitempty"`
 }
 
 func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, reqOrgId int64) (api.ProfileResponse, VerifyResult) {
@@ -67,20 +112,26 @@ func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, 
 	if errInfo.Error != "" {
 		return api.ProfileResponse{}, VerifyResult{errors.New(errInfo.Error), ErrorInfoNotNull}
 	}
+	runtime.Breakpoint()
 
-	userInfo := api.ProfileResponse{}
-	err = json.Unmarshal(*info, &userInfo)
+	userProfile := ProfileResponse{}
+
+	err = json.Unmarshal(*info, &userProfile)
 	if err != nil {
 		log.WithError(err).Error("auth/VerifyRequestViaAuthServer")
 	}
+	fmt.Println(userProfile)
 
-	for _, v := range userInfo.Organizations {
-		if v.OrganizationId == reqOrgId {
-			return userInfo, VerifyResult{nil, OK}
+	fmt.Println(string(*info))
+
+	for _, v := range userProfile.Organizations {
+		id, _:= strconv.ParseInt(v.OrganizationId, 10, 64)
+		if id == reqOrgId {
+			return api.ProfileResponse{}, VerifyResult{nil, OK}
 		}
 	}
 
-	return userInfo, VerifyResult{nil, OrganizationIdDeleted}
+	return api.ProfileResponse{}, VerifyResult{nil, OrganizationIdDeleted}
 }
 
 func tokenMiddleware(ctx context.Context) (*[]byte, error) {
