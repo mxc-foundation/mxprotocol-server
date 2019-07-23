@@ -9,7 +9,7 @@ import Tab from '@material-ui/core/Tab';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import Divider from '@material-ui/core/Divider';
-
+import Spinner from "../../components/ScaleLoader"
 //import SessionStore from "../../stores/SessionStore";
 
 import Transactions from "./Transactions";
@@ -24,6 +24,7 @@ class HistoryLayout extends Component {
     super();
     this.state = {
       tab: 0,
+      loading: false,
       admin: false,
     };
 
@@ -32,7 +33,9 @@ class HistoryLayout extends Component {
   }
 
   componentDidMount() {
+    this.setState({loading:true});
     this.locationToTab();
+    this.setState({loading:false});
   }
 
   componentDidUpdate(oldProps) {
@@ -67,6 +70,7 @@ class HistoryLayout extends Component {
     
     return(
       <Grid container spacing={24}>
+        <Spinner on={this.state.loading}/>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
