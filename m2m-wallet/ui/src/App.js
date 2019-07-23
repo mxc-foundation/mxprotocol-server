@@ -90,7 +90,7 @@ class RedirectedFromLora extends Component {
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
     const { path } = data;
     SessionStore.initProfile(data);
-  
+    
     return <Redirect to={path} />;
   }
 }

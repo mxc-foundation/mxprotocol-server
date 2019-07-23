@@ -56,6 +56,19 @@ class SessionStore extends EventEmitter {
     this.emit("organization.change");
   }
 
+  getLoraHostUrl() {
+    const loraHostUrl = localStorage.getItem("loraHostUrl");
+    if (loraHostUrl === "") {
+      return null;
+    }
+
+    return loraHostUrl;
+  }
+
+  setLoraHostUrl(loraHostUrl) {
+    localStorage.setItem("loraHostUrl", loraHostUrl);
+  }
+
   setOrganizationList(organizations) {
     let organizationList = null;
     
@@ -102,13 +115,14 @@ class SessionStore extends EventEmitter {
   }
 
   initProfile(data) {
-    const { jwt, org_id } = data;
+    const { jwt, org_id, loraHostUrl } = data;
     
     if(jwt === "" || org_id === "" || org_id === undefined){
-      window.location.replace(`http://localhost:3002/`);
+      window.location.replace(loraHostUrl);
     }
     
     this.setToken(jwt);
+    this.setLoraHostUrl(loraHostUrl);
     this.setOrganizationID(org_id);
   }
 
