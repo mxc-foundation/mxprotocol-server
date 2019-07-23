@@ -4,7 +4,7 @@ package api;
 
 import "google/api/annotations.proto";
 import "ext_account.proto";
-import "internal.proto";
+import "profile.proto";
 
 service SuperNodeService {
     rpc GetSuperNodeActiveMoneyAccount (GetSuperNodeActiveMoneyAccountRequest) returns (GetSuperNodeActiveMoneyAccountResponse){

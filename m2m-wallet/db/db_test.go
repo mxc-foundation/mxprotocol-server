@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
@@ -10,11 +11,11 @@ import (
 func testDb() {
 	// testWallet()
 	// testInternalTx()
-	// testWithdrawFee()
+	testWithdrawFee()
 	// testExtCurrency()
-	testWithdraw()
+	// testWithdraw()
 	// testExtAccount()
-	testTopup()
+	// testTopup()
 
 }
 
@@ -40,9 +41,9 @@ func testWallet() {
 
 	fmt.Println("DbInsertWallet  retInd:", retInd, "  err: ", errIns)
 
-	var wp *pstgDb.Wallet = new(pstgDb.Wallet)
-	DbGetWallet(wp, 2)
-	fmt.Println("wp getWallet: ", *wp)
+	// var wp *pstgDb.Wallet = new(pstgDb.Wallet)
+	// DbGetWallet(wp, 2)
+	// fmt.Println("wp getWallet: ", *wp)
 
 }
 
@@ -63,6 +64,12 @@ func testInternalTx() {
 
 func testExtCurrency() {
 
+	// _, err = DbInsertExtCurr(
+	// 	pstgDb.ExtCurrency{
+	// 		Name: "ethereum",
+	// 		Abv:  "ETH"})
+	// fmt.Println("err DbInsertExtCurr(): ", err)
+
 	idCur, errIdCur := DbGetExtCurrencyIdByAbbr("MXC")
 	fmt.Println("DbGetExtCurrencyIdByAbbr(): ", idCur, " err:", errIdCur)
 
@@ -78,44 +85,45 @@ func testExtCurrency() {
 
 func testWithdrawFee() {
 
-	wid, errwid := DbGetActiveWithdrawFeeId("MXC")
-	fmt.Println("DbGetActiveWithdrawFeeId(): ", wid, " err:", errwid)
+	// wid, errwid := DbGetActiveWithdrawFeeId("MXC")
+	// fmt.Println("DbGetActiveWithdrawFeeId(): ", wid, " err:", errwid)
 
-	fee, errGetWF := DbGetActiveWithdrawFee("MXC")
-	fmt.Println("DbGetActiveWithdrawFee(): ", fee, " err:", errGetWF)
+	// fee, errGetWF := DbGetActiveWithdrawFee("MXC")
+	// fmt.Println("DbGetActiveWithdrawFee(): ", fee, " err:", errGetWF)
 
 	err := dbCreateWithdrawFeeTable()
 	fmt.Println("err dbCreateWithdrawFeeTable(): ", err)
 
 	wf := pstgDb.WithdrawFee{
 		FkExtCurr:  1,
-		Fee:        134.2,
+		Fee:        99.1,
 		InsertTime: time.Now().UTC(),
 		Status:     string(pstgDb.ACTIVE)}
 
-	_, errIns := DbInsertWithdrawFee(wf)
+	_, errIns := DbInsertWithdrawFee("MXC", wf.Fee)
 	fmt.Println("err DbInsertWithdrawFee(): ", errIns)
 
 }
 
 func testExtAccount() {
+
+	ea := pstgDb.ExtAccount{
+		FkWallet:           1,
+		FkExtCurrency:      1,
+		Account_adr:        "0x616",
+		Insert_time:        time.Now().UTC(),
+		Status:             string(pstgDb.ARC),
+		LatestCheckedBlock: 123}
+
+	indInsert, errIns := DBInsertExtAccount(int64(ea.FkWallet), ea.Account_adr, "Ether")
+	fmt.Println("err DBInsertExtAccount(): ", indInsert, errIns)
+
 	acntId2, errGetAi2 := DbGetExtAccountIdByAdr("0x8347")
 	fmt.Println("DbGetExtAccountIdByAdr(): ", acntId2, " err:", errGetAi2)
+	fmt.Println("suffix:", strings.HasSuffix(errGetAi2.Error(), DbError.NoRowQueryRes.Error()))
 
 	acntId, errGetAi := DbGetUserExtAccountId(1, "MXC")
 	fmt.Println("DbGetUserExtAccountId(): ", acntId, " err:", errGetAi)
-	acntAdr, errGetAu := DbGetUserExtAccountAdr(1, "MXC")
-	fmt.Println("DbGetUserExtAccountAdr(): ", acntAdr, " err:", errGetAu)
-
-	valId, errGetids := DbGetSuperNodeExtAccountId("MXC")
-	fmt.Println("DbGetSuperNodeExtAccountId(): ", valId, " err:", errGetids)
-
-	acntId2, errGetAi2 := DbGetExtAccountIdByAdr("0x8347")
-	fmt.Println("DbGetExtAccountIdByAdr(): ", acntId2, " err:", errGetAi2)
-
-	acntId, errGetAi := DbGetUserExtAccountId(1, "MXC")
-	fmt.Println("DbGetUserExtAccountId(): ", acntId, " err:", errGetAi)
-
 	acntAdr, errGetAu := DbGetUserExtAccountAdr(1, "MXC")
 	fmt.Println("DbGetUserExtAccountAdr(): ", acntAdr, " err:", errGetAu)
 
@@ -131,17 +139,6 @@ func testExtAccount() {
 	fmt.Println("DbGetSuperNodeExtAccountAdr(): ", val, " err:", errGetAc)
 
 	fmt.Println("err dbCreateExtAccountTable(): ", dbCreateExtAccountTable())
-
-	// ea := pstgDb.ExtAccount{   // @@ to be checked
-	// 	FkWallet:           1,
-	// 	FkExtCurrency:      1,
-	// 	Account_adr:        "0x7645",
-	// 	Insert_time:        time.Now().UTC(),
-	// 	Status:             string(pstgDb.ARC),
-	// 	LatestCheckedBlock: 123}
-
-	// _, errIns := DBInsertExtAccount(int64(ea.FkWallet), ea.Account_adr, int64(ea.FkExtCurrency))
-	// fmt.Println("err DBInsertExtAccount(): ", errIns)
 
 }
 

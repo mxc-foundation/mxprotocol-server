@@ -6,15 +6,17 @@ import Grid from '@material-ui/core/Grid';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import Divider from '@material-ui/core/Divider';
+import Spinner from "../../components/ScaleLoader";
 import TopupStore from "../../stores/TopupStore";
 import TopupForm from "./TopupForm";
 import styles from "./TopupStyle"
 
-
 class Topup extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      loading: false,
+    };
     this.loadData = this.loadData.bind(this);
   }
   
@@ -23,16 +25,24 @@ class Topup extends Component {
   }
   
   loadData() {
+    this.setState({loading:true});
     TopupStore.getTopUpHistory(this.props.match.params.organizationID, 0, 1, resp => {
-      this.setState({
-        topupHistory: resp.topupHistory[0],
-      });
+      if(resp.status){
+        this.setState({
+          topupHistory: resp.body.topupHistory[0],
+        });
+        this.setState({loading:false});
+      }else{
+        this.setState({loading:false});
+      }
+      
     }); 
   }
 
   render() {
     return(
       <Grid container spacing={24}>
+        <Spinner on={this.state.loading}/>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>

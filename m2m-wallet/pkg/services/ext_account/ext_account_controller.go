@@ -47,7 +47,7 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	case auth.OrganizationIdDeleted:
+	case auth.OrganizationIdRearranged:
 		return &api.ModifyMoneyAccountResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
@@ -78,7 +78,7 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	case auth.OrganizationIdDeleted:
+	case auth.OrganizationIdRearranged:
 		return &api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
@@ -105,7 +105,7 @@ func (s *ExtAccountServerAPI) GetActiveMoneyAccount(ctx context.Context, req *ap
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	case auth.OrganizationIdDeleted:
+	case auth.OrganizationIdRearranged:
 		return &api.GetActiveMoneyAccountResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 

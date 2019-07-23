@@ -65,7 +65,7 @@ func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *api.Modif
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	case auth.OrganizationIdDeleted:
+	case auth.OrganizationIdRearranged:
 		return &api.ModifyWithdrawFeeResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
@@ -97,7 +97,7 @@ func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWith
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	case auth.OrganizationIdDeleted:
+	case auth.OrganizationIdRearranged:
 		return &api.GetWithdrawFeeResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
@@ -123,7 +123,7 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	case auth.OrganizationIdDeleted:
+	case auth.OrganizationIdRearranged:
 		return &api.GetWithdrawHistoryResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
@@ -150,7 +150,7 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	case auth.OrganizationIdDeleted:
+	case auth.OrganizationIdRearranged:
 		return &api.WithdrawReqResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
