@@ -52,7 +52,33 @@ func (pgDbp DbSpec) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err er
 		wf.Status,
 	).Scan(&insertIndex)
 
+	if err == nil {
+		wf.Id = insertIndex
+		err2 := pgDbp.changeStatus2ArcOldRowWithdrawFee(wf)
+		if err2 != nil {
+			return insertIndex, errors.Wrap(err, "db/InsertWithdrawFee")
+		}
+	}
+
 	return insertIndex, errors.Wrap(err, "db/InsertWithdrawFee")
+}
+
+func (pgDbp DbSpec) changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
+	_, err = pgDbp.Db.Exec(`
+	UPDATE 
+		withdraw_fee 
+	SET 
+		status = 'ARC'
+	WHERE
+		fk_ext_currency = $1
+		AND
+		id <> $2   
+	;
+	`,
+		wf.FkExtCurr,
+		wf.Id)
+
+	return errors.Wrap(err, "db/changeStatus2ArcOldRowWithdrawFee")
 }
 
 func (pgDbp DbSpec) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
