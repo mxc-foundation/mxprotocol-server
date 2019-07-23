@@ -51,13 +51,12 @@ class HistoryLayout extends Component {
 
   locationToTab() {
     let tab = 0;
-
     if (window.location.href.endsWith("/eth_account")) {
       tab = 1;
     } else if (window.location.href.endsWith("/Withdraw")) {
       tab = 2;
     } 
-
+    
     this.setState({
       tab,
     });
@@ -103,11 +102,11 @@ class HistoryLayout extends Component {
 
         <Grid item xs={12}>
           <Switch>
-            <Route exact path={`${this.props.match.path}/${organizationID}/transactions`} render={props => <Transactions {...props} />} />
-            <Route exact path={`${this.props.match.path}/${organizationID}/eth_account`} render={props => <EthAccount {...props} />} />
-            <Route exact path={`${this.props.match.path}/${organizationID}/Withdraw`} render={props => <SubScriptions {...props} />} />
+            <Route exact path={`/history/${organizationID}/transactions`} render={props => <Transactions {...props} />} />
+            <Route exact path={`/history/${organizationID}/eth_account`} render={props => <EthAccount {...props} />} />
+            <Route exact path={`/history/${organizationID}/Withdraw`} render={props => <SubScriptions {...props} />} />
 
-            <Redirect to={`/history/${organizationID}/transactions`} />
+            {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}
           </Switch>
         </Grid>
       </Grid>

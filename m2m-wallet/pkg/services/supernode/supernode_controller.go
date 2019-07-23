@@ -2,6 +2,8 @@ package supernode
 
 import (
 	"context"
+	"time"
+
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
@@ -10,7 +12,6 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/ext_account"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"time"
 )
 
 func Setup() error {
@@ -55,11 +56,9 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 	case auth.OrganizationIdDeleted:
 		return &api.AddSuperNodeMoneyAccountResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
-
 	case auth.OK:
-
 		log.WithFields(log.Fields{
-			"moneyAbbr": api.Money_name[int32(in.MoneyAbbr)],
+			"moneyAbbr":   api.Money_name[int32(in.MoneyAbbr)],
 			"accountAddr": in.AccountAddr,
 		}).Debug("grpc_api/AddSuperNodeMoneyAccount")
 
