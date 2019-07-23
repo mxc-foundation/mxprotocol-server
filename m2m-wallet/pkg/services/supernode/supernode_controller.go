@@ -57,7 +57,6 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
-
 		log.WithFields(log.Fields{
 			"moneyAbbr": api.Money_name[int32(in.MoneyAbbr)],
 			"accountAddr": in.AccountAddr,

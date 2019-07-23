@@ -85,7 +85,6 @@ func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, 
 
 func tokenMiddleware(ctx context.Context) (*[]byte, error) {
 	tokenStr, err := getTokenFromContext(ctx)
-
 	if err != nil {
 		return nil, errors.Wrap(err, "get token from context error")
 	} else {
@@ -99,6 +98,7 @@ func tokenMiddleware(ctx context.Context) (*[]byte, error) {
 
 var validAuthorizationRegexp = regexp.MustCompile(`(?i)^bearer (.*)$`)
 
+//get jwt token from ctx
 func getTokenFromContext(ctx context.Context) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {

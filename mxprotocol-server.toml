@@ -80,12 +80,18 @@ cors_allow_origin="http://localhost:3000"
 disable_assign_existing_users=false
 
 [supernode]
-contract_address="0x5Ca381bBfb58f0092df149bD3D243b08B9a8386e"
-supernode_address="0x8a96E17d85Bd897a88B547718865de990D2Fcb80"
+## For official Eth network
+#contract_address="0x5Ca381bBfb58f0092df149bD3D243b08B9a8386e"
+#supernode_address="0x8a96E17d85Bd897a88B547718865de990D2Fcb80"
+
+## For Ether testnetwork (Ropsten)
+contract_address="0xd0B0e864959d4625577939fC4d45b77aeB04F1d0"
+supernode_address="0x63dF6a06D4a9e20199C6Be3eE9cac591b7d5D01F"
+
 api_key="W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4"
 check_account_seconds=30
-external_currency_abv="MXC"
-ether_net=false
+external_currency_abv="Ether"
+ether_test_net=true
 
 [paymentserver]
 payment_service_address="payment"

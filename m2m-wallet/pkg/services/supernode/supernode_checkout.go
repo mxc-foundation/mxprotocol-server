@@ -1,6 +1,7 @@
 package supernode
 
 import (
+	"fmt"
 	"github.com/nanmu42/etherscan-api"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
@@ -19,12 +20,14 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 	}
 
 	supernodeID, err := db.DbGetSuperNodeExtAccountId(config.Cstruct.SuperNode.ExtCurrAbv)
+	fmt.Println("SuperNodeID: ", supernodeID)
 	if err != nil {
 		log.WithError(err).Warning("storage: Cannot get supernodeID from DB")
 		return err
 	}
 
 	currentBlockNo, err := db.DbGetLatestCheckedBlock(supernodeID)
+	fmt.Println("currentBlockNo: ", currentBlockNo)
 	if err != nil {
 		log.WithError(err).Warning("storage: Cannot get currentBlockNo from DB")
 		return err
