@@ -5,6 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/golang/protobuf/ptypes/timestamp"
+	"github.com/gomodule/redigo/redis"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
@@ -13,8 +15,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
-	"runtime"
 	"strconv"
+	"time"
 )
 
 type errStruct struct {
@@ -24,9 +26,16 @@ type errStruct struct {
 	Details []byte `json:"details,omitempty"`
 }
 
+const (
+	redisDialWriteTimeout = time.Second
+	redisDialReadTimeout  = time.Minute
+	onBorrowPingInterval  = time.Minute
+)
+
 var ctxAuth struct {
 	authServer string
 	authUrl    string
+	redisPool  *redis.Pool
 }
 
 func Setup(conf config.MxpConfig) error {
@@ -34,16 +43,42 @@ func Setup(conf config.MxpConfig) error {
 
 	ctxAuth.authServer = conf.General.AuthServer
 	ctxAuth.authUrl = conf.General.AuthUrl
+	ctxAuth.redisPool = &redis.Pool{
+		MaxIdle:     conf.Redis.MaxIdle,
+		IdleTimeout: conf.Redis.IdleTimeout,
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.DialURL(conf.Redis.URL,
+				redis.DialReadTimeout(redisDialReadTimeout),
+				redis.DialWriteTimeout(redisDialWriteTimeout),
+			)
+			if err != nil {
+				return nil, fmt.Errorf("redis connection error: %s", err)
+			}
+			return c, err
+		},
+		TestOnBorrow: func(c redis.Conn, t time.Time) error {
+			if time.Now().Sub(t) < onBorrowPingInterval {
+				return nil
+			}
+
+			_, err := c.Do("PING")
+			if err != nil {
+				return fmt.Errorf("ping redis error: %s", err)
+			}
+			return nil
+		},
+	}
+
 	return nil
 }
 
 type resCode int32
 
 const (
-	OK                    resCode = 0
-	ErrorInfoNotNull      resCode = 1
-	OrganizationIdDeleted resCode = 2
-	JsonParseError        resCode = 3
+	OK                       resCode = 0
+	ErrorInfoNotNull         resCode = 1
+	OrganizationIdRearranged resCode = 2
+	JsonParseError           resCode = 3
 )
 
 type VerifyResult struct {
@@ -80,9 +115,9 @@ type OrganizationLink struct {
 	// User is admin within the context of this organization.
 	IsAdmin bool `json:"isAdmin,omitempty"`
 	// Created at timestamp.
-	CreatedAt string `json:"createdAt,omitempty"`
+	CreatedAt time.Time `json:"createdAt,omitempty"`
 	// Last update timestamp.
-	UpdatedAt string `json:"updatedAt,omitempty"`
+	UpdatedAt time.Time `json:"updatedAt,omitempty"`
 }
 
 type ProfileResponse struct {
@@ -95,7 +130,6 @@ type ProfileResponse struct {
 }
 
 func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, reqOrgId int64) (api.ProfileResponse, VerifyResult) {
-	log.WithField("request service", requestServiceName).Info()
 
 	info, err := tokenMiddleware(ctx)
 	if err != nil {
@@ -112,26 +146,42 @@ func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, 
 	if errInfo.Error != "" {
 		return api.ProfileResponse{}, VerifyResult{errors.New(errInfo.Error), ErrorInfoNotNull}
 	}
-	runtime.Breakpoint()
 
 	userProfile := ProfileResponse{}
-
 	err = json.Unmarshal(*info, &userProfile)
 	if err != nil {
 		log.WithError(err).Error("auth/VerifyRequestViaAuthServer")
 	}
-	fmt.Println(userProfile)
 
-	fmt.Println(string(*info))
+	profile := api.ProfileResponse{}
+	profile.User = &api.User{}
+	profile.Settings = &api.ProfileSettings{}
+	// assign api.ProfileResponse.User
+	profile.User.Id = userProfile.User.Id
+	profile.User.Username = userProfile.User.Username
+	profile.User.SessionTtl = userProfile.User.SessionTtl
+	profile.User.IsAdmin = userProfile.User.IsAdmin
+	profile.User.IsActive = userProfile.User.IsActive
+	profile.User.Email = userProfile.User.Email
+	profile.User.Note = userProfile.User.Note
+	// assign api.ProfileResponse.Settings
+	profile.Settings.DisableAssignExistingUsers = userProfile.Settings.DisableAssignExistingUsers
 
 	for _, v := range userProfile.Organizations {
-		id, _:= strconv.ParseInt(v.OrganizationId, 10, 64)
-		if id == reqOrgId {
-			return api.ProfileResponse{}, VerifyResult{nil, OK}
-		}
+		id, _ := strconv.ParseInt(v.OrganizationId, 10, 64)
+		org := api.OrganizationLink{}
+		org.OrganizationId = id
+		org.IsAdmin = v.IsAdmin
+		org.OrganizationName = v.OrganizationName
+		org.CreatedAt = &timestamp.Timestamp{Seconds: int64(v.CreatedAt.Second()), Nanos: int32(v.CreatedAt.Nanosecond())}
+		org.UpdatedAt = &timestamp.Timestamp{Seconds: int64(v.UpdatedAt.Second()), Nanos: int32(v.UpdatedAt.Nanosecond())}
+		profile.Organizations = append(profile.Organizations, &org)
 	}
 
-	return api.ProfileResponse{}, VerifyResult{nil, OrganizationIdDeleted}
+	// check if user profile updated
+
+
+	return profile, VerifyResult{nil, OK}
 }
 
 func tokenMiddleware(ctx context.Context) (*[]byte, error) {
