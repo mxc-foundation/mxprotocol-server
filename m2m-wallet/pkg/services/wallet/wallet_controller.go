@@ -107,7 +107,7 @@ func (s *WalletServerAPI) GetWalletBalance(ctx context.Context, req *api.GetWall
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	case auth.OrganizationIdDeleted:
+	case auth.OrganizationIdRearranged:
 		return &api.GetWalletBalanceResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
@@ -144,7 +144,7 @@ func (s *WalletServerAPI) GetVmxcTxHistory(ctx context.Context, req *api.GetVmxc
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	case auth.OrganizationIdDeleted:
+	case auth.OrganizationIdRearranged:
 		return &api.GetVmxcTxHistoryResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 

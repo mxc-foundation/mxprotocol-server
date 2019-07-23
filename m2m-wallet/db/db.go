@@ -5,11 +5,15 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
-	"github.com/pkg/errors" // register postgresql driver
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 )
+
+var DbError struct {
+	NoRowQueryRes error
+}
 
 var pgDb pstgDb.DbSpec
 
@@ -33,6 +37,7 @@ func Setup(conf config.MxpConfig) error {
 
 func openDBWithPing(conf config.MxpConfig) (*sql.DB, error) {
 	log.Debug("db/connect_db")
+
 	d, err := sql.Open("postgres", conf.PostgreSQL.DSN)
 	if err != nil {
 		log.WithError(err).Error("db/connect_db")
@@ -53,6 +58,8 @@ func openDBWithPing(conf config.MxpConfig) (*sql.DB, error) {
 }
 
 func dbInit() {
+	dbErrorInit()
+
 	if err := dbCreateWalletTable(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateWalletTable")
 	}
@@ -93,4 +100,8 @@ func dbInit() {
 		log.WithError(err).Fatal("db/initExtCurrencyTable")
 	}
 
+}
+
+func dbErrorInit() {
+	DbError.NoRowQueryRes = sql.ErrNoRows
 }

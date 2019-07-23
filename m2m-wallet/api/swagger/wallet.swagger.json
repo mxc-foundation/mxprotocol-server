@@ -138,7 +138,8 @@
           "format": "date-time",
           "description": "Last update timestamp."
         }
-      }
+      },
+      "description": "Defines an organization to which an user is associated."
     },
     "apiProfileResponse": {
       "type": "object",

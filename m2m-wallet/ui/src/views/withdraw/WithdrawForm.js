@@ -4,11 +4,15 @@ import TextField from '@material-ui/core/TextField';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
 //import Button from "@material-ui/core/Button";
-
+import Spinner from "../../components/ScaleLoader"
 import { withRouter } from "react-router-dom";
 
 class WithdrawForm extends FormComponent {
-
+  
+  state = {
+    amount: ''
+  }
+ 
   onChange = (event) => {
     const { id, value } = event.target;
     
@@ -19,7 +23,7 @@ class WithdrawForm extends FormComponent {
 
   render() {
     if (this.props.txinfo === undefined) {
-      return(<div>loading...</div>);
+      return(<Spinner on={this.state.loading}/>);
     }
 
     /* const extraButtons = <>
@@ -66,7 +70,6 @@ class WithdrawForm extends FormComponent {
           InputProps={{
             readOnly: true,
           }}
-          required
           fullWidth
         />
         
@@ -82,7 +85,6 @@ class WithdrawForm extends FormComponent {
             readOnly: true,
           }}
           
-          required
           fullWidth
         />
       </Form>

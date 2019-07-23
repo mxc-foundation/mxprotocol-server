@@ -1,5 +1,7 @@
 package config
 
+import "time"
+
 // Config defines the configuration structure.
 type MxpConfig struct {
 	General struct {
@@ -13,6 +15,12 @@ type MxpConfig struct {
 	PostgreSQL struct {
 		DSN         string `mapstructure:"dsn"`
 		Automigrate bool   `mapstructure:"automigrate"`
+	}
+
+	Redis struct {
+		URL         string        `mapstructure:"url"`
+		MaxIdle     int           `mapstructure:"max_idle"`
+		IdleTimeout time.Duration `mapstructure:"idle_timeout"`
 	}
 
 	ApplicationServer struct {

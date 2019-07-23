@@ -9,7 +9,7 @@ import Tab from '@material-ui/core/Tab';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import Divider from '@material-ui/core/Divider';
-
+import Spinner from "../../components/ScaleLoader"
 //import SessionStore from "../../stores/SessionStore";
 
 import Transactions from "./Transactions";
@@ -24,6 +24,7 @@ class HistoryLayout extends Component {
     super();
     this.state = {
       tab: 0,
+      loading: false,
       admin: false,
     };
 
@@ -32,11 +33,13 @@ class HistoryLayout extends Component {
   }
 
   componentDidMount() {
+    this.setState({loading:true});
     this.locationToTab();
+    this.setState({loading:false});
   }
 
   componentDidUpdate(oldProps) {
-    if (this.props === oldProps) {
+    if (this.props.match.url === oldProps.match.url) {
       return;
     }
 
@@ -51,13 +54,12 @@ class HistoryLayout extends Component {
 
   locationToTab() {
     let tab = 0;
-
     if (window.location.href.endsWith("/eth_account")) {
       tab = 1;
     } else if (window.location.href.endsWith("/Withdraw")) {
       tab = 2;
     } 
-
+    
     this.setState({
       tab,
     });
@@ -68,6 +70,7 @@ class HistoryLayout extends Component {
     
     return(
       <Grid container spacing={24}>
+        <Spinner on={this.state.loading}/>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
@@ -103,11 +106,11 @@ class HistoryLayout extends Component {
 
         <Grid item xs={12}>
           <Switch>
-            <Route exact path={`${this.props.match.path}/${organizationID}/transactions`} render={props => <Transactions {...props} />} />
-            <Route exact path={`${this.props.match.path}/${organizationID}/eth_account`} render={props => <EthAccount {...props} />} />
-            <Route exact path={`${this.props.match.path}/${organizationID}/Withdraw`} render={props => <SubScriptions {...props} />} />
+            <Route exact path={`/history/${organizationID}/transactions`} render={props => <Transactions {...props} />} />
+            <Route exact path={`/history/${organizationID}/eth_account`} render={props => <EthAccount {...props} />} />
+            <Route exact path={`/history/${organizationID}/Withdraw`} render={props => <SubScriptions {...props} />} />
 
-            <Redirect to={`/history/${organizationID}/transactions`} />
+            {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}
           </Switch>
         </Grid>
       </Grid>

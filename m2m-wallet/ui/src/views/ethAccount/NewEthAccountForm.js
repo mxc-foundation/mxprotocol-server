@@ -2,10 +2,16 @@ import React from "react";
 
 import TextField from '@material-ui/core/TextField';
 import FormComponent from "../../classes/FormComponent";
+import FormControl from "../../components/FormControl";
 import Form from "../../components/Form";
-
 class NewEthAccountForm extends FormComponent {
 
+  state = {
+    createAccount: '',
+    username: '',
+    password: ''
+  }
+ 
   onChange = (event) => {
     const { id, value } = event.target;
     
@@ -50,9 +56,10 @@ class NewEthAccountForm extends FormComponent {
           value={this.state.createAccount}
           placeholder="Type here" 
           onChange={this.onChange}
-          /* inputProps={{
+          inputProps={{
             pattern: "^0x[a-fA-F0-9]{40}$",
-          }} */
+          }} 
+
           autoComplete='off'
           required
           fullWidth
@@ -65,9 +72,6 @@ class NewEthAccountForm extends FormComponent {
           value={this.state.username}
           placeholder="Type here" 
           onChange={this.onChange}
-          /* inputProps={{
-            pattern: "[\\w-]+",
-          }} */
           autoComplete='off'
           required
           fullWidth
@@ -80,9 +84,7 @@ class NewEthAccountForm extends FormComponent {
           value={this.state.password}
           placeholder="Type here" 
           onChange={this.onChange}
-          /* inputProps={{
-            pattern: "[\\w-]+",
-          }} */
+          
           type="password"
           autoComplete="off"
           required

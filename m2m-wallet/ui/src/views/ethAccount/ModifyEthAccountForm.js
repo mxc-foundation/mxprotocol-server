@@ -6,6 +6,12 @@ import Form from "../../components/Form";
 
 class ModifyEthAccountForm extends FormComponent {
 
+  state = {
+    newaccount: '',
+    username: '',
+    password: ''
+  }
+  
   onChange = (event) => {
     const { id, value } = event.target;
     

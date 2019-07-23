@@ -3,7 +3,7 @@ syntax = "proto3";
 package api;
 
 import "google/api/annotations.proto";
-import "internal.proto";
+import "profile.proto";
 
 service MoneyService {
     rpc ModifyMoneyAccount(ModifyMoneyAccountRequest) returns (ModifyMoneyAccountResponse){
