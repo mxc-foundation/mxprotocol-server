@@ -39,7 +39,7 @@ class HistoryLayout extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    if (this.props === oldProps) {
+    if (this.props.match.url === oldProps.match.url) {
       return;
     }
 

@@ -117,8 +117,8 @@ class Withdraw extends Component {
     this.loadData();
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps === this.props) {
+  componentDidUpdate(oldProps) {
+    if (this.props.match.url === oldProps.match.url) {
       return;
     }
   }

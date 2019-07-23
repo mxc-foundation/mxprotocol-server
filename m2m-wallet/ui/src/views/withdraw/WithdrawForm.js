@@ -8,7 +8,11 @@ import Spinner from "../../components/ScaleLoader"
 import { withRouter } from "react-router-dom";
 
 class WithdrawForm extends FormComponent {
-
+  
+  state = {
+    amount: ''
+  }
+ 
   onChange = (event) => {
     const { id, value } = event.target;
     
@@ -66,7 +70,6 @@ class WithdrawForm extends FormComponent {
           InputProps={{
             readOnly: true,
           }}
-          required
           fullWidth
         />
         
@@ -82,7 +85,6 @@ class WithdrawForm extends FormComponent {
             readOnly: true,
           }}
           
-          required
           fullWidth
         />
       </Form>
