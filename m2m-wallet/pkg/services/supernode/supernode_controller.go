@@ -52,7 +52,7 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	case auth.OrganizationIdDeleted:
+	case auth.OrganizationIdRearranged:
 		return &api.AddSuperNodeMoneyAccountResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
@@ -83,7 +83,7 @@ func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context,
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
-	case auth.OrganizationIdDeleted:
+	case auth.OrganizationIdRearranged:
 		return &api.GetSuperNodeActiveMoneyAccountResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
