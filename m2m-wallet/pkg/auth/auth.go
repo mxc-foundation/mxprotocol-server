@@ -5,13 +5,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	"github.com/gomodule/redigo/redis"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -26,16 +28,9 @@ type errStruct struct {
 	Details []byte `json:"details,omitempty"`
 }
 
-const (
-	redisDialWriteTimeout = time.Second
-	redisDialReadTimeout  = time.Minute
-	onBorrowPingInterval  = time.Minute
-)
-
 var ctxAuth struct {
 	authServer string
 	authUrl    string
-	redisPool  *redis.Pool
 }
 
 func Setup(conf config.MxpConfig) error {
@@ -43,31 +38,6 @@ func Setup(conf config.MxpConfig) error {
 
 	ctxAuth.authServer = conf.General.AuthServer
 	ctxAuth.authUrl = conf.General.AuthUrl
-	ctxAuth.redisPool = &redis.Pool{
-		MaxIdle:     conf.Redis.MaxIdle,
-		IdleTimeout: conf.Redis.IdleTimeout,
-		Dial: func() (redis.Conn, error) {
-			c, err := redis.DialURL(conf.Redis.URL,
-				redis.DialReadTimeout(redisDialReadTimeout),
-				redis.DialWriteTimeout(redisDialWriteTimeout),
-			)
-			if err != nil {
-				return nil, fmt.Errorf("redis connection error: %s", err)
-			}
-			return c, err
-		},
-		TestOnBorrow: func(c redis.Conn, t time.Time) error {
-			if time.Now().Sub(t) < onBorrowPingInterval {
-				return nil
-			}
-
-			_, err := c.Do("PING")
-			if err != nil {
-				return fmt.Errorf("ping redis error: %s", err)
-			}
-			return nil
-		},
-	}
 
 	return nil
 }
@@ -167,6 +137,7 @@ func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, 
 	// assign api.ProfileResponse.Settings
 	profile.Settings.DisableAssignExistingUsers = userProfile.Settings.DisableAssignExistingUsers
 
+	orgDeleted := true
 	for _, v := range userProfile.Organizations {
 		id, _ := strconv.ParseInt(v.OrganizationId, 10, 64)
 		org := api.OrganizationLink{}
@@ -176,9 +147,15 @@ func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, 
 		org.CreatedAt = &timestamp.Timestamp{Seconds: int64(v.CreatedAt.Second()), Nanos: int32(v.CreatedAt.Nanosecond())}
 		org.UpdatedAt = &timestamp.Timestamp{Seconds: int64(v.UpdatedAt.Second()), Nanos: int32(v.UpdatedAt.Nanosecond())}
 		profile.Organizations = append(profile.Organizations, &org)
+
+		if id == reqOrgId {
+			orgDeleted = false
+		}
 	}
 
-	// check if user profile updated
+	if orgDeleted {
+		return profile, VerifyResult{nil, OrganizationIdRearranged}
+	}
 
 
 	return profile, VerifyResult{nil, OK}
@@ -294,4 +271,24 @@ func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*
 		fmt.Println("unmarshal response", err)
 	}
 	return &api.LoginResponse{Jwt: output["jwt"]}, nil
+}
+
+func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, in *empty.Empty) (*api.GetUserOrganizationListResponse, error){
+	userProfile, res := VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
+
+	switch res.Type {
+	case JsonParseError:
+		fallthrough
+	case ErrorInfoNotNull:
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
+
+	case OrganizationIdRearranged:
+		fallthrough
+	case OK:
+		orgList := api.GetUserOrganizationListResponse{}
+		orgList.Organizations = userProfile.Organizations
+		return &orgList, nil
+	}
+
+	return nil, status.Errorf(codes.Unknown, "")
 }

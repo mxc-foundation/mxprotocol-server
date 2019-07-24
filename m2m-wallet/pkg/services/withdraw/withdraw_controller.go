@@ -62,6 +62,7 @@ func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *api.Modif
 
 	switch res.Type {
 	case auth.JsonParseError:
+		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
@@ -94,6 +95,7 @@ func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWith
 
 	switch res.Type {
 	case auth.JsonParseError:
+		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
@@ -120,6 +122,7 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 
 	switch res.Type {
 	case auth.JsonParseError:
+		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
@@ -147,6 +150,7 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 
 	switch res.Type {
 	case auth.JsonParseError:
+		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
