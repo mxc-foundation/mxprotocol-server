@@ -292,6 +292,15 @@ func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *ap
 	case OK:
 		orgList := api.GetUserOrganizationListResponse{}
 		orgList.Organizations = userProfile.Organizations
+
+		if userProfile.User.IsAdmin == true {
+			org := api.OrganizationLink{
+				OrganizationId: 0,
+				OrganizationName: "Super_admin",
+				IsAdmin: true,
+			}
+			orgList.Organizations = append(orgList.Organizations, &org)
+		}
 		return &orgList, nil
 	}
 
