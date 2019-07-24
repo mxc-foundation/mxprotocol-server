@@ -15,7 +15,7 @@ import SideNav from "./components/SideNav";
 import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
-import WalletStore from "./stores/WalletStore";
+import ProfileStore from "./stores/ProfileStore";
 
 // search
 //import Search from "./views/search/Search";
@@ -88,8 +88,10 @@ class RedirectedFromLora extends Component {
     const { match: { params: { data: dataString } }} = this.props;
     
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
-    const { path } = data;
+    const { path, org_id } = data;
+    
     SessionStore.initProfile(data);
+    ProfileStore.getUserOrganizationList(org_id);
     
     return <Redirect to={path} />;
   }

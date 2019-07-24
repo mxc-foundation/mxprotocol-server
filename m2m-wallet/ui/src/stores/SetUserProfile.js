@@ -2,7 +2,6 @@ import sessionStore from "./SessionStore";
 import hash from "object-hash";
 
 export default function updateOrganizations(response) {
-    
     const organizationList = response.body.userProfile.organizations;
     
     if(!organizationList){

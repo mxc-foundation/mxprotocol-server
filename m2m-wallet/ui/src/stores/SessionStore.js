@@ -84,8 +84,8 @@ class SessionStore extends EventEmitter {
 
   getOrganizationList() {
     const organizationList = localStorage.getItem("organizationList");
-    if (organizationList.length == 0) {
-      return null;
+    if (!organizationList) {
+      return [];
     }
 
     return JSON.parse(organizationList);
@@ -120,7 +120,6 @@ class SessionStore extends EventEmitter {
     if(jwt === "" || org_id === "" || org_id === undefined){
       window.location.replace(loraHostUrl);
     }
-    
     this.setToken(jwt);
     this.setLoraHostUrl(loraHostUrl);
     this.setOrganizationID(org_id);
