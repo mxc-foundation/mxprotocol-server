@@ -63,7 +63,8 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 		err := UpdateActiveExtAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/ModifyMoneyAccount")
-			return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
+			return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile},
+					status.Errorf(codes.InvalidArgument, "Duplicate or invalid format.")
 		}
 		return &api.ModifyMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
 	}
@@ -119,7 +120,7 @@ func (s *ExtAccountServerAPI) GetActiveMoneyAccount(ctx context.Context, req *ap
 			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetActiveMoneyAccount")
 
-		walletId, err := db.DbGetWalletIdFromOrgId(req.OrgId)
+		walletId, err := wallet.GetWalletId(req.OrgId)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetActiveMoneyAccount")
 			return &api.GetActiveMoneyAccountResponse{ActiveAccount: "", UserProfile: &userProfile}, nil

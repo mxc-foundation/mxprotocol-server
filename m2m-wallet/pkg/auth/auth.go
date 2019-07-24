@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -151,7 +150,13 @@ func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, 
 		if id == reqOrgId {
 			orgDeleted = false
 		}
+
 	}
+
+	if profile.User.IsAdmin == true && reqOrgId == 0 {
+		return profile, VerifyResult{nil, OK}
+	}
+
 
 	if orgDeleted {
 		return profile, VerifyResult{nil, OrganizationIdRearranged}
@@ -273,8 +278,8 @@ func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*
 	return &api.LoginResponse{Jwt: output["jwt"]}, nil
 }
 
-func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, in *empty.Empty) (*api.GetUserOrganizationListResponse, error){
-	userProfile, res := VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
+func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *api.GetUserOrganizationListRequest) (*api.GetUserOrganizationListResponse, error){
+	userProfile, res := VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
 	case JsonParseError:
