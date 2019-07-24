@@ -4,6 +4,7 @@ package api;
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 // InternalService is the service providing API endpoints for internal usage.
 service InternalService {
@@ -12,6 +13,12 @@ service InternalService {
 		option(google.api.http) = {
 			post: "/api/internal/login"
 			body: "*"
+		};
+	}
+
+	rpc GetUserOrganizationList(google.protobuf.Empty) returns (GetUserOrganizationListResponse) {
+		option(google.api.http) = {
+			get: "/api/internal/organizations"
 		};
 	}
 }
@@ -86,4 +93,8 @@ message LoginRequest {
 message LoginResponse {
 	// The JWT tag to be used to access lora-app-server interfaces.
 	string jwt = 1;
+}
+
+message GetUserOrganizationListResponse {
+	repeated OrganizationLink organizations = 1;
 }
