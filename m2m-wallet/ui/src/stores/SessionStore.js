@@ -17,9 +17,9 @@ class SessionStore extends EventEmitter {
     this.swagger.then(client => {
       this.client = client;
 
-      if (this.getToken() !== null) {
-        //this.fetchProfile(() => {});
-      }
+      /* if (this.getToken() !== null) {
+        this.fetchProfile(() => {});
+      } */
     });
   }
 
@@ -54,6 +54,19 @@ class SessionStore extends EventEmitter {
   setOrganizationID(id) {
     localStorage.setItem("organizationID", id);
     this.emit("organization.change");
+  }
+
+  getLoraHostUrl() {
+    const loraHostUrl = localStorage.getItem("loraHostUrl");
+    if (loraHostUrl === "") {
+      return null;
+    }
+
+    return loraHostUrl;
+  }
+
+  setLoraHostUrl(loraHostUrl) {
+    localStorage.setItem("loraHostUrl", loraHostUrl);
   }
 
   setOrganizationList(organizations) {
@@ -102,12 +115,14 @@ class SessionStore extends EventEmitter {
   }
 
   initProfile(data) {
-    const { jwt, org_id } = data;
+    const { jwt, org_id, loraHostUrl } = data;
+    
     if(jwt === "" || org_id === "" || org_id === undefined){
-      window.location.replace(`http://localhost:3002/`);
+      window.location.replace(loraHostUrl);
     }
     
     this.setToken(jwt);
+    this.setLoraHostUrl(loraHostUrl);
     this.setOrganizationID(org_id);
   }
 

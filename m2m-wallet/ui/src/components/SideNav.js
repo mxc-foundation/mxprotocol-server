@@ -110,8 +110,17 @@ class SideNav extends Component {
   }
 
   render() {
-    
-    let organizationID = this.state.organizationID;
+    const { organizationID } = this.state;
+    const { pathname } = this.props.location;
+
+    const active = (path) => Boolean(pathname.match(path));
+    const selected = (path) => {
+      if(Boolean(pathname.match(path))){
+        return { primary: this.props.classes.selected };
+      }else{
+        return {};
+      }
+    }
     return(
       <Drawer
         variant="persistent"
@@ -133,29 +142,29 @@ class SideNav extends Component {
             triggerReload={this.state.cacheCounter}
           />
         </div>
-          <ListItem button component={Link} to={`/withdraw/${this.state.organizationID}`}>
+          <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${this.state.organizationID}`}>
             <ListItemIcon className={this.props.classes.iconStyle}>
               <PagePreviousOutline />
             </ListItemIcon>
-            <ListItemText primary="Withdraw" />
+            <ListItemText classes={selected('/withdraw')} primary="Withdraw" />
           </ListItem>
-          <ListItem button component={Link} to={`/topup/${this.state.organizationID}`}>
+          <ListItem selected={active('/topup')} button component={Link} to={`/topup/${this.state.organizationID}`}>
             <ListItemIcon>
               <PageNextOutline />
             </ListItemIcon>
-            <ListItemText primary="Top up" />
+            <ListItemText classes={selected('/topup')} primary="Top up" />
           </ListItem>
-          <ListItem button component={Link} to={`/history/${this.state.organizationID}`}>
+          <ListItem selected={active('/history')} button component={Link} to={`/history/${this.state.organizationID}`}>
             <ListItemIcon>
               <CalendarCheckOutline />
             </ListItemIcon>
-            <ListItemText primary="History" />
+            <ListItemText classes={selected('/history')} primary="History" />
           </ListItem>
-          <ListItem button component={Link} to={`/modify-account/${this.state.organizationID}`}>
+          <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${this.state.organizationID}`}>
             <ListItemIcon>
               <CreditCard />
             </ListItemIcon>
-            <ListItemText primary="ETH Account" />
+            <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
           </ListItem>
           
               <List className={this.props.classes.card}>

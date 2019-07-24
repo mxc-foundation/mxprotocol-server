@@ -34,7 +34,7 @@ class NewEthAccountForm extends FormComponent {
       createAccount: this.state.createAccount,
       username: this.state.username,
       password: this.state.password
-    })
+    });
 
     this.clear();
   }

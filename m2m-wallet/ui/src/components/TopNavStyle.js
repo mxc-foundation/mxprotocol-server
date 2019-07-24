@@ -55,7 +55,8 @@ const TopNavStyle = {
         color: theme.palette.primary.main,
     },
     noPadding: {
-        padding: 0
+        padding: 0,
+        color: theme.palette.textPrimary.main
     }
   };
   

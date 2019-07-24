@@ -17,6 +17,10 @@ const SideNavStyle = {
       paddingRight: theme.spacing.unit * 3,
       paddingBottom: theme.spacing.unit * 1,
     },
+    selected: {
+      fontSize: 'bold', 
+      color: theme.palette.common.white,
+    },
     card: { // lora server options
       width: '100%',
       height: 250,
