@@ -3,6 +3,7 @@ package postgres_db
 import (
 	"time"
 
+	"github.com/ethereum/go-ethereum/log"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 )
@@ -15,6 +16,13 @@ type ExtAccount struct {
 	Insert_time        time.Time `db:"insert_time"`
 	Status             string    `db:"status"`
 	LatestCheckedBlock int64     `db:"latest_checked_block"`
+}
+
+type ExtAccountHistRet struct {
+	AccountAdr     string
+	InsertTime     time.Time
+	Status         string
+	ExtCurrencyAbv string
 }
 
 func (pgDbp DbSpec) CreateExtAccountTable() error {
@@ -237,4 +245,50 @@ func (pgDbp DbSpec) UpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum in
 	`, updatedBlockNum, extAcntId)
 
 	return errors.Wrap(err, "db/UpdateLatestCheckedBlock")
+}
+
+func (pgDbp DbSpec) GetExtAcntHist(walletId int64, offset int64, limit int64) ([]ExtAccountHistRet, error) {
+
+	rows, err := pgDbp.Db.Query(
+		`select
+			ea.account_adr,
+			ea.insert_time,
+			ea.status,
+			ec.abv AS ext_currency_abv
+		from
+			ext_account ea,
+			wallet w, 
+			ext_currency ec
+		WHERE
+			ea.fk_ext_currency = ec.id AND
+			ea.fk_wallet = w.id AND
+			w.id = $1
+		ORDER BY ea.insert_time DESC
+		LIMIT $2
+		OFFSET $3
+		;
+		;`, walletId, limit, offset)
+
+	defer rows.Close()
+
+	res := make([]ExtAccountHistRet, 0)
+	var extAcntVal ExtAccountHistRet
+	var insertTime string
+
+	for rows.Next() {
+		rows.Scan(
+			&extAcntVal.AccountAdr,
+			&insertTime,
+			&extAcntVal.Status,
+			&extAcntVal.ExtCurrencyAbv,
+		)
+		if conTime, errTime := time.Parse(timeLayout, insertTime); errTime == nil {
+			extAcntVal.InsertTime = conTime
+		} else {
+			log.Debug("db/GetExtAcntHist Unable to convert time: ", err)
+		}
+
+		res = append(res, extAcntVal)
+	}
+	return res, errors.Wrap(err, "db/GetExtAcntHist")
 }

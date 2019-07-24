@@ -3,6 +3,7 @@ package postgres_db
 import (
 	"time"
 
+	"github.com/ethereum/go-ethereum/log"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 )
@@ -26,6 +27,18 @@ type Withdraw struct {
 	TxAprvdTime              time.Time `db:"tx_approved_time"`
 	FkQueryIdePaymentService int64     `db:"fk_query_id_payment_service"`
 	TxHash                   string    `db:"tx_hash"`
+}
+
+type WithdrawHistRet struct {
+	AcntSender  string
+	AcntRcvr    string
+	ExtCurrency string
+	Value       float64
+	WithdrawFee float64
+	TxSentTime  time.Time `db:"tx_sent_time"`
+	TxStatus    string    `db:"tx_status"`
+	TxAprvdTime time.Time
+	TxHash      string
 }
 
 func (pgDbp DbSpec) CreateWithdrawTable() error {
@@ -64,7 +77,7 @@ func (pgDbp DbSpec) CreateWithdrawTable() error {
 	return errors.Wrap(err, "db/CreateWithdrawTable")
 }
 
-func (pgDbp DbSpec) InsertWithdraw(wdr Withdraw) (insertIndex int64, err error) {
+func (pgDbp DbSpec) insertWithdraw(wdr Withdraw) (insertIndex int64, err error) {
 	err = pgDbp.Db.QueryRow(`
 		INSERT INTO withdraw (
 			fk_ext_account_sender,
@@ -134,7 +147,7 @@ func (pgDbp DbSpec) CreateWithdrawFunctions() error {
 		v_fk_withdraw_fee INT,
 		v_tx_sent_time TIMESTAMP,
 		v_tx_stat tx_status,
-		v_fk_wallet_sernder INT,
+		v_fk_wallet_sender INT,
 		v_fk_wallet_receiver INT,
 		v_payment_cat PAYMENT_CATEGORY,
 		v_value_fee_included NUMERIC(28,18)
@@ -165,14 +178,14 @@ func (pgDbp DbSpec) CreateWithdrawFunctions() error {
 
 
 		INSERT INTO internal_tx (
-			fk_wallet_sernder,
+			fk_wallet_sender,
 			fk_wallet_receiver,
 			payment_cat,
 			tx_internal_ref,
 			value,
 			time_tx )
 		VALUES (
-			v_fk_wallet_sernder,
+			v_fk_wallet_sender,
 			v_fk_wallet_receiver,
 			v_payment_cat,
 			wdr_id,
@@ -186,7 +199,7 @@ func (pgDbp DbSpec) CreateWithdrawFunctions() error {
 		SET
 			balance = balance - v_value_fee_included
 		WHERE
-			id = v_fk_wallet_sernder
+			id = v_fk_wallet_sender
 		;
 
 	RETURN wdr_id;
@@ -199,7 +212,7 @@ func (pgDbp DbSpec) CreateWithdrawFunctions() error {
 	return errors.Wrap(err, "db/CreateWithdrawFunctions")
 }
 
-func (pgDbp DbSpec) InitWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err error) {
+func (pgDbp DbSpec) initWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err error) {
 
 	err = pgDbp.Db.QueryRow(`
 		select withdraw_req_init($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);
@@ -228,30 +241,30 @@ func (pgDbp DbSpec) InitWithdrawReq(walletId int64, value float64, extCurrencyAb
 		TxStatus:   string(NOT_SENT_TO_PS),
 	}
 
-	wdr.FkExtAcntSender, err = pgDbp.GetUserExtAccountId(walletId, extCurrencyAbbr)
+	wdr.FkExtAcntRcvr, err = pgDbp.GetUserExtAccountId(walletId, extCurrencyAbbr)
 	if err != nil {
-		return withdrawId, errors.Wrap(err, "db: InitWithdrawReq query error GetUserExtAccountId()")
+		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
-	wdr.FkExtAcntRcvr, err = pgDbp.GetSuperNodeExtAccountId(extCurrencyAbbr)
+	wdr.FkExtAcntSender, err = pgDbp.GetSuperNodeExtAccountId(extCurrencyAbbr)
 	if err != nil {
-		return withdrawId, errors.Wrap(err, "db: InitWithdrawReq query error GetSuperNodeExtAccountId()")
+		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
 	wdr.FkExtCurr, err = pgDbp.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
 	if err != nil {
-		return withdrawId, errors.Wrap(err, "db: InitWithdrawReq query error GetExtCurrencyIdByAbbr()")
+		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
 	wdr.FkWithdrawFee, err = pgDbp.GetActiveWithdrawFeeId(extCurrencyAbbr)
 	if err != nil {
-		return withdrawId, errors.Wrap(err, "db: InitWithdrawReq query error GetActiveWithdrawFeeId()")
+		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
 	var withdrawFeeAmnt float64
 	withdrawFeeAmnt, err = pgDbp.GetActiveWithdrawFee(extCurrencyAbbr)
 	if err != nil {
-		return withdrawId, errors.Wrap(err, "db: InitWithdrawReq query error GetActiveWithdrawFee()")
+		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
 	it := InternalTx{
@@ -262,14 +275,14 @@ func (pgDbp DbSpec) InitWithdrawReq(walletId int64, value float64, extCurrencyAb
 
 	it.FkWalletRcvr, err = pgDbp.GetWalletIdSuperNode()
 	if err != nil {
-		return withdrawId, errors.Wrap(err, "db: InitWithdrawReq query error GetWalletIdSuperNode()")
+		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
-	return pgDbp.InitWithdrawReqApply(wdr, it)
+	return pgDbp.initWithdrawReqApply(wdr, it)
 
 }
 
-func (pgDbp DbSpec) UpdateWithdrawPaymentQueryId(walletId int64, reqIdPaymentServ int64) error {
+func (pgDbp DbSpec) UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error {
 	_, err := pgDbp.Db.Exec(`
 		UPDATE withdraw 
 		SET
@@ -280,7 +293,74 @@ func (pgDbp DbSpec) UpdateWithdrawPaymentQueryId(walletId int64, reqIdPaymentSer
 		;
 	
 	`, reqIdPaymentServ,
-		walletId)
+		withdrawId)
 
 	return errors.Wrap(err, "db/UpdateWithdrawPaymentQueryId")
+}
+
+func (pgDbp DbSpec) GetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
+
+	rows, err := pgDbp.Db.Query(
+		`select
+			ea.account_adr AS sender_adr, 
+			ea2.account_adr AS receiver_adr, 
+			ec.abv AS currency_abv,
+			wdr.value,
+			wf.fee,
+			wdr.tx_sent_time,
+			wdr.tx_stat,
+			wdr.tx_approved_time,
+			wdr.tx_hash
+		from
+			withdraw wdr,
+			ext_account ea,
+			ext_account ea2,
+			wallet w, 
+			ext_currency ec,
+			withdraw_fee wf
+		WHERE
+			wdr.fk_ext_account_sender = ea.id AND
+			wdr.fk_ext_account_receiver = ea2.id AND
+			wdr.fk_ext_currency = ec.id AND
+			ea2.fk_wallet = w.id AND
+			ea.fk_ext_currency = ec.id AND
+			ea2.fk_ext_currency = ec.id AND
+			wdr.fk_withdraw_fee = wf.id AND
+			w.id = $1
+		ORDER BY wdr.tx_sent_time DESC
+		LIMIT $2 
+		OFFSET $3
+		;`, walletId, limit, offset)
+
+	defer rows.Close()
+
+	res := make([]WithdrawHistRet, 0)
+	var withVal WithdrawHistRet
+	var aprvdTime, sentTime string
+
+	for rows.Next() {
+		rows.Scan(
+			&withVal.AcntSender,
+			&withVal.AcntRcvr,
+			&withVal.ExtCurrency,
+			&withVal.Value,
+			&withVal.WithdrawFee,
+			&sentTime,
+			&withVal.TxStatus,
+			&aprvdTime,
+			&withVal.TxHash,
+		)
+		if conTime, errTime := time.Parse(timeLayout, sentTime); errTime == nil {
+			withVal.TxSentTime = conTime
+		} else {
+			log.Debug("db/GetWithdrawHist Unable to convert time: ", err)
+		}
+		if conTime, errTime := time.Parse(timeLayout, aprvdTime); errTime == nil {
+			withVal.TxAprvdTime = conTime
+		} else {
+			log.Debug("db/GetWithdrawHist Unable to convert time: ", err)
+		}
+		res = append(res, withVal)
+	}
+	return res, errors.Wrap(err, "db/GetWithdrawHist")
 }
