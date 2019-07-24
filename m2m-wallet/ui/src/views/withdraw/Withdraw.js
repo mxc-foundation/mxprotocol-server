@@ -113,7 +113,6 @@ class Withdraw extends Component {
   }
 
   componentDidMount() {
-    console.log('sadasf',this.props.match.params.organizationID);
     this.loadData();
   }
 

@@ -10,8 +10,6 @@ export default function updateOrganizations(response) {
     }
     
     if(sessionStore.getOrganizationList() !== null){
-        console.log('updateOrganizations', hash(organizationList));
-        console.log('updateOrganizations', hash(response.body.userProfile.organizations));
         if(hash(sessionStore.getOrganizationList()) !== hash(organizationList)){
             sessionStore.setOrganizationList(organizationList);
         }

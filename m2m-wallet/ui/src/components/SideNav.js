@@ -24,7 +24,7 @@ import styles from "./SideNavStyle";
 
 
 const LinkToLora = ({children, ...otherProps}) => 
-<a href={`http://localhost:3002`} {...otherProps}>{children}</a>;
+<a href={SessionStore.getLoraHostUrl()} {...otherProps}>{children}</a>;
 
 const coinType = 'Ether';
 
