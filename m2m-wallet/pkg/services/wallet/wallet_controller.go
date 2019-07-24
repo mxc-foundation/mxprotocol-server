@@ -2,6 +2,7 @@ package wallet
 
 import (
 	"context"
+	"errors"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
@@ -9,6 +10,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"strings"
 )
 
 func Setup(conf config.MxpConfig) error {
@@ -17,10 +19,17 @@ func Setup(conf config.MxpConfig) error {
 	return nil
 }
 
+//  return option 1: 0, true        --> no wallet created yet
+//  return option 2: 0, false       --> sql error
+//  return option 3: walletId, true --> get walletId successfully
 func userHasWallet(orgId int64) (int64, bool) {
 	walletId, err := db.DbGetWalletIdFromOrgId(orgId)
 	if err != nil {
-		return walletId, false
+		if strings.HasSuffix(err.Error(), db.DbError.NoRowQueryRes.Error()) {
+			return 0, true
+		}
+
+		return 0, false
 	}
 
 	return walletId, true
@@ -43,10 +52,14 @@ func GetWalletId(orgId int64) (walletId int64, err error) {
 	var res bool
 
 	walletId, res = userHasWallet(orgId)
-	if false == res {
+	if true == res && 0 == walletId {
 		if walletId, err = createWallet(orgId); err != nil {
 			return 0, err
 		}
+	} else if false == res {
+		err = errors.New("Failed to get walletId.")
+		log.WithError(err).Error("pkg/wallet/GetWalletId")
+		return 0, err
 	}
 
 	return walletId, nil
@@ -118,13 +131,7 @@ func (s *WalletServerAPI) GetWalletBalance(ctx context.Context, req *api.GetWall
 			"orgId": req.OrgId,
 		}).Debug("grpc_api/GetWalletBalance")
 
-		walletId, err := GetWalletId(req.OrgId)
-		if err != nil {
-			log.WithError(err).Error("grpc_api/GetWalletBalance")
-			return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, nil
-		}
-
-		balance, err := db.DbGetWalletBalance(walletId)
+		balance, err := GetBalance(req.OrgId)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetWalletBalance")
 			return &api.GetWalletBalanceResponse{UserProfile: &userProfile}, nil
