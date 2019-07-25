@@ -20,6 +20,7 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 	}
 
 	supernodeID, err := db.DbGetSuperNodeExtAccountId(config.Cstruct.SuperNode.ExtCurrAbv)
+	//todo: delete
 	fmt.Println("SuperNodeID: ", supernodeID)
 	if err != nil {
 		log.WithError(err).Warning("storage: Cannot get supernodeID from DB")
@@ -27,6 +28,7 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 	}
 
 	currentBlockNo, err := db.DbGetLatestCheckedBlock(supernodeID)
+	//todo: delete
 	fmt.Println("currentBlockNo: ", currentBlockNo)
 	if err != nil {
 		log.WithError(err).Warning("storage: Cannot get currentBlockNo from DB")
@@ -45,7 +47,18 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 		if strings.EqualFold(tx.To, address) && tx.BlockNumber > incurBlockNo {
 
 			amount := float64(tx.Value.Int().Int64())
-			_, err := db.DbAddTopUpRequest(tx.From, tx.To, tx.Hash, amount, currAbv)
+			//todo: delete
+			fmt.Println("From: ", tx.From)
+			fmt.Println("To: ", tx.To)
+			fmt.Println("Amount: ", amount)
+
+			from, err := db.DbGetExtAccountIdByAdr(tx.From)
+			fmt.Println("from: ", from)
+
+			to, err := db.DbGetExtAccountIdByAdr(tx.To)
+			fmt.Println("to: ", to)
+
+			_, err = db.DbAddTopUpRequest(tx.From, tx.To, tx.Hash, amount, currAbv)
 			if err != nil {
 				log.WithError(err).Warning("Storage: Cannot update TopUpRequest to DB")
 				return err
