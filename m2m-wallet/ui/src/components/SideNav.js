@@ -15,7 +15,7 @@ import CalendarCheckOutline from "mdi-material-ui/CalendarCheckOutline";
 import CreditCard from "mdi-material-ui/CreditCard";
 import AccessPoint from "mdi-material-ui/AccessPoint";
 
-import WithdrawStore from "../stores/WithdrawStore"
+import ProfileStore from "../stores/ProfileStore"
 import SessionStore from "../stores/SessionStore"
 import PageNextOutline from "mdi-material-ui/PageNextOutline";
 import PagePreviousOutline from "mdi-material-ui/PagePreviousOutline";
@@ -35,13 +35,12 @@ class SideNav extends Component {
     this.state = {
       open: true,
       organization: {},
-      options: [],
+      options: SessionStore.getOrganizationList(),
       organizationID: '',
       cacheCounter: 0,
     };
 
     this.onChange = this.onChange.bind(this);
-    this.getOrganizationOption = this.getOrganizationOption.bind(this);
     this.getOrganizationOptions = this.getOrganizationOptions.bind(this);
   }
 
@@ -51,21 +50,20 @@ class SideNav extends Component {
 
   componentDidMount() {
     const organizationID = SessionStore.getOrganizationID();
-    const options = SessionStore.getOrganizationList();
+   
     this.setState({
       organizationID,
-      options
     })
-    SessionStore.on("organizationList.change", () => {
+    
+    /* SessionStore.on("organizationList.change", () => {
       const organizationID = SessionStore.getOrganizationID();
       const options = SessionStore.getOrganizationList();
-      console.log('options', options);
       
       this.setState({
         organizationID,
         options
       })
-    });
+    });   */
   }
 
   onChange(e) {
@@ -85,21 +83,6 @@ class SideNav extends Component {
       SessionStore.setOrganizationID(match[1]);
     } */
   }
-
-  getOrganizationOption(id, callbackFunc) {
-    WithdrawStore.getWithdrawFee(coinType, resp => {
-      const option = resp.userProfile.organizations[0];
-      callbackFunc({label: option.organizationName, value: option.organizationID});
-    }); 
-  }
-
-  /* getOrganizationOptions(search, callbackFunc) {
-    let options = SessionStore.getOrganizationList();
-    //options.push({label: 'mxp',value: '1' });
-    return callbackFunc(options);
-
-    //return callbackFunc(SessionStore.getOrganizationList());
-  } */
 
   getOrganizationOptions(search, callbackFunc) {
     let options = this.state.options;
@@ -134,7 +117,7 @@ class SideNav extends Component {
             id="organizationID"
             margin="none"
             value={organizationID}
-            onChange={this.onChange}
+            onChange={this.onChange}//{this.state.organization && 
             getOptions={this.getOrganizationOptions}
             className={this.props.classes.select}
             triggerReload={this.state.cacheCounter}
@@ -164,9 +147,7 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
           </ListItem>
-          
               <List className={this.props.classes.card}>
-                {/* <ListItem button  onClick={this.handleOpenLora}> */}
                 <ListItem button component={LinkToLora} className={this.props.classes.static}>  
                   <ListItemIcon>
                     <AccessPoint />
@@ -174,18 +155,6 @@ class SideNav extends Component {
                   <ListItemText primary="LoRa Server" />
                 </ListItem>
                 <Divider />
-                {/* <ListItem button >
-                  <ListItemText primary="Super Node" />
-                  <ListItemIcon>
-                    <RadioTower />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem button >
-                  <ListItemText primary="Organization" />
-                  <ListItemIcon>
-                    <Domain />
-                  </ListItemIcon>
-                </ListItem> */}
                 <Divider />
                 <ListItem>
                   <ListItemText primary="Powered by" />
@@ -193,12 +162,6 @@ class SideNav extends Component {
                     <img src="/logo/mxc_logo.png" className="iconStyle" alt="LoRa Server" onClick={this.handleMXC} />
                   </ListItemIcon>
                 </ListItem>
-                {/* <ListItem button onClick={this.handleOpenM2M} >
-                  <ListItemText primary="Change Account" />
-                  <ListItemIcon>
-                    <Repeat />
-                  </ListItemIcon>
-                </ListItem> */}
               </List>
         </List>}
       </Drawer>

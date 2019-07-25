@@ -222,7 +222,7 @@ class AutocompleteSelect extends Component {
 
   setInitialOptions(callbackFunc) {
     this.props.getOptions("", options => {
-      //console.log('options', this.props, options);
+      
       this.setState({
         options: options,
       }, callbackFunc);
@@ -292,6 +292,7 @@ class AutocompleteSelect extends Component {
 
   render() {
     const inputProps = this.props.inputProps || {};
+    
     return(
       <FormControl margin={this.props.margin || ""}  fullWidth={true} className={this.props.className}>
         <Input
