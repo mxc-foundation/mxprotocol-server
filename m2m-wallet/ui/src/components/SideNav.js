@@ -59,11 +59,8 @@ class SideNav extends Component {
     SessionStore.on("organizationList.change", () => {
       const organizationID = SessionStore.getOrganizationID();
       const options = SessionStore.getOrganizationList();
+      console.log('options', options);
       
-      this.setState({
-        organizationID: '',
-        options:[]
-      });
       this.setState({
         organizationID,
         options
@@ -106,6 +103,7 @@ class SideNav extends Component {
 
   getOrganizationOptions(search, callbackFunc) {
     let options = this.state.options;
+    console.log('getOrganizationOptions', options);
     return callbackFunc(options);
   }
 

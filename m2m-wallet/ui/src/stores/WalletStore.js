@@ -20,7 +20,7 @@ class WalletStore extends EventEmitter {
         org_id,
       })
       .then(checkStatus)
-      .then(updateOrganizations)
+      //.then(updateOrganizations)
       .then(resp => {
         callbackFunc(resp.obj);
       })

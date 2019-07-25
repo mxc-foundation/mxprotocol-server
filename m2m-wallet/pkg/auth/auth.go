@@ -5,6 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"regexp"
+	"strconv"
+	"time"
+
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -13,11 +19,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"io/ioutil"
-	"net/http"
-	"regexp"
-	"strconv"
-	"time"
 )
 
 type errStruct struct {
@@ -157,11 +158,9 @@ func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, 
 		return profile, VerifyResult{nil, OK}
 	}
 
-
 	if orgDeleted {
 		return profile, VerifyResult{nil, OrganizationIdRearranged}
 	}
-
 
 	return profile, VerifyResult{nil, OK}
 }
@@ -278,7 +277,7 @@ func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*
 	return &api.LoginResponse{Jwt: output["jwt"]}, nil
 }
 
-func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *api.GetUserOrganizationListRequest) (*api.GetUserOrganizationListResponse, error){
+func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *api.GetUserOrganizationListRequest) (*api.GetUserOrganizationListResponse, error) {
 	userProfile, res := VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
@@ -295,12 +294,13 @@ func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *ap
 
 		if userProfile.User.IsAdmin == true {
 			org := api.OrganizationLink{
-				OrganizationId: 0,
+				OrganizationId:   0,
 				OrganizationName: "Super_admin",
-				IsAdmin: true,
+				IsAdmin:          true,
 			}
 			orgList.Organizations = append(orgList.Organizations, &org)
 		}
+
 		return &orgList, nil
 	}
 

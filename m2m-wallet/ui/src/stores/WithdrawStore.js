@@ -20,7 +20,7 @@ class WithdrawStore extends EventEmitter {
         money_abbr,
       })
       .then(checkStatus)
-      .then(updateOrganizations)
+      //.then(updateOrganizations)
       .then(resp => {
         callbackFunc(resp.obj);
       })
@@ -37,7 +37,7 @@ class WithdrawStore extends EventEmitter {
         },
       })
       .then(checkStatus)
-      .then(updateOrganizations)
+      //.then(updateOrganizations)
       .then(resp => {
         this.notify("updated");
         this.emit("withdraw");

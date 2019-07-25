@@ -22,7 +22,7 @@ class TopupStore extends EventEmitter {
         limit
       })
       .then(checkStatus)
-      .then(updateOrganizations)
+      //.then(updateOrganizations)
       .then(resp => {
         callbackFunc(resp.body);
       })
@@ -39,7 +39,7 @@ class TopupStore extends EventEmitter {
         },
       })
       .then(checkStatus)
-      .then(updateOrganizations)
+      //.then(updateOrganizations)
       .then(resp => {
         this.notify("completed");
         callbackFunc(resp.obj);

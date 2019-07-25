@@ -14,7 +14,7 @@ class ProfileStore extends EventEmitter {
     this.swagger = new Swagger("/swagger/profile.swagger.json", sessionStore.getClientOpts());
   }
 
-  getUserOrganizationList(orgId, callbackFunc) {
+  getUserOrganizationList(orgId) {
     this.swagger.then(client => {
       client.apis.InternalService.GetUserOrganizationList({
         orgId
@@ -22,7 +22,7 @@ class ProfileStore extends EventEmitter {
       .then(checkStatus)
       .then(updateOrganizations)
       .then(resp => {
-        callbackFunc(resp.body);
+        //callbackFunc(resp.body);
       })
       .catch(errorHandler);
     });
