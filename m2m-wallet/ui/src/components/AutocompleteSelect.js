@@ -6,7 +6,7 @@ import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 import FormControl from "@material-ui/core/FormControl";
-
+import ProfileStore from "../stores/ProfileStore"
 import MenuDown from "mdi-material-ui/MenuDown";
 import Cancel from "mdi-material-ui/Cancel";
 import MenuUp from "mdi-material-ui/MenuUp";
@@ -162,6 +162,9 @@ function SelectWrapped(props) {
       optionComponent={Option}
       noResultsText={<Typography>{'No results found'}</Typography>}
       arrowRenderer={arrowProps => {
+        if(arrowProps.isOpen){
+          props.updateOptions();
+        }
         return arrowProps.isOpen ? <MenuUp /> : <MenuDown />;
       }}
       clearRenderer={() => <Close />}
@@ -271,7 +274,7 @@ class AutocompleteSelect extends Component {
       });
     });
   }
-
+  
   onChange(v) {
     let value = null;
     if (v !== null) {
@@ -300,12 +303,14 @@ class AutocompleteSelect extends Component {
           inputComponent={SelectWrapped}
           placeholder={this.props.label}
           id={this.props.id}
+          onClick={this.reloadOptions}
           onChange={this.onChange}
           inputProps={{...{
             instanceId: this.props.id,
             clearable: false,
             options: this.state.options,
             loadOptions: this.onAutocomplete,
+            updateOptions: this.props.updateOptions,
             value: this.state.selectedOption || "",
           }, ...inputProps}}
         />

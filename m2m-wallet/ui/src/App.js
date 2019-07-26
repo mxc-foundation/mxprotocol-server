@@ -75,9 +75,7 @@ class RedirectedFromLora extends Component {
   constructor(...args) {
     super(...args);
 
-    this.state = {
-
-    }
+    this.state = {}
   }
   
   formatNumber(number) {
@@ -86,18 +84,16 @@ class RedirectedFromLora extends Component {
 
   render() {
     const { match: { params: { data: dataString } }} = this.props;
-    
+
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
     const { path, org_id } = data;
-    
+    console.log('render',data);
     SessionStore.initProfile(data);
     ProfileStore.getUserOrganizationList(org_id);
     
     return <Redirect to={path} />;
   }
 }
-
-
 
 class App extends Component {
   constructor() {
@@ -140,7 +136,7 @@ class App extends Component {
 
     if (this.state.user !== null) {
       topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} />;
-      sideNav = <SideNav open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
+      sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
     }
     
     return (

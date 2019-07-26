@@ -28,6 +28,19 @@ const LinkToLora = ({children, ...otherProps}) =>
 
 const coinType = 'Ether';
 
+function updateOrganizationList(org_id) {
+  /* return new Promise((resolve, reject) => {
+    resolve(ProfileStore.getUserOrganizationList(org_id));
+  }); */
+
+  return new Promise((resolve, reject) => {
+    ProfileStore.getUserOrganizationList(org_id,
+      resp => {
+        resolve(resp);
+      })
+  });
+}
+
 class SideNav extends Component {
   constructor() {
     super();
@@ -86,8 +99,11 @@ class SideNav extends Component {
 
   getOrganizationOptions(search, callbackFunc) {
     let options = this.state.options;
-    console.log('getOrganizationOptions', options);
     return callbackFunc(options);
+  }
+
+  selectClicked = async () => {
+    const res = await updateOrganizationList(this.state.organizationID);
   }
 
   render() {
@@ -102,6 +118,19 @@ class SideNav extends Component {
         return {};
       }
     }
+
+    /*setTimeout(function() {
+      const select = document.querySelector('.Select .Select-value');
+      
+      select && select.addEventListener('click', function(event) {
+        console.log(event.target, event.currentTarget)
+      });
+      window.addEventListener('click', function(event) {
+        console.log(event.target, event.currentTarget)
+        // .Select
+      })
+    })*/
+
     return(
       <Drawer
         variant="persistent"
@@ -117,6 +146,7 @@ class SideNav extends Component {
             id="organizationID"
             margin="none"
             value={organizationID}
+            updateOptions={this.selectClicked}
             onChange={this.onChange}//{this.state.organization && 
             getOptions={this.getOrganizationOptions}
             className={this.props.classes.select}

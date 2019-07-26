@@ -15,7 +15,15 @@ class TopupForm extends FormComponent {
 
   render() {
     if (this.props.reps === undefined) {
-      return(<div></div>);
+      return(
+        <Form
+          submitLabel={this.props.submitLabel}
+          extraButtons={extraButtons}
+          onSubmit={this.onSubmit}
+        >
+          <TitleBarTitle component={Link} to={'#'} title="THERE IS NO DATA TO DISPLAY." />
+        </Form>
+      );
     }
     //console.log('this.props.reps', this.props.reps);
     const extraButtons = <>
