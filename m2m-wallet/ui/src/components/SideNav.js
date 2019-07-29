@@ -60,15 +60,33 @@ class SideNav extends Component {
   handleMXC = () => {
     window.location.replace(`http://mxc.org/`);
   } 
-
+  loadData = async () => {
+    try {
+      const organizationID = SessionStore.getOrganizationID();
+      this.setState({
+        organizationID,
+      })
+      this.setState({loading: true})
+      var result = await ProfileStore.getUserOrganizationList(organizationID);
+      
+      this.setState({loading: false})
+    } catch (error) {
+      this.setState({loading: false})
+      console.error(error);
+      this.setState({ error });
+    }
+  }
   componentDidMount() {
-    const organizationID = SessionStore.getOrganizationID();
+    this.loadData();
+    this.forceUpdate();
+    /*const organizationID = SessionStore.getOrganizationID();
    
     this.setState({
       organizationID,
     })
+    ProfileStore.getUserOrganizationList(organizationID);
     
-    /* SessionStore.on("organizationList.change", () => {
+     SessionStore.on("organizationList.change", () => {
       const organizationID = SessionStore.getOrganizationID();
       const options = SessionStore.getOrganizationList();
       

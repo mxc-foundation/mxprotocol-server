@@ -89,9 +89,17 @@ class RedirectedFromLora extends Component {
     const { path, org_id } = data;
     
     SessionStore.initProfile(data);
-    ProfileStore.getUserOrganizationList(org_id);
+    //ProfileStore.getUserOrganizationList(org_id);
     
-    return <Redirect to={path} />;
+    new Promise((resolve, reject) => {
+      ProfileStore.getUserOrganizationList(org_id,
+        resp => {
+          resolve(resp);
+        })
+    }).then((resp)=>{
+      return <Redirect to={path} />;  
+    });
+    return <Redirect to={path} />; 
   }
 }
 

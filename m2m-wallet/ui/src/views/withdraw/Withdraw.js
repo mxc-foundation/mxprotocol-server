@@ -24,9 +24,9 @@ function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function loadWithdrawFee(coinType) {
+function loadWithdrawFee(coinType, organizationID) {
   return new Promise((resolve, reject) => {
-    WithdrawStore.getWithdrawFee(coinType,
+    WithdrawStore.getWithdrawFee(coinType, organizationID,
       resp => {
         Object.keys(resp).forEach(attr => {
           const value = resp[attr];
@@ -86,11 +86,11 @@ class Withdraw extends Component {
 
   loadData = async () => {
     try {
-      
+      const organizationID = this.props.match.params.organizationID;
       this.setState({loading: true})
-      var result = await loadWithdrawFee(coinType);
-      var wallet = await loadWalletBalance(this.props.match.params.organizationID);
-      var account = await loadCurrentAccount(coinType, this.props.match.params.organizationID);
+      var result = await loadWithdrawFee(coinType, organizationID);
+      var wallet = await loadWalletBalance(organizationID);
+      var account = await loadCurrentAccount(coinType, organizationID);
       
       /* this.setState({
         activeAccount: resp.supernodeActiveAccount,

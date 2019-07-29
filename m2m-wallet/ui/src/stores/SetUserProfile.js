@@ -3,7 +3,7 @@ import hash from "object-hash";
 
 export default function updateOrganizations(response) {
     const organizationList = response.body.organizations;
-    console.log(organizationList);
+    
     if(!organizationList){
         return false;
     }
