@@ -103,6 +103,27 @@ func (pgDbp DbSpec) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) 
 	return walletId, errors.Wrap(err, "db/GetWalletIdofActiveAcnt")
 }
 
+func (pgDbp DbSpec) getWalletIdofActiveAcntSuperAdmin(acntAdr string, externalCur string) (walletId int64, err error) {
+
+	err = pgDbp.Db.QueryRow(
+		`select 
+			w.id as wallet_id 
+			from
+			wallet w,ext_account ea,ext_currency ec
+		WHERE
+			w.id = ea.fk_wallet AND
+			w.type = 'SUPER_ADMIN' AND
+			ea.fk_ext_currency = ec.id AND
+			ea.status = 'ACTIVE' AND
+			account_adr = $1 AND
+			ec.abv = $2 
+		ORDER BY ea.id DESC 
+		LIMIT 1 
+		;`, acntAdr, externalCur).Scan(&walletId)
+
+	return walletId, errors.Wrap(err, "db/getWalletIdofActiveAcntSuperAdmin")
+}
+
 func (pgDbp DbSpec) GetWalletIdSuperNode() (walletId int64, err error) {
 
 	err = pgDbp.Db.QueryRow(

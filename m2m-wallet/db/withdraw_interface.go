@@ -2,6 +2,8 @@ package db
 
 import (
 	"time"
+
+	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
 func dbCreateWithdrawTable() error {
@@ -24,6 +26,10 @@ func DbInitWithdrawReq(walletId int64, amount float64, extCurAbv string) (withdr
 	return pgDb.InitWithdrawReq(walletId, amount, extCurAbv)
 }
 
-func DbUpdateWithdrawPaymentQueryId(walletId int64, reqIdPaymentServ int64) error {
-	return pgDb.UpdateWithdrawPaymentQueryId(walletId, reqIdPaymentServ)
+func DbUpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error {
+	return pgDb.UpdateWithdrawPaymentQueryId(withdrawId, reqIdPaymentServ)
+}
+
+func DbGetWithdrawHist(walletId int64, offset int64, limit int64) ([]pstgDb.WithdrawHistRet, error) {
+	return pgDb.GetWithdrawHist(walletId, offset, limit)
 }
