@@ -24,7 +24,7 @@ const (
 
 type InternalTx struct {
 	Id             int64     `db:"id"`
-	FkWalletSender int64     `db:"fk_wallet_sernder"`
+	FkWalletSender int64     `db:"fk_wallet_sender"`
 	FkWalletRcvr   int64     `db:"fk_wallet_receiver"`
 	PaymentCat     string    `db:"payment_cat"`
 	TxInternalRef  int64     `db:"tx_internal_ref"` // reference to the id of corresponding table to PaymentCat
@@ -60,7 +60,7 @@ func (pgDbp DbSpec) CreateInternalTxTable() error {
 
 		CREATE TABLE IF NOT EXISTS internal_tx (
 			id SERIAL PRIMARY KEY,
-			fk_wallet_sernder INT REFERENCES wallet(id) NOT NULL,
+			fk_wallet_sender INT REFERENCES wallet(id) NOT NULL,
 			fk_wallet_receiver INT REFERENCES wallet(id) NOT NULL,
 			payment_cat PAYMENT_CATEGORY,
 			tx_internal_ref INT NOT NULL,
@@ -76,7 +76,7 @@ func (pgDbp DbSpec) CreateInternalTxTable() error {
 func (pgDbp DbSpec) InsertInternalTx(it InternalTx) (insertIndex int64, err error) {
 	err = pgDbp.Db.QueryRow(`
 	INSERT INTO internal_tx (
-		fk_wallet_sernder,
+		fk_wallet_sender,
 		fk_wallet_receiver,
 		payment_cat,
 		tx_internal_ref,

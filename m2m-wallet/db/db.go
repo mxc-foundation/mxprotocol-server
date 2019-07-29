@@ -11,10 +11,6 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 )
 
-var DbError struct {
-	NoRowQueryRes error
-}
-
 var pgDb pstgDb.DbSpec
 
 func Setup(conf config.MxpConfig) error {
@@ -100,8 +96,4 @@ func dbInit() {
 		log.WithError(err).Fatal("db/initExtCurrencyTable")
 	}
 
-}
-
-func dbErrorInit() {
-	DbError.NoRowQueryRes = sql.ErrNoRows
 }

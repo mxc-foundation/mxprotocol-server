@@ -55,3 +55,7 @@ func DbUpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum int64) error {
 func DbGetExtAccountIdByAdr(acntAdr string) (int64, error) {
 	return pgDb.GetExtAccountIdByAdr(acntAdr)
 }
+
+func DbGetExtAcntHist(walletId int64, offset int64, limit int64) ([]pstgDb.ExtAccountHistRet, error) {
+	return pgDb.GetExtAcntHist(walletId, offset, limit)
+}

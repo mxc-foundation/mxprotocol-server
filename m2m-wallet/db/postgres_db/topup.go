@@ -3,6 +3,7 @@ package postgres_db
 import (
 	"time"
 
+	"github.com/ethereum/go-ethereum/log"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 )
@@ -15,6 +16,15 @@ type Topup struct {
 	Value           float64   `db:"value"`
 	TxAprvdTime     time.Time `db:"tx_approved_time"`
 	TxHash          string    `db:"tx_hash"`
+}
+
+type TopupHistRet struct {
+	AcntSender  string
+	AcntRcvr    string
+	ExtCurrency string
+	Value       float64
+	TxAprvdTime time.Time
+	TxHash      string
 }
 
 func (pgDbp DbSpec) CreateTopupTable() error {
@@ -32,7 +42,7 @@ func (pgDbp DbSpec) CreateTopupTable() error {
 	return errors.Wrap(err, "db/CreateTopupTable")
 }
 
-func (pgDbp DbSpec) InsertTopup(tu Topup) (insertIndex int64, err error) {
+func (pgDbp DbSpec) insertTopup(tu Topup) (insertIndex int64, err error) {
 	err = pgDbp.Db.QueryRow(`
 		INSERT INTO topup (
 			fk_ext_account_sender,
@@ -82,7 +92,7 @@ func (pgDbp DbSpec) CreateTopupFunctions() error {
 			fk_ext_account_sender,
 			fk_ext_account_receiver,
 			fk_ext_currency,
-			value ,
+			value,
 			tx_approved_time,
 			tx_hash )
 			VALUES (
@@ -96,7 +106,7 @@ func (pgDbp DbSpec) CreateTopupFunctions() error {
 		
 		
 		INSERT INTO internal_tx (
-			fk_wallet_sernder,
+			fk_wallet_sender,
 			fk_wallet_receiver,
 			payment_cat,
 			tx_internal_ref,
@@ -131,7 +141,7 @@ func (pgDbp DbSpec) CreateTopupFunctions() error {
 	return errors.Wrap(err, "db/CreateTopupFunctions")
 }
 
-func (pgDbp DbSpec) ApplyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
+func (pgDbp DbSpec) applyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
 	err = pgDbp.Db.QueryRow(`
 		select topup_req_apply($1,$2,$3,$4,$5,$6,$7,$8,$9);
 		
@@ -159,33 +169,87 @@ func (pgDbp DbSpec) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string, tx
 
 	tu.FkExtAcntSender, err = pgDbp.GetExtAccountIdByAdr(acntAdrSender)
 	if err != nil {
-		return topupId, errors.Wrap(err, "db: AddTopUpRequest query error GetExtAccountIdByAdr()")
+		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
 
 	tu.FkExtAcntRcvr, err = pgDbp.GetExtAccountIdByAdr(acntAdrRcvr)
 	if err != nil {
-		return topupId, errors.Wrap(err, "db: AddTopUpRequest query error GetExtAccountIdByAdr()")
+		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
 
 	tu.FkExtCurr, err = pgDbp.GetExtCurrencyIdByAbbr(extCurAbv)
 	if err != nil {
-		return topupId, errors.Wrap(err, "db: InitWithdrawReq query error GetExtCurrencyIdByAbbr()")
+		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
 
 	it := InternalTx{
 		PaymentCat: string(TOP_UP),
 	}
 
-	it.FkWalletSender, err = pgDbp.GetWalletIdofActiveAcnt(acntAdrSender, extCurAbv)
+	it.FkWalletRcvr, err = pgDbp.GetWalletIdofActiveAcnt(acntAdrSender, extCurAbv)
 	if err != nil {
-		return topupId, errors.Wrap(err, "db: InitWithdrawReq query error GetWalletIdofActiveAcnt()")
+		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
 
-	it.FkWalletRcvr, err = pgDbp.GetWalletIdofActiveAcnt(acntAdrRcvr, extCurAbv)
+	it.FkWalletSender, err = pgDbp.getWalletIdofActiveAcntSuperAdmin(acntAdrRcvr, extCurAbv)
 	if err != nil {
-		return topupId, errors.Wrap(err, "db: InitWithdrawReq query error GetWalletIdofActiveAcnt()")
+		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
 
-	return pgDbp.ApplyTopup(tu, it)
+	return pgDbp.applyTopup(tu, it)
 
+}
+
+func (pgDbp DbSpec) GetTopupHist(walletId int64, offset int64, limit int64) ([]TopupHistRet, error) {
+
+	rows, err := pgDbp.Db.Query(
+		`select
+			ea.account_adr AS sender_adr, 
+			ea2.account_adr AS receiver_adr, 
+			ec.abv AS currency_abv,
+			tu.value,
+			tu.tx_approved_time,
+			tu.tx_hash
+		from
+			topup tu,
+			ext_account ea,
+			ext_account ea2,
+			wallet w, 
+			ext_currency ec
+		WHERE
+			tu.fk_ext_account_sender = ea.id AND
+			tu.fk_ext_account_receiver = ea2.id AND
+			tu.fk_ext_currency = ec.id AND
+			ea.fk_wallet = w.id AND
+			ea.fk_ext_currency = ec.id AND
+			ea2.fk_ext_currency = ec.id AND
+			w.id = $1 
+		ORDER BY tu.tx_approved_time DESC
+		LIMIT $2  
+		OFFSET $3 
+		;`, walletId, limit, offset)
+
+	defer rows.Close()
+
+	res := make([]TopupHistRet, 0)
+	var topupVal TopupHistRet
+	var timeRead string
+
+	for rows.Next() {
+		rows.Scan(
+			&topupVal.AcntSender,
+			&topupVal.AcntRcvr,
+			&topupVal.ExtCurrency,
+			&topupVal.Value,
+			&timeRead,
+			&topupVal.TxHash,
+		)
+		if conTime, errTime := time.Parse(timeLayout, timeRead); errTime == nil {
+			topupVal.TxAprvdTime = conTime
+		} else {
+			log.Debug("db/GetTopupHist Unable to convert time: ", err)
+		}
+		res = append(res, topupVal)
+	}
+	return res, errors.Wrap(err, "db/GetTopupHist")
 }
