@@ -11,8 +11,8 @@ import MenuDown from "mdi-material-ui/MenuDown";
 import Cancel from "mdi-material-ui/Cancel";
 import MenuUp from "mdi-material-ui/MenuUp";
 import Close from "mdi-material-ui/Close";
-import Select from 'react-select';
-import 'react-select/dist/react-select.css';
+import AsyncSelect from 'react-select/async';
+//import 'react-select/dist/react-select.css';
 
 
 // taken from react-select example
@@ -157,10 +157,36 @@ class Option extends Component {
 function SelectWrapped(props) {
   const { classes, ...other } = props;
 
+  const components = {
+    option: Option,
+    value: (valueProps) => {
+      const { value, children, onRemove } = valueProps;
+      const onDelete = event => {
+        event.preventDefault();
+        event.stopPropagation();
+        onRemove(value);
+      };
+
+      if (onRemove) {
+        return (
+          <Chip
+            tabIndex={-1}
+            label={children}
+            className={classes.chip}
+            deleteIcon={<Cancel onTouchEnd={onDelete} />}
+            onDelete={onDelete}
+          />
+        );
+      }
+
+      return <div className="Select-value">{children}</div>;
+    }
+  };
+
   return (
-    <Select.Async
-      optionComponent={Option}
-      noResultsText={<Typography>{'No results found'}</Typography>}
+    <AsyncSelect
+      components={components}
+      noOptionsMessage={<Typography>{'No results found'}</Typography>}
       arrowRenderer={arrowProps => {
         if(arrowProps.isOpen){
           props.updateOptions();
@@ -168,29 +194,6 @@ function SelectWrapped(props) {
         return arrowProps.isOpen ? <MenuUp /> : <MenuDown />;
       }}
       clearRenderer={() => <Close />}
-      valueComponent={valueProps => {
-        const { value, children, onRemove } = valueProps;
-
-        const onDelete = event => {
-          event.preventDefault();
-          event.stopPropagation();
-          onRemove(value);
-        };
-
-        if (onRemove) {
-          return (
-            <Chip
-              tabIndex={-1}
-              label={children}
-              className={classes.chip}
-              deleteIcon={<Cancel onTouchEnd={onDelete} />}
-              onDelete={onDelete}
-            />
-          );
-        }
-
-        return <div className="Select-value">{children}</div>;
-      }}
       {...other}
     />
   );
@@ -263,14 +266,14 @@ class AutocompleteSelect extends Component {
   }
 
   onAutocomplete(input, callbackFunc) {
-    this.props.getOptions(input, options => {
-      this.setState({
-        options: options,
-      });
+    return new Promise((resolve, reject) => {
+      this.props.getOptions(input, options => {
+        
+        this.setState({
+          options: options,
+        });
 
-      callbackFunc(null, {
-        options: options,
-        complete: true,
+        resolve(options);
       });
     });
   }
@@ -308,7 +311,7 @@ class AutocompleteSelect extends Component {
           inputProps={{...{
             instanceId: this.props.id,
             clearable: false,
-            options: this.state.options,
+            defaultOptions: this.state.options,
             loadOptions: this.onAutocomplete,
             updateOptions: this.props.updateOptions,
             value: this.state.selectedOption || "",

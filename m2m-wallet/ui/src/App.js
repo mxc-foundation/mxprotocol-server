@@ -87,7 +87,7 @@ class RedirectedFromLora extends Component {
 
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
     const { path, org_id } = data;
-    console.log('render',data);
+    
     SessionStore.initProfile(data);
     ProfileStore.getUserOrganizationList(org_id);
     
@@ -157,7 +157,7 @@ class App extends Component {
                     <Route path="/history/:organizationID" component={HistoryLayout} />
                     <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
 
-                    <Route render={redirectToLora} />
+                    {/* <Route render={redirectToLora} /> */}
                   </Switch>
                 </Grid>
               </div>
