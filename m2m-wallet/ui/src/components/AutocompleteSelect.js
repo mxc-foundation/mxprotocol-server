@@ -186,11 +186,11 @@ function SelectWrapped(props) {
   return (
     <AsyncSelect
       components={components}
-      noOptionsMessage={<Typography>{'No results found'}</Typography>}
       arrowRenderer={arrowProps => {
         if(arrowProps.isOpen){
           props.updateOptions();
         }
+        
         return arrowProps.isOpen ? <MenuUp /> : <MenuDown />;
       }}
       clearRenderer={() => <Close />}
