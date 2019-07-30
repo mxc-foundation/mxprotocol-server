@@ -24,18 +24,23 @@ export default class WithPromises extends Component {
     constructor() {
         super();
         this.state = {
-          default: null,
-          modal: null
+            
         };
     } 
 
-    componentDidMount() {
-        console.log('componentDidMount', this.props.default)
-        this.setState({
-            default:{ value: 'ocean', label: 'Ocean', color: '#00B8D9', isFixed: true }
-        })
+    sdfaf = () => {
+        if(Object.getOwnPropertyNames(this.props.default).length !== 0){
+            this.setState({value: this.props.default});
+            return this.props.default;
+        }
     }
-
+    componentDidMount() {
+        const option = promiseOptions();
+        option.then((resp)=>{
+            this.setState({value:resp[0]})
+        })
+    
+      }
     onChange = (v) => {
         let value = null;
         if (v !== null) {
@@ -54,10 +59,10 @@ export default class WithPromises extends Component {
             <AsyncSelect 
                 cacheOptions 
                 defaultOptions 
-                //defaultValue={this.props.default}
+                defaultValue={this.state.value}
                 onChange={this.onChange}
                 loadOptions={promiseOptions} 
             />
         );
-  }
+    }
 }
