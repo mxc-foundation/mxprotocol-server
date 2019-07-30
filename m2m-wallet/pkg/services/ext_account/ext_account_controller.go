@@ -2,6 +2,7 @@ package ext_account
 
 import (
 	"context"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
@@ -53,14 +54,13 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
-
 		log.WithFields(log.Fields{
 			"orgId": req.OrgId,
 			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
-			"accountAddr": req.CurrentAccount,
+			"accountAddr": strings.ToLower(req.CurrentAccount),
 		}).Debug("grpc_api/ModifyMoneyAccount")
 
-		err := UpdateActiveExtAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
+		err := UpdateActiveExtAccount(req.OrgId, strings.ToLower(req.CurrentAccount), api.Money_name[int32(req.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/ModifyMoneyAccount")
 			return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile},
