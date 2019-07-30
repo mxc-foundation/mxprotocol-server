@@ -3,6 +3,7 @@ package supernode
 import (
 	"context"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
+	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -60,10 +61,10 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 	case auth.OK:
 		log.WithFields(log.Fields{
 			"moneyAbbr":   api.Money_name[int32(in.MoneyAbbr)],
-			"accountAddr": in.AccountAddr,
+			"accountAddr": strings.ToLower(in.AccountAddr),
 		}).Debug("grpc_api/AddSuperNodeMoneyAccount")
 
-		err := ext_account.UpdateActiveExtAccount(0, in.AccountAddr, api.Money_name[int32(in.MoneyAbbr)])
+		err := ext_account.UpdateActiveExtAccount(0, strings.ToLower(in.AccountAddr), api.Money_name[int32(in.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
 			return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil

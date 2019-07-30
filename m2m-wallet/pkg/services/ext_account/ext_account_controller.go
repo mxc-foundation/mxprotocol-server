@@ -9,6 +9,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/wallet"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"strings"
 )
 
 func Setup() error {
@@ -52,18 +53,17 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
-
 		log.WithFields(log.Fields{
-			"orgId": req.OrgId,
-			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
-			"accountAddr": req.CurrentAccount,
+			"orgId":       req.OrgId,
+			"moneyAbbr":   api.Money_name[int32(req.MoneyAbbr)],
+			"accountAddr": strings.ToLower(req.CurrentAccount),
 		}).Debug("grpc_api/ModifyMoneyAccount")
 
-		err := UpdateActiveExtAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
+		err := UpdateActiveExtAccount(req.OrgId, strings.ToLower(req.CurrentAccount), api.Money_name[int32(req.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/ModifyMoneyAccount")
 			return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile},
-					status.Errorf(codes.InvalidArgument, "Duplicate or invalid format.")
+				status.Errorf(codes.InvalidArgument, "Duplicate or invalid format.")
 		}
 		return &api.ModifyMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
 	}
@@ -87,14 +87,14 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 	case auth.OK:
 
 		log.WithFields(log.Fields{
-			"orgId": req.OrgId,
-			"offset": req.Offset,
-			"limit": req.Limit,
+			"orgId":     req.OrgId,
+			"offset":    req.Offset,
+			"limit":     req.Limit,
 			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetChangeMoneyAccountHistory")
 
 		walletId, err := wallet.GetWalletId(req.OrgId)
-		if err != nil{
+		if err != nil {
 			log.WithError(err).Error("grpc_api/GetChangeMoneyAccountHistory")
 			return &api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}, nil
 		}
@@ -138,7 +138,7 @@ func (s *ExtAccountServerAPI) GetActiveMoneyAccount(ctx context.Context, req *ap
 	case auth.OK:
 
 		log.WithFields(log.Fields{
-			"orgId": req.OrgId,
+			"orgId":     req.OrgId,
 			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetActiveMoneyAccount")
 
