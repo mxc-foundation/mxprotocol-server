@@ -16,7 +16,7 @@ services:
       - TEST_MQTT_SERVER=tcp://mosquitto:1883
     tty: true
     ports:
-      - 3000:3000
+      - 4000:4000
     security_opt:
       - seccomp:unconfined
     cap_add:

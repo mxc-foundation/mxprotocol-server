@@ -14,6 +14,12 @@ service InternalService {
 			body: "*"
 		};
 	}
+
+	rpc GetUserOrganizationList(GetUserOrganizationListRequest) returns (GetUserOrganizationListResponse) {
+		option(google.api.http) = {
+			get: "/api/internal/organizations"
+		};
+	}
 }
 
 message ProfileResponse {
@@ -86,4 +92,12 @@ message LoginRequest {
 message LoginResponse {
 	// The JWT tag to be used to access lora-app-server interfaces.
 	string jwt = 1;
+}
+
+message GetUserOrganizationListRequest {
+	int64 org_id = 1;
+}
+
+message GetUserOrganizationListResponse {
+	repeated OrganizationLink organizations = 1;
 }

@@ -89,15 +89,8 @@ class RedirectedFromLora extends Component {
     
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
     const { path } = data;
-
-    WalletStore.getWalletBalance(SessionStore.getOrganizationID(), resp => {
-      if(resp.userProfile.organizations.length > 0){
-        SessionStore.initProfile(data);
-      }else{
-        redirectToLora();
-      }
-    }); 
-  
+    SessionStore.initProfile(data);
+    
     return <Redirect to={path} />;
   }
 }
@@ -166,7 +159,7 @@ class App extends Component {
                     <Route path="/history/:organizationID" component={HistoryLayout} />
                     <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
 
-                    {/* <Route render={redirectToLora} /> */}
+                    <Route render={redirectToLora} />
                   </Switch>
                 </Grid>
               </div>

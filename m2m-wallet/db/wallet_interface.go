@@ -4,7 +4,7 @@ import (
 	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
-type WalletType string // db:wallet_type
+type WalletType string
 
 const (
 	USER        WalletType = "USER"

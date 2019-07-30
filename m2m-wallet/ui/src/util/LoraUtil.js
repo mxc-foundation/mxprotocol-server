@@ -1,6 +1,7 @@
 
+import SessionStore from '../stores/SessionStore';
 
-export const LoraUrl = `http://localhost:3002/`;
+export const LoraUrl = SessionStore.getLoraHostUrl();
 
 export function redirectToLora() {
     window.location.replace(LoraUrl);
