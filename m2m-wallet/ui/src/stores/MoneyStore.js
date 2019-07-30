@@ -4,7 +4,6 @@ import Swagger from "swagger-client";
 
 import sessionStore from "./SessionStore";
 import {checkStatus, errorHandler } from "./helpers";
-import updateOrganizations from "./SetUserProfile";
 import dispatcher from "../dispatcher";
 
 
@@ -21,7 +20,7 @@ class MoneyStore extends EventEmitter {
         orgId,
       })
       .then(checkStatus)
-      .then(updateOrganizations)
+      //.then(updateOrganizations)
       .then(resp => {
         callbackFunc(resp.obj);
       })
@@ -40,7 +39,7 @@ class MoneyStore extends EventEmitter {
         },
       })
       .then(checkStatus)
-      .then(updateOrganizations)
+      //.then(updateOrganizations)
       .then(resp => {
         this.notify("updated");
         callbackFunc(resp.obj);

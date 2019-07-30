@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Switch, Link, withRouter, Redirect } from "react-router-dom";
+import { Route, Switch, Link, withRouter } from "react-router-dom";
 
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
@@ -97,7 +97,7 @@ class HistoryLayout extends Component {
             scrollButtons="auto"
             textColor="primary"
           >
-            <Tab label="Transactions" component={Link} to={`/history/${organizationID}/transactions`} />
+            <Tab label="Transactions" component={Link} to={`/history/${organizationID}/`} />
             <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth_account`} />
             <Tab label="Withdraw" component={Link} to={`/history/${organizationID}/Withdraw`} />
             
@@ -106,7 +106,7 @@ class HistoryLayout extends Component {
 
         <Grid item xs={12}>
           <Switch>
-            <Route exact path={`/history/${organizationID}/transactions`} render={props => <Transactions {...props} />} />
+            <Route exact path={`/history/${organizationID}/`} render={props => <Transactions {...props} />} />
             <Route exact path={`/history/${organizationID}/eth_account`} render={props => <EthAccount {...props} />} />
             <Route exact path={`/history/${organizationID}/Withdraw`} render={props => <SubScriptions {...props} />} />
 

@@ -2,7 +2,6 @@ import React from "react";
 
 import TextField from '@material-ui/core/TextField';
 import FormComponent from "../../classes/FormComponent";
-import FormControl from "../../components/FormControl";
 import Form from "../../components/Form";
 class NewEthAccountForm extends FormComponent {
 
