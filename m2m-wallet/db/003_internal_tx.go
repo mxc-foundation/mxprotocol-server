@@ -1,4 +1,4 @@
-package postgres_db
+package db
 
 import (
 	"time"
@@ -32,8 +32,8 @@ type InternalTx struct {
 	TimeTx         time.Time `db:"timestamp"`
 }
 
-func (pgDbp DbSpec) CreateInternalTxTable() error {
-	_, err := pgDbp.Db.Exec(`
+func (pgDbp *dbCtx) CreateInternalTxTable() error {
+	_, err := pgDbp.db.Exec(`
 	DO $$
 	BEGIN
 		IF 
@@ -73,8 +73,8 @@ func (pgDbp DbSpec) CreateInternalTxTable() error {
 	return errors.Wrap(err, "db/CreateInternalTxTable")
 }
 
-func (pgDbp DbSpec) InsertInternalTx(it InternalTx) (insertIndex int64, err error) {
-	err = pgDbp.Db.QueryRow(`
+func (pgDbp *dbCtx) InsertInternalTx(it InternalTx) (insertIndex int64, err error) {
+	err = pgDbp.db.QueryRow(`
 	INSERT INTO internal_tx (
 		fk_wallet_sender,
 		fk_wallet_receiver,

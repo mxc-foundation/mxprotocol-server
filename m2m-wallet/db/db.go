@@ -7,11 +7,17 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 )
 
-var pgDb pstgDb.DbSpec
+var dbHandler *dbCtx
+var timeLayout string = "2006-01-02T15:04:05.000000Z"
+
+type dbCtx struct {
+	db         *sql.DB
+	driverName string
+	dbUrl      string
+}
 
 func Setup(conf config.MxpConfig) error {
 	dbp, err := openDBWithPing(conf)
@@ -19,10 +25,10 @@ func Setup(conf config.MxpConfig) error {
 	if err != nil {
 		return err
 	} else {
-		pgDb = pstgDb.DbSpec{
-			Db:         dbp,
-			DriverName: "postgres",
-			Dburl:      conf.PostgreSQL.DSN,
+		dbHandler = &dbCtx{
+			db:         dbp,
+			driverName: "postgres",
+			dbUrl:      conf.PostgreSQL.DSN,
 		}
 	}
 

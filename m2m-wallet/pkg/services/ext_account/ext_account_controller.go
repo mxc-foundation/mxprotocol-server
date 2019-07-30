@@ -2,8 +2,6 @@ package ext_account
 
 import (
 	"context"
-	"strings"
-
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
@@ -11,6 +9,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/wallet"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"strings"
 )
 
 func Setup() error {
@@ -46,6 +45,8 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 	switch res.Type {
 	case auth.JsonParseError:
 		fallthrough
+	case auth.OrganizationIdMisMatch:
+		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
@@ -55,16 +56,20 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 
 	case auth.OK:
 		log.WithFields(log.Fields{
-			"orgId": req.OrgId,
-			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
+			"orgId":       req.OrgId,
+			"moneyAbbr":   api.Money_name[int32(req.MoneyAbbr)],
 			"accountAddr": strings.ToLower(req.CurrentAccount),
 		}).Debug("grpc_api/ModifyMoneyAccount")
+
+		if 0 == req.OrgId {
+			return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
+		}
 
 		err := UpdateActiveExtAccount(req.OrgId, strings.ToLower(req.CurrentAccount), api.Money_name[int32(req.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/ModifyMoneyAccount")
 			return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile},
-					status.Errorf(codes.InvalidArgument, "Duplicate or invalid format.")
+				status.Errorf(codes.InvalidArgument, "Duplicate or invalid format.")
 		}
 		return &api.ModifyMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
 	}
@@ -78,6 +83,8 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 	switch res.Type {
 	case auth.JsonParseError:
 		fallthrough
+	case auth.OrganizationIdMisMatch:
+		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
@@ -88,13 +95,40 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 	case auth.OK:
 
 		log.WithFields(log.Fields{
-			"orgId": req.OrgId,
-			"offset": req.Offset,
-			"limit": req.Limit,
+			"orgId":     req.OrgId,
+			"offset":    req.Offset,
+			"limit":     req.Limit,
 			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetChangeMoneyAccountHistory")
 
-		return &api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}, nil
+		walletId, err := wallet.GetWalletId(req.OrgId)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetChangeMoneyAccountHistory")
+			return &api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}, nil
+		}
+
+		response := api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}
+		ptr, err := db.DbGetExtAcntHist(walletId, req.Offset * req.Limit, req.Limit)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetChangeMoneyAccountHistory")
+			return &api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}, nil
+		}
+
+		var count int64
+		for _, v := range ptr {
+			if v.ExtCurrencyAbv != api.Money_name[int32(req.MoneyAbbr)] {
+				continue
+			}
+			history := api.MoneyAccountChangeHistory{}
+			history.Addr = v.AccountAdr
+			history.CreatedAt = v.InsertTime.String()
+			history.Status = v.Status
+			count += 1
+			response.ChangeHistory = append(response.ChangeHistory, &history)
+		}
+		response.Count = count
+
+		return &response, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")
@@ -106,6 +140,8 @@ func (s *ExtAccountServerAPI) GetActiveMoneyAccount(ctx context.Context, req *ap
 	switch res.Type {
 	case auth.JsonParseError:
 		fallthrough
+	case auth.OrganizationIdMisMatch:
+		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
@@ -116,7 +152,7 @@ func (s *ExtAccountServerAPI) GetActiveMoneyAccount(ctx context.Context, req *ap
 	case auth.OK:
 
 		log.WithFields(log.Fields{
-			"orgId": req.OrgId,
+			"orgId":     req.OrgId,
 			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetActiveMoneyAccount")
 

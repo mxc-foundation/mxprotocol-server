@@ -2,13 +2,12 @@ package db
 
 import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
-	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
-var CurrencyList = []pstgDb.ExtCurrency{}
+var CurrencyList = []ExtCurrency{}
 
 func initExtCurrencyTable() error {
-	currency := pstgDb.ExtCurrency{}
+	currency := ExtCurrency{}
 	for _, v := range api.Money_name {
 		if _, err := DbGetExtCurrencyIdByAbbr(v); err == nil {
 			continue
@@ -29,13 +28,13 @@ func initExtCurrencyTable() error {
 }
 
 func dbCreateExtCurrencyTable() error {
-	return pgDb.CreateExtCurrencyTable()
+	return dbHandler.CreateExtCurrencyTable()
 }
 
-func DbInsertExtCurr(ec pstgDb.ExtCurrency) (insertIndex int64, err error) {
-	return pgDb.InsertExtCurr(ec)
+func DbInsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
+	return dbHandler.InsertExtCurr(ec)
 }
 
 func DbGetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
-	return pgDb.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
+	return dbHandler.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
 }
