@@ -5,6 +5,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
+	"math"
+	"math/big"
 	"strings"
 )
 
@@ -38,24 +40,51 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 		return err
 	}
 
+	var newBlockNo int64
+
 	for _, tx := range transfers {
 		if strings.EqualFold(tx.To, address) && tx.BlockNumber > incurBlockNo {
+			fbalance := new(big.Float)
+			fbalance.SetString(tx.Value.Int().String())
+			ethValue, _ := new(big.Float).Quo(fbalance, big.NewFloat(math.Pow10(18))).Float64()
 
-			amount := float64(tx.Value.Int().Int64())
-			_, err := db.DbAddTopUpRequest(tx.From, tx.To, tx.Hash, amount, currAbv)
+			from, err := db.DbGetExtAccountIdByAdr(tx.From)
+			if err != nil {
+				log.WithError(err).Warning("Cannot get external account from DB")
+				return err
+			}
+			if from == 0 {
+				log.WithError(err).Warning(tx.From, " is not in DB")
+				continue
+			}
+
+			to, err := db.DbGetExtAccountIdByAdr(tx.To)
+			if err != nil {
+				log.WithError(err).Warning("Cannot get super node account from DB")
+				return err
+			}
+			if to == 0 {
+				log.WithError(err).Warning(tx.To, " is not in DB")
+				continue
+			}
+
+			_, err = db.DbAddTopUpRequest(tx.From, tx.To, tx.Hash, ethValue, currAbv)
 			if err != nil {
 				log.WithError(err).Warning("Storage: Cannot update TopUpRequest to DB")
 				return err
 			}
+		}
+		newBlockNo = int64(tx.BlockNumber)
+	}
 
-			// Update the last block to db
-			err = db.DbUpdateLatestCheckedBlock(supernodeID, int64(tx.BlockNumber))
-			if err != nil {
-				log.WithError(err).Warning("Storage: Cannot update lastBlockNo to DB")
-				return err
-			}
-			return nil
+	// Update the last block to db
+	if newBlockNo > currentBlockNo{
+		err = db.DbUpdateLatestCheckedBlock(supernodeID, int64(newBlockNo))
+		if err != nil {
+			log.WithError(err).Warning("Storage: Cannot update lastBlockNo to DB")
+			return err
 		}
 	}
+
 	return nil
 }

@@ -45,7 +45,7 @@ type MxpConfig struct {
 		APIKey              string `mapstructure:"api_key"`
 		CheckAccountSeconds int    `mapstructure:"check_account_seconds"`
 		ExtCurrAbv          string `mapstructure:"external_currency_abv"`
-		TestNet             bool   `mapstructure:"ether_net"`
+		TestNet             bool   `mapstructure:"ether_test_net"`
 	}
 }
 
