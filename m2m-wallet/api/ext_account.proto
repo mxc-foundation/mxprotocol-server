@@ -49,8 +49,8 @@ message GetMoneyAccountChangeHistoryRequest {
 }
 
 message MoneyAccountChangeHistory {
-    string from = 1;
-    string to = 2;
+    string addr = 1;
+    string status = 2;
     string created_at = 3;
 }
 

@@ -1,4 +1,4 @@
-package postgres_db
+package db
 
 import (
 	"time"
@@ -15,8 +15,8 @@ type WithdrawFee struct {
 	Status     string    `db:"status"`
 }
 
-func (pgDbp DbSpec) CreateWithdrawFeeTable() error {
-	_, err := pgDbp.Db.Exec(`
+func (pgDbp *dbCtx) CreateWithdrawFeeTable() error {
+	_, err := pgDbp.db.Exec(`
 
 		CREATE TABLE IF NOT EXISTS 
 		withdraw_fee (
@@ -31,8 +31,8 @@ func (pgDbp DbSpec) CreateWithdrawFeeTable() error {
 	return errors.Wrap(err, "db/CreateWithdrawFeeTable")
 }
 
-func (pgDbp DbSpec) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
-	err = pgDbp.Db.QueryRow(`
+func (pgDbp *dbCtx) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
+	err = pgDbp.db.QueryRow(`
 		INSERT INTO withdraw_fee (
 			fk_ext_currency,
 			fee,
@@ -63,8 +63,8 @@ func (pgDbp DbSpec) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err er
 	return insertIndex, errors.Wrap(err, "db/InsertWithdrawFee")
 }
 
-func (pgDbp DbSpec) changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
-	_, err = pgDbp.Db.Exec(`
+func (pgDbp *dbCtx) changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
+	_, err = pgDbp.db.Exec(`
 	UPDATE 
 		withdraw_fee 
 	SET 
@@ -81,8 +81,8 @@ func (pgDbp DbSpec) changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error
 	return errors.Wrap(err, "db/changeStatus2ArcOldRowWithdrawFee")
 }
 
-func (pgDbp DbSpec) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
-	err = pgDbp.Db.QueryRow(`
+func (pgDbp *dbCtx) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
+	err = pgDbp.db.QueryRow(`
 		SELECT 
 			wf.fee
 		FROM
@@ -99,8 +99,8 @@ func (pgDbp DbSpec) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64
 	return withdrawFee, errors.Wrap(err, "db/GetActiveWithdrawFee")
 }
 
-func (pgDbp DbSpec) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
-	err = pgDbp.Db.QueryRow(`
+func (pgDbp *dbCtx) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
+	err = pgDbp.db.QueryRow(`
 		SELECT 
 			wf.id
 		FROM

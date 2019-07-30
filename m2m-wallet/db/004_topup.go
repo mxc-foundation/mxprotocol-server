@@ -1,4 +1,4 @@
-package postgres_db
+package db
 
 import (
 	"time"
@@ -27,8 +27,8 @@ type TopupHistRet struct {
 	TxHash      string
 }
 
-func (pgDbp DbSpec) CreateTopupTable() error {
-	_, err := pgDbp.Db.Exec(`
+func (pgDbp *dbCtx) CreateTopupTable() error {
+	_, err := pgDbp.db.Exec(`
 	CREATE TABLE IF NOT EXISTS topup (
 		id SERIAL PRIMARY KEY,
 		fk_ext_account_sender INT REFERENCES  ext_account(id) NOT NULL,
@@ -42,8 +42,8 @@ func (pgDbp DbSpec) CreateTopupTable() error {
 	return errors.Wrap(err, "db/CreateTopupTable")
 }
 
-func (pgDbp DbSpec) insertTopup(tu Topup) (insertIndex int64, err error) {
-	err = pgDbp.Db.QueryRow(`
+func (pgDbp *dbCtx) insertTopup(tu Topup) (insertIndex int64, err error) {
+	err = pgDbp.db.QueryRow(`
 		INSERT INTO topup (
 			fk_ext_account_sender,
 			fk_ext_account_receiver,
@@ -67,8 +67,8 @@ func (pgDbp DbSpec) insertTopup(tu Topup) (insertIndex int64, err error) {
 	return insertIndex, errors.Wrap(err, "db/InsertTopup")
 }
 
-func (pgDbp DbSpec) CreateTopupFunctions() error {
-	_, err := pgDbp.Db.Exec(`
+func (pgDbp *dbCtx) CreateTopupFunctions() error {
+	_, err := pgDbp.db.Exec(`
 
 	CREATE OR REPLACE FUNCTION topup_req_apply (
 			v_fk_ext_account_sender INT,
@@ -141,8 +141,8 @@ func (pgDbp DbSpec) CreateTopupFunctions() error {
 	return errors.Wrap(err, "db/CreateTopupFunctions")
 }
 
-func (pgDbp DbSpec) applyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
-	err = pgDbp.Db.QueryRow(`
+func (pgDbp *dbCtx) applyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
+	err = pgDbp.db.QueryRow(`
 		select topup_req_apply($1,$2,$3,$4,$5,$6,$7,$8,$9);
 		
 	`, tu.FkExtAcntSender,
@@ -159,7 +159,7 @@ func (pgDbp DbSpec) applyTopup(tu Topup, it InternalTx) (topupId int64, err erro
 
 }
 
-func (pgDbp DbSpec) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string, txHash string, value float64, extCurAbv string) (topupId int64, err error) {
+func (pgDbp *dbCtx) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string, txHash string, value float64, extCurAbv string) (topupId int64, err error) {
 
 	tu := Topup{
 		Value:       value,
@@ -200,9 +200,9 @@ func (pgDbp DbSpec) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string, tx
 
 }
 
-func (pgDbp DbSpec) GetTopupHist(walletId int64, offset int64, limit int64) ([]TopupHistRet, error) {
+func (pgDbp *dbCtx) GetTopupHist(walletId int64, offset int64, limit int64) ([]TopupHistRet, error) {
 
-	rows, err := pgDbp.Db.Query(
+	rows, err := pgDbp.db.Query(
 		`select
 			ea.account_adr AS sender_adr, 
 			ea2.account_adr AS receiver_adr, 
