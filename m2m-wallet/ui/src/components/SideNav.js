@@ -9,7 +9,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Divider from '@material-ui/core/Divider';
-import AutocompleteSelect from "./AutocompleteSelect";
 import DropdownMenu from "./DropdownMenu";
 
 import CalendarCheckOutline from "mdi-material-ui/CalendarCheckOutline";
@@ -183,19 +182,6 @@ class SideNav extends Component {
           {/* <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}> */}
           <Divider />
           <div>
-          {/* <AutocompleteSelect
-            id="organizationID"
-            margin="none"
-            value={organizationID}
-            updateOptions={this.selectClicked}
-            onChange={this.onChange}
-
-            
-            getOptions={this.state.options}
-            //getOptions={this.getOrganizationOptions}
-            className={this.props.classes.select}
-            triggerReload={this.state.cacheCounter}
-          /> */}
           <DropdownMenu default={ this.state.default } onChange={this.onChange} />
         </div>
           <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${this.state.organizationID}`}>
