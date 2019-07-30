@@ -4,7 +4,9 @@ import (
 	"context"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/wallet"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -29,6 +31,8 @@ func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpH
 	case auth.AuthFailed:
 		fallthrough
 	case auth.JsonParseError:
+		fallthrough
+	case auth.OrganizationIdMisMatch:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
@@ -43,8 +47,35 @@ func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpH
 			"limit": req.Limit,
 		}).Debug("grpc_api/GetTopUpHistory")
 
-		return &api.GetTopUpHistoryResponse{UserProfile: &userProfile}, nil
+		walletId, err := wallet.GetWalletId(req.OrgId)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetTopUpHistory")
+			return &api.GetTopUpHistoryResponse{UserProfile: &userProfile}, nil
+		}
 
+		response := api.GetTopUpHistoryResponse{UserProfile: &userProfile}
+		ptr, err := db.DbGetTopupHist(walletId, req.Offset * req.Limit, req.Limit)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetTopUpHistory")
+			return &api.GetTopUpHistoryResponse{UserProfile: &userProfile}, nil
+		}
+
+		var count int64
+		for _, v := range ptr {
+			history := api.TopUpHistory{}
+			history.From = v.AcntSender
+			history.To = v.AcntRcvr
+			history.Amount = v.Value
+			history.CreatedAt = v.TxAprvdTime.String()
+			history.MoneyType = v.ExtCurrency
+			history.TxHash = v.TxHash
+			count += 1
+
+			response.TopupHistory = append(response.TopupHistory, &history)
+		}
+		response.Count = count
+
+		return &response, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")

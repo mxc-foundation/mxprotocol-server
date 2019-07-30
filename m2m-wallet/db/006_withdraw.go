@@ -1,4 +1,4 @@
-package postgres_db
+package db
 
 import (
 	"time"
@@ -41,8 +41,8 @@ type WithdrawHistRet struct {
 	TxHash      string
 }
 
-func (pgDbp DbSpec) CreateWithdrawTable() error {
-	_, err := pgDbp.Db.Exec(`
+func (pgDbp *dbCtx) CreateWithdrawTable() error {
+	_, err := pgDbp.db.Exec(`
 
 	DO $$
 	BEGIN
@@ -77,8 +77,8 @@ func (pgDbp DbSpec) CreateWithdrawTable() error {
 	return errors.Wrap(err, "db/CreateWithdrawTable")
 }
 
-func (pgDbp DbSpec) insertWithdraw(wdr Withdraw) (insertIndex int64, err error) {
-	err = pgDbp.Db.QueryRow(`
+func (pgDbp *dbCtx) insertWithdraw(wdr Withdraw) (insertIndex int64, err error) {
+	err = pgDbp.db.QueryRow(`
 		INSERT INTO withdraw (
 			fk_ext_account_sender,
 			fk_ext_account_receiver,
@@ -110,16 +110,16 @@ func (pgDbp DbSpec) insertWithdraw(wdr Withdraw) (insertIndex int64, err error) 
 	return insertIndex, errors.Wrap(err, "db/InsertWithdraw")
 }
 
-func (pgDbp DbSpec) UpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
-	_, err := pgDbp.Db.Exec(`
+func (pgDbp *dbCtx) UpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
+	_, err := pgDbp.db.Exec(`
 		select withdraw_success($1,$2,$3);
 		
 	`, withdrawId, txHash, txApprovedTime)
 	return errors.Wrap(err, "db/UpdateWithdrawSuccessful")
 }
 
-func (pgDbp DbSpec) CreateWithdrawFunctions() error {
-	_, err := pgDbp.Db.Exec(`
+func (pgDbp *dbCtx) CreateWithdrawFunctions() error {
+	_, err := pgDbp.db.Exec(`
 
 
 
@@ -212,9 +212,9 @@ func (pgDbp DbSpec) CreateWithdrawFunctions() error {
 	return errors.Wrap(err, "db/CreateWithdrawFunctions")
 }
 
-func (pgDbp DbSpec) initWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err error) {
+func (pgDbp *dbCtx) initWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err error) {
 
-	err = pgDbp.Db.QueryRow(`
+	err = pgDbp.db.QueryRow(`
 		select withdraw_req_init($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);
 		
 	`, wdr.FkExtAcntSender,
@@ -233,7 +233,7 @@ func (pgDbp DbSpec) initWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawI
 
 }
 
-func (pgDbp DbSpec) InitWithdrawReq(walletId int64, value float64, extCurrencyAbbr string) (withdrawId int64, err error) {
+func (pgDbp *dbCtx) InitWithdrawReq(walletId int64, value float64, extCurrencyAbbr string) (withdrawId int64, err error) {
 
 	wdr := Withdraw{
 		Value:      value,
@@ -282,8 +282,8 @@ func (pgDbp DbSpec) InitWithdrawReq(walletId int64, value float64, extCurrencyAb
 
 }
 
-func (pgDbp DbSpec) UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error {
-	_, err := pgDbp.Db.Exec(`
+func (pgDbp *dbCtx) UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error {
+	_, err := pgDbp.db.Exec(`
 		UPDATE withdraw 
 		SET
 			tx_stat = 'PENDING',
@@ -298,9 +298,9 @@ func (pgDbp DbSpec) UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentS
 	return errors.Wrap(err, "db/UpdateWithdrawPaymentQueryId")
 }
 
-func (pgDbp DbSpec) GetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
+func (pgDbp *dbCtx) GetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
 
-	rows, err := pgDbp.Db.Query(
+	rows, err := pgDbp.db.Query(
 		`select
 			ea.account_adr AS sender_adr, 
 			ea2.account_adr AS receiver_adr, 

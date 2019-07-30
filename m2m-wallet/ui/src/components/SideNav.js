@@ -9,13 +9,13 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Divider from '@material-ui/core/Divider';
-import AutocompleteSelect from "./AutocompleteSelect";
+import DropdownMenu from "./DropdownMenu";
 
 import CalendarCheckOutline from "mdi-material-ui/CalendarCheckOutline";
 import CreditCard from "mdi-material-ui/CreditCard";
 import AccessPoint from "mdi-material-ui/AccessPoint";
 
-import WithdrawStore from "../stores/WithdrawStore"
+import ProfileStore from "../stores/ProfileStore"
 import SessionStore from "../stores/SessionStore"
 import PageNextOutline from "mdi-material-ui/PageNextOutline";
 import PagePreviousOutline from "mdi-material-ui/PagePreviousOutline";
@@ -24,9 +24,32 @@ import styles from "./SideNavStyle";
 
 
 const LinkToLora = ({children, ...otherProps}) => 
-<a href={`http://localhost:3002`} {...otherProps}>{children}</a>;
+<a href={SessionStore.getLoraHostUrl()} {...otherProps}>{children}</a>;
 
-const coinType = 'Ether';
+//const coinType = 'Ether';
+
+function updateOrganizationList(org_id) {
+  /* return new Promise((resolve, reject) => {
+    resolve(ProfileStore.getUserOrganizationList(org_id));
+  }); */
+
+  return new Promise((resolve, reject) => {
+    ProfileStore.getUserOrganizationList(org_id,
+      resp => {
+        resolve(resp);
+      })
+  });
+}
+
+function initOrganizationList(org_id) {
+  return new Promise((resolve, reject) => {
+    ProfileStore.getUserOrganizationList(org_id,
+      resp => {
+        const options = resp.organizations.map((o, i) => {return {label: o.organizationName, value: o.organizationID, color: '#00B8D9', isFixed: true}});
+        resolve(options);
+      })
+  });
+}
 
 class SideNav extends Component {
   constructor() {
@@ -36,39 +59,61 @@ class SideNav extends Component {
       open: true,
       organization: {},
       options: [],
+      default:{},
       organizationID: '',
       cacheCounter: 0,
     };
-
     this.onChange = this.onChange.bind(this);
-    this.getOrganizationOption = this.getOrganizationOption.bind(this);
-    this.getOrganizationOptions = this.getOrganizationOptions.bind(this);
+    //this.getOrganizationOptions = this.getOrganizationOptions.bind(this);
   }
 
-  handleMXC = () => {
+  handleMXC = async () => {
     window.location.replace(`http://mxc.org/`);
   } 
-
+  loadData = async () => {
+    try {
+      const organizationID = SessionStore.getOrganizationID();
+      this.setState({
+        organizationID,
+      })
+      this.setState({loading: true})
+      
+      const options = await initOrganizationList(organizationID);
+      console.log('initOrganizationList', options);
+      
+      /*const options = await updateOrganizationList(organizationID);
+      console.log('updateOrganizationList', options); */
+      
+      this.setState({
+        options,
+        default: options[0],
+        loading: false
+      })
+    } catch (error) {
+      this.setState({loading: false})
+      console.error(error);
+      this.setState({ error });
+    }
+  }
   componentDidMount() {
-    const organizationID = SessionStore.getOrganizationID();
-    const options = SessionStore.getOrganizationList();
+    this.loadData();
+    
+    /*const organizationID = SessionStore.getOrganizationID();
+   
     this.setState({
       organizationID,
-      options
     })
-    SessionStore.on("organizationList.change", () => {
+    ProfileStore.getUserOrganizationList(organizationID);
+    
+     SessionStore.on("organizationList.change", () => {
       const organizationID = SessionStore.getOrganizationID();
       const options = SessionStore.getOrganizationList();
       
       this.setState({
-        organizationID: '',
-        options:[]
-      });
-      this.setState({
         organizationID,
         options
       })
-    });
+    });   */
   }
 
   onChange(e) {
@@ -89,24 +134,16 @@ class SideNav extends Component {
     } */
   }
 
-  getOrganizationOption(id, callbackFunc) {
-    WithdrawStore.getWithdrawFee(coinType, resp => {
-      const option = resp.userProfile.organizations[0];
-      callbackFunc({label: option.organizationName, value: option.organizationID});
-    }); 
+  getOrganizationOptions = (search, callbackFunc) => {
+    let options = this.state.options;
+    console.log('getOrganizationOptions', options);
+    //return callbackFunc(options);
+    return options;
   }
 
-  /* getOrganizationOptions(search, callbackFunc) {
-    let options = SessionStore.getOrganizationList();
-    //options.push({label: 'mxp',value: '1' });
-    return callbackFunc(options);
-
-    //return callbackFunc(SessionStore.getOrganizationList());
-  } */
-
-  getOrganizationOptions(search, callbackFunc) {
-    let options = this.state.options;
-    return callbackFunc(options);
+  selectClicked = async () => {
+    const res = await updateOrganizationList(this.state.organizationID);
+    console.log('selectClicked', res);
   }
 
   render() {
@@ -121,6 +158,19 @@ class SideNav extends Component {
         return {};
       }
     }
+
+    /*setTimeout(function() {
+      const select = document.querySelector('.Select .Select-value');
+      
+      select && select.addEventListener('click', function(event) {
+        console.log(event.target, event.currentTarget)
+      });
+      window.addEventListener('click', function(event) {
+        console.log(event.target, event.currentTarget)
+        // .Select
+      })
+    })*/
+
     return(
       <Drawer
         variant="persistent"
@@ -132,15 +182,7 @@ class SideNav extends Component {
           {/* <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}> */}
           <Divider />
           <div>
-          <AutocompleteSelect
-            id="organizationID"
-            margin="none"
-            value={organizationID}
-            onChange={this.onChange}
-            getOptions={this.getOrganizationOptions}
-            className={this.props.classes.select}
-            triggerReload={this.state.cacheCounter}
-          />
+          <DropdownMenu default={ this.state.default } onChange={this.onChange} />
         </div>
           <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${this.state.organizationID}`}>
             <ListItemIcon className={this.props.classes.iconStyle}>
@@ -166,9 +208,7 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
           </ListItem>
-          
               <List className={this.props.classes.card}>
-                {/* <ListItem button  onClick={this.handleOpenLora}> */}
                 <ListItem button component={LinkToLora} className={this.props.classes.static}>  
                   <ListItemIcon>
                     <AccessPoint />
@@ -176,18 +216,6 @@ class SideNav extends Component {
                   <ListItemText primary="LoRa Server" />
                 </ListItem>
                 <Divider />
-                {/* <ListItem button >
-                  <ListItemText primary="Super Node" />
-                  <ListItemIcon>
-                    <RadioTower />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem button >
-                  <ListItemText primary="Organization" />
-                  <ListItemIcon>
-                    <Domain />
-                  </ListItemIcon>
-                </ListItem> */}
                 <Divider />
                 <ListItem>
                   <ListItemText primary="Powered by" />
@@ -195,12 +223,6 @@ class SideNav extends Component {
                     <img src="/logo/mxc_logo.png" className="iconStyle" alt="LoRa Server" onClick={this.handleMXC} />
                   </ListItemIcon>
                 </ListItem>
-                {/* <ListItem button onClick={this.handleOpenM2M} >
-                  <ListItemText primary="Change Account" />
-                  <ListItemIcon>
-                    <Repeat />
-                  </ListItemIcon>
-                </ListItem> */}
               </List>
         </List>}
       </Drawer>

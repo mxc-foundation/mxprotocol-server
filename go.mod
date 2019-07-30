@@ -23,7 +23,7 @@ require (
 	github.com/rs/cors v1.6.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/smartystreets/assertions v0.0.0-20190401211740-f487f9de1cd3 // indirect
-	github.com/smartystreets/goconvey v0.0.0-20190710185942-9d28bd7c0945
+	github.com/smartystreets/goconvey v0.0.0-20190710185942-9d28bd7c0945 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

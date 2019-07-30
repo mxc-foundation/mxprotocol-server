@@ -1,5 +1,5 @@
 import { createMuiTheme } from "@material-ui/core/styles";
-import { teal } from "@material-ui/core/colors";
+//import { teal } from "@material-ui/core/colors";
 
 const tealHighLight = '#00FFD9';
 const tealHighLight20 = '#00FFD920';

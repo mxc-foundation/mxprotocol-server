@@ -112,8 +112,7 @@ class TopNav extends Component {
     } */
     const { balance } = this.state;
 
-    const open = Boolean(this.state.menuAnchor);
-     ;
+    //const open = Boolean(this.state.menuAnchor);
 
     const balanceEl = balance === null ? 
       <span className="color-gray">(no org selected)</span> : 
@@ -124,7 +123,7 @@ class TopNav extends Component {
         <Toolbar>
           {/* <IconButton
             color="inherit"
-            aria-label="toggle drawer"
+            aria-label="toggle drawerPaper"
             onClick={this.handleDrawerToggle}
             className={this.props.classes.menuButton}
           >
@@ -138,48 +137,12 @@ class TopNav extends Component {
           <List>
             <ListItem>
               <ListItemIcon >
-                <Wallet color="primary !important" className={this.props.classes.iconStyle} />
+                <Wallet color="primary" className={this.props.classes.iconStyle} />
               </ListItemIcon>
               <ListItemText primary={ balanceEl } classes={{ primary: this.props.classes.noPadding }}/>
             </ListItem>
           </List>
 
-          {/* <a href="https://www.loraserver.io/lora-app-server/" target="loraserver-doc">
-            <IconButton className={this.props.classes.iconButton}>
-              <HelpCicle />
-            </IconButton>
-          </a> */}
-
-          {/* <Chip
-            avatar={
-              <Avatar>
-                <AccountCircle />
-              </Avatar>
-            }
-            label={this.props.user.username}
-            onClick={this.onMenuOpen}
-            classes={{
-              avatar: this.props.classes.avatar,
-              root: this.props.classes.chip,
-            }}
-          />
-          <Menu
-            id="menu-appbar"
-            anchorEl={this.state.menuAnchor}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={open}
-            onClose={this.onMenuClose}
-          >
-            <MenuItem component={Link} to={`/users/${this.props.user.id}/password`}>Edit Profile</MenuItem>
-            <MenuItem onClick={this.onLogout}>Logout</MenuItem>
-          </Menu> */}
         </Toolbar>
       </AppBar>
     );

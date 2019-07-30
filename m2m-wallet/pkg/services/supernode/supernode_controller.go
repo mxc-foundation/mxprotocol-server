@@ -2,11 +2,12 @@ package supernode
 
 import (
 	"context"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
+	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/ext_account"
@@ -52,6 +53,8 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 	case auth.AuthFailed:
 		fallthrough
 	case auth.JsonParseError:
+		fallthrough
+	case auth.OrganizationIdMisMatch:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
@@ -60,10 +63,10 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 	case auth.OK:
 		log.WithFields(log.Fields{
 			"moneyAbbr":   api.Money_name[int32(in.MoneyAbbr)],
-			"accountAddr": in.AccountAddr,
+			"accountAddr": strings.ToLower(in.AccountAddr),
 		}).Debug("grpc_api/AddSuperNodeMoneyAccount")
 
-		err := ext_account.UpdateActiveExtAccount(0, in.AccountAddr, api.Money_name[int32(in.MoneyAbbr)])
+		err := ext_account.UpdateActiveExtAccount(0, strings.ToLower(in.AccountAddr), api.Money_name[int32(in.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
 			return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
@@ -82,6 +85,8 @@ func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context,
 	case auth.AuthFailed:
 		fallthrough
 	case auth.JsonParseError:
+		fallthrough
+	case auth.OrganizationIdMisMatch:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:

@@ -82,7 +82,8 @@
             "name": "offset",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           {
             "name": "limit",
@@ -346,7 +347,20 @@
           "type": "number",
           "format": "double"
         },
-        "createdAt": {
+        "withdrawFee": {
+          "type": "number",
+          "format": "double"
+        },
+        "txSentTime": {
+          "type": "string"
+        },
+        "txStatus": {
+          "type": "string"
+        },
+        "txApprovedTime": {
+          "type": "string"
+        },
+        "txHash": {
           "type": "string"
         }
       }

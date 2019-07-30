@@ -4,24 +4,25 @@ import Swagger from "swagger-client";
 
 import sessionStore from "./SessionStore";
 import {checkStatus, errorHandler } from "./helpers";
+import updateOrganizations from "./SetUserProfile";
 import dispatcher from "../dispatcher";
 
 
-class WalletStore extends EventEmitter {
+class ProfileStore extends EventEmitter {
   constructor() {
     super();
-    this.swagger = new Swagger("/swagger/wallet.swagger.json", sessionStore.getClientOpts());
+    this.swagger = new Swagger("/swagger/profile.swagger.json", sessionStore.getClientOpts());
   }
 
-  getWalletBalance(org_id, callbackFunc) {
+  getUserOrganizationList(orgId, callbackFunc) {
     this.swagger.then(client => {
-      client.apis.WalletService.GetWalletBalance({
-        org_id,
+      client.apis.InternalService.GetUserOrganizationList({
+        orgId
       })
       .then(checkStatus)
-      //.then(updateOrganizations)
+      .then(updateOrganizations)
       .then(resp => {
-        callbackFunc(resp.obj);
+        callbackFunc(resp.body);
       })
       .catch(errorHandler);
     });
@@ -32,11 +33,11 @@ class WalletStore extends EventEmitter {
       type: "CREATE_NOTIFICATION",
       notification: {
         type: "success",
-        message: "Balance has been " + action,
+        message: "Profile has been " + action,
       },
     });
   }
 }
 
-const walletStore = new WalletStore();
-export default walletStore;
+const profileStore = new ProfileStore();
+export default profileStore;

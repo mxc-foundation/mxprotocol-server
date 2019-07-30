@@ -4,7 +4,6 @@ import Swagger from "swagger-client";
 
 import sessionStore from "./SessionStore";
 import {checkStatus, errorHandler } from "./helpers";
-import updateOrganizations from "./SetUserProfile";
 import dispatcher from "../dispatcher";
 
 
@@ -25,7 +24,7 @@ class HistoryStore extends EventEmitter {
         offset,
       })
       .then(checkStatus)
-      .then(updateOrganizations)
+      //.then(updateOrganizations)
       .then(resp => {
         callbackFunc(resp.obj);
       })
@@ -42,7 +41,7 @@ class HistoryStore extends EventEmitter {
         offset,
       })
       .then(checkStatus)
-      .then(updateOrganizations)
+      //.then(updateOrganizations)
       .then(resp => {
         callbackFunc(resp.obj);
       })
@@ -58,7 +57,7 @@ class HistoryStore extends EventEmitter {
         offset,
       })
       .then(checkStatus)
-      .then(updateOrganizations)
+      //.then(updateOrganizations)
       .then(resp => {
         callbackFunc(resp.obj);
       })
@@ -75,7 +74,7 @@ class HistoryStore extends EventEmitter {
         offset,
       })
       .then(checkStatus)
-      .then(updateOrganizations)
+      //.then(updateOrganizations)
       .then(resp => {
         callbackFunc(resp.obj);
       })

@@ -3,8 +3,6 @@ package db
 import (
 	"fmt"
 	"time"
-
-	pstgDb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
 func testDb() {
@@ -53,10 +51,10 @@ func testInternalTx() {
 	dbCreateInternalTxTable()
 
 	retInd, errIns := DbInsertInternalTx(
-		pstgDb.InternalTx{
+		InternalTx{
 			FkWalletSender: 4,
 			FkWalletRcvr:   21,
-			PaymentCat:     string(pstgDb.TOP_UP),
+			PaymentCat:     string(TOP_UP),
 			TxInternalRef:  4,
 			Value:          65.23,
 			TimeTx:         time.Now().UTC()})
@@ -73,7 +71,7 @@ func testExtCurrency() {
 	// fmt.Println("err DbInsertExtCurr(): ", err)
 
 	_, err := DbInsertExtCurr(
-		pstgDb.ExtCurrency{
+		ExtCurrency{
 			Name: "MXC token",
 			Abv:  "MXC"})
 	fmt.Println("err DbInsertExtCurr(): ", err)
@@ -91,11 +89,11 @@ func testWithdrawFee() {
 	err := dbCreateWithdrawFeeTable()
 	fmt.Println("err dbCreateWithdrawFeeTable(): ", err)
 
-	wf := pstgDb.WithdrawFee{
+	wf := WithdrawFee{
 		FkExtCurr:  2,
 		Fee:        9.99,
 		InsertTime: time.Now().UTC(),
-		Status:     string(pstgDb.ACTIVE)}
+		Status:     string(ACTIVE)}
 
 	_, errIns := DbInsertWithdrawFee("MXC", wf.Fee)
 	fmt.Println("err DbInsertWithdrawFee(): ", errIns)
@@ -110,32 +108,32 @@ func testWithdrawFee() {
 
 func testExtAccount() {
 
-	indInsert, errIns := DBInsertExtAccount(1, "0x11", "Ether")
+	indInsert, errIns := ext_account.DBInsertExtAccount(1, "0x11", "Ether")
 	fmt.Println("err DBInsertExtAccount(): ", indInsert, errIns)
 
-	acntId2, errGetAi2 := DbGetExtAccountIdByAdr("0x1")
+	acntId2, errGetAi2 := ext_account.DbGetExtAccountIdByAdr("0x1")
 	fmt.Println("DbGetExtAccountIdByAdr(): ", acntId2, " err:", errGetAi2)
 	// fmt.Println("suffix:", strings.HasSuffix(errGetAi2.Error(), DbError.NoRowQueryRes.Error()))
 
-	acntId, errGetAi := DbGetUserExtAccountId(2, "MXC")
+	acntId, errGetAi := ext_account.DbGetUserExtAccountId(2, "MXC")
 	fmt.Println("DbGetUserExtAccountId(): ", acntId, " err:", errGetAi)
-	acntAdr, errGetAu := DbGetUserExtAccountAdr(1, "MXC")
+	acntAdr, errGetAu := ext_account.DbGetUserExtAccountAdr(1, "MXC")
 	fmt.Println("DbGetUserExtAccountAdr(): ", acntAdr, " err:", errGetAu)
 
-	valId, errGetids := DbGetSuperNodeExtAccountId("MXC")
+	valId, errGetids := ext_account.DbGetSuperNodeExtAccountId("MXC")
 	fmt.Println("DbGetSuperNodeExtAccountId(): ", valId, " err:", errGetids)
 
-	fmt.Println("DbUpdateLatestCheckedBlock(): err", DbUpdateLatestCheckedBlock(3, 876))
+	fmt.Println("DbUpdateLatestCheckedBlock(): err", ext_account.DbUpdateLatestCheckedBlock(3, 876))
 
-	blk, errBlk := DbGetLatestCheckedBlock(3)
+	blk, errBlk := ext_account.DbGetLatestCheckedBlock(3)
 	fmt.Println("DbGetLatestCheckedBlock(): ", blk, " err:", errBlk)
 
-	val, errGetAc := DbGetSuperNodeExtAccountAdr("MXC")
+	val, errGetAc := ext_account.DbGetSuperNodeExtAccountAdr("MXC")
 	fmt.Println("DbGetSuperNodeExtAccountAdr(): ", val, " err:", errGetAc)
 
-	fmt.Println("err dbCreateExtAccountTable(): ", dbCreateExtAccountTable())
+	fmt.Println("err dbCreateExtAccountTable(): ", ext_account.dbCreateExtAccountTable())
 
-	valHist, errHist := DbGetExtAcntHist(2, 0, 100)
+	valHist, errHist := ext_account.DbGetExtAcntHist(2, 0, 100)
 	fmt.Println("DbGetExtAcntHist() errHist: ", errHist)
 	for _, v := range valHist {
 		fmt.Println(v)

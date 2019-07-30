@@ -1,6 +1,5 @@
 import blue from "@material-ui/core/colors/blue";
 import theme from "../theme";
-import { teal } from "@material-ui/core/colors";
 
 const TopNavStyle = {
     appBar: {

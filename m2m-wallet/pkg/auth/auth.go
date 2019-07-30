@@ -5,6 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"regexp"
+	"strconv"
+	"time"
+
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -13,11 +19,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"io/ioutil"
-	"net/http"
-	"regexp"
-	"strconv"
-	"time"
 )
 
 type errStruct struct {
@@ -48,6 +49,7 @@ const (
 	OrganizationIdRearranged resCode = 1
 	JsonParseError           resCode = 2
 	AuthFailed               resCode = 3
+	OrganizationIdMisMatch   resCode = 4
 )
 
 type VerifyResult struct {
@@ -147,8 +149,13 @@ func isOrgListRearranged(userProfile ProfileResponse, orgId int64) (api.ProfileR
 		}
 	}
 
-	if profile.User.IsAdmin == true && orgId == 0 {
-		return profile, VerifyResult{nil, OK}
+
+	if orgId == 0 {
+		if profile.User.IsAdmin == true {
+			return profile, VerifyResult{nil, OK}
+		} else {
+			return profile, VerifyResult{nil, OrganizationIdMisMatch}
+		}
 	}
 
 	if orgDeleted {
@@ -189,6 +196,7 @@ func requestUserProfileWithJWT(jwToken string) (ProfileResponse, error) {
 
 var validAuthorizationRegexp = regexp.MustCompile(`(?i)^bearer (.*)$`)
 
+//get jwt token from ctx
 func getTokenFromContext(ctx context.Context) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
@@ -300,6 +308,9 @@ func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *ap
 	case AuthFailed:
 		fallthrough
 	case JsonParseError:
+		fallthrough
+	case OrganizationIdMisMatch:
+
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case OrganizationIdRearranged:
@@ -316,6 +327,7 @@ func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *ap
 			}
 			orgList.Organizations = append(orgList.Organizations, &org)
 		}
+
 		return &orgList, nil
 	}
 
