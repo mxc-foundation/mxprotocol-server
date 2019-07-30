@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package api;
 
+
 import "google/api/annotations.proto";
 import "profile.proto";
 
@@ -24,6 +25,8 @@ message TopUpHistory {
     string to = 2;
     double amount = 3;
     string created_at = 4;
+    string money_type = 5;
+	string tx_hash = 6;
 }
 
 message GetTopUpHistoryResponse {

@@ -200,10 +200,10 @@
     "apiMoneyAccountChangeHistory": {
       "type": "object",
       "properties": {
-        "from": {
+        "addr": {
           "type": "string"
         },
-        "to": {
+        "status": {
           "type": "string"
         },
         "createdAt": {

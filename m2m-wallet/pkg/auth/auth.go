@@ -49,6 +49,7 @@ const (
 	ErrorInfoNotNull         resCode = 1
 	OrganizationIdRearranged resCode = 2
 	JsonParseError           resCode = 3
+	OrganizationIdMisMatch   resCode = 4
 )
 
 type VerifyResult struct {
@@ -154,8 +155,12 @@ func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, 
 
 	}
 
-	if profile.User.IsAdmin == true && reqOrgId == 0 {
-		return profile, VerifyResult{nil, OK}
+	if reqOrgId == 0 {
+		if profile.User.IsAdmin == true {
+			return profile, VerifyResult{nil, OK}
+		} else {
+			return profile, VerifyResult{nil, OrganizationIdMisMatch}
+		}
 	}
 
 	if orgDeleted {
@@ -282,6 +287,8 @@ func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *ap
 
 	switch res.Type {
 	case JsonParseError:
+		fallthrough
+	case OrganizationIdMisMatch:
 		fallthrough
 	case ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)

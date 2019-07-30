@@ -149,6 +149,12 @@
         },
         "createdAt": {
           "type": "string"
+        },
+        "moneyType": {
+          "type": "string"
+        },
+        "txHash": {
+          "type": "string"
         }
       }
     },

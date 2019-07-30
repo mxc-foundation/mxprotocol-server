@@ -2,12 +2,12 @@ package supernode
 
 import (
 	"context"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/ext_account"
@@ -52,6 +52,8 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 	switch res.Type {
 	case auth.JsonParseError:
 		fallthrough
+	case auth.OrganizationIdMisMatch:
+		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
@@ -81,6 +83,8 @@ func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context,
 
 	switch res.Type {
 	case auth.JsonParseError:
+		fallthrough
+	case auth.OrganizationIdMisMatch:
 		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
