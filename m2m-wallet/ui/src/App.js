@@ -15,7 +15,7 @@ import SideNav from "./components/SideNav";
 import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
-import WalletStore from "./stores/WalletStore";
+//import ProfileStore from "./stores/ProfileStore";
 
 // search
 //import Search from "./views/search/Search";
@@ -25,7 +25,7 @@ import Topup from "./views/topup/Topup"
 import Withdraw from "./views/withdraw/Withdraw"
 import HistoryLayout from "./views/history/HistoryLayout"
 import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
-import { redirectToLora } from "./util/LoraUtil";
+//import { redirectToLora } from "./util/LoraUtil";
 
 const drawerWidth = 270;
 
@@ -75,9 +75,7 @@ class RedirectedFromLora extends Component {
   constructor(...args) {
     super(...args);
 
-    this.state = {
-
-    }
+    this.state = {}
   }
   
   formatNumber(number) {
@@ -86,16 +84,23 @@ class RedirectedFromLora extends Component {
 
   render() {
     const { match: { params: { data: dataString } }} = this.props;
-    
+
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
     const { path } = data;
     SessionStore.initProfile(data);
+    //ProfileStore.getUserOrganizationList(org_id);
     
-    return <Redirect to={path} />;
+    /* new Promise((resolve, reject) => {
+      ProfileStore.getUserOrganizationList(org_id,
+        resp => {
+          resolve(resp);
+        })
+    }).then((resp)=>{
+      return <Redirect to={path} />;  
+    }); */
+    return <Redirect to={path} />; 
   }
 }
-
-
 
 class App extends Component {
   constructor() {
@@ -138,7 +143,7 @@ class App extends Component {
 
     if (this.state.user !== null) {
       topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} />;
-      sideNav = <SideNav open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
+      sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
     }
     
     return (
@@ -159,7 +164,7 @@ class App extends Component {
                     <Route path="/history/:organizationID" component={HistoryLayout} />
                     <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
 
-                    <Route render={redirectToLora} />
+                    {/* <Route render={redirectToLora} /> */}
                   </Switch>
                 </Grid>
               </div>
