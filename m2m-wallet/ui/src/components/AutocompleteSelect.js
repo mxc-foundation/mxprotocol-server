@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 import FormControl from "@material-ui/core/FormControl";
-import ProfileStore from "../stores/ProfileStore"
-import MenuDown from "mdi-material-ui/MenuDown";
 import Cancel from "mdi-material-ui/Cancel";
-import MenuUp from "mdi-material-ui/MenuUp";
 import Close from "mdi-material-ui/Close";
 import AsyncSelect from 'react-select/async';
 //import 'react-select/dist/react-select.css';
@@ -82,11 +78,9 @@ const styles = theme => ({
     '.Select-value': {
       color: "black !important",
       paddingLeft: "0 !important",
-      color: theme.palette.textPrimary.main,
     },
     '.Select-placeholder': {
       opacity: 0.42,
-      color: theme.palette.textPrimary.main,
     },
     '.Select-menu-outer': {
       backgroundColor: '#090046',
@@ -186,13 +180,13 @@ function SelectWrapped(props) {
   return (
     <AsyncSelect
       components={components}
-      arrowRenderer={arrowProps => {
+      /* arrowRenderer={arrowProps => {
         if(arrowProps.isOpen){
           props.updateOptions();
         }
         
         return arrowProps.isOpen ? <MenuUp /> : <MenuDown />;
-      }}
+      }} */
       clearRenderer={() => <Close />}
       {...other}
     />
@@ -215,7 +209,11 @@ class AutocompleteSelect extends Component {
   }
 
   componentDidMount() {
-    this.setInitialOptions(this.setSelectedOption);
+    console.log('auto componentDidMount', this.props.getOptions);
+    this.setState({
+      options: this.props.getOptions,
+    });
+    //this.setInitialOptions(this.setSelectedOption);
   }
 
   componentDidUpdate(prevProps) {
@@ -227,12 +225,18 @@ class AutocompleteSelect extends Component {
   }
 
   setInitialOptions(callbackFunc) {
-    this.props.getOptions("", options => {
+    console.log('setInitialOptions', this.props.getOptions);
+    this.setState({
+      options: this.props.getOptions,
+    });
+    
+    /* this.props.getOptions("", options => {
+      console.log('setInitialOptions', options);
       
       this.setState({
         options: options,
       }, callbackFunc);
-    });
+    }); */
   }
 
   setSelectedOption() {
@@ -268,6 +272,7 @@ class AutocompleteSelect extends Component {
   onAutocomplete(input, callbackFunc) {
     return new Promise((resolve, reject) => {
       this.props.getOptions(input, options => {
+        console.log('onAutocomplete', options);
         
         this.setState({
           options: options,
@@ -297,6 +302,7 @@ class AutocompleteSelect extends Component {
   }
 
   render() {
+    console.log('onAutocomplete', this.props.getOptions);
     const inputProps = this.props.inputProps || {};
     
     return(

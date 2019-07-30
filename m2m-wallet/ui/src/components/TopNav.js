@@ -112,7 +112,7 @@ class TopNav extends Component {
     } */
     const { balance } = this.state;
 
-    const open = Boolean(this.state.menuAnchor);
+    //const open = Boolean(this.state.menuAnchor);
 
     const balanceEl = balance === null ? 
       <span className="color-gray">(no org selected)</span> : 
@@ -123,7 +123,7 @@ class TopNav extends Component {
         <Toolbar>
           {/* <IconButton
             color="inherit"
-            aria-label="toggle drawer"
+            aria-label="toggle drawerPaper"
             onClick={this.handleDrawerToggle}
             className={this.props.classes.menuButton}
           >

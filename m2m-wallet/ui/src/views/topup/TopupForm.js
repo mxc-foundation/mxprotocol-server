@@ -14,6 +14,10 @@ class TopupForm extends FormComponent {
   } 
 
   render() {
+    const extraButtons = <>
+      <Button color="primary" onClick={this.handleOpenAXS} type="button" disabled={false}>USE AXS WALLET</Button>
+    </>;
+    
     if (this.props.reps === undefined) {
       return(
         <Form
@@ -26,9 +30,6 @@ class TopupForm extends FormComponent {
       );
     }
     //console.log('this.props.reps', this.props.reps);
-    const extraButtons = <>
-      <Button color="primary" onClick={this.handleOpenAXS} type="button" disabled={false}>USE AXS WALLET</Button>
-    </>;
 
     return(
       <Form

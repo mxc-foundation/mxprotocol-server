@@ -4,7 +4,6 @@ import Swagger from "swagger-client";
 
 import sessionStore from "./SessionStore";
 import {checkStatus, errorHandler } from "./helpers";
-import updateOrganizations from "./SetUserProfile";
 import dispatcher from "../dispatcher";
 
 

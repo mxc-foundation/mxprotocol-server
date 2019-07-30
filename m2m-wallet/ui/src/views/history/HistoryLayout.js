@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Switch, Link, withRouter, Redirect } from "react-router-dom";
+import { Route, Switch, Link, withRouter } from "react-router-dom";
 
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';

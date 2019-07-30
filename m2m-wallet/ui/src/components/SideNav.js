@@ -10,6 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import Divider from '@material-ui/core/Divider';
 import AutocompleteSelect from "./AutocompleteSelect";
+import DropdownMenu from "./DropdownMenu";
 
 import CalendarCheckOutline from "mdi-material-ui/CalendarCheckOutline";
 import CreditCard from "mdi-material-ui/CreditCard";
@@ -26,7 +27,7 @@ import styles from "./SideNavStyle";
 const LinkToLora = ({children, ...otherProps}) => 
 <a href={SessionStore.getLoraHostUrl()} {...otherProps}>{children}</a>;
 
-const coinType = 'Ether';
+//const coinType = 'Ether';
 
 function updateOrganizationList(org_id) {
   /* return new Promise((resolve, reject) => {
@@ -41,6 +42,16 @@ function updateOrganizationList(org_id) {
   });
 }
 
+function initOrganizationList(org_id) {
+  return new Promise((resolve, reject) => {
+    ProfileStore.getUserOrganizationList(org_id,
+      resp => {
+        const options = resp.organizations.map((o, i) => {return {label: o.organizationName, value: o.organizationID, color: '#00B8D9', isFixed: true}});
+        resolve(options);
+      })
+  });
+}
+
 class SideNav extends Component {
   constructor() {
     super();
@@ -48,16 +59,16 @@ class SideNav extends Component {
     this.state = {
       open: true,
       organization: {},
-      options: SessionStore.getOrganizationList(),
+      options: [],
+      default:{},
       organizationID: '',
       cacheCounter: 0,
     };
-
     this.onChange = this.onChange.bind(this);
-    this.getOrganizationOptions = this.getOrganizationOptions.bind(this);
+    //this.getOrganizationOptions = this.getOrganizationOptions.bind(this);
   }
 
-  handleMXC = () => {
+  handleMXC = async () => {
     window.location.replace(`http://mxc.org/`);
   } 
   loadData = async () => {
@@ -67,9 +78,18 @@ class SideNav extends Component {
         organizationID,
       })
       this.setState({loading: true})
-      var result = await ProfileStore.getUserOrganizationList(organizationID);
       
-      this.setState({loading: false})
+      const options = await initOrganizationList(organizationID);
+      console.log('initOrganizationList', options);
+      
+      /*const options = await updateOrganizationList(organizationID);
+      console.log('updateOrganizationList', options); */
+      
+      this.setState({
+        options,
+        default: options[0],
+        loading: false
+      })
     } catch (error) {
       this.setState({loading: false})
       console.error(error);
@@ -78,7 +98,7 @@ class SideNav extends Component {
   }
   componentDidMount() {
     this.loadData();
-    this.forceUpdate();
+    
     /*const organizationID = SessionStore.getOrganizationID();
    
     this.setState({
@@ -115,13 +135,16 @@ class SideNav extends Component {
     } */
   }
 
-  getOrganizationOptions(search, callbackFunc) {
+  getOrganizationOptions = (search, callbackFunc) => {
     let options = this.state.options;
-    return callbackFunc(options);
+    console.log('getOrganizationOptions', options);
+    //return callbackFunc(options);
+    return options;
   }
 
   selectClicked = async () => {
     const res = await updateOrganizationList(this.state.organizationID);
+    console.log('selectClicked', res);
   }
 
   render() {
@@ -160,16 +183,20 @@ class SideNav extends Component {
           {/* <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}> */}
           <Divider />
           <div>
-          <AutocompleteSelect
+          {/* <AutocompleteSelect
             id="organizationID"
             margin="none"
             value={organizationID}
             updateOptions={this.selectClicked}
-            onChange={this.onChange}//{this.state.organization && 
-            getOptions={this.getOrganizationOptions}
+            onChange={this.onChange}
+
+            
+            getOptions={this.state.options}
+            //getOptions={this.getOrganizationOptions}
             className={this.props.classes.select}
             triggerReload={this.state.cacheCounter}
-          />
+          /> */}
+          <DropdownMenu default={ this.state.default } onChange={this.onChange} />
         </div>
           <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${this.state.organizationID}`}>
             <ListItemIcon className={this.props.classes.iconStyle}>

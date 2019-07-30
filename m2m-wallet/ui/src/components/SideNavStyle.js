@@ -8,8 +8,8 @@ const SideNavStyle = {
       paddingLeft: 0,
       paddingRight: 0,
       backgroundColor: '#1C1478',
-      color: '#F9FAFC',
-      fontSize: 14,
+      color: theme.palette.secondary.main,
+      fontSize: 'bold',
     },
     select: {
       paddingTop: theme.spacing.unit,

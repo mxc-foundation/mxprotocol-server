@@ -10,7 +10,7 @@ import SupernodeStore from "../../stores/SupernodeStore";
 import WalletStore from "../../stores/WalletStore";
 import WithdrawForm from "./WithdrawForm";
 import Modal from "./Modal";
-import WithdrawBalanceInfo from "./WithdrawBalanceInfo";
+//import WithdrawBalanceInfo from "./WithdrawBalanceInfo";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Divider from '@material-ui/core/Divider';
@@ -42,9 +42,9 @@ function loadWithdrawFee(coinType, organizationID) {
 }
 
 function loadCurrentAccount(coinType, organizationID) {
-  
+  console.log('loadCurrentAccount', organizationID);
   return new Promise((resolve, reject) => {
-    if (organizationID == 0) {
+    if (organizationID === '0') {
       SupernodeStore.getSuperNodeActiveMoneyAccount(coinType, resp => {
         resolve(resp.supernodeActiveAccount);
         

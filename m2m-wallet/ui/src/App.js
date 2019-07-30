@@ -15,7 +15,7 @@ import SideNav from "./components/SideNav";
 import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
-import ProfileStore from "./stores/ProfileStore";
+//import ProfileStore from "./stores/ProfileStore";
 
 // search
 //import Search from "./views/search/Search";
@@ -25,7 +25,7 @@ import Topup from "./views/topup/Topup"
 import Withdraw from "./views/withdraw/Withdraw"
 import HistoryLayout from "./views/history/HistoryLayout"
 import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
-import { redirectToLora } from "./util/LoraUtil";
+//import { redirectToLora } from "./util/LoraUtil";
 
 const drawerWidth = 270;
 
@@ -86,19 +86,18 @@ class RedirectedFromLora extends Component {
     const { match: { params: { data: dataString } }} = this.props;
 
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
-    const { path, org_id } = data;
-    
+    const { path } = data;
     SessionStore.initProfile(data);
     //ProfileStore.getUserOrganizationList(org_id);
     
-    new Promise((resolve, reject) => {
+    /* new Promise((resolve, reject) => {
       ProfileStore.getUserOrganizationList(org_id,
         resp => {
           resolve(resp);
         })
     }).then((resp)=>{
       return <Redirect to={path} />;  
-    });
+    }); */
     return <Redirect to={path} />; 
   }
 }
