@@ -45,6 +45,8 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 	switch res.Type {
 	case auth.JsonParseError:
 		fallthrough
+	case auth.OrganizationIdMisMatch:
+		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
@@ -58,6 +60,10 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 			"moneyAbbr":   api.Money_name[int32(req.MoneyAbbr)],
 			"accountAddr": strings.ToLower(req.CurrentAccount),
 		}).Debug("grpc_api/ModifyMoneyAccount")
+
+		if 0 == req.OrgId {
+			return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
+		}
 
 		err := UpdateActiveExtAccount(req.OrgId, strings.ToLower(req.CurrentAccount), api.Money_name[int32(req.MoneyAbbr)])
 		if err != nil {
@@ -76,6 +82,8 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 
 	switch res.Type {
 	case auth.JsonParseError:
+		fallthrough
+	case auth.OrganizationIdMisMatch:
 		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
@@ -100,7 +108,11 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 		}
 
 		response := api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}
-		ptr, err := db.DbGetExtAcntHist(walletId, req.Offset, req.Limit)
+		ptr, err := db.DbGetExtAcntHist(walletId, req.Offset * req.Limit, req.Limit)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetChangeMoneyAccountHistory")
+			return &api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}, nil
+		}
 
 		var count int64
 		for _, v := range ptr {
@@ -127,6 +139,8 @@ func (s *ExtAccountServerAPI) GetActiveMoneyAccount(ctx context.Context, req *ap
 
 	switch res.Type {
 	case auth.JsonParseError:
+		fallthrough
+	case auth.OrganizationIdMisMatch:
 		fallthrough
 	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
