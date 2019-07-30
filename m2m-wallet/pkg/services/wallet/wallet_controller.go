@@ -116,9 +116,9 @@ func (s *WalletServerAPI) GetWalletBalance(ctx context.Context, req *api.GetWall
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
-	case auth.JsonParseError:
+	case auth.AuthFailed:
 		fallthrough
-	case auth.ErrorInfoNotNull:
+	case auth.JsonParseError:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
@@ -148,9 +148,9 @@ func (s *WalletServerAPI) GetVmxcTxHistory(ctx context.Context, req *api.GetVmxc
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
-	case auth.JsonParseError:
+	case auth.AuthFailed:
 		fallthrough
-	case auth.ErrorInfoNotNull:
+	case auth.JsonParseError:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:

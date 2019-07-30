@@ -45,9 +45,9 @@ type resCode int32
 
 const (
 	OK                       resCode = 0
-	ErrorInfoNotNull         resCode = 1
-	OrganizationIdRearranged resCode = 2
-	JsonParseError           resCode = 3
+	OrganizationIdRearranged resCode = 1
+	JsonParseError           resCode = 2
+	AuthFailed               resCode = 3
 )
 
 type VerifyResult struct {
@@ -99,33 +99,28 @@ type ProfileResponse struct {
 }
 
 func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, reqOrgId int64) (api.ProfileResponse, VerifyResult) {
-
-	info, err := tokenMiddleware(ctx)
+	// parse jwt from context
+	tokenStr, err := getTokenFromContext(ctx)
 	if err != nil {
 		log.WithError(err).Error("auth/VerifyRequestViaAuthServer")
 		return api.ProfileResponse{}, VerifyResult{err, JsonParseError}
 	}
 
-	errInfo := errStruct{}
-	err = json.Unmarshal(*info, &errInfo)
+	// request user profile with jwt
+	userProfile, err := requestUserProfileWithJWT(tokenStr)
 	if err != nil {
 		log.WithError(err).Error("auth/VerifyRequestViaAuthServer")
+		return api.ProfileResponse{}, VerifyResult{err, AuthFailed}
 	}
 
-	if errInfo.Error != "" {
-		return api.ProfileResponse{}, VerifyResult{errors.New(errInfo.Error), ErrorInfoNotNull}
-	}
+	return isOrgListRearranged(userProfile, reqOrgId)
+}
 
-	userProfile := ProfileResponse{}
-	err = json.Unmarshal(*info, &userProfile)
-	if err != nil {
-		log.WithError(err).Error("auth/VerifyRequestViaAuthServer")
-	}
-
+func isOrgListRearranged(userProfile ProfileResponse, orgId int64) (api.ProfileResponse, VerifyResult) {
 	profile := api.ProfileResponse{}
 	profile.User = &api.User{}
 	profile.Settings = &api.ProfileSettings{}
-	// assign api.ProfileResponse.User
+
 	profile.User.Id = userProfile.User.Id
 	profile.User.Username = userProfile.User.Username
 	profile.User.SessionTtl = userProfile.User.SessionTtl
@@ -133,7 +128,7 @@ func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, 
 	profile.User.IsActive = userProfile.User.IsActive
 	profile.User.Email = userProfile.User.Email
 	profile.User.Note = userProfile.User.Note
-	// assign api.ProfileResponse.Settings
+
 	profile.Settings.DisableAssignExistingUsers = userProfile.Settings.DisableAssignExistingUsers
 
 	orgDeleted := true
@@ -147,37 +142,49 @@ func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, 
 		org.UpdatedAt = &timestamp.Timestamp{Seconds: int64(v.UpdatedAt.Second()), Nanos: int32(v.UpdatedAt.Nanosecond())}
 		profile.Organizations = append(profile.Organizations, &org)
 
-		if id == reqOrgId {
+		if id == orgId {
 			orgDeleted = false
 		}
-
 	}
 
-	if profile.User.IsAdmin == true && reqOrgId == 0 {
+	if profile.User.IsAdmin == true && orgId == 0 {
 		return profile, VerifyResult{nil, OK}
 	}
-
 
 	if orgDeleted {
 		return profile, VerifyResult{nil, OrganizationIdRearranged}
 	}
 
-
 	return profile, VerifyResult{nil, OK}
 }
 
-func tokenMiddleware(ctx context.Context) (*[]byte, error) {
-	tokenStr, err := getTokenFromContext(ctx)
-
+func requestUserProfileWithJWT(jwToken string) (ProfileResponse, error) {
+	res, err := getRequest(ctxAuth.authServer+ctxAuth.authUrl, jwToken)
 	if err != nil {
-		return nil, errors.Wrap(err, "get token from context error")
-	} else {
-		res, err := getRequest(ctxAuth.authServer+ctxAuth.authUrl, tokenStr)
-		if err != nil {
-			return nil, errors.Wrap(err, "no response from lora app server")
-		}
-		return res, nil
+		log.WithError(err).Error("auth/requestUserProfileWithJWT")
+		return ProfileResponse{}, err
 	}
+
+	errInfo := errStruct{}
+	err = json.Unmarshal(*res, &errInfo)
+	if err != nil {
+		log.WithError(err).Error("auth/requestUserProfileWithJWT")
+		return ProfileResponse{}, err
+	}
+
+	if errInfo.Error != "" {
+		err := errors.New(errInfo.Error)
+		log.WithError(err).Error("auth/requestUserProfileWithJWT")
+		return ProfileResponse{}, err
+	}
+
+	userProfile := ProfileResponse{}
+	err = json.Unmarshal(*res, &userProfile)
+	if err != nil {
+		log.WithError(err).Error("auth/requestUserProfileWithJWT")
+		return ProfileResponse{}, err
+	}
+	return userProfile, nil
 }
 
 var validAuthorizationRegexp = regexp.MustCompile(`(?i)^bearer (.*)$`)
@@ -228,15 +235,15 @@ func NewInternalServerAPI() *InternalServerAPI {
 	return &InternalServerAPI{serviceName: "internal get jwt"}
 }
 
-func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*api.LoginResponse, error) {
+func requestJWTWithUsernamePass(username string, password string) (string, error) {
 	requestBody, err := json.Marshal(map[string]string{
-		"password": req.Password,
-		"username": req.Username,
+		"password": password,
+		"username": username,
 	})
 
 	if err != nil {
 		log.Warn(err)
-		return &api.LoginResponse{}, err
+		return "", err
 	}
 
 	request, err := http.NewRequest("POST", ctxAuth.authServer+"/api/internal/login", bytes.NewBuffer(requestBody))
@@ -245,18 +252,18 @@ func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*
 
 	if err != nil {
 		log.Warn(err)
-		return &api.LoginResponse{}, err
+		return "", err
 	}
 
 	res, err := http.DefaultClient.Do(request)
 	if err != nil {
-		return &api.LoginResponse{}, err
+		return "", err
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return &api.LoginResponse{}, err
+		return "", err
 	}
 
 	// parse response
@@ -267,7 +274,7 @@ func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*
 	}
 
 	if errInfo.Error != "" {
-		return &api.LoginResponse{}, err
+		return "", err
 	}
 
 	var output map[string]string
@@ -275,16 +282,24 @@ func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*
 	if err != nil {
 		fmt.Println("unmarshal response", err)
 	}
-	return &api.LoginResponse{Jwt: output["jwt"]}, nil
+	return output["jwt"], nil
 }
 
-func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *api.GetUserOrganizationListRequest) (*api.GetUserOrganizationListResponse, error){
+func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*api.LoginResponse, error) {
+	jwt, err := requestJWTWithUsernamePass(req.Username, req.Password)
+	if err != nil {
+		return &api.LoginResponse{}, err
+	}
+	return &api.LoginResponse{Jwt: jwt}, nil
+}
+
+func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *api.GetUserOrganizationListRequest) (*api.GetUserOrganizationListResponse, error) {
 	userProfile, res := VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
-	case JsonParseError:
+	case AuthFailed:
 		fallthrough
-	case ErrorInfoNotNull:
+	case JsonParseError:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case OrganizationIdRearranged:
@@ -295,9 +310,9 @@ func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *ap
 
 		if userProfile.User.IsAdmin == true {
 			org := api.OrganizationLink{
-				OrganizationId: 0,
+				OrganizationId:   0,
 				OrganizationName: "Super_admin",
-				IsAdmin: true,
+				IsAdmin:          true,
 			}
 			orgList.Organizations = append(orgList.Organizations, &org)
 		}

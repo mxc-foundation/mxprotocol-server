@@ -49,9 +49,9 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
 
 	switch res.Type {
-	case auth.JsonParseError:
+	case auth.AuthFailed:
 		fallthrough
-	case auth.ErrorInfoNotNull:
+	case auth.JsonParseError:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
@@ -79,9 +79,9 @@ func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context,
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
 
 	switch res.Type {
-	case auth.JsonParseError:
+	case auth.AuthFailed:
 		fallthrough
-	case auth.ErrorInfoNotNull:
+	case auth.JsonParseError:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:

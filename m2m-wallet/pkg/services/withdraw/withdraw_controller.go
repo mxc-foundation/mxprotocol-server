@@ -61,9 +61,9 @@ func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *api.Modif
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, in.OrgId)
 
 	switch res.Type {
-	case auth.JsonParseError:
+	case auth.AuthFailed:
 		fallthrough
-	case auth.ErrorInfoNotNull:
+	case auth.JsonParseError:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
@@ -94,9 +94,9 @@ func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWith
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
-	case auth.JsonParseError:
+	case auth.AuthFailed:
 		fallthrough
-	case auth.ErrorInfoNotNull:
+	case auth.JsonParseError:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
@@ -121,9 +121,9 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
-	case auth.JsonParseError:
+	case auth.AuthFailed:
 		fallthrough
-	case auth.ErrorInfoNotNull:
+	case auth.JsonParseError:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
@@ -149,9 +149,9 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
-	case auth.JsonParseError:
+	case auth.AuthFailed:
 		fallthrough
-	case auth.ErrorInfoNotNull:
+	case auth.JsonParseError:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:

@@ -26,9 +26,9 @@ func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpH
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
-	case auth.JsonParseError:
+	case auth.AuthFailed:
 		fallthrough
-	case auth.ErrorInfoNotNull:
+	case auth.JsonParseError:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
