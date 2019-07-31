@@ -93,8 +93,9 @@ class ModifyEthAccount extends Component {
     onSubmit = async (resp) => {
       try {
         const isOK = await verifyUser(resp);
-        
+        alert(1);
         if(resp.action === 'modifyAccount' && isOK) {
+          alert(2);
           await modifyAccount(resp, this.props.match.params.organizationID, this.props.history);
         } 
         if(resp.action === 'createAccount' && isOK) {

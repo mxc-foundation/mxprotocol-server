@@ -42,7 +42,6 @@ function loadWithdrawFee(coinType, organizationID) {
 }
 
 function loadCurrentAccount(coinType, organizationID) {
-  console.log('loadCurrentAccount', organizationID);
   return new Promise((resolve, reject) => {
     if (organizationID === '0') {
       SupernodeStore.getSuperNodeActiveMoneyAccount(coinType, resp => {

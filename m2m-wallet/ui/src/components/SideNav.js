@@ -32,6 +32,15 @@ function updateOrganizationList(org_id) {
   /* return new Promise((resolve, reject) => {
     resolve(ProfileStore.getUserOrganizationList(org_id));
   }); */
+// the local storage gets loaded into this component
+// the local storage is 'stale' ie, from the last logged in user
+// then the app hits the lora server to get the new options
+// those options are loaded into local storage
+// the local stage here is never updated, therefore the component
+// downt rerender, therefor it stays with the old values
+// instead of rerendering with the proper values
+// we need to get the local state in this component to update when
+// the local storage is updated.
 
   return new Promise((resolve, reject) => {
     ProfileStore.getUserOrganizationList(org_id,
@@ -57,14 +66,11 @@ class SideNav extends Component {
 
     this.state = {
       open: true,
-      organization: {},
-      options: [],
-      default:{},
+      //organization: {},
       organizationID: '',
       cacheCounter: 0,
     };
     this.onChange = this.onChange.bind(this);
-    //this.getOrganizationOptions = this.getOrganizationOptions.bind(this);
   }
 
   handleMXC = async () => {
@@ -78,17 +84,6 @@ class SideNav extends Component {
       })
       this.setState({loading: true})
       
-      const options = await initOrganizationList(organizationID);
-      console.log('initOrganizationList', options);
-      
-      /*const options = await updateOrganizationList(organizationID);
-      console.log('updateOrganizationList', options); */
-      
-      this.setState({
-        options,
-        default: options[0],
-        loading: false
-      })
     } catch (error) {
       this.setState({loading: false})
       console.error(error);
@@ -97,23 +92,6 @@ class SideNav extends Component {
   }
   componentDidMount() {
     this.loadData();
-    
-    /*const organizationID = SessionStore.getOrganizationID();
-   
-    this.setState({
-      organizationID,
-    })
-    ProfileStore.getUserOrganizationList(organizationID);
-    
-     SessionStore.on("organizationList.change", () => {
-      const organizationID = SessionStore.getOrganizationID();
-      const options = SessionStore.getOrganizationList();
-      
-      this.setState({
-        organizationID,
-        options
-      })
-    });   */
   }
 
   onChange(e) {
@@ -122,7 +100,9 @@ class SideNav extends Component {
     this.setState({
       organizationID: e.target.value
     })
+    
     this.props.history.push(`/withdraw/${e.target.value}`);
+    
   }
 
   getOrganizationFromLocation() {
@@ -136,7 +116,6 @@ class SideNav extends Component {
 
   getOrganizationOptions = (search, callbackFunc) => {
     let options = this.state.options;
-    console.log('getOrganizationOptions', options);
     //return callbackFunc(options);
     return options;
   }
@@ -159,18 +138,6 @@ class SideNav extends Component {
       }
     }
 
-    /*setTimeout(function() {
-      const select = document.querySelector('.Select .Select-value');
-      
-      select && select.addEventListener('click', function(event) {
-        console.log(event.target, event.currentTarget)
-      });
-      window.addEventListener('click', function(event) {
-        console.log(event.target, event.currentTarget)
-        // .Select
-      })
-    })*/
-
     return(
       <Drawer
         variant="persistent"
@@ -178,31 +145,31 @@ class SideNav extends Component {
         open={this.props.open}
         classes={{paper: this.props.classes.drawerPaper}}
       >
-        {this.state.organization && <List className={this.props.classes.static}>
+        {organizationID && <List className={this.props.classes.static}>
           {/* <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}> */}
           <Divider />
           <div>
           <DropdownMenu default={ this.state.default } onChange={this.onChange} />
         </div>
-          <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${this.state.organizationID}`}>
+          <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${organizationID}`}>
             <ListItemIcon className={this.props.classes.iconStyle}>
               <PagePreviousOutline />
             </ListItemIcon>
             <ListItemText classes={selected('/withdraw')} primary="Withdraw" />
           </ListItem>
-          <ListItem selected={active('/topup')} button component={Link} to={`/topup/${this.state.organizationID}`}>
+          <ListItem selected={active('/topup')} button component={Link} to={`/topup/${organizationID}`}>
             <ListItemIcon>
               <PageNextOutline />
             </ListItemIcon>
             <ListItemText classes={selected('/topup')} primary="Top up" />
           </ListItem>
-          <ListItem selected={active('/history')} button component={Link} to={`/history/${this.state.organizationID}`}>
+          <ListItem selected={active('/history')} button component={Link} to={`/history/${organizationID}`}>
             <ListItemIcon>
               <CalendarCheckOutline />
             </ListItemIcon>
             <ListItemText classes={selected('/history')} primary="History" />
           </ListItem>
-          <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${this.state.organizationID}`}>
+          <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
             <ListItemIcon>
               <CreditCard />
             </ListItemIcon>

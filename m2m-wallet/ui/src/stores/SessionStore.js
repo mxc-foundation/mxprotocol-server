@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 
 import Swagger from "swagger-client";
 import { checkStatus, errorHandler, errorHandlerLogin } from "./helpers";
+//import updateOrganizations from "./SetUserProfile";
 
 class SessionStore extends EventEmitter {
   constructor() {
@@ -12,8 +13,9 @@ class SessionStore extends EventEmitter {
     this.settings = {};
     this.branding = {};
 
-    this.swagger = Swagger("/swagger/internal.swagger.json", this.getClientOpts())
-    
+    this.swagger = Swagger("/swagger/internal.swagger.json", this.getClientOpts());
+    this.profileSwagger = new Swagger("/swagger/profile.swagger.json", this.getClientOpts());
+
     this.swagger.then(client => {
       this.client = client;
 
@@ -56,6 +58,19 @@ class SessionStore extends EventEmitter {
     this.emit("organization.change");
   }
 
+  getOrganizationName() {
+    const orgName = localStorage.getItem("organizationName");
+    if (orgName === "") {
+      return null;
+    }
+
+    return orgName;
+  }
+
+  setOrganizationName(name) {
+    localStorage.setItem("organizationName", name);
+  }
+
   getLoraHostUrl() {
     const loraHostUrl = localStorage.getItem("loraHostUrl");
     if (loraHostUrl === "") {
@@ -92,6 +107,31 @@ class SessionStore extends EventEmitter {
     return JSON.parse(organizationList);
   }
 
+  getUserOrganizationList(orgId, callbackFunc) {
+    this.profileSwagger.then(client => {
+      client.apis.InternalService.GetUserOrganizationList({
+        orgId
+      })
+      .then(checkStatus)
+      //.then(updateOrganizations)
+      .then(resp => {
+        const organizations = resp.body.organizations;
+        let organizationList = null;
+    
+        if(organizations.length > 0){
+          organizationList = organizations.map((o, i) => { 
+          return {label: o.organizationName, value: o.organizationID}});
+        }else{
+          organizationList = {};
+        }
+    
+    
+        callbackFunc(organizationList);
+      })
+      .catch(errorHandler);
+    });
+  }
+
   getUser() {
     return this.user;
   }
@@ -117,14 +157,16 @@ class SessionStore extends EventEmitter {
 
   initProfile(data) {
 
-    const { jwt, org_id, loraHostUrl } = data;
+    const { jwt, org_id, org_name, loraHostUrl } = data;
     
     if(jwt === "" || org_id === "" || org_id === undefined){
       window.location.replace(loraHostUrl);
     }
+    console.log('org_name', org_name);
     this.setToken(jwt);
     this.setLoraHostUrl(loraHostUrl);
     this.setOrganizationID(org_id);
+    this.setOrganizationName(org_name);
   }
 
   login(login, callBackFunc) {

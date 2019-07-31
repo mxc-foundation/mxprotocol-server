@@ -20,7 +20,8 @@ class Transactions extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.getVmxcTxHistory(this.props.match.params.organizationID, limit, offset, (data) => {
+    console.log('organizationID getpage', this.props);
+    HistoryStore.getVmxcTxHistory('12', limit, offset, (data) => {
       callbackFunc({
         totalCount: offset + 2 * limit,
         result: data.txHistory
@@ -29,6 +30,7 @@ class Transactions extends Component {
   }
 
   getRow(obj, index) {
+    console.dir(obj);
     return(
       <TableRow key={index}>
         <TableCell>{obj.from}</TableCell>
