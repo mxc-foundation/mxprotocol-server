@@ -15,8 +15,8 @@ type WithdrawFee struct {
 	Status     string    `db:"status"`
 }
 
-func (pgDbp *dbCtx) CreateWithdrawFeeTable() error {
-	_, err := pgDbp.db.Exec(`
+func (pgDbp *DBHandler) CreateWithdrawFeeTable() error {
+	_, err := pgDbp.DB.Exec(`
 
 		CREATE TABLE IF NOT EXISTS 
 		withdraw_fee (
@@ -31,8 +31,8 @@ func (pgDbp *dbCtx) CreateWithdrawFeeTable() error {
 	return errors.Wrap(err, "db/CreateWithdrawFeeTable")
 }
 
-func (pgDbp *dbCtx) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
-	err = pgDbp.db.QueryRow(`
+func (pgDbp *DBHandler) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
+	err = pgDbp.DB.QueryRow(`
 		INSERT INTO withdraw_fee (
 			fk_ext_currency,
 			fee,
@@ -63,8 +63,8 @@ func (pgDbp *dbCtx) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err er
 	return insertIndex, errors.Wrap(err, "db/InsertWithdrawFee")
 }
 
-func (pgDbp *dbCtx) changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
-	_, err = pgDbp.db.Exec(`
+func (pgDbp *DBHandler) changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
+	_, err = pgDbp.DB.Exec(`
 	UPDATE 
 		withdraw_fee 
 	SET 
@@ -81,8 +81,8 @@ func (pgDbp *dbCtx) changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error
 	return errors.Wrap(err, "db/changeStatus2ArcOldRowWithdrawFee")
 }
 
-func (pgDbp *dbCtx) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
-	err = pgDbp.db.QueryRow(`
+func (pgDbp *DBHandler) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
+	err = pgDbp.DB.QueryRow(`
 		SELECT 
 			wf.fee
 		FROM
@@ -99,8 +99,8 @@ func (pgDbp *dbCtx) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64
 	return withdrawFee, errors.Wrap(err, "db/GetActiveWithdrawFee")
 }
 
-func (pgDbp *dbCtx) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
-	err = pgDbp.db.QueryRow(`
+func (pgDbp *DBHandler) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
+	err = pgDbp.DB.QueryRow(`
 		SELECT 
 			wf.id
 		FROM

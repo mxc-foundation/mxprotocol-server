@@ -2,6 +2,8 @@ package db
 
 import (
 	"database/sql"
+	migrate "github.com/rubenv/sql-migrate"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/migrations"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -10,14 +12,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 )
 
-var dbHandler *dbCtx
 var timeLayout string = "2006-01-02T15:04:05.000000Z"
-
-type dbCtx struct {
-	db         *sql.DB
-	driverName string
-	dbUrl      string
-}
 
 func Setup(conf config.MxpConfig) error {
 	dbp, err := openDBWithPing(conf)
@@ -25,14 +20,24 @@ func Setup(conf config.MxpConfig) error {
 	if err != nil {
 		return err
 	} else {
-		dbHandler = &dbCtx{
-			db:         dbp,
-			driverName: "postgres",
-			dbUrl:      conf.PostgreSQL.DSN,
-		}
+		db = &DBHandler{dbp	}
 	}
 
 	dbInit()
+
+	if conf.PostgreSQL.Automigrate {
+		log.Info("db/applying PostgreSQL data migrations")
+		m := &migrate.AssetMigrationSource{
+			Asset:    migrations.Asset,
+			AssetDir: migrations.AssetDir,
+			Dir:      "",
+		}
+		n, err := migrate.Exec(db.DB, "postgres", m, migrate.Up)
+		if err != nil {
+			return errors.Wrap(err, "db/applying PostgreSQL data migrations error")
+		}
+		log.WithField("count", n).Info("db/PostgreSQL data migrations applied")
+	}
 
 	return nil
 }

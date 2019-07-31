@@ -8,7 +8,7 @@ const (
 )
 
 func dbCreateWalletTable() error {
-	return dbHandler.CreateWalletTable()
+	return db.CreateWalletTable()
 }
 
 func DbInsertWallet(orgId int64, walletType WalletType) (insertIndex int64, err error) {
@@ -17,21 +17,21 @@ func DbInsertWallet(orgId int64, walletType WalletType) (insertIndex int64, err 
 		TypeW:   string(walletType),
 		Balance: 0.0,
 	}
-	return dbHandler.InsertWallet(w)
+	return db.InsertWallet(w)
 }
 
 func DbGetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
-	return dbHandler.GetWalletIdFromOrgId(orgIdLora)
+	return db.GetWalletIdFromOrgId(orgIdLora)
 }
 
 func DbGetWalletBalance(walletId int64) (float64, error) {
-	return dbHandler.GetWalletBalance(walletId)
+	return db.GetWalletBalance(walletId)
 }
 
 func DbUpdateBalanceByWalletId(walletId int64, newBalance float64) error {
-	return dbHandler.UpdateBalanceByWalletId(walletId, newBalance)
+	return db.UpdateBalanceByWalletId(walletId, newBalance)
 }
 
 func DbGetWalletIdSuperNode() (walletId int64, err error) {
-	return dbHandler.GetWalletIdSuperNode()
+	return db.GetWalletIdSuperNode()
 }

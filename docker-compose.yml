@@ -11,7 +11,7 @@ services:
       - redis
       - mosquitto
     environment:
-      - TEST_POSTGRES_DSN=postgres://mxprotocol_m2m_wallet:mxprotocol_m2m_wallet@postgres/mxprotocol_m2m_wallet?sslmode=disable
+      - TEST_POSTGRES_DSN=postgres://test:test@postgres/test?sslmode=disable
       - TEST_LORA_APP_SERVER=http://appserver:8080
     tty: true
     ports:

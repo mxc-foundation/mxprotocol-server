@@ -1,11 +1,58 @@
 package db
 
 import (
-	"fmt"
-	"time"
+	"github.com/stretchr/testify/suite"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/tests"
+	"testing"
 )
 
-func testDb() {
+type DbInterfaceTestSuite struct {
+	tx *TxHandler
+}
+
+// SetupSuite is called once before starting the test-suite.
+func (b *DbInterfaceTestSuite) SetupSuite() {
+	conf := tests.GetConfig()
+	if err := Setup(conf); err != nil {
+		panic(err)
+	}
+}
+
+// SetupTest is called before every test.
+func (b *DbInterfaceTestSuite) SetupTest() {
+	tx, err := DB().Begin()
+	if err != nil {
+		panic(err)
+	}
+	b.tx = tx
+
+	tests.ResetDB(DB().DB)
+}
+
+// TearDownTest is called after every test.
+func (b *DbInterfaceTestSuite) TearDownTest() {
+	if err := b.tx.Rollback(); err != nil {
+		panic(err)
+	}
+}
+
+// Tx returns a database transaction (which is rolled back after every
+// test).
+func (b *DbInterfaceTestSuite) Tx() *TxHandler {
+	return b.tx
+}
+
+type DbTestSuite struct {
+	suite.Suite
+	DbInterfaceTestSuite
+}
+
+func TestDb(t *testing.T) {
+	suite.Run(t, new(DbTestSuite))
+}
+
+
+/*func testDb() {
 	// testWallet()
 	// testInternalTx()
 	testWithdrawFee()
@@ -207,4 +254,4 @@ func testTopup() {
 	// fmt.Println("err dbCreateTopupTable(): ", dbCreateTopupTable())
 	// fmt.Println("err DbInsertWithdraw(): x:", retInd, "err: ", err)
 
-}
+}*/
