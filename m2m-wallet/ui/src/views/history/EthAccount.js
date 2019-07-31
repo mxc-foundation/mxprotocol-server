@@ -19,7 +19,7 @@ class EthAccount extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.getChangeMoneyAccountHistory("Ether",this.props.match.params.organizationID, limit, offset, (data) => {
+    HistoryStore.getChangeMoneyAccountHistory("Ether", "12", limit, offset, (data) => {
       callbackFunc({
         totalCount: offset + 2 * limit,
         result: data.changeHistory
@@ -28,6 +28,7 @@ class EthAccount extends Component {
   }
 
   getRow(obj, index) {
+    console.dir(obj);
     return(
       <TableRow key={index}>
         <TableCell>{obj.from}</TableCell>

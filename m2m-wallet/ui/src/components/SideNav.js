@@ -32,6 +32,15 @@ function updateOrganizationList(org_id) {
   /* return new Promise((resolve, reject) => {
     resolve(ProfileStore.getUserOrganizationList(org_id));
   }); */
+// the local storage gets loaded into this component
+// the local storage is 'stale' ie, from the last logged in user
+// then the app hits the lora server to get the new options
+// those options are loaded into local storage
+// the local stage here is never updated, therefore the component
+// downt rerender, therefor it stays with the old values
+// instead of rerendering with the proper values
+// we need to get the local state in this component to update when
+// the local storage is updated.
 
   return new Promise((resolve, reject) => {
     ProfileStore.getUserOrganizationList(org_id,
@@ -79,7 +88,7 @@ class SideNav extends Component {
       this.setState({loading: true})
       
       const options = await initOrganizationList(organizationID);
-      console.log('initOrganizationList', options);
+      //console.log('initOrganizationList', options);
       
       /*const options = await updateOrganizationList(organizationID);
       console.log('updateOrganizationList', options); */
@@ -122,7 +131,9 @@ class SideNav extends Component {
     this.setState({
       organizationID: e.target.value
     })
+    
     this.props.history.push(`/withdraw/${e.target.value}`);
+    
   }
 
   getOrganizationFromLocation() {
@@ -136,7 +147,6 @@ class SideNav extends Component {
 
   getOrganizationOptions = (search, callbackFunc) => {
     let options = this.state.options;
-    console.log('getOrganizationOptions', options);
     //return callbackFunc(options);
     return options;
   }
@@ -182,7 +192,7 @@ class SideNav extends Component {
           {/* <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}> */}
           <Divider />
           <div>
-          <DropdownMenu default={ this.state.default } onChange={this.onChange} />
+          <DropdownMenu default={ this.state.default } options={this.state.options} onChange={this.onChange} />
         </div>
           <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${this.state.organizationID}`}>
             <ListItemIcon className={this.props.classes.iconStyle}>

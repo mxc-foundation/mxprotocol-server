@@ -86,7 +86,7 @@ class RedirectedFromLora extends Component {
     const { match: { params: { data: dataString } }} = this.props;
 
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
-    const { path } = data;
+    const { path, org_id } = data;
     SessionStore.initProfile(data);
     //ProfileStore.getUserOrganizationList(org_id);
     

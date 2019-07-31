@@ -11,7 +11,7 @@ import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
 
-class SubScriptions extends Component {
+class WithdrawHistory extends Component {
   constructor() {
     super();
     this.getPage = this.getPage.bind(this);
@@ -75,4 +75,4 @@ class SubScriptions extends Component {
   }
 }
 
-export default SubScriptions;
+export default WithdrawHistory;

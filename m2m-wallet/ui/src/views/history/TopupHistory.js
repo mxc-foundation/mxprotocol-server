@@ -4,27 +4,27 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
-import HistoryStore from "../../stores/HistoryStore";
+import TopupStore from "../../stores/TopupStore";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
 
-class SubScriptions extends Component {
-  constructor() {
-    super();
+class TopupHistory extends Component {
+  constructor(props) {
+    super(props);
     this.getPage = this.getPage.bind(this);
     this.getRow = this.getRow.bind(this);
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.getWithdrawHistory("Ether", this.props.match.params.organizationID, limit, offset, (data) => {
-      callbackFunc({
-        totalCount: offset + 2 * limit,
-        result: data.withdrawHistory
-      });
-    });
+    TopupStore.getTopUpHistory(this.props.organizationID, offset, limit, data => {
+        callbackFunc({
+            totalCount: data.count,
+            result: data.topupHistory
+          });
+      }); 
   }
 
   getRow(obj, index) {
@@ -53,7 +53,7 @@ class SubScriptions extends Component {
             </Admin>
           }
         >
-        <TitleBarTitle title="WithDraw" />
+        <TitleBarTitle title="Topup History" />
         </TitleBar>
         <Grid item xs={12}>
           <DataTable
@@ -75,4 +75,4 @@ class SubScriptions extends Component {
   }
 }
 
-export default SubScriptions;
+export default TopupHistory;
