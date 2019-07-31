@@ -32,12 +32,8 @@ export default class WithPromises extends Component {
 
     componentDidMount() {
         promiseOptions().then(options => {
-            const sa = options.find(opt => opt.label.toLowerCase() === 'super_admin')
-            
             this.setState({
-                options,
-                value: SessionStore.getOrganizationID() === "0"
-                  ? options[2] : options[0]
+                options
             })
         })
     }
@@ -55,14 +51,19 @@ export default class WithPromises extends Component {
             },
         });
     }
-    
+    onClick = (v) => {
+        console.log('onClick',v);
+    }
     render() {
         //console.log("SessionStore: ", SessionStore.getUserOrganizationList());
+        const dValue = {label:SessionStore.getOrganizationName(), value: SessionStore.getOrganizationID()}; 
         return (
             <AsyncSelect 
                 cacheOptions 
                 defaultOptions
-                //defaultValue={}
+                defaultValue={dValue}
+                onClick={this.onClick}
+                //defaultValue={this.state.value}
                 //inputValue={this.state.value}
                 onChange={this.onChange}
                 loadOptions={promiseOptions}

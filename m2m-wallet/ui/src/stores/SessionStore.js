@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 
 import Swagger from "swagger-client";
 import { checkStatus, errorHandler, errorHandlerLogin } from "./helpers";
-import updateOrganizations from "./SetUserProfile";
+//import updateOrganizations from "./SetUserProfile";
 
 class SessionStore extends EventEmitter {
   constructor() {
@@ -56,6 +56,19 @@ class SessionStore extends EventEmitter {
   setOrganizationID(id) {
     localStorage.setItem("organizationID", id);
     this.emit("organization.change");
+  }
+
+  getOrganizationName() {
+    const orgName = localStorage.getItem("organizationName");
+    if (orgName === "") {
+      return null;
+    }
+
+    return orgName;
+  }
+
+  setOrganizationName(name) {
+    localStorage.setItem("organizationName", name);
   }
 
   getLoraHostUrl() {
@@ -144,14 +157,16 @@ class SessionStore extends EventEmitter {
 
   initProfile(data) {
 
-    const { jwt, org_id, loraHostUrl } = data;
+    const { jwt, org_id, org_name, loraHostUrl } = data;
     
     if(jwt === "" || org_id === "" || org_id === undefined){
       window.location.replace(loraHostUrl);
     }
+    console.log('org_name', org_name);
     this.setToken(jwt);
     this.setLoraHostUrl(loraHostUrl);
     this.setOrganizationID(org_id);
+    this.setOrganizationName(org_name);
   }
 
   login(login, callBackFunc) {
