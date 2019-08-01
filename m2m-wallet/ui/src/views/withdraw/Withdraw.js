@@ -115,11 +115,11 @@ class Withdraw extends Component {
     this.loadData();
   }
 
-  componentDidUpdate(oldProps) {
-    if (this.props.match.url === oldProps.match.url) {
+  /* componentDidUpdate(oldProps) {
+    if (this.props === oldProps) {
       return;
     }
-  }
+  } */
 
   showModal(modal) {
     this.setState({ modal });
