@@ -52,6 +52,7 @@ export default class WithPromises extends Component {
         });
     }
     onClick = (v) => {
+        alert(1);
         console.log('onClick',v);
     }
     render() {
