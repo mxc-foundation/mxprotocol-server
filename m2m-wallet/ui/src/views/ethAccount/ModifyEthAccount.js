@@ -32,22 +32,20 @@ function verifyUser (resp) {
   });
 }
 
-function modifyAccount (resp , organizationID, history) {
-  resp.moneyAbbr = coinType;
+function modifyAccount (req, orgId) {
+  req.moneyAbbr = coinType;
+  req.orgId = orgId;
   return new Promise((resolve, reject) => {
-    MoneyStore.modifyMoneyAccount(resp, resp => {
-      history.push(`/modify-account/${organizationID}`);
+    MoneyStore.modifyMoneyAccount(req, resp => {
       resolve(resp);
     })
   });
 }
 
-function createAccount (req, organizationID, history) {
-  //console.log('req.organizationID', req);
+function createAccount (req) {
   req.moneyAbbr = coinType;
   return new Promise((resolve, reject) => {
     SupernodeStore.addSuperNodeMoneyAccount(req, resp => {
-      history.push(`/modify-account/${organizationID}`);
       resolve(resp);
     })
   });
@@ -91,16 +89,23 @@ class ModifyEthAccount extends Component {
     }
 
     onSubmit = async (resp) => {
+      const org_id = this.props.match.params.organizationID;
+      
       try {
         const isOK = await verifyUser(resp);
-        alert(1);
-        if(resp.action === 'modifyAccount' && isOK) {
-          alert(2);
-          await modifyAccount(resp, this.props.match.params.organizationID, this.props.history);
+        
+        if(org_id == 0 && isOK) {
+          const res = await createAccount(resp, org_id);
+          if(res.status){
+            window.location.reload();
+          }
+        }else{
+          
+          const res = await modifyAccount(resp, org_id);
+          if(res.status){
+            window.location.reload();
+          }
         } 
-        if(resp.action === 'createAccount' && isOK) {
-          await createAccount(resp, this.props.match.params.organizationID, this.props.history);
-        }
       } catch (error) {
         console.error(error);
         this.setState({ error });
