@@ -29,24 +29,10 @@ const LinkToLora = ({children, ...otherProps}) =>
 //const coinType = 'Ether';
 
 function updateOrganizationList(org_id) {
-  /* return new Promise((resolve, reject) => {
-    resolve(ProfileStore.getUserOrganizationList(org_id));
-  }); */
-
   return new Promise((resolve, reject) => {
     ProfileStore.getUserOrganizationList(org_id,
       resp => {
         resolve(resp);
-      })
-  });
-}
-
-function initOrganizationList(org_id) {
-  return new Promise((resolve, reject) => {
-    ProfileStore.getUserOrganizationList(org_id,
-      resp => {
-        const options = resp.organizations.map((o, i) => {return {label: o.organizationName, value: o.organizationID, color: '#00B8D9', isFixed: true}});
-        resolve(options);
       })
   });
 }
@@ -67,6 +53,7 @@ class SideNav extends Component {
   handleMXC = async () => {
     window.location.replace(`http://mxc.org/`);
   } 
+
   loadData = async () => {
     try {
       const organizationID = SessionStore.getOrganizationID();
@@ -94,21 +81,6 @@ class SideNav extends Component {
     
     this.props.history.push(`/withdraw/${e.target.value}`);
     
-  }
-
-  getOrganizationFromLocation() {
-    /* const organizationRe = /\/organizations\/(\d+)/g;
-    const match = organizationRe.exec(this.props.history.location.pathname);
-
-    if (match !== null && (this.state.organization === null || this.state.organization.id !== match[1])) {
-      SessionStore.setOrganizationID(match[1]);
-    } */
-  }
-
-  getOrganizationOptions = (search, callbackFunc) => {
-    let options = this.state.options;
-    //return callbackFunc(options);
-    return options;
   }
 
   selectClicked = async () => {
