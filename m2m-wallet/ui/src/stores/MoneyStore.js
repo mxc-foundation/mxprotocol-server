@@ -42,7 +42,7 @@ class MoneyStore extends EventEmitter {
       //.then(updateOrganizations)
       .then(resp => {
         this.notify("updated");
-        callbackFunc(resp.obj);
+        callbackFunc(resp.body);
       })
       .catch(errorHandler);
     });
