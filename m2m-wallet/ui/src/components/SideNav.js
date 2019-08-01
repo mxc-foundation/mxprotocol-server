@@ -78,7 +78,7 @@ class SideNav extends Component {
     this.setState({
       organizationID: e.target.value
     })
-    
+    //console.log('side', this.state.organizationID);
     this.props.history.push(`/withdraw/${e.target.value}`);
     
   }

@@ -162,7 +162,7 @@ class SessionStore extends EventEmitter {
     if(jwt === "" || org_id === "" || org_id === undefined){
       window.location.replace(loraHostUrl);
     }
-    console.log('org_name', org_name);
+    
     this.setToken(jwt);
     this.setLoraHostUrl(loraHostUrl);
     this.setOrganizationID(org_id);
