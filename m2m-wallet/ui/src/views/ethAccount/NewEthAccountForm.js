@@ -31,6 +31,7 @@ class NewEthAccountForm extends FormComponent {
     this.props.onSubmit({
       action: 'createAccount',  
       createAccount: this.state.createAccount,
+      currentAccount: this.state.createAccount,
       username: this.state.username,
       password: this.state.password
     });

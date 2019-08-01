@@ -28,11 +28,10 @@ class EthAccount extends Component {
   }
 
   getRow(obj, index) {
-    console.dir(obj);
     return(
       <TableRow key={index}>
-        <TableCell>{obj.from}</TableCell>
-        <TableCell>{obj.to}</TableCell>
+        <TableCell>{obj.addr}</TableCell>
+        <TableCell>{obj.status}</TableCell>
         <TableCell>{obj.createdAt}</TableCell>
       </TableRow>
     );
@@ -57,8 +56,8 @@ class EthAccount extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell>Old Account</TableCell>
-                <TableCell>New Account</TableCell>
+                <TableCell>Account</TableCell>
+                <TableCell>Status</TableCell>
                 <TableCell>Date</TableCell>
               </TableRow>
             }
