@@ -72,9 +72,9 @@ class ModifyEthAccountForm extends FormComponent {
           value={this.state.newaccount}
           placeholder="Type here" 
           onChange={this.onChange}
-          /* inputProps={{
+          inputProps={{
             pattern: "^0x[a-fA-F0-9]{40}$",
-          }} */
+          }}
             
           autoComplete='off'
           required
