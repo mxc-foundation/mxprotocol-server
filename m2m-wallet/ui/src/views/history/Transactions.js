@@ -20,7 +20,6 @@ class Transactions extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    console.log('organizationID getpage', this.props);
     HistoryStore.getVmxcTxHistory('12', limit, offset, (data) => {
       callbackFunc({
         totalCount: offset + 2 * limit,

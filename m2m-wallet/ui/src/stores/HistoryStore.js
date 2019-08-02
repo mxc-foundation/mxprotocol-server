@@ -66,7 +66,6 @@ class HistoryStore extends EventEmitter {
   }
 
   getChangeMoneyAccountHistory(money_abbr, orgId, limit, offset, callbackFunc) {
-    console.log(limit, ' ', offset)
     this.moneySwagger.then((client) => {      
       client.apis.MoneyService.GetChangeMoneyAccountHistory({
         money_abbr,
