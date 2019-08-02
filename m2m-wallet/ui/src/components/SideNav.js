@@ -83,7 +83,6 @@ class SideNav extends Component {
 
   selectClicked = async () => {
     const res = await updateOrganizationList(this.state.organizationID);
-    console.log('selectClicked', res);
   }
 
   render() {

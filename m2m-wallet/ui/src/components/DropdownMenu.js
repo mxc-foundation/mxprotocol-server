@@ -55,10 +55,8 @@ export default class WithPromises extends Component {
         });
     }
     onClick = (v) => {
-        console.log('onClick',v);
     }
     render() {
-        //console.log("SessionStore: ", SessionStore.getUserOrganizationList());
         const dValue = {label:SessionStore.getOrganizationName(), value: SessionStore.getOrganizationID()}; 
         return (
             <AsyncSelect 
