@@ -10,6 +10,7 @@ import TitleBarTitle from "../../components/TitleBarTitle";
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
+import { ETHER } from "../../util/Coin-type"
 
 class EthAccount extends Component {
   constructor() {
@@ -19,7 +20,7 @@ class EthAccount extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.getChangeMoneyAccountHistory("Ether", "12", limit, offset, (data) => {
+    HistoryStore.getChangeMoneyAccountHistory(ETHER, this.props.match.params.organizationID, limit, offset, (data) => {
       callbackFunc({
         totalCount: offset + 2 * limit,
         result: data.changeHistory

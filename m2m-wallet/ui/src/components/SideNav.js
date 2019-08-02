@@ -26,8 +26,6 @@ import styles from "./SideNavStyle";
 const LinkToLora = ({children, ...otherProps}) => 
 <a href={SessionStore.getLoraHostUrl()} {...otherProps}>{children}</a>;
 
-//const coinType = 'Ether';
-
 function updateOrganizationList(org_id) {
   return new Promise((resolve, reject) => {
     ProfileStore.getUserOrganizationList(org_id,

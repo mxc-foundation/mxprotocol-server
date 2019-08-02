@@ -17,6 +17,7 @@ class NewEthAccountForm extends FormComponent {
     this.setState({
       [id]: value
     });
+    this.clear();
   }
 
   clear() {
@@ -40,10 +41,6 @@ class NewEthAccountForm extends FormComponent {
   }
 
   render() {
-    /* if (this.props.activeAccount === undefined) {
-      return(<div></div>);
-    } */
-
     return(
       <Form
         submitLabel={this.props.submitLabel}
