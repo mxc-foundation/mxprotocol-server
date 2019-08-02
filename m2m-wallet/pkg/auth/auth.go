@@ -209,7 +209,7 @@ func getTokenFromContext(ctx context.Context) (string, error) {
 	// authorization header should respect RFC1945
 	if len(match) == 0 {
 		log.Warning("Deprecated Authorization header : RFC1945 format expected : Authorization: <type> <credentials>")
-		return token[0], nil
+		return token[0], errors.New("Deprecated Authorization header : RFC1945 format expected : Authorization: <type> <credentials>")
 	}
 
 	return match[1], nil
@@ -294,6 +294,14 @@ func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*
 	if err != nil {
 		return &api.LoginResponse{}, err
 	}
+
+	tokenStr, err := getTokenFromContext(ctx)
+	if err != nil {
+		if jwt != tokenStr {
+			return &api.LoginResponse{}, err
+		}
+	}
+
 	return &api.LoginResponse{Jwt: jwt}, nil
 }
 
