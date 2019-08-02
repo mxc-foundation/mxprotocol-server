@@ -92,6 +92,10 @@ class ModifyEthAccount extends Component {
       const org_id = this.props.match.params.organizationID;
       
       try {
+        if(resp.username !== SessionStore.getUsername() ){
+          alert('inccorect username or password.');
+          return false;
+        }
         const isOK = await verifyUser(resp);
         
         if(org_id == 0 && isOK) {
