@@ -17,6 +17,7 @@ class NewEthAccountForm extends FormComponent {
     this.setState({
       [id]: value
     });
+    this.clear();
   }
 
   clear() {
@@ -31,6 +32,7 @@ class NewEthAccountForm extends FormComponent {
     this.props.onSubmit({
       action: 'createAccount',  
       createAccount: this.state.createAccount,
+      currentAccount: this.state.createAccount,
       username: this.state.username,
       password: this.state.password
     });
@@ -39,10 +41,6 @@ class NewEthAccountForm extends FormComponent {
   }
 
   render() {
-    /* if (this.props.activeAccount === undefined) {
-      return(<div></div>);
-    } */
-
     return(
       <Form
         submitLabel={this.props.submitLabel}

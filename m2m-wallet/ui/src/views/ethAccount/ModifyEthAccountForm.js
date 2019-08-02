@@ -18,19 +18,22 @@ class ModifyEthAccountForm extends FormComponent {
     this.setState({
       [id]: value
     });
+    this.clear();
   }
 
   clear() {
-    const newaccount = '';
     this.setState({
-      newaccount
-    });
+      username: '',
+      password: '',
+      newaccount: ''
+    })
   }
 
   submit = () => {
     this.props.onSubmit({
       action: 'modifyAccount',  
       currentAccount: this.state.newaccount,
+      createAccount: this.state.newaccount,
       username: this.state.username,
       password: this.state.password
     })
@@ -74,6 +77,7 @@ class ModifyEthAccountForm extends FormComponent {
           inputProps={{
             pattern: "^0x[a-fA-F0-9]{40}$",
           }}
+            
           autoComplete='off'
           required
           fullWidth

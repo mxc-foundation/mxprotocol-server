@@ -21,6 +21,12 @@ class WithdrawForm extends FormComponent {
     });
   }
 
+  clear() {
+    this.setState({
+      amount: ''
+    })
+  }
+
   render() {
     if (this.props.txinfo === undefined) {
       return(<Spinner on={this.state.loading}/>);

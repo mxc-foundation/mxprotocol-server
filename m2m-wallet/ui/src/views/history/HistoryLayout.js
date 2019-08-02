@@ -15,13 +15,14 @@ import Spinner from "../../components/ScaleLoader"
 import Transactions from "./Transactions";
 import EthAccount from "./EthAccount";
 import SubScriptions from "./SubScriptions";
+import TopupHistory from "./TopupHistory";
 
 import styles from "./HistoryStyle";
 
 
 class HistoryLayout extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       tab: 0,
       loading: false,
@@ -39,7 +40,7 @@ class HistoryLayout extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    if (this.props.match.url === oldProps.match.url) {
+    if (this.props.match.url == oldProps.match.url) {
       return;
     }
 
@@ -56,9 +57,9 @@ class HistoryLayout extends Component {
     let tab = 0;
     if (window.location.href.endsWith("/eth_account")) {
       tab = 1;
-    } else if (window.location.href.endsWith("/Withdraw")) {
+    } /* else if (window.location.href.endsWith("/Withdraw")) {
       tab = 2;
-    } 
+    }  */
     
     this.setState({
       tab,
@@ -97,18 +98,18 @@ class HistoryLayout extends Component {
             scrollButtons="auto"
             textColor="primary"
           >
-            <Tab label="Transactions" component={Link} to={`/history/${organizationID}/`} />
+            <Tab label="Top up" component={Link} to={`/history/${organizationID}/`} />
             <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth_account`} />
-            <Tab label="Withdraw" component={Link} to={`/history/${organizationID}/Withdraw`} />
+            {/* <Tab label="Withdraw" component={Link} to={`/history/${organizationID}/Withdraw`} /> */}
             
           </Tabs>
         </Grid>
 
         <Grid item xs={12}>
           <Switch>
-            <Route exact path={`/history/${organizationID}/`} render={props => <Transactions {...props} />} />
+            <Route exact path={`/history/${organizationID}/`} render={props => <TopupHistory organizationID={organizationID} {...props} />} />
             <Route exact path={`/history/${organizationID}/eth_account`} render={props => <EthAccount {...props} />} />
-            <Route exact path={`/history/${organizationID}/Withdraw`} render={props => <SubScriptions {...props} />} />
+            {/* <Route path={`/history/${organizationID}/Withdraw`} render={props => <SubScriptions {...props} />} /> */}
 
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}
           </Switch>

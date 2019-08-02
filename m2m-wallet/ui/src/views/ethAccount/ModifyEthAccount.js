@@ -12,8 +12,7 @@ import SupernodeStore from "../../stores/SupernodeStore";
 import ModifyEthAccountForm from "./ModifyEthAccountForm";
 import NewEthAccountForm from "./NewEthAccountForm";
 import styles from "./EthAccountStyle";
-
-const coinType = "Ether";
+import { ETHER } from "../../util/Coin-type";
 
 function verifyUser (resp) {
   const login = {};
@@ -32,22 +31,20 @@ function verifyUser (resp) {
   });
 }
 
-function modifyAccount (resp , organizationID, history) {
-  resp.moneyAbbr = coinType;
+function modifyAccount (req, orgId) {
+  req.moneyAbbr = ETHER;
+  req.orgId = orgId;
   return new Promise((resolve, reject) => {
-    MoneyStore.modifyMoneyAccount(resp, resp => {
-      history.push(`/modify-account/${organizationID}`);
+    MoneyStore.modifyMoneyAccount(req, resp => {
       resolve(resp);
     })
   });
 }
 
-function createAccount (req, organizationID, history) {
-  //console.log('req.organizationID', req);
-  req.moneyAbbr = coinType;
+function createAccount (req) {
+  req.moneyAbbr = ETHER;
   return new Promise((resolve, reject) => {
     SupernodeStore.addSuperNodeMoneyAccount(req, resp => {
-      history.push(`/modify-account/${organizationID}`);
       resolve(resp);
     })
   });
@@ -68,13 +65,13 @@ class ModifyEthAccount extends Component {
       const org_id = this.props.match.params.organizationID;
 
       if (org_id === '0') {
-        SupernodeStore.getSuperNodeActiveMoneyAccount(coinType, resp => {
+        SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, resp => {
           this.setState({
             activeAccount: resp.supernodeActiveAccount,
           });
         });
       }else{
-        MoneyStore.getActiveMoneyAccount(coinType, org_id, resp => {
+        MoneyStore.getActiveMoneyAccount(ETHER, org_id, resp => {
           this.setState({
             activeAccount: resp.activeAccount,
           });
@@ -91,15 +88,23 @@ class ModifyEthAccount extends Component {
     }
 
     onSubmit = async (resp) => {
+      const org_id = this.props.match.params.organizationID;
+      
       try {
         const isOK = await verifyUser(resp);
         
-        if(resp.action === 'modifyAccount' && isOK) {
-          await modifyAccount(resp, this.props.match.params.organizationID, this.props.history);
+        if(org_id == 0 && isOK) {
+          const res = await createAccount(resp, org_id);
+          if(res.status){
+            window.location.reload();
+          }
+        }else{
+          
+          const res = await modifyAccount(resp, org_id);
+          if(res.status){
+            window.location.reload();
+          }
         } 
-        if(resp.action === 'createAccount' && isOK) {
-          await createAccount(resp, this.props.match.params.organizationID, this.props.history);
-        }
       } catch (error) {
         console.error(error);
         this.setState({ error });

@@ -15,18 +15,15 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Divider from '@material-ui/core/Divider';
 import styles from "./WithdrawStyle"
-
-
-
-const coinType = "Ether";
+import { ETHER } from "../../util/Coin-type"
 
 function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function loadWithdrawFee(coinType, organizationID) {
+function loadWithdrawFee(ETHER, organizationID) {
   return new Promise((resolve, reject) => {
-    WithdrawStore.getWithdrawFee(coinType, organizationID,
+    WithdrawStore.getWithdrawFee(ETHER, organizationID,
       resp => {
         Object.keys(resp).forEach(attr => {
           const value = resp[attr];
@@ -35,22 +32,21 @@ function loadWithdrawFee(coinType, organizationID) {
             resp[attr] = formatNumber(value);
           }
         });
-        resp.moneyAbbr = coinType;
+        resp.moneyAbbr = ETHER;
         resolve(resp);
       })
   });
 }
 
-function loadCurrentAccount(coinType, organizationID) {
-  console.log('loadCurrentAccount', organizationID);
+function loadCurrentAccount(ETHER, organizationID) {
   return new Promise((resolve, reject) => {
     if (organizationID === '0') {
-      SupernodeStore.getSuperNodeActiveMoneyAccount(coinType, resp => {
+      SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, resp => {
         resolve(resp.supernodeActiveAccount);
         
       });
     }else{
-      MoneyStore.getActiveMoneyAccount(coinType, organizationID, resp => {
+      MoneyStore.getActiveMoneyAccount(ETHER, organizationID, resp => {
         resolve(resp.activeAccount);
         
       });
@@ -88,9 +84,9 @@ class Withdraw extends Component {
     try {
       const organizationID = this.props.match.params.organizationID;
       this.setState({loading: true})
-      var result = await loadWithdrawFee(coinType, organizationID);
+      var result = await loadWithdrawFee(ETHER, organizationID);
       var wallet = await loadWalletBalance(organizationID);
-      var account = await loadCurrentAccount(coinType, organizationID);
+      var account = await loadCurrentAccount(ETHER, organizationID);
       
       /* this.setState({
         activeAccount: resp.supernodeActiveAccount,
@@ -116,11 +112,11 @@ class Withdraw extends Component {
     this.loadData();
   }
 
-  componentDidUpdate(oldProps) {
-    if (this.props.match.url === oldProps.match.url) {
+  /* componentDidUpdate(oldProps) {
+    if (this.props === oldProps) {
       return;
     }
-  }
+  } */
 
   showModal(modal) {
     this.setState({ modal });

@@ -4,35 +4,37 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
-import HistoryStore from "../../stores/HistoryStore";
+import TopupStore from "../../stores/TopupStore";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
-import { ETHER } from "../../util/Coin-type"
 
-class EthAccount extends Component {
-  constructor() {
-    super();
+class TopupHistory extends Component {
+  constructor(props) {
+    super(props);
     this.getPage = this.getPage.bind(this);
     this.getRow = this.getRow.bind(this);
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.getChangeMoneyAccountHistory(ETHER, this.props.match.params.organizationID, limit, offset, (data) => {
-      callbackFunc({
-        totalCount: offset + 2 * limit,
-        result: data.changeHistory
-      });
-    });
+    TopupStore.getTopUpHistory(this.props.organizationID, offset, limit, data => {
+        callbackFunc({
+            totalCount: data.count,
+            result: data.topupHistory
+          });
+      }); 
   }
 
   getRow(obj, index) {
+    console.dir(obj);
     return(
       <TableRow key={index}>
-        <TableCell>{obj.addr}</TableCell>
-        <TableCell>{obj.status}</TableCell>
+        <TableCell>{obj.from}</TableCell>
+        <TableCell>{obj.to}</TableCell>
+        <TableCell>{obj.moneyType}</TableCell>
+        <TableCell>{obj.amount}</TableCell>
         <TableCell>{obj.createdAt}</TableCell>
       </TableRow>
     );
@@ -51,14 +53,16 @@ class EthAccount extends Component {
             </Admin>
           }
         >
-          <TitleBarTitle title="EthAccount" />
+        <TitleBarTitle title="Topup History" />
         </TitleBar>
         <Grid item xs={12}>
           <DataTable
             header={
               <TableRow>
-                <TableCell>Account</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>From</TableCell>
+                <TableCell>To</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Amount</TableCell>
                 <TableCell>Date</TableCell>
               </TableRow>
             }
@@ -71,4 +75,4 @@ class EthAccount extends Component {
   }
 }
 
-export default EthAccount;
+export default TopupHistory;
