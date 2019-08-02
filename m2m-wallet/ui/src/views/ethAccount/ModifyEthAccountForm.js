@@ -70,7 +70,7 @@ class ModifyEthAccountForm extends FormComponent {
           label="New account"
           margin="normal"
           value={this.state.newaccount}
-          placeholder="Type here" 
+          placeholder="0x0000000000000000000000000000000000000000" 
           onChange={this.onChange}
           inputProps={{
             pattern: "^0x[a-fA-F0-9]{40}$",
