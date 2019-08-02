@@ -78,9 +78,9 @@ class SideNav extends Component {
     this.setState({
       organizationID: e.target.value
     })
-    //console.log('side', this.state.organizationID);
-    this.props.history.push(`/withdraw/${e.target.value}`);
     
+    const currentLocation = this.props.history.location.pathname.split('/')[1];
+    this.props.history.push(`/${currentLocation}/${e.target.value}`);
   }
 
   selectClicked = async () => {

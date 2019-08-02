@@ -65,6 +65,7 @@ class ModifyEthAccount extends Component {
     loadData() {
       const org_id = this.props.match.params.organizationID;
 
+      //org_id is 0 which means current user is super_admin
       if (org_id === '0') {
         SupernodeStore.getSuperNodeActiveMoneyAccount(coinType, resp => {
           this.setState({
@@ -100,7 +101,6 @@ class ModifyEthAccount extends Component {
             window.location.reload();
           }
         }else{
-          
           const res = await modifyAccount(resp, org_id);
           if(res.status){
             window.location.reload();

@@ -56,9 +56,9 @@ class NewEthAccountForm extends FormComponent {
           value={this.state.createAccount}
           placeholder="Type here" 
           onChange={this.onChange}
-          inputProps={{
+          /* inputProps={{
             pattern: "^0x[a-fA-F0-9]{40}$",
-          }} 
+          }} */ 
 
           autoComplete='off'
           required
