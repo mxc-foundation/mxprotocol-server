@@ -13,6 +13,7 @@ import ModifyEthAccountForm from "./ModifyEthAccountForm";
 import NewEthAccountForm from "./NewEthAccountForm";
 import styles from "./EthAccountStyle";
 import { ETHER } from "../../util/Coin-type";
+import { SUPER_ADMIN } from "../../util/M2mUtil";
 
 function verifyUser (resp) {
   const login = {};
@@ -64,7 +65,7 @@ class ModifyEthAccount extends Component {
     loadData() {
       const org_id = this.props.match.params.organizationID;
 
-      if (org_id === '0') {
+      if (org_id === SUPER_ADMIN) {
         SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, resp => {
           this.setState({
             activeAccount: resp.supernodeActiveAccount,
@@ -99,7 +100,6 @@ class ModifyEthAccount extends Component {
             window.location.reload();
           }
         }else{
-          
           const res = await modifyAccount(resp, org_id);
           if(res.status){
             window.location.reload();
