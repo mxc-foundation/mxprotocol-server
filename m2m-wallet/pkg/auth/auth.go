@@ -149,13 +149,9 @@ func isOrgListRearranged(userProfile ProfileResponse, orgId int64) (api.ProfileR
 		}
 	}
 
-
-	if orgId == 0 {
-		if profile.User.IsAdmin == true {
-			return profile, VerifyResult{nil, OK}
-		} else {
-			return profile, VerifyResult{nil, OrganizationIdMisMatch}
-		}
+	// bypass super admin users
+	if true == profile.User.IsAdmin {
+		return profile, VerifyResult{nil, OK}
 	}
 
 	if orgDeleted {
@@ -317,6 +313,8 @@ func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *ap
 		fallthrough
 	case OK:
 		orgList := api.GetUserOrganizationListResponse{}
+
+		// users who are not super admin users
 		orgList.Organizations = userProfile.Organizations
 
 		if userProfile.User.IsAdmin == true {
