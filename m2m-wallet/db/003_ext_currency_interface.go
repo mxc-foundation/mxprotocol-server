@@ -28,13 +28,13 @@ func initExtCurrencyTable() error {
 }
 
 func dbCreateExtCurrencyTable() error {
-	return dbHandler.CreateExtCurrencyTable()
+	return db.CreateExtCurrencyTable()
 }
 
 func DbInsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
-	return dbHandler.InsertExtCurr(ec)
+	return db.InsertExtCurr(ec)
 }
 
 func DbGetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
-	return dbHandler.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
+	return db.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
 }

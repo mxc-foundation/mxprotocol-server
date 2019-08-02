@@ -1,4 +1,4 @@
-.PHONY: subdirs all clean ui-subdirs ui-requirements dev-requirements run-compose-test
+.PHONY: subdirs all clean ui-subdirs ui-requirements dev-requirements
 SUBDIRS=m2m-wallet
 
 subdirs:
@@ -38,5 +38,3 @@ dev-requirements:
 	go install github.com/goreleaser/goreleaser
 	go install github.com/goreleaser/nfpm
 
-run-compose-test:
-	docker-compose run --rm appserver make test

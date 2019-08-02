@@ -23,7 +23,7 @@ type ExtAccountHistRet struct {
 }
 
 func dbCreateExtAccountTable() error {
-	return dbHandler.CreateExtAccountTable()
+	return db.CreateExtAccountTable()
 }
 
 func DBInsertExtAccount(walletId int64, newAccount string, currencyAbbr string) (insertIndex int64, err error) {
@@ -39,39 +39,39 @@ func DBInsertExtAccount(walletId int64, newAccount string, currencyAbbr string) 
 		Insert_time:   time.Now().UTC(),
 	}
 
-	extAcntId, errInsert := dbHandler.InsertExtAccount(ea)
+	extAcntId, errInsert := db.InsertExtAccount(ea)
 
 	return extAcntId, errInsert
 }
 
 func DbGetSuperNodeExtAccountAdr(extCurrAbv string) (acntAdr string, err error) {
-	return dbHandler.GetSuperNodeExtAccountAdr(extCurrAbv)
+	return db.GetSuperNodeExtAccountAdr(extCurrAbv)
 }
 
 func DbGetSuperNodeExtAccountId(extCurrAbv string) (acntId int64, err error) {
-	return dbHandler.GetSuperNodeExtAccountId(extCurrAbv)
+	return db.GetSuperNodeExtAccountId(extCurrAbv)
 }
 
 func DbGetUserExtAccountAdr(walletId int64, extCurrAbv string) (acntAdr string, err error) {
-	return dbHandler.GetUserExtAccountAdr(walletId, extCurrAbv)
+	return db.GetUserExtAccountAdr(walletId, extCurrAbv)
 }
 
 func DbGetUserExtAccountId(walletId int64, extCurrAbv string) (int64, error) {
-	return dbHandler.GetUserExtAccountId(walletId, extCurrAbv)
+	return db.GetUserExtAccountId(walletId, extCurrAbv)
 }
 
 func DbGetLatestCheckedBlock(extAcntId int64) (int64, error) {
-	return dbHandler.GetLatestCheckedBlock(extAcntId)
+	return db.GetLatestCheckedBlock(extAcntId)
 }
 
 func DbUpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum int64) error {
-	return dbHandler.UpdateLatestCheckedBlock(extAcntId, updatedBlockNum)
+	return db.UpdateLatestCheckedBlock(extAcntId, updatedBlockNum)
 }
 
 func DbGetExtAccountIdByAdr(acntAdr string) (int64, error) {
-	return dbHandler.GetExtAccountIdByAdr(acntAdr)
+	return db.GetExtAccountIdByAdr(acntAdr)
 }
 
 func DbGetExtAcntHist(walletId int64, offset int64, limit int64) ([]ExtAccountHistRet, error) {
-	return dbHandler.GetExtAcntHist(walletId, offset, limit)
+	return db.GetExtAcntHist(walletId, offset, limit)
 }

@@ -5,29 +5,29 @@ import (
 )
 
 func dbCreateWithdrawTable() error {
-	return dbHandler.CreateWithdrawTable()
+	return db.CreateWithdrawTable()
 }
 
 func dbCreateWithdrawRelations() error {
-	return dbHandler.CreateWithdrawFunctions()
+	return db.CreateWithdrawFunctions()
 }
 
 func DbGetWalletIdByActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
-	return dbHandler.GetWalletIdofActiveAcnt(acntAdr, externalCur)
+	return db.GetWalletIdofActiveAcnt(acntAdr, externalCur)
 }
 
 func DbUpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
-	return dbHandler.UpdateWithdrawSuccessful(withdrawId, txHash, txApprovedTime)
+	return db.UpdateWithdrawSuccessful(withdrawId, txHash, txApprovedTime)
 }
 
 func DbInitWithdrawReq(walletId int64, amount float64, extCurAbv string) (withdrawId int64, err error) {
-	return dbHandler.InitWithdrawReq(walletId, amount, extCurAbv)
+	return db.InitWithdrawReq(walletId, amount, extCurAbv)
 }
 
 func DbUpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error {
-	return dbHandler.UpdateWithdrawPaymentQueryId(withdrawId, reqIdPaymentServ)
+	return db.UpdateWithdrawPaymentQueryId(withdrawId, reqIdPaymentServ)
 }
 
 func DbGetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
-	return dbHandler.GetWithdrawHist(walletId, offset, limit)
+	return db.GetWithdrawHist(walletId, offset, limit)
 }

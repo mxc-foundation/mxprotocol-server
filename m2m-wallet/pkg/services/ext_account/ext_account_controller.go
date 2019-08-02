@@ -43,11 +43,11 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
+	case auth.AuthFailed:
+		fallthrough
 	case auth.JsonParseError:
 		fallthrough
 	case auth.OrganizationIdMisMatch:
-		fallthrough
-	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
@@ -81,11 +81,11 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
+	case auth.AuthFailed:
+		fallthrough
 	case auth.JsonParseError:
 		fallthrough
 	case auth.OrganizationIdMisMatch:
-		fallthrough
-	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
@@ -138,11 +138,11 @@ func (s *ExtAccountServerAPI) GetActiveMoneyAccount(ctx context.Context, req *ap
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
+	case auth.AuthFailed:
+		fallthrough
 	case auth.JsonParseError:
 		fallthrough
 	case auth.OrganizationIdMisMatch:
-		fallthrough
-	case auth.ErrorInfoNotNull:
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
