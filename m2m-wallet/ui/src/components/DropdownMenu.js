@@ -6,8 +6,9 @@ import SessionStore from "../stores/SessionStore";
 const getOrgList = (organizations) => {
     let organizationList = null;
     if(organizations){
-        organizationList = organizations.map((o, i) => { 
-        return {label: o.organizationName, value: o.organizationID}});
+        organizationList = organizations.map((o, i) => {
+            return {label: o.organizationName, value: o.organizationID};
+        });
     }
     
     return organizationList;
@@ -43,7 +44,9 @@ export default class WithPromises extends Component {
         if (v !== null) {
             value = v.value;
         }
-
+        
+        SessionStore.setOrganizationID(v.value);
+        SessionStore.setOrganizationName(v.label);
         this.props.onChange({
             target: {
                 id: this.props.id,
@@ -52,7 +55,6 @@ export default class WithPromises extends Component {
         });
     }
     onClick = (v) => {
-        alert(1);
         console.log('onClick',v);
     }
     render() {
