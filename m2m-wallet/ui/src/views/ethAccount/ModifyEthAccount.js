@@ -12,8 +12,7 @@ import SupernodeStore from "../../stores/SupernodeStore";
 import ModifyEthAccountForm from "./ModifyEthAccountForm";
 import NewEthAccountForm from "./NewEthAccountForm";
 import styles from "./EthAccountStyle";
-
-const coinType = "Ether";
+import { ETHER } from "../../util/Coin-type";
 
 function verifyUser (resp) {
   const login = {};
@@ -33,7 +32,7 @@ function verifyUser (resp) {
 }
 
 function modifyAccount (req, orgId) {
-  req.moneyAbbr = coinType;
+  req.moneyAbbr = ETHER;
   req.orgId = orgId;
   return new Promise((resolve, reject) => {
     MoneyStore.modifyMoneyAccount(req, resp => {
@@ -43,7 +42,7 @@ function modifyAccount (req, orgId) {
 }
 
 function createAccount (req) {
-  req.moneyAbbr = coinType;
+  req.moneyAbbr = ETHER;
   return new Promise((resolve, reject) => {
     SupernodeStore.addSuperNodeMoneyAccount(req, resp => {
       resolve(resp);
@@ -66,13 +65,13 @@ class ModifyEthAccount extends Component {
       const org_id = this.props.match.params.organizationID;
 
       if (org_id === '0') {
-        SupernodeStore.getSuperNodeActiveMoneyAccount(coinType, resp => {
+        SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, resp => {
           this.setState({
             activeAccount: resp.supernodeActiveAccount,
           });
         });
       }else{
-        MoneyStore.getActiveMoneyAccount(coinType, org_id, resp => {
+        MoneyStore.getActiveMoneyAccount(ETHER, org_id, resp => {
           this.setState({
             activeAccount: resp.activeAccount,
           });

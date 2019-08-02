@@ -10,6 +10,7 @@ import TitleBarTitle from "../../components/TitleBarTitle";
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
+import { ETHER } from "../../util/Coin-type";
 
 class SubScriptions extends Component {
   constructor() {
@@ -19,7 +20,7 @@ class SubScriptions extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.getWithdrawHistory("Ether", this.props.match.params.organizationID, limit, offset, (data) => {
+    HistoryStore.getWithdrawHistory(ETHER, this.props.match.params.organizationID, limit, offset, (data) => {
       callbackFunc({
         totalCount: offset + 2 * limit,
         result: data.withdrawHistory

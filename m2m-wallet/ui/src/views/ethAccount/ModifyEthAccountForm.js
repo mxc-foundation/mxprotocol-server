@@ -18,13 +18,15 @@ class ModifyEthAccountForm extends FormComponent {
     this.setState({
       [id]: value
     });
+    this.clear();
   }
 
   clear() {
-    const newaccount = '';
     this.setState({
-      newaccount
-    });
+      username: '',
+      password: '',
+      newaccount: ''
+    })
   }
 
   submit = () => {
