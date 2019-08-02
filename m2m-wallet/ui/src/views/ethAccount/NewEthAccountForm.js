@@ -17,7 +17,6 @@ class NewEthAccountForm extends FormComponent {
     this.setState({
       [id]: value
     });
-    this.clear();
   }
 
   clear() {
