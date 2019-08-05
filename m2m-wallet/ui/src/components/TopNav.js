@@ -7,6 +7,9 @@ import { withStyles } from "@material-ui/core/styles";
 
 import Typography from '@material-ui/core/Typography';
 import SessionStore from "../stores/SessionStore";
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
+import AccountCircle from "mdi-material-ui/AccountCircle";
 
 import WithdrawStore from "../stores/WithdrawStore";
 import WalletStore from "../stores/WalletStore";
@@ -133,6 +136,20 @@ class TopNav extends Component {
           <div className={this.props.classes.flex}>
             <Typography type="body2" style={{ color: '#FFFFFF', fontFamily: 'Montserrat', fontWeight: 'bold', fontSize: '22px' }} >M2M Wallet</Typography>
           </div>
+
+          <Chip
+            avatar={
+              <Avatar>
+                <AccountCircle />
+              </Avatar>
+            }
+            label={this.props.username}
+            onClick={this.onMenuOpen}
+            classes={{
+              avatar: this.props.classes.avatar,
+              root: this.props.classes.chip,
+            }}
+          />
 
           <List>
             <ListItem>

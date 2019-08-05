@@ -116,6 +116,10 @@ class ModifyEthAccount extends Component {
     } 
 
   render() {
+    
+    const organizationID = this.props.match.params.organizationID;
+    const isAdmin = (organizationID === SUPER_ADMIN)?true:false;
+    
     return(
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
@@ -134,7 +138,7 @@ class ModifyEthAccount extends Component {
             </div>
         </Grid>
         <Grid item xs={6} className={this.props.classes.column}>
-          {this.state.activeAccount &&  
+          {this.state.activeAccount &&
             <ModifyEthAccountForm
               submitLabel="Confirm"
               onSubmit={this.onSubmit}
@@ -145,6 +149,7 @@ class ModifyEthAccount extends Component {
           <NewEthAccountForm
             submitLabel="Confirm"
             onSubmit={this.onSubmit}
+            //isAdmin={isAdmin}
           />
           }
         </Grid>
