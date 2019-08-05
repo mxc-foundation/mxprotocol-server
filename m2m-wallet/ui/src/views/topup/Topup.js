@@ -12,8 +12,8 @@ import TopupForm from "./TopupForm";
 import styles from "./TopupStyle"
 
 class Topup extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       loading: false,
     };
@@ -24,6 +24,14 @@ class Topup extends Component {
     this.loadData();
   }
   
+  componentDidUpdate(oldProps) {
+    if (this.props === oldProps) {
+      return;
+    }
+
+    this.loadData();
+  }
+
   loadData() {
     this.setState({loading:true});
     TopupStore.getTopUpHistory(this.props.match.params.organizationID, 0, 1, resp => {
