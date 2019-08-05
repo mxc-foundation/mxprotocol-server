@@ -107,8 +107,8 @@ class HistoryLayout extends Component {
 
         <Grid item xs={12}>
           <Switch>
-            <Route exact path={`/history/${organizationID}/`} render={props => <TopupHistory organizationID={organizationID} {...props} />} />
-            <Route exact path={`/history/${organizationID}/eth_account`} render={props => <EthAccount {...props} />} />
+            <Route exact path={`${this.props.match.path}/`} render={props => <TopupHistory organizationID={organizationID} {...props} />} />
+            <Route exact path={`${this.props.match.path}/eth_account`} render={props => <EthAccount {...props} />} />
             {/* <Route path={`/history/${organizationID}/Withdraw`} render={props => <SubScriptions {...props} />} /> */}
 
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}

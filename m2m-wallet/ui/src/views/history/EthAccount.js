@@ -13,8 +13,8 @@ import Admin from "../../components/Admin";
 import { ETHER } from "../../util/Coin-type"
 
 class EthAccount extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.getPage = this.getPage.bind(this);
     this.getRow = this.getRow.bind(this);
   }
