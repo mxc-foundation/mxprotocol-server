@@ -88,16 +88,7 @@ class RedirectedFromLora extends Component {
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
     const { path } = data;
     SessionStore.initProfile(data);
-    //ProfileStore.getUserOrganizationList(org_id);
     
-    /* new Promise((resolve, reject) => {
-      ProfileStore.getUserOrganizationList(org_id,
-        resp => {
-          resolve(resp);
-        })
-    }).then((resp)=>{
-      return <Redirect to={path} />;  
-    }); */
     return <Redirect to={path} />; 
   }
 }
@@ -142,7 +133,7 @@ class App extends Component {
     let sideNav = null;
 
     if (this.state.user !== null) {
-      topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} />;
+      topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} username={SessionStore.getUsername()} />;
       sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
     }
     

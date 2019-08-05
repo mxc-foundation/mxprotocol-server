@@ -29,8 +29,8 @@ const TopNavStyle = {
         borderRadius: 3,
     },
     avatar: {
-        background: blue[600],
-        color: theme.palette.common.white,
+        background: theme.palette.secondary.main,
+        color: theme.palette.secondary.main,
     },
     chip: {
         background: theme.palette.secondary.main,
