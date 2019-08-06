@@ -32,11 +32,7 @@ class WithdrawForm extends FormComponent {
       return(<Spinner on={this.state.loading}/>);
     }
 
-    /* const extraButtons = <>
-      <Button color="primary" type="button" disabled={false} >Cancel</Button>
-    </>; */
-    
-    const w_limit = parseFloat(this.props.txinfo.balance);
+    const w_limit = this.props.txinfo.balance;
     const { txinfo } = this.props;
 
     return(
