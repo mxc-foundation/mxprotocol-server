@@ -89,9 +89,9 @@ class ModifyEthAccountForm extends FormComponent {
           value={this.state.username}
           placeholder="Type here" 
           onChange={this.onChange}
-          inputProps={{
+          /* inputProps={{
             pattern: "[\\w-]+",
-          }}
+          }} */
           autoComplete='off'
           required
           fullWidth
@@ -104,9 +104,9 @@ class ModifyEthAccountForm extends FormComponent {
           value={this.state.password}
           placeholder="Type here" 
           onChange={this.onChange}
-          inputProps={{
+          /* inputProps={{
             pattern: "[\\w-]+",
-          }}
+          }} */
           type="password"
           autoComplete="off"
           required
