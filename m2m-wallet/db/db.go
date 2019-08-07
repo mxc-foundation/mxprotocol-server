@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	migrate "github.com/rubenv/sql-migrate"
+	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/migrations"
 	"time"
 
@@ -12,15 +13,17 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
 )
 
-var timeLayout string = "2006-01-02T15:04:05.000000Z"
-
 func Setup(conf config.MxpConfig) error {
-	dbp, err := openDBWithPing(conf)
-
+	dbp, err := openPostgresDBWithPing(conf)
+	var db DBHandler
+	i = &pg.PgDB
 	if err != nil {
 		return err
 	} else {
-		db = &DBHandler{dbp	}
+		db = addDB(i, dbp)
+		if db.DB == nil {
+			return errors.New("db/Setup: wrong db driver")
+		}
 	}
 
 	dbInit()
@@ -42,7 +45,7 @@ func Setup(conf config.MxpConfig) error {
 	return nil
 }
 
-func openDBWithPing(conf config.MxpConfig) (*sql.DB, error) {
+func openPostgresDBWithPing(conf config.MxpConfig) (*sql.DB, error) {
 	log.Debug("db/connect_db")
 
 	d, err := sql.Open("postgres", conf.PostgreSQL.DSN)

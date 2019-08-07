@@ -1,5 +1,9 @@
 package db
 
+import (
+	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
+)
+
 type WalletType string
 
 const (
@@ -8,30 +12,30 @@ const (
 )
 
 func dbCreateWalletTable() error {
-	return db.CreateWalletTable()
+	return pg.PgDB.CreateWalletTable()
 }
 
 func DbInsertWallet(orgId int64, walletType WalletType) (insertIndex int64, err error) {
-	w := Wallet{
+	w := pg.Wallet{
 		FkOrgLa: orgId,
 		TypeW:   string(walletType),
 		Balance: 0.0,
 	}
-	return db.InsertWallet(w)
+	return pg.PgDB.InsertWallet(w)
 }
 
 func DbGetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
-	return db.GetWalletIdFromOrgId(orgIdLora)
+	return pg.PgDB.GetWalletIdFromOrgId(orgIdLora)
 }
 
 func DbGetWalletBalance(walletId int64) (float64, error) {
-	return db.GetWalletBalance(walletId)
+	return pg.PgDB.GetWalletBalance(walletId)
 }
 
 func DbUpdateBalanceByWalletId(walletId int64, newBalance float64) error {
-	return db.UpdateBalanceByWalletId(walletId, newBalance)
+	return pg.PgDB.UpdateBalanceByWalletId(walletId, newBalance)
 }
 
 func DbGetWalletIdSuperNode() (walletId int64, err error) {
-	return db.GetWalletIdSuperNode()
+	return pg.PgDB.GetWalletIdSuperNode()
 }

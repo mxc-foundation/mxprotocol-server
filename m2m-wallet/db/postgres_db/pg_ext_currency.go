@@ -1,4 +1,4 @@
-package db
+package postgres_db
 
 import (
 	_ "github.com/lib/pq"
@@ -12,7 +12,7 @@ type ExtCurrency struct {
 	Abv  string `db:"abv"`
 }
 
-func (pgDbp *DBHandler) CreateExtCurrencyTable() error {
+func (pgDbp *PGHandler) CreateExtCurrencyTable() error {
 	_, err := pgDbp.DB.Exec(`
 		CREATE TABLE IF NOT EXISTS 
 		ext_currency (
@@ -24,7 +24,7 @@ func (pgDbp *DBHandler) CreateExtCurrencyTable() error {
 	return errors.Wrap(err, "db/CreateExtCurrencyTable")
 }
 
-func (pgDbp *DBHandler) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
+func (pgDbp *PGHandler) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
 	log.WithFields(log.Fields{
 		"name": ec.Name,
 		"abbr": ec.Abv,
@@ -46,7 +46,7 @@ func (pgDbp *DBHandler) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err er
 	return insertIndex, errors.Wrap(err, "db/InsertExtCurr")
 }
 
-func (pgDbp *DBHandler) GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
+func (pgDbp *PGHandler) GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
 	var extCurrencyId int64
 	err := pgDbp.DB.QueryRow(`
 		select id 

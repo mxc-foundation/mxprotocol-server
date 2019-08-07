@@ -1,4 +1,4 @@
-package db
+package postgres_db
 
 import (
 	"time"
@@ -15,7 +15,7 @@ type WithdrawFee struct {
 	Status     string    `db:"status"`
 }
 
-func (pgDbp *DBHandler) CreateWithdrawFeeTable() error {
+func (pgDbp *PGHandler) CreateWithdrawFeeTable() error {
 	_, err := pgDbp.DB.Exec(`
 
 		CREATE TABLE IF NOT EXISTS 
@@ -31,7 +31,7 @@ func (pgDbp *DBHandler) CreateWithdrawFeeTable() error {
 	return errors.Wrap(err, "db/CreateWithdrawFeeTable")
 }
 
-func (pgDbp *DBHandler) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
+func (pgDbp *PGHandler) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
 	err = pgDbp.DB.QueryRow(`
 		INSERT INTO withdraw_fee (
 			fk_ext_currency,
@@ -63,7 +63,7 @@ func (pgDbp *DBHandler) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, er
 	return insertIndex, errors.Wrap(err, "db/InsertWithdrawFee")
 }
 
-func (pgDbp *DBHandler) changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
+func (pgDbp *PGHandler) changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
 	_, err = pgDbp.DB.Exec(`
 	UPDATE 
 		withdraw_fee 
@@ -81,7 +81,7 @@ func (pgDbp *DBHandler) changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err e
 	return errors.Wrap(err, "db/changeStatus2ArcOldRowWithdrawFee")
 }
 
-func (pgDbp *DBHandler) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
+func (pgDbp *PGHandler) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
 	err = pgDbp.DB.QueryRow(`
 		SELECT 
 			wf.fee
@@ -99,7 +99,7 @@ func (pgDbp *DBHandler) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee flo
 	return withdrawFee, errors.Wrap(err, "db/GetActiveWithdrawFee")
 }
 
-func (pgDbp *DBHandler) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
+func (pgDbp *PGHandler) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
 	err = pgDbp.DB.QueryRow(`
 		SELECT 
 			wf.id

@@ -1,4 +1,4 @@
-package db
+package postgres_db
 
 import (
 	"time"
@@ -27,7 +27,7 @@ type TopupHistRet struct {
 	TxHash      string
 }
 
-func (pgDbp *DBHandler) CreateTopupTable() error {
+func (pgDbp *PGHandler) CreateTopupTable() error {
 	_, err := pgDbp.DB.Exec(`
 	CREATE TABLE IF NOT EXISTS topup (
 		id SERIAL PRIMARY KEY,
@@ -42,7 +42,7 @@ func (pgDbp *DBHandler) CreateTopupTable() error {
 	return errors.Wrap(err, "db/CreateTopupTable")
 }
 
-func (pgDbp *DBHandler) insertTopup(tu Topup) (insertIndex int64, err error) {
+func (pgDbp *PGHandler) insertTopup(tu Topup) (insertIndex int64, err error) {
 	err = pgDbp.DB.QueryRow(`
 		INSERT INTO topup (
 			fk_ext_account_sender,
@@ -67,7 +67,7 @@ func (pgDbp *DBHandler) insertTopup(tu Topup) (insertIndex int64, err error) {
 	return insertIndex, errors.Wrap(err, "db/InsertTopup")
 }
 
-func (pgDbp *DBHandler) CreateTopupFunctions() error {
+func (pgDbp *PGHandler) CreateTopupFunctions() error {
 	_, err := pgDbp.DB.Exec(`
 
 	CREATE OR REPLACE FUNCTION topup_req_apply (
@@ -141,7 +141,7 @@ func (pgDbp *DBHandler) CreateTopupFunctions() error {
 	return errors.Wrap(err, "db/CreateTopupFunctions")
 }
 
-func (pgDbp *DBHandler) applyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
+func (pgDbp *PGHandler) applyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
 	err = pgDbp.DB.QueryRow(`
 		select topup_req_apply($1,$2,$3,$4,$5,$6,$7,$8,$9);
 		
@@ -159,7 +159,7 @@ func (pgDbp *DBHandler) applyTopup(tu Topup, it InternalTx) (topupId int64, err 
 
 }
 
-func (pgDbp *DBHandler) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string, txHash string, value float64, extCurAbv string) (topupId int64, err error) {
+func (pgDbp *PGHandler) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string, txHash string, value float64, extCurAbv string) (topupId int64, err error) {
 
 	tu := Topup{
 		Value:       value,
@@ -200,7 +200,7 @@ func (pgDbp *DBHandler) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string
 
 }
 
-func (pgDbp *DBHandler) GetTopupHist(walletId int64, offset int64, limit int64) ([]TopupHistRet, error) {
+func (pgDbp *PGHandler) GetTopupHist(walletId int64, offset int64, limit int64) ([]TopupHistRet, error) {
 
 	rows, err := pgDbp.DB.Query(
 		`select
