@@ -279,7 +279,7 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 					log.Info("Still pending...")
 					continue
 				} else {
-					timeStamp, err := time.Parse(reply.TxSentTime, "Mon Jan 2 15:04:05 -0700 MST 2006")
+					timeStamp, err := time.Parse("", reply.TxSentTime)
 					if err != nil {
 						log.Error("Time format error: ", err)
 					}
