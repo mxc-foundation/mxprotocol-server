@@ -1,4 +1,4 @@
-package db
+package postgres_db
 
 import (
 	_ "github.com/lib/pq"
@@ -12,7 +12,7 @@ type Wallet struct {
 	Balance float64 `db:"balance"`
 }
 
-func (pgDbp *DBHandler) CreateWalletTable() error {
+func (pgDbp *PGHandler) CreateWalletTable() error {
 	_, err := pgDbp.DB.Exec(`
 		DO $$
 		BEGIN
@@ -38,7 +38,7 @@ func (pgDbp *DBHandler) CreateWalletTable() error {
 	return errors.Wrap(err, "db/CreateWalletTable")
 }
 
-func (pgDbp *DBHandler) InsertWallet(w Wallet) (insertIndex int64, err error) {
+func (pgDbp *PGHandler) InsertWallet(w Wallet) (insertIndex int64, err error) {
 	err = pgDbp.DB.QueryRow(`
 		INSERT INTO wallet (
 			fk_org_la ,
@@ -56,7 +56,7 @@ func (pgDbp *DBHandler) InsertWallet(w Wallet) (insertIndex int64, err error) {
 	return insertIndex, errors.Wrap(err, "db/InsertWallet")
 }
 
-func (pgDbp *DBHandler) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
+func (pgDbp *PGHandler) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
 	var w Wallet
 	w.Id = 0
 	err := pgDbp.DB.QueryRow(
@@ -69,7 +69,7 @@ func (pgDbp *DBHandler) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
 	return w.Id, errors.Wrap(err, "db/GetWalletIdFromOrgId")
 }
 
-func (pgDbp *DBHandler) GetWalletBalance(walletId int64) (float64, error) {
+func (pgDbp *PGHandler) GetWalletBalance(walletId int64) (float64, error) {
 	var w Wallet
 	w.Id = 0
 	err := pgDbp.DB.QueryRow(
@@ -82,7 +82,7 @@ func (pgDbp *DBHandler) GetWalletBalance(walletId int64) (float64, error) {
 	return w.Balance, errors.Wrap(err, "db/GetWalletBalance")
 }
 
-func (pgDbp *DBHandler) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
+func (pgDbp *PGHandler) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
 
 	err = pgDbp.DB.QueryRow(
 		`select 
@@ -103,7 +103,7 @@ func (pgDbp *DBHandler) GetWalletIdofActiveAcnt(acntAdr string, externalCur stri
 	return walletId, errors.Wrap(err, "db/GetWalletIdofActiveAcnt")
 }
 
-func (pgDbp *DBHandler) getWalletIdofActiveAcntSuperAdmin(acntAdr string, externalCur string) (walletId int64, err error) {
+func (pgDbp *PGHandler) getWalletIdofActiveAcntSuperAdmin(acntAdr string, externalCur string) (walletId int64, err error) {
 
 	err = pgDbp.DB.QueryRow(
 		`select 
@@ -124,7 +124,7 @@ func (pgDbp *DBHandler) getWalletIdofActiveAcntSuperAdmin(acntAdr string, extern
 	return walletId, errors.Wrap(err, "db/getWalletIdofActiveAcntSuperAdmin")
 }
 
-func (pgDbp *DBHandler) GetWalletIdSuperNode() (walletId int64, err error) {
+func (pgDbp *PGHandler) GetWalletIdSuperNode() (walletId int64, err error) {
 
 	err = pgDbp.DB.QueryRow(
 		`SELECT
@@ -140,7 +140,7 @@ func (pgDbp *DBHandler) GetWalletIdSuperNode() (walletId int64, err error) {
 	return walletId, errors.Wrap(err, "db/GetWalletIdSuperNode")
 }
 
-func (pgDbp *DBHandler) UpdateBalanceByWalletId(walletId int64, newBalance float64) error {
+func (pgDbp *PGHandler) UpdateBalanceByWalletId(walletId int64, newBalance float64) error {
 	_, err := pgDbp.DB.Exec(`
 	UPDATE
 		wallet 
