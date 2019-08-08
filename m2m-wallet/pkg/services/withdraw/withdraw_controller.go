@@ -18,6 +18,12 @@ var ctxWithdraw struct {
 	withdrawFee map[string]float64
 }
 
+const (
+	TOBE_SENT_FROM_PAYMENT_SERVER    = "TOBE_SENT"
+	TOBE_CHECKED_FROM_PAYMENT_SERVER = "TOBE_CHECKED" // tx is sent, still not sure if it was successful
+	SUCCESSFUL                       = "SUCCESSFUL"
+)
+
 func Setup(conf config.MxpConfig) error {
 	log.Info("Setup withdraw service")
 
@@ -140,9 +146,9 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 	case auth.OK:
 
 		log.WithFields(log.Fields{
-			"orgId": req.OrgId,
+			"orgId":  req.OrgId,
 			"offset": req.Offset,
-			"limit": req.Limit,
+			"limit":  req.Limit,
 		}).Debug("grpc_api/GetWithdrawHistory")
 
 		walletId, err := wallet.GetWalletId(req.OrgId)
@@ -152,12 +158,12 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 		}
 
 		response := api.GetWithdrawHistoryResponse{UserProfile: &userProfile}
-		ptr, err := db.DbGetWithdrawHist(walletId, req.Offset * req.Limit, req.Limit)
+		ptr, err := db.DbGetWithdrawHist(walletId, req.Offset*req.Limit, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetWithdrawHistory")
 			return &api.GetWithdrawHistoryResponse{UserProfile: &userProfile}, nil
 		}
-		
+
 		var count int64
 		for _, v := range ptr {
 			if v.ExtCurrency != api.Money_name[int32(req.MoneyAbbr)] {
@@ -202,7 +208,6 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
-
 		log.WithFields(log.Fields{
 			"orgId":     req.OrgId,
 			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
@@ -224,23 +229,25 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get wallet balance from DB: %s", err)
 		}
 
-		//check if the ext_account is enough in supernode
-		if withdrawfee >= balance {
-			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.Unavailable, "Not enough ext_account in super node")
-		}
-
-		withdrawID, err := db.DbInitWithdrawReq(walletID, req.Amount, req.MoneyAbbr.String())
-		if err != nil {
-			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get wallet withdrawID from DB: %s", err)
+		//check if the ext_account balance is enough in wallet
+		if withdrawfee + req.Amount > balance {
+			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.Unavailable, "Not enough balance in user wallet")
 		}
 
 		receiverAdd, err := db.DbGetUserExtAccountAdr(walletID, req.MoneyAbbr.String())
 		if err != nil {
 			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get user address from DB: %s", err)
 		}
-		reqIdClient, err := db.DbInitWithdrawReq(walletID, req.Amount, req.MoneyAbbr.String())
+
+		// also updated the balance and history
+		withdrawID, err := db.DbInitWithdrawReq(walletID, req.Amount, req.MoneyAbbr.String())
+		if err != nil {
+			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get wallet withdrawID from DB: %s", err)
+		}
+
+		//reqIdClient, err := db.DbInitWithdrawReq(walletID, req.Amount, req.MoneyAbbr.String())
 		amount := fmt.Sprintf("%f", req.Amount)
-		reply, err := paymentReq(ctx, &config.Cstruct, amount, receiverAdd, reqIdClient)
+		reply, err := paymentReq(ctx, &config.Cstruct, amount, receiverAdd, withdrawID)
 		if err != nil {
 			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.FailedPrecondition, "send payment request failed: %s", err)
 		}
@@ -267,11 +274,12 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 					continue
 				}
 
-				if reply.TxPaymentStatusEnum != 2 {
+				status := fmt.Sprintf("%s", reply.TxPaymentStatusEnum)
+				if status != SUCCESSFUL {
 					log.Info("Still pending...")
 					continue
 				} else {
-					timeStamp, err := time.Parse(reply.TxSentTime, "Mon Jan 2 15:04:05 -0700 MST 2006")
+					timeStamp, err := time.Parse("", reply.TxSentTime)
 					if err != nil {
 						log.Error("Time format error: ", err)
 					}
@@ -286,9 +294,7 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 				}
 			}
 		}()
-
 		return &api.WithdrawReqResponse{Status: true, UserProfile: &userProfile}, nil
-
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")
