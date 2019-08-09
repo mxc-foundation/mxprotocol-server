@@ -140,10 +140,10 @@ func (pgDbp *PGHandler) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, er
 		WHERE
 			w.id = ea.fk_wallet
 			AND
-			w.tExtAccount: db/GetExtAccountIdByAdr: pq: column "ext_account.id" must appear in the GROUP BY cl
-			ANDExtAccount: db/GetExtAccountIdByAdr: pq: column "ext_account.id" must appear in the GROUP BY cl
-			ea.ExtAccount: db/GetExtAccountIdByAdr: pq: column "ext_account.id" must appear in the GROUP BY cl
-			ANDExtAccount: db/GetExtAccountIdByAdr: pq: column "ext_account.id" must appear in the GROUP BY cl
+			w.type = 'SUPER_ADMIN'
+			AND
+			ea.fk_ext_currency = ec.id
+			AND
 			ea.status = 'ACTIVE'
 			AND
 			ec.abv = $1
