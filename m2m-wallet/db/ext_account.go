@@ -1,8 +1,9 @@
 package db
 
 import (
-	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 	"time"
+
+	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
 type ExtAccountHistRet pg.ExtAccountHistRet
@@ -20,8 +21,8 @@ func DBInsertExtAccount(walletId int64, newAccount string, currencyAbbr string) 
 	ea := pg.ExtAccount{
 		FkWallet:      walletId,
 		FkExtCurrency: extCurrencyId,
-		Account_adr:   newAccount,
-		Insert_time:   time.Now().UTC(),
+		AccountAdr:    newAccount,
+		InsertTime:    time.Now().UTC(),
 	}
 
 	extAcntId, errInsert := pg.PgDB.InsertExtAccount(ea)
@@ -53,8 +54,8 @@ func DbUpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum int64) error {
 	return pg.PgDB.UpdateLatestCheckedBlock(extAcntId, updatedBlockNum)
 }
 
-func DbGetExtAccountIdByAdr(acntAdr string) (int64, error) {
-	return pg.PgDB.GetExtAccountIdByAdr(acntAdr)
+func DbGetExtAccountIdByAdr(acntAdr string, extCurrAbv string) (int64, error) {
+	return pg.PgDB.GetExtAccountIdByAdr(acntAdr, extCurrAbv)
 }
 
 func castExtAccountHistRet(acntHist []pg.ExtAccountHistRet, err1 error) (castedVal []ExtAccountHistRet, err error) {
