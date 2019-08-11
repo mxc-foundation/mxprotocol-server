@@ -164,9 +164,9 @@ func (s *WalletServerAPI) GetVmxcTxHistory(ctx context.Context, req *api.GetVmxc
 	case auth.OK:
 
 		log.WithFields(log.Fields{
-			"orgId": req.OrgId,
+			"orgId":  req.OrgId,
 			"offset": req.Offset,
-			"limit": req.Limit,
+			"limit":  req.Limit,
 		})
 
 		return &api.GetVmxcTxHistoryResponse{UserProfile: &userProfile}, nil

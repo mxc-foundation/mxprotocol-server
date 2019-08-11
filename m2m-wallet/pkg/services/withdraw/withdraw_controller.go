@@ -230,7 +230,7 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 		}
 
 		//check if the ext_account balance is enough in wallet
-		if withdrawfee + req.Amount > balance {
+		if withdrawfee+req.Amount > balance {
 			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.Unavailable, "Not enough balance in user wallet")
 		}
 

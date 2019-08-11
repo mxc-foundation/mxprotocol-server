@@ -78,7 +78,7 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 	}
 
 	// Update the last block to db
-	if newBlockNo > currentBlockNo{
+	if newBlockNo > currentBlockNo {
 		err = db.DbUpdateLatestCheckedBlock(supernodeID, int64(newBlockNo))
 		if err != nil {
 			log.WithError(err).Warning("Storage: Cannot update lastBlockNo to DB")
