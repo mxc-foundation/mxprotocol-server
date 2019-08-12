@@ -109,7 +109,7 @@ func setupTopUp() error {
 }
 
 func setupSupernode() error {
-	if err := supernode.Setup(); err != nil {
+	if err := supernode.Setup(config.Cstruct); err != nil {
 		return errors.Wrap(err, "setup service super_node error")
 	}
 	return nil

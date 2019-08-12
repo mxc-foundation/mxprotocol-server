@@ -5,7 +5,6 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
 )
 
-
 type DbInterfaceTestSuite struct {
 	tx *db.TxHandler
 }

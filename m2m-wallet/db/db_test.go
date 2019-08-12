@@ -51,7 +51,6 @@ func TestDb(t *testing.T) {
 	suite.Run(t, new(DbTestSuite))
 }
 
-
 /*func testDb() {
 	// testWallet()
 	// testInternalTx()

@@ -6,6 +6,7 @@ import (
 )
 
 var i DBInterface
+
 type DBInterface interface {
 	GetDB(string) *sql.DB
 	AddDB(*sql.DB)
@@ -27,6 +28,7 @@ type TxHandler struct {
 type DBHandler struct {
 	*sql.DB
 }
+
 func (db *DBHandler) Begin() (*TxHandler, error) {
 	tx, err := db.DB.Begin()
 	return &TxHandler{tx}, err
