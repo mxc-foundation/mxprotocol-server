@@ -60,7 +60,6 @@ func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpH
 			return &api.GetTopUpHistoryResponse{UserProfile: &userProfile}, nil
 		}
 
-		var count int64
 		for _, v := range ptr {
 			history := api.TopUpHistory{}
 			history.From = v.AcntSender
@@ -69,11 +68,10 @@ func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpH
 			history.CreatedAt = v.TxAprvdTime.String()
 			history.MoneyType = v.ExtCurrency
 			history.TxHash = v.TxHash
-			count += 1
 
 			response.TopupHistory = append(response.TopupHistory, &history)
 		}
-		response.Count = count
+		response.Count, err = db.DbGetTopupHistRecCnt(walletId)
 
 		return &response, nil
 	}

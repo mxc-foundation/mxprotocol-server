@@ -86,6 +86,10 @@ func dbInit() {
 		log.WithError(err).Fatal("db/dbCreateExtAccountTable")
 	}
 
+	if err := dbCreateWithdrawFeeTable(); err != nil {
+		log.WithError(err).Fatal("db/dbCreateWithdrawFeeTable")
+	}
+
 	if err := dbCreateWithdrawTable(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateWithdrawTable")
 	}
@@ -100,10 +104,6 @@ func dbInit() {
 
 	if err := dbCreateTopupRelations(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateTopupRelations")
-	}
-
-	if err := dbCreateWithdrawFeeTable(); err != nil {
-		log.WithError(err).Fatal("db/dbCreateWithdrawFeeTable")
 	}
 
 	if err := initExtCurrencyTable(); err != nil {

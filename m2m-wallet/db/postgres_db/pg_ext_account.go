@@ -1,7 +1,6 @@
 package postgres_db
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/ethereum/go-ethereum/log"
@@ -85,7 +84,6 @@ func (pgDbp *PGHandler) InsertExtAccount(ea ExtAccount) (insertIndex int64, err 
 func (pgDbp *PGHandler) alreadyExistActiveAcnt(acntAdr string, extCurrId int64) (bool, error) {
 
 	var nRow int64
-	fmt.Println("vals:", acntAdr, extCurrId)
 
 	err := pgDbp.DB.QueryRow(`
 		select 
@@ -307,7 +305,6 @@ func (pgDbp *PGHandler) GetExtAcntHist(walletId int64, offset int64, limit int64
 		ORDER BY ea.insert_time DESC
 		LIMIT $2
 		OFFSET $3
-		;
 		;`, walletId, limit, offset)
 
 	defer rows.Close()
@@ -332,4 +329,21 @@ func (pgDbp *PGHandler) GetExtAcntHist(walletId int64, offset int64, limit int64
 		res = append(res, extAcntVal)
 	}
 	return res, errors.Wrap(err, "db/GetExtAcntHist")
+}
+
+func (pgDbp *PGHandler) GetExtAcntHistRecCnt(walletId int64) (recCnt int64, err error) {
+
+	err = pgDbp.DB.QueryRow(`
+		SELECT
+			COUNT(*)
+		FROM
+			ext_account ea,
+			wallet w
+		WHERE
+			ea.fk_wallet = w.id AND
+			w.id = $1
+		;
+	`, walletId).Scan(&recCnt)
+
+	return recCnt, err
 }

@@ -28,3 +28,7 @@ type TopupHistRet pg.TopupHistRet
 func DbGetTopupHist(walletId int64, offset int64, limit int64) ([]TopupHistRet, error) {
 	return castTopupHistRet(pg.PgDB.GetTopupHist(walletId, offset, limit))
 }
+
+func DbGetTopupHistRecCnt(walletId int64) (int64, error) {
+	return pg.PgDB.GetTopupHistRecCnt(walletId)
+}

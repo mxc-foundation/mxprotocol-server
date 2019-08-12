@@ -143,7 +143,7 @@ func (pgDbp *PGHandler) CreateTopupFunctions() error {
 
 func (pgDbp *PGHandler) applyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
 	err = pgDbp.DB.QueryRow(`
-		select topup_req_apply($1,$2,$3,$4,$5,$6,$7,$8,$9);
+		SELECT topup_req_apply($1,$2,$3,$4,$5,$6,$7,$8,$9);
 		
 	`, tu.FkExtAcntSender,
 		tu.FkExtAcntRcvr,
@@ -203,14 +203,14 @@ func (pgDbp *PGHandler) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string
 func (pgDbp *PGHandler) GetTopupHist(walletId int64, offset int64, limit int64) ([]TopupHistRet, error) {
 
 	rows, err := pgDbp.DB.Query(
-		`select
+		`SELECT
 			ea.account_adr AS sender_adr, 
 			ea2.account_adr AS receiver_adr, 
 			ec.abv AS currency_abv,
 			tu.value,
 			tu.tx_approved_time,
 			tu.tx_hash
-		from
+		FROM
 			topup tu,
 			ext_account ea,
 			ext_account ea2,
@@ -252,4 +252,24 @@ func (pgDbp *PGHandler) GetTopupHist(walletId int64, offset int64, limit int64) 
 		res = append(res, topupVal)
 	}
 	return res, errors.Wrap(err, "db/GetTopupHist")
+}
+
+func (pgDbp *PGHandler) GetTopupHistRecCnt(walletId int64) (recCnt int64, err error) {
+
+	err = pgDbp.DB.QueryRow(`
+	SELECT
+		COUNT (*)
+	FROM
+		topup tu,
+		ext_account ea,
+		wallet w
+	WHERE
+		tu.fk_ext_account_sender = ea.id AND
+		ea.fk_wallet = w.id AND
+		w.id = $1 			
+		;
+		
+	`, walletId).Scan(&recCnt)
+
+	return recCnt, err
 }
