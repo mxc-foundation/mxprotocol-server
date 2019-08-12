@@ -167,12 +167,12 @@ func (pgDbp *PGHandler) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string
 		TxHash:      txHash,
 	}
 
-	tu.FkExtAcntSender, err = pgDbp.GetExtAccountIdByAdr(acntAdrSender)
+	tu.FkExtAcntSender, err = pgDbp.GetExtAccountIdByAdr(acntAdrSender, extCurAbv)
 	if err != nil {
 		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
 
-	tu.FkExtAcntRcvr, err = pgDbp.GetExtAccountIdByAdr(acntAdrRcvr)
+	tu.FkExtAcntRcvr, err = pgDbp.GetExtAccountIdByAdr(acntAdrRcvr, extCurAbv)
 	if err != nil {
 		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}

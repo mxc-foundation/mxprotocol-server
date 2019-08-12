@@ -55,8 +55,8 @@ func DbUpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum int64) error {
 	return pg.PgDB.UpdateLatestCheckedBlock(extAcntId, updatedBlockNum)
 }
 
-func DbGetExtAccountIdByAdr(acntAdr string) (int64, error) {
-	return pg.PgDB.GetExtAccountIdByAdr(strings.ToLower(acntAdr))
+func DbGetExtAccountIdByAdr(acntAdr string, extCurrAbv string) (int64, error) {
+	return pg.PgDB.GetExtAccountIdByAdr(strings.ToLower(acntAdr), extCurrAbv)
 }
 
 func castExtAccountHistRet(acntHist []pg.ExtAccountHistRet, err1 error) (castedVal []ExtAccountHistRet, err error) {

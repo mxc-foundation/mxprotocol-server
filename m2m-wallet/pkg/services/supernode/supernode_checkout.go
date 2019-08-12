@@ -48,7 +48,7 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 			fbalance.SetString(tx.Value.Int().String())
 			ethValue, _ := new(big.Float).Quo(fbalance, big.NewFloat(math.Pow10(18))).Float64()
 
-			from, err := db.DbGetExtAccountIdByAdr(tx.From)
+			from, err := db.DbGetExtAccountIdByAdr(tx.From, config.Cstruct.SuperNode.ExtCurrAbv) //config.Cstruct.SuperNode.ExtCurrAbv is added by Aslan => please check!
 			if err != nil {
 				log.WithError(err).Warning("Cannot get external account from DB")
 				return err
@@ -58,7 +58,7 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 				continue
 			}
 
-			to, err := db.DbGetExtAccountIdByAdr(tx.To)
+			to, err := db.DbGetExtAccountIdByAdr(tx.To, config.Cstruct.SuperNode.ExtCurrAbv) //config.Cstruct.SuperNode.ExtCurrAbv is added by Aslan => please check!
 			if err != nil {
 				log.WithError(err).Warning("Cannot get super node account from DB")
 				return err

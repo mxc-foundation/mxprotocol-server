@@ -1,6 +1,7 @@
 package postgres_db
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ethereum/go-ethereum/log"
@@ -12,8 +13,8 @@ type ExtAccount struct {
 	Id                 int64     `db:"id"`
 	FkWallet           int64     `db:"fk_wallet"`
 	FkExtCurrency      int64     `db:"fk_ext_currency"`
-	Account_adr        string    `db:"account_adr"`
-	Insert_time        time.Time `db:"insert_time"`
+	AccountAdr         string    `db:"account_adr"`
+	InsertTime         time.Time `db:"insert_time"`
 	Status             string    `db:"status"`
 	LatestCheckedBlock int64     `db:"latest_checked_block"`
 }
@@ -31,7 +32,7 @@ func (pgDbp *PGHandler) CreateExtAccountTable() error {
 			id SERIAL PRIMARY KEY,
 			fk_wallet INT REFERENCES wallet(id) NOT NULL,
 			fk_ext_currency INT REFERENCES ext_currency (id) NOT NULL,
-			account_adr varchar(128) NOT NULL UNIQUE,
+			account_adr varchar(128) NOT NULL,
 			insert_time TIMESTAMP NOT NULL,
 			status FIELD_STATUS NOT NULL,
 			latest_checked_block INT DEFAULT 0
@@ -42,6 +43,15 @@ func (pgDbp *PGHandler) CreateExtAccountTable() error {
 }
 
 func (pgDbp *PGHandler) InsertExtAccount(ea ExtAccount) (insertIndex int64, err error) {
+
+	alreadyExist, errAlreadyExist := pgDbp.alreadyExistActiveAcnt(ea.AccountAdr, ea.FkExtCurrency)
+	if errAlreadyExist != nil {
+		return 0, errors.Wrap(errAlreadyExist, "db/InsertExtAccount")
+	}
+	if alreadyExist {
+		return 0, errors.Wrap(errors.New("Account Address is already active!"), "db/InsertExtAccount")
+	}
+
 	err = pgDbp.DB.QueryRow(`
 	INSERT INTO ext_account (
 			fk_wallet,
@@ -57,8 +67,8 @@ func (pgDbp *PGHandler) InsertExtAccount(ea ExtAccount) (insertIndex int64, err 
 	`,
 		ea.FkWallet,
 		ea.FkExtCurrency,
-		ea.Account_adr,
-		ea.Insert_time,
+		ea.AccountAdr,
+		ea.InsertTime,
 		ea.LatestCheckedBlock).Scan(&insertIndex)
 
 	if err == nil {
@@ -70,6 +80,31 @@ func (pgDbp *PGHandler) InsertExtAccount(ea ExtAccount) (insertIndex int64, err 
 	}
 
 	return insertIndex, errors.Wrap(err, "db/InsertExtAccount")
+}
+
+func (pgDbp *PGHandler) alreadyExistActiveAcnt(acntAdr string, extCurrId int64) (bool, error) {
+
+	var nRow int64
+	fmt.Println("vals:", acntAdr, extCurrId)
+
+	err := pgDbp.DB.QueryRow(`
+		select 
+			COALESCE(SUM(1),0) as num_rep
+		FROM
+			ext_account 
+		WHERE
+			account_adr = $1
+		AND
+			status = 'ACTIVE'		
+		AND 
+			fk_ext_currency = $2
+		;
+	
+	`, acntAdr, extCurrId).Scan(&nRow)
+
+	res := nRow != 0
+
+	return res, errors.Wrap(err, "db/alreadyExistActiveAcnt")
 }
 
 func (pgDbp *PGHandler) changeStatus2ArcOldRowExtAcnt(ea ExtAccount) (err error) {
@@ -196,22 +231,28 @@ func (pgDbp *PGHandler) GetUserExtAccountId(walletId int64, extCurrAbv string) (
 	return res, errors.Wrap(err, "db/GetUserExtAccountId")
 }
 
-func (pgDbp *PGHandler) GetExtAccountIdByAdr(acntAdr string) (int64, error) {
+func (pgDbp *PGHandler) GetExtAccountIdByAdr(acntAdr string, extCurrAbv string) (int64, error) {
 
 	var res int64
 
 	err := pgDbp.DB.QueryRow(`
 		select 
-			id
+			ea.id
 		from
-		ext_account
+			ext_account ea, ext_currency ec
 		WHERE
-			account_adr = $1
-		ORDER BY id DESC 
+			ea.fk_ext_currency = ec.id
+		AND
+			ea.account_adr = $1
+		AND
+			ea.status = 'ACTIVE'		
+		AND 
+			ec.abv = $2
+		ORDER BY ea.id DESC 
 		LIMIT 1 
 		;
 	
-	`, acntAdr).Scan(&res)
+	`, acntAdr, extCurrAbv).Scan(&res)
 
 	return res, errors.Wrap(err, "db/GetExtAccountIdByAdr")
 }
