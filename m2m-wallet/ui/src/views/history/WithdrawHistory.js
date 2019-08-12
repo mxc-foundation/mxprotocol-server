@@ -10,7 +10,7 @@ import TitleBarTitle from "../../components/TitleBarTitle";
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
-import ETHER from "../../util/Coin-type";
+import { ETHER } from "../../util/Coin-type";
 
 class WithdrawHistory extends Component {
   constructor() {
@@ -22,21 +22,25 @@ class WithdrawHistory extends Component {
   getPage(limit, offset, callbackFunc) {
     HistoryStore.getWithdrawHistory(ETHER, this.props.match.params.organizationID, limit, offset, (data) => {
       callbackFunc({
-        totalCount: offset + 2 * limit,
+        totalCount: data.count,
         result: data.withdrawHistory
       });
     });
   }
 
   getRow(obj, index) {
-    console.dir(obj);
     return(
       <TableRow key={index}>
         <TableCell>{obj.from}</TableCell>
         <TableCell>{obj.to}</TableCell>
         <TableCell>{obj.moneyType}</TableCell>
         <TableCell>{obj.amount}</TableCell>
-        <TableCell>{obj.createdAt}</TableCell>
+        <TableCell>{obj.withdrawFee}</TableCell>
+        <TableCell>{obj.txSentTime}</TableCell>
+        <TableCell>{obj.txApprovedTime}</TableCell>
+        {/* <TableCell>{obj.txStatus}</TableCell>
+        <TableCell>{obj.txHash}</TableCell> */}
+        {/* <TableCell>{obj.createdAt}</TableCell> */}
       </TableRow>
     );
   }
@@ -63,8 +67,13 @@ class WithdrawHistory extends Component {
                 <TableCell>From</TableCell>
                 <TableCell>To</TableCell>
                 <TableCell>Type</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>VMXC Amount</TableCell>
+                <TableCell>withdrawFee</TableCell>
+                <TableCell>txSentTime</TableCell>
+                <TableCell>txApprovedTime</TableCell>
+                {/* <TableCell>txStatus</TableCell>
+                <TableCell>txHash</TableCell> */}
+                {/* <TableCell>Date</TableCell> */}
               </TableRow>
             }
             getPage={this.getPage}
