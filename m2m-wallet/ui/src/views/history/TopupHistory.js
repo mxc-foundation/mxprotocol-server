@@ -28,7 +28,6 @@ class TopupHistory extends Component {
   }
 
   getRow(obj, index) {
-    console.dir(obj);
     return(
       <TableRow key={index}>
         <TableCell>{obj.from}</TableCell>
@@ -62,7 +61,7 @@ class TopupHistory extends Component {
                 <TableCell>From</TableCell>
                 <TableCell>To</TableCell>
                 <TableCell>Type</TableCell>
-                <TableCell>Amount</TableCell>
+                <TableCell>VMXC Amount</TableCell>
                 <TableCell>Date</TableCell>
               </TableRow>
             }

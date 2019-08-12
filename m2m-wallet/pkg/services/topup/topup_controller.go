@@ -42,9 +42,9 @@ func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpH
 	case auth.OK:
 
 		log.WithFields(log.Fields{
-			"orgId": req.OrgId,
+			"orgId":  req.OrgId,
 			"offset": req.Offset,
-			"limit": req.Limit,
+			"limit":  req.Limit,
 		}).Debug("grpc_api/GetTopUpHistory")
 
 		walletId, err := wallet.GetWalletId(req.OrgId)
@@ -54,7 +54,7 @@ func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpH
 		}
 
 		response := api.GetTopUpHistoryResponse{UserProfile: &userProfile}
-		ptr, err := db.DbGetTopupHist(walletId, req.Offset * req.Limit, req.Limit)
+		ptr, err := db.DbGetTopupHist(walletId, req.Offset*req.Limit, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetTopUpHistory")
 			return &api.GetTopUpHistoryResponse{UserProfile: &userProfile}, nil

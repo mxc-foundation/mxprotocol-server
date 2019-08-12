@@ -20,15 +20,43 @@ func Setup() error {
 func UpdateActiveExtAccount(orgId int64, newAccount string, currencyAbbr string) error {
 	walletId, err := wallet.GetWalletId(orgId)
 	if err != nil {
+		log.WithError(err).Error("service/UpdateActiveExtAccount")
 		return err
 	}
 
 	_, err = db.DBInsertExtAccount(walletId, newAccount, currencyAbbr)
 	if err != nil {
+		log.WithError(err).Error("service/UpdateActiveExtAccount")
 		return err
 	}
 
 	return nil
+}
+
+func GetActiveExtAccount(orgId int64, currencyAbbr string) (string, error) {
+	walletId, err := wallet.GetWalletId(orgId)
+	if err != nil {
+		log.WithError(err).Error("service/GetActiveExtAccount")
+		return "", err
+	}
+
+	var accountAddr string
+	if orgId == 0 {
+		accountAddr, err = db.DbGetSuperNodeExtAccountAdr(currencyAbbr)
+	} else {
+		accountAddr, err = db.DbGetUserExtAccountAdr(walletId, currencyAbbr)
+	}
+
+	if err != nil {
+		if strings.HasSuffix(err.Error(), db.DbError.NoRowQueryRes.Error()) {
+			log.Warnf("service/GetActiveExtAccount: get account with walletId=%d, currency=%s", walletId, currencyAbbr)
+			return "", nil
+		}
+		log.WithError(err).Error("service/GetActiveExtAccount")
+		return "", err
+	}
+
+	return accountAddr, nil
 }
 
 type ExtAccountServerAPI struct {
@@ -65,7 +93,7 @@ func (s *ExtAccountServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.M
 			return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
 		}
 
-		err := UpdateActiveExtAccount(req.OrgId, strings.ToLower(req.CurrentAccount), api.Money_name[int32(req.MoneyAbbr)])
+		err := UpdateActiveExtAccount(req.OrgId, req.CurrentAccount, api.Money_name[int32(req.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/ModifyMoneyAccount")
 			return &api.ModifyMoneyAccountResponse{Status: false, UserProfile: &userProfile},
@@ -108,7 +136,7 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 		}
 
 		response := api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}
-		ptr, err := db.DbGetExtAcntHist(walletId, req.Offset * req.Limit, req.Limit)
+		ptr, err := db.DbGetExtAcntHist(walletId, req.Offset*req.Limit, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetChangeMoneyAccountHistory")
 			return &api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}, nil
@@ -156,13 +184,7 @@ func (s *ExtAccountServerAPI) GetActiveMoneyAccount(ctx context.Context, req *ap
 			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetActiveMoneyAccount")
 
-		walletId, err := wallet.GetWalletId(req.OrgId)
-		if err != nil {
-			log.WithError(err).Error("grpc_api/GetActiveMoneyAccount")
-			return &api.GetActiveMoneyAccountResponse{ActiveAccount: "", UserProfile: &userProfile}, nil
-		}
-
-		accountAddr, err := db.DbGetUserExtAccountAdr(walletId, api.Money_name[int32(req.MoneyAbbr)])
+		accountAddr, err := GetActiveExtAccount(req.OrgId, api.Money_name[int32(req.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetActiveMoneyAccount")
 			return &api.GetActiveMoneyAccountResponse{ActiveAccount: "", UserProfile: &userProfile}, nil
