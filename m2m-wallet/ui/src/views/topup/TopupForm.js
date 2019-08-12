@@ -37,24 +37,10 @@ class TopupForm extends FormComponent {
         onSubmit={this.onSubmit}
       >
         <TextField
-          id="amount"
-          label="Amount"
-          //helperText="Send MXC amount from."
-          margin="normal"
-
-          value={this.props.reps.amount || ""}
-          InputProps={{
-            readOnly: true,
-
-          }}
-
-          fullWidth
-        />
-        <TextField
           id="to"
           label="From"
           margin="normal"
-          value={this.props.reps.from || ""}
+          value={this.props.reps.account || "Can not find any account."}
           InputProps={{
             readOnly: true,
           }}
@@ -64,7 +50,7 @@ class TopupForm extends FormComponent {
           id="to"
           label="To"
           margin="normal"
-          value={this.props.reps.to || ""}
+          value={this.props.reps.superNodeAccount || "Can not find any account."}
           InputProps={{
             readOnly: true,
           }}

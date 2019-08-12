@@ -8,8 +8,27 @@ import TitleBarTitle from "../../components/TitleBarTitle";
 import Divider from '@material-ui/core/Divider';
 import Spinner from "../../components/ScaleLoader";
 import TopupStore from "../../stores/TopupStore";
+import MoneyStore from "../../stores/MoneyStore";
 import TopupForm from "./TopupForm";
+import { ETHER } from "../../util/Coin-type"
 import styles from "./TopupStyle"
+
+function loadSuperNodeActiveMoneyAccount(organizationID) {
+  return new Promise((resolve, reject) => {
+      TopupStore.getTopUpDestination(ETHER, organizationID, resp => {
+        resolve(resp.activeAccount);
+      });
+    
+  });
+}
+      
+function loadActiveMoneyAccount(organizationID) {
+  return new Promise((resolve, reject) => {
+    MoneyStore.getActiveMoneyAccount(ETHER, organizationID, resp => {
+      resolve(resp.activeAccount);
+    });
+  });
+}
 
 class Topup extends Component {
   constructor(props) {
@@ -32,19 +51,29 @@ class Topup extends Component {
     this.loadData();
   }
 
-  loadData() {
-    this.setState({loading:true});
-    TopupStore.getTopUpHistory(this.props.match.params.organizationID, 0, 1, resp => {
-      if(resp.status){
-        this.setState({
-          topupHistory: resp.body.topupHistory[0],
-        });
-        this.setState({loading:false});
-      }else{
-        this.setState({loading:false});
-      }
+  loadData = async () => {
+    try {
+      const organizationID = this.props.match.params.organizationID;
+      this.setState({loading: true})
+      var superNodeAccount = await loadSuperNodeActiveMoneyAccount(organizationID);
+      var account = await loadActiveMoneyAccount(organizationID);
       
-    }); 
+      console.log('superNodeAccount', superNodeAccount);
+      console.log('account', account);
+      
+      const accounts = {};
+      accounts.superNodeAccount = superNodeAccount;
+      accounts.account = account;
+
+      this.setState({
+        accounts
+      }); 
+      this.setState({loading: false})
+    } catch (error) {
+      this.setState({loading: false})
+      console.error(error);
+      this.setState({ error });
+    }
   }
 
   render() {
@@ -70,7 +99,7 @@ class Topup extends Component {
           <TitleBarTitle title="Send Tokens" />
           <Divider light={true}/>
           <TopupForm
-            reps={this.state.topupHistory} {...this.props}
+            reps={this.state.accounts} {...this.props}
             orgId ={this.props.match.params.organizationID} 
           />
             
