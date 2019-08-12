@@ -61,7 +61,7 @@ class TopupHistory extends Component {
               <TableRow>
                 <TableCell>From</TableCell>
                 <TableCell>To</TableCell>
-                <TableCell>Type</TableCell>
+                <TableCell>VMXC Type</TableCell>
                 <TableCell>Amount</TableCell>
                 <TableCell>Date</TableCell>
               </TableRow>
