@@ -61,7 +61,7 @@ func (pgDbp *PGHandler) CreateWithdrawTable() error {
 		fk_ext_account_receiver INT REFERENCES  ext_account(id) NOT NULL,
 		fk_ext_currency INT REFERENCES  ext_currency(id) NOT NULL,
 		value NUMERIC(28,18) NOT NULL,
-		fk_withdraw_fee INT REFERENCES  withdraw(id) NOT NULL,
+		fk_withdraw_fee INT REFERENCES  withdraw_fee(id) NOT NULL,
 		tx_sent_time TIMESTAMP NOT NULL,
 		tx_stat tx_status NOT NULL,
 		tx_approved_time TIMESTAMP,
@@ -112,7 +112,7 @@ func (pgDbp *PGHandler) insertWithdraw(wdr Withdraw) (insertIndex int64, err err
 
 func (pgDbp *PGHandler) UpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
 	_, err := pgDbp.DB.Exec(`
-		select withdraw_success($1,$2,$3);
+		SELECT withdraw_success($1,$2,$3);
 		
 	`, withdrawId, txHash, txApprovedTime)
 	return errors.Wrap(err, "db/UpdateWithdrawSuccessful")
@@ -215,7 +215,7 @@ func (pgDbp *PGHandler) CreateWithdrawFunctions() error {
 func (pgDbp *PGHandler) initWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err error) {
 
 	err = pgDbp.DB.QueryRow(`
-		select withdraw_req_init($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);
+		SELECT withdraw_req_init($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);
 		
 	`, wdr.FkExtAcntSender,
 		wdr.FkExtAcntRcvr,
@@ -301,7 +301,7 @@ func (pgDbp *PGHandler) UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaym
 func (pgDbp *PGHandler) GetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
 
 	rows, err := pgDbp.DB.Query(
-		`select
+		`SELECT
 			ea.account_adr AS sender_adr, 
 			ea2.account_adr AS receiver_adr, 
 			ec.abv AS currency_abv,
@@ -311,7 +311,7 @@ func (pgDbp *PGHandler) GetWithdrawHist(walletId int64, offset int64, limit int6
 			wdr.tx_stat,
 			wdr.tx_approved_time,
 			wdr.tx_hash
-		from
+		FROM
 			withdraw wdr,
 			ext_account ea,
 			ext_account ea2,
@@ -363,4 +363,22 @@ func (pgDbp *PGHandler) GetWithdrawHist(walletId int64, offset int64, limit int6
 		res = append(res, withVal)
 	}
 	return res, errors.Wrap(err, "db/GetWithdrawHist")
+}
+
+func (pgDbp *PGHandler) GetWithdrawHistRecCnt(walletId int64) (recCnt int64, err error) {
+
+	err = pgDbp.DB.QueryRow(`
+	SELECT
+			COUNT(*)
+		FROM
+			withdraw wdr,
+			ext_account ea2,
+			wallet w			
+		WHERE
+			wdr.fk_ext_account_receiver = ea2.id AND
+			ea2.fk_wallet = w.id AND
+			w.id = $1		
+	`, walletId).Scan(&recCnt)
+
+	return recCnt, err
 }

@@ -1,8 +1,9 @@
 package db
 
 import (
-	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 	"time"
+
+	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
 type WithdrawHistRet pg.WithdrawHistRet
@@ -40,4 +41,8 @@ func castWithdrawHistRet(acntHist []pg.WithdrawHistRet, err1 error) (castedVal [
 
 func DbGetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
 	return castWithdrawHistRet(pg.PgDB.GetWithdrawHist(walletId, offset, limit))
+}
+
+func DbGetWithdrawHistRecCnt(walletId int64) (int64, error) {
+	return pg.PgDB.GetWithdrawHistRecCnt(walletId)
 }

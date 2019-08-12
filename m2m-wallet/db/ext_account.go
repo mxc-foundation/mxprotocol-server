@@ -1,9 +1,10 @@
 package db
 
 import (
-	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 	"strings"
 	"time"
+
+	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
 )
 
 type ExtAccountHistRet pg.ExtAccountHistRet
@@ -67,4 +68,8 @@ func castExtAccountHistRet(acntHist []pg.ExtAccountHistRet, err1 error) (castedV
 
 func DbGetExtAcntHist(walletId int64, offset int64, limit int64) ([]ExtAccountHistRet, error) {
 	return castExtAccountHistRet(pg.PgDB.GetExtAcntHist(walletId, offset, limit))
+}
+
+func DbGetExtAcntHistRecCnt(walletId int64) (int64, error) {
+	return pg.PgDB.GetExtAcntHistRecCnt(walletId)
 }
