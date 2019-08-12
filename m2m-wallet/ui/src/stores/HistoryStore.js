@@ -76,7 +76,6 @@ class HistoryStore extends EventEmitter {
       .then(checkStatus)
       //.then(updateOrganizations)
       .then(resp => {
-        console.log('getChangeMoneyAccountHistory', resp);
         callbackFunc(resp.obj);
       })
       .catch(errorHandler);
