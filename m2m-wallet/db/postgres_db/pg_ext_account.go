@@ -1,7 +1,6 @@
 package postgres_db
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/ethereum/go-ethereum/log"
@@ -85,7 +84,6 @@ func (pgDbp *PGHandler) InsertExtAccount(ea ExtAccount) (insertIndex int64, err 
 func (pgDbp *PGHandler) alreadyExistActiveAcnt(acntAdr string, extCurrId int64) (bool, error) {
 
 	var nRow int64
-	fmt.Println("vals:", acntAdr, extCurrId)
 
 	err := pgDbp.DB.QueryRow(`
 		select 

@@ -142,7 +142,6 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 			return &api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}, nil
 		}
 
-		var count int64
 		for _, v := range ptr {
 			if v.ExtCurrencyAbv != api.Money_name[int32(req.MoneyAbbr)] {
 				continue
@@ -151,10 +150,9 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 			history.Addr = v.AccountAdr
 			history.CreatedAt = v.InsertTime.String()
 			history.Status = v.Status
-			count += 1
 			response.ChangeHistory = append(response.ChangeHistory, &history)
 		}
-		response.Count = count
+		response.Count, err = db.DbGetExtAcntHistRecCnt(walletId)
 
 		return &response, nil
 	}

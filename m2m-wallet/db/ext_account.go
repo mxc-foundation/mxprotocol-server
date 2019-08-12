@@ -22,8 +22,8 @@ func DBInsertExtAccount(walletId int64, newAccount string, currencyAbbr string) 
 	ea := pg.ExtAccount{
 		FkWallet:      walletId,
 		FkExtCurrency: extCurrencyId,
-		Account_adr:   strings.ToLower(newAccount),
-		Insert_time:   time.Now().UTC(),
+		AccountAdr:    strings.ToLower(newAccount),
+		InsertTime:    time.Now().UTC(),
 	}
 
 	extAcntId, errInsert := pg.PgDB.InsertExtAccount(ea)

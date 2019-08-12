@@ -164,7 +164,6 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 			return &api.GetWithdrawHistoryResponse{UserProfile: &userProfile}, nil
 		}
 
-		var count int64
 		for _, v := range ptr {
 			if v.ExtCurrency != api.Money_name[int32(req.MoneyAbbr)] {
 				continue
@@ -180,11 +179,10 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 			history.TxStatus = v.TxStatus
 			history.TxApprovedTime = v.TxAprvdTime.String()
 			history.TxHash = v.TxHash
-			count += 1
 
 			response.WithdrawHistory = append(response.WithdrawHistory, &history)
 		}
-		response.Count = count
+		response.Count, err = db.DbGetWithdrawHistRecCnt(walletId)
 
 		return &response, nil
 	}
