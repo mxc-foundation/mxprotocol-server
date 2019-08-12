@@ -22,7 +22,7 @@ class WithdrawHistory extends Component {
   getPage(limit, offset, callbackFunc) {
     HistoryStore.getWithdrawHistory(ETHER, this.props.match.params.organizationID, limit, offset, (data) => {
       callbackFunc({
-        totalCount: offset + 2 * limit,
+        totalCount: parseInt(data.count),
         result: data.withdrawHistory
       });
     });

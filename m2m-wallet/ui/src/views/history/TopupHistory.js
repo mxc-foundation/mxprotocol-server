@@ -21,7 +21,7 @@ class TopupHistory extends Component {
   getPage(limit, offset, callbackFunc) {
     TopupStore.getTopUpHistory(this.props.organizationID, offset, limit, data => {
         callbackFunc({
-            totalCount: data.count,
+            totalCount: parseInt(data.count),
             result: data.topupHistory
           });
       }); 
