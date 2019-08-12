@@ -78,3 +78,37 @@ func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpH
 
 	return nil, status.Errorf(codes.Unknown, "")
 }
+
+func (s *TopUpServerAPI) GetTopUpDestination(ctx context.Context, req *api.GetTopUpDestinationRequest) (*api.GetTopUpDestinationResponse, error) {
+	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
+
+	switch res.Type {
+	case auth.AuthFailed:
+		fallthrough
+	case auth.JsonParseError:
+		fallthrough
+	case auth.OrganizationIdMisMatch:
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
+
+	case auth.OrganizationIdRearranged:
+		return &api.GetTopUpDestinationResponse{UserProfile: &userProfile},
+			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
+
+	case auth.OK:
+
+		log.WithFields(log.Fields{
+			"orgId":  req.OrgId,
+			"moneyType": api.Money_name[int32(req.MoneyAbbr)],
+		}).Debug("grpc_api/GetTopUpDestination")
+
+		supernode_account, err := db.DbGetSuperNodeExtAccountAdr(api.Money_name[int32(req.MoneyAbbr)])
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetTopUpDestination")
+			return &api.GetTopUpDestinationResponse{ActiveAccount: "", UserProfile: &userProfile}, err
+		}
+
+		return &api.GetTopUpDestinationResponse{ActiveAccount: supernode_account, UserProfile: &userProfile}, nil
+	}
+
+	return nil, status.Errorf(codes.Unknown, "")
+}

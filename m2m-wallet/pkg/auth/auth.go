@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
+	"runtime"
 	"strconv"
 	"time"
 
@@ -155,6 +156,7 @@ func isOrgListRearranged(userProfile ProfileResponse, orgId int64) (api.ProfileR
 	}
 
 	if orgDeleted {
+		runtime.Breakpoint()
 		return profile, VerifyResult{nil, OrganizationIdRearranged}
 	}
 

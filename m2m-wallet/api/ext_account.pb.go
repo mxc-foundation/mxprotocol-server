@@ -9,6 +9,8 @@ import (
 	proto "github.com/golang/protobuf/proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -524,6 +526,20 @@ type MoneyServiceServer interface {
 	ModifyMoneyAccount(context.Context, *ModifyMoneyAccountRequest) (*ModifyMoneyAccountResponse, error)
 	GetChangeMoneyAccountHistory(context.Context, *GetMoneyAccountChangeHistoryRequest) (*GetMoneyAccountChangeHistoryResponse, error)
 	GetActiveMoneyAccount(context.Context, *GetActiveMoneyAccountRequest) (*GetActiveMoneyAccountResponse, error)
+}
+
+// UnimplementedMoneyServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedMoneyServiceServer struct {
+}
+
+func (*UnimplementedMoneyServiceServer) ModifyMoneyAccount(ctx context.Context, req *ModifyMoneyAccountRequest) (*ModifyMoneyAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ModifyMoneyAccount not implemented")
+}
+func (*UnimplementedMoneyServiceServer) GetChangeMoneyAccountHistory(ctx context.Context, req *GetMoneyAccountChangeHistoryRequest) (*GetMoneyAccountChangeHistoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetChangeMoneyAccountHistory not implemented")
+}
+func (*UnimplementedMoneyServiceServer) GetActiveMoneyAccount(ctx context.Context, req *GetActiveMoneyAccountRequest) (*GetActiveMoneyAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetActiveMoneyAccount not implemented")
 }
 
 func RegisterMoneyServiceServer(s *grpc.Server, srv MoneyServiceServer) {
