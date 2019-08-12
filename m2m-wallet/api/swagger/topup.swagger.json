@@ -53,9 +53,54 @@
           "TopUpService"
         ]
       }
+    },
+    "/api/top_up/{money_abbr}/supernode_account": {
+      "get": {
+        "operationId": "GetTopUpDestination",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetTopUpDestinationResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "money_abbr",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Ether"
+            ]
+          },
+          {
+            "name": "orgId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TopUpService"
+        ]
+      }
     }
   },
   "definitions": {
+    "apiGetTopUpDestinationResponse": {
+      "type": "object",
+      "properties": {
+        "activeAccount": {
+          "type": "string"
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
+        }
+      }
+    },
     "apiGetTopUpHistoryResponse": {
       "type": "object",
       "properties": {
@@ -73,6 +118,13 @@
           "$ref": "#/definitions/apiProfileResponse"
         }
       }
+    },
+    "apiMoney": {
+      "type": "string",
+      "enum": [
+        "Ether"
+      ],
+      "default": "Ether"
     },
     "apiOrganizationLink": {
       "type": "object",
