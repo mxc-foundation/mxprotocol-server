@@ -31,19 +31,16 @@ class WithdrawForm extends FormComponent {
     if (this.props.txinfo === undefined) {
       return(<Spinner on={this.state.loading}/>);
     }
-
+    
     const w_limit = this.props.txinfo.balance - this.props.txinfo.withdrawFee;
     const { txinfo } = this.props;
-
+    
     return(
       <Form
         submitLabel={this.props.submitLabel}
         //extraButtons={extraButtons}
         onSubmit={(e) => this.props.onSubmit(e, {
-          amount: this.state.amount,
-          txFee: txinfo.withdrawFee,
-          destination: txinfo.destination,
-          moneyAbbr: txinfo.moneyAbbr
+          amount: parseFloat(this.state.amount),
         })}
       >
         <TextField

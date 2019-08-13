@@ -33,7 +33,9 @@ class WithdrawStore extends EventEmitter {
       client.apis.WithdrawService.WithdrawReq({
         "money_abbr": apiWithdrawReqRequest.moneyAbbr,
         body: {
-          apiWithdrawReqRequest,
+          amount: apiWithdrawReqRequest.amount,
+          moneyAbbr: apiWithdrawReqRequest.moneyAbbr,
+          orgId: apiWithdrawReqRequest.orgId
         },
       })
       .then(checkStatus)

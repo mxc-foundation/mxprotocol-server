@@ -27,13 +27,13 @@ function loadWithdrawFee(ETHER, organizationID) {
   return new Promise((resolve, reject) => {
     WithdrawStore.getWithdrawFee(ETHER, organizationID,
       resp => {
-        Object.keys(resp).forEach(attr => {
+        /* Object.keys(resp).forEach(attr => {
           const value = resp[attr];
 
           if (typeof value === 'number') {
             resp[attr] = formatNumber(value);
           }
-        });
+        }); */
         resp.moneyAbbr = ETHER;
         resolve(resp);
       })
@@ -61,13 +61,13 @@ function loadWalletBalance(organizationID) {
   return new Promise((resolve, reject) => {
     WalletStore.getWalletBalance(organizationID,
       resp => {
-        Object.keys(resp).forEach(attr => {
+        /* Object.keys(resp).forEach(attr => {
           const value = resp[attr];
   
           if (typeof value === 'number') {
             resp[attr] = formatNumber(value);
           }
-        });
+        }); */
         resolve(resp);
       });
   });
@@ -97,6 +97,7 @@ class Withdraw extends Component {
       const txinfo = {};
       txinfo.withdrawFee = result.withdrawFee;
       txinfo.balance = wallet.balance;
+      
       txinfo.account = account;
 
       this.setState({
@@ -138,7 +139,8 @@ class Withdraw extends Component {
 
   onConfirm = (data) => {
     data.moneyAbbr = ETHER;
-    if(data.amount === '0'){
+    data.orgId = this.props.match.params.organizationID;
+    if(data.amount === 0){
       alert(INVALID_AMOUNT);
       return false;
     } 
@@ -150,8 +152,10 @@ class Withdraw extends Component {
     
     this.setState({loading: true});
     WithdrawStore.WithdrawReq(data, resp => {
+      console.log('sdfasdfasf',resp);
       this.setState({loading: false});
     });
+
   }
 
   render() {
