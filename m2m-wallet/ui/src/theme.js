@@ -118,6 +118,9 @@ const theme = createMuiTheme({
         body: {
           background: '#0C0270',
           color: white,
+        },
+        root: {
+          padding: '4px 5px'
         }
       },
       MuiPaper: {
