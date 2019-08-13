@@ -25,7 +25,7 @@ import Topup from "./views/topup/Topup"
 import Withdraw from "./views/withdraw/Withdraw"
 import HistoryLayout from "./views/history/HistoryLayout"
 import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
-//import { redirectToLora } from "./util/M2mUtil";
+import { redirectToLora } from "./util/M2mUtil";
 
 const drawerWidth = 270;
 
@@ -155,7 +155,7 @@ class App extends Component {
                     <Route path="/history/:organizationID" component={HistoryLayout} />
                     <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
 
-                    {/* <Route render={redirectToLora} /> */}
+                    <Route render={redirectToLora} />
                   </Switch>
                 </Grid>
               </div>
