@@ -31,11 +31,11 @@ export default function ConfirmDialog(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} color="primary" autoFocus>
-            Cancel
+          <Button onClick={onClose} color="primary25" autoFocus>
+            CANCEL
           </Button>
-          <Button onClick={agree} color="primary" autoFocus>
-            Agree
+          <Button onClick={agree} color="primary25" autoFocus>
+            PROCEED
           </Button>
         </DialogActions>
       </Dialog>
