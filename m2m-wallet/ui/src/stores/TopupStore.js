@@ -13,6 +13,20 @@ class TopupStore extends EventEmitter {
     this.swagger = new Swagger("/swagger/topup.swagger.json", sessionStore.getClientOpts());
   }
 
+  getTopUpDestination(money_abbr, orgId, callbackFunc) {
+    this.swagger.then(client => {
+      client.apis.TopUpService.GetTopUpDestination({
+        money_abbr,
+        orgId
+      })
+      .then(checkStatus)
+      .then(resp => {
+        callbackFunc(resp.body);
+      })
+      .catch(errorHandler);
+    });
+  }
+
   getTopUpHistory(orgId, offset, limit, callbackFunc) {
     this.swagger.then(client => {
       client.apis.TopUpService.GetTopUpHistory({
