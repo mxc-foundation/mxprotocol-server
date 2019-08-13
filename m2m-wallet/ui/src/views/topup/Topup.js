@@ -58,9 +58,6 @@ class Topup extends Component {
       var superNodeAccount = await loadSuperNodeActiveMoneyAccount(organizationID);
       var account = await loadActiveMoneyAccount(organizationID);
       
-      console.log('superNodeAccount', superNodeAccount);
-      console.log('account', account);
-      
       const accounts = {};
       accounts.superNodeAccount = superNodeAccount;
       accounts.account = account;
