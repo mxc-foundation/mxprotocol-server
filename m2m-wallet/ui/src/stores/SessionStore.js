@@ -80,16 +80,7 @@ class SessionStore extends EventEmitter {
   }
 
   getLoraHostUrl() {
-    const loraHostUrl = localStorage.getItem("loraHostUrl");
-    if (loraHostUrl === "") {
-      return null;
-    }
-
-    return loraHostUrl;
-  }
-
-  setLoraHostUrl(loraHostUrl) {
-    localStorage.setItem("loraHostUrl", loraHostUrl);
+    return process.env.REACT_APP_LORA_APP_SERVER;
   }
 
   setOrganizationList(organizations) {
@@ -173,7 +164,6 @@ class SessionStore extends EventEmitter {
     
     this.setToken(jwt);
     this.setUsername(username);
-    this.setLoraHostUrl(loraHostUrl);
     this.setOrganizationID(org_id);
     this.setOrganizationName(org_name);
   }

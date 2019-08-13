@@ -2,6 +2,9 @@
 PKGS := $(shell go list ./... | grep -v /vendor |grep -v m2m-wallet/api | grep -v m2m-wallet/migrations \
             | grep -v m2m-wallet/static | grep -v m2m-wallet/ui| grep -v grpc_api-paymemt_service )
 VERSION := $(shell git describe --always |sed -e "s/^v//")
+LORA_APP_SERVER=$(shell cat ../mxprotocol-server.toml | grep lora_app_server=| sed 's/^lora_app_server=//g')
+LORA_APP_SERVER_DEV=$(shell cat ../mxprotocol-server.toml | grep lora_app_server_development=| sed 's/^lora_app_server_development=//g')
+
 
 build: ui/build pkg/static pkg/migrations
 	mkdir -p build
@@ -13,6 +16,7 @@ clean:
 	@rm -f static/index.html static/icon.png static/manifest.json static/asset-manifest.json static/service-worker.js
 	@rm -f static/swagger/*.json
 	@rm -rf static/logo
+	@rm -f ui/.env.*
 
 test: pkg/static pkg/migrations
 	@echo "Running tests"
@@ -25,6 +29,8 @@ test: pkg/static pkg/migrations
 
 ui/build:
 	@echo "Building ui"
+	@cd ui && printf 'REACT_APP_LORA_APP_SERVER=$(LORA_APP_SERVER)'  >> .env.production 
+	@cd ui && printf 'REACT_APP_LORA_APP_SERVER=$(LORA_APP_SERVER_DEV)' >> .env.development 
 	@cd ui && npm run build
 	@mv ui/build/* static
 api:

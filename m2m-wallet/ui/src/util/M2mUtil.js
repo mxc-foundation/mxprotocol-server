@@ -6,5 +6,5 @@ export const LoraUrl = SessionStore.getLoraHostUrl();
 export const SUPER_ADMIN = '0';
 
 export function redirectToLora() {
-    window.location.replace(LoraUrl);
+    window.location.replace(process.env.REACT_APP_LORA_APP_SERVER);
 }
