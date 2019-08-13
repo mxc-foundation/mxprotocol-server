@@ -31,15 +31,15 @@ class WithdrawHistory extends Component {
   getRow(obj, index) {
     return(
       <TableRow key={index}>
-        <TableCell>{obj.from}</TableCell>
+        {/* <TableCell>{obj.from}</TableCell> */}
         <TableCell>{obj.to}</TableCell>
         <TableCell>{obj.moneyType}</TableCell>
         <TableCell>{obj.amount}</TableCell>
         <TableCell>{obj.withdrawFee}</TableCell>
         <TableCell>{obj.txSentTime}</TableCell>
         <TableCell>{obj.txApprovedTime}</TableCell>
-        {/* <TableCell>{obj.txStatus}</TableCell>
-        <TableCell>{obj.txHash}</TableCell> */}
+        <TableCell>{obj.txStatus}</TableCell>
+        <TableCell>{obj.txHash}</TableCell> 
         {/* <TableCell>{obj.createdAt}</TableCell> */}
       </TableRow>
     );
@@ -64,15 +64,15 @@ class WithdrawHistory extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell>From</TableCell>
+                {/* <TableCell>From</TableCell> */}
                 <TableCell>To</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell>VMXC Amount</TableCell>
                 <TableCell>withdrawFee</TableCell>
                 <TableCell>txSentTime</TableCell>
                 <TableCell>txApprovedTime</TableCell>
-                {/* <TableCell>txStatus</TableCell>
-                <TableCell>txHash</TableCell> */}
+                <TableCell>txStatus</TableCell>
+                <TableCell>txHash</TableCell>
                 {/* <TableCell>Date</TableCell> */}
               </TableRow>
             }
