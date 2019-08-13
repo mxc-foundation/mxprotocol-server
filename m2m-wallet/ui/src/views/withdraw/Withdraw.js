@@ -16,6 +16,8 @@ import { withStyles } from "@material-ui/core/styles";
 import Divider from '@material-ui/core/Divider';
 import styles from "./WithdrawStyle"
 import { ETHER } from "../../util/Coin-type"
+import { SUPER_ADMIN } from "../../util/M2mUtil"
+import { CONFIRMATION, CONFIRMATION_TEXT, INVALID_ACCOUNT, INVALID_AMOUNT } from "../../util/Messages"
 
 function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -40,7 +42,7 @@ function loadWithdrawFee(ETHER, organizationID) {
 
 function loadCurrentAccount(ETHER, organizationID) {
   return new Promise((resolve, reject) => {
-    if (organizationID === '0') {
+    if (organizationID === SUPER_ADMIN) {
       SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, resp => {
         resolve(resp.supernodeActiveAccount);
         
@@ -76,7 +78,7 @@ class Withdraw extends Component {
     super(props);
     this.state = {
       loading: false,
-      modal: null
+      modal: null,
     };
   }
 
@@ -135,6 +137,17 @@ class Withdraw extends Component {
   }
 
   onConfirm = (data) => {
+    data.moneyAbbr = ETHER;
+    if(data.amount === '0'){
+      alert(INVALID_AMOUNT);
+      return false;
+    } 
+
+    if(data.destination){
+      alert(INVALID_ACCOUNT);
+      return false;
+    }
+    
     this.setState({loading: true});
     WithdrawStore.WithdrawReq(data, resp => {
       this.setState({loading: false});
@@ -145,7 +158,7 @@ class Withdraw extends Component {
     return (
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
         {this.state.modal && 
-          <Modal title="title" description="description" onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
+          <Modal title={CONFIRMATION} description={CONFIRMATION_TEXT} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
