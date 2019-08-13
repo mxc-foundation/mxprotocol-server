@@ -12,9 +12,9 @@ import Divider from '@material-ui/core/Divider';
 import Spinner from "../../components/ScaleLoader"
 //import SessionStore from "../../stores/SessionStore";
 
-import Transactions from "./Transactions";
+//import Transactions from "./Transactions";
 import EthAccount from "./EthAccount";
-import SubScriptions from "./SubScriptions";
+import WithdrawHistory from "./WithdrawHistory";
 import TopupHistory from "./TopupHistory";
 
 import styles from "./HistoryStyle";
@@ -57,9 +57,9 @@ class HistoryLayout extends Component {
     let tab = 0;
     if (window.location.href.endsWith("/eth_account")) {
       tab = 1;
-    } /* else if (window.location.href.endsWith("/Withdraw")) {
+    } else if (window.location.href.endsWith("/withdraw")) {
       tab = 2;
-    }  */
+    }  
     
     this.setState({
       tab,
@@ -100,7 +100,7 @@ class HistoryLayout extends Component {
           >
             <Tab label="Top up" component={Link} to={`/history/${organizationID}/`} />
             <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth_account`} />
-            {/* <Tab label="Withdraw" component={Link} to={`/history/${organizationID}/Withdraw`} /> */}
+            <Tab label="Withdraw" component={Link} to={`/history/${organizationID}/withdraw`} />
             
           </Tabs>
         </Grid>
@@ -109,7 +109,7 @@ class HistoryLayout extends Component {
           <Switch>
             <Route exact path={`${this.props.match.path}/`} render={props => <TopupHistory organizationID={organizationID} {...props} />} />
             <Route exact path={`${this.props.match.path}/eth_account`} render={props => <EthAccount {...props} />} />
-            {/* <Route path={`/history/${organizationID}/Withdraw`} render={props => <SubScriptions {...props} />} /> */}
+            <Route exact path={`${this.props.match.path}/withdraw`} render={props => <WithdrawHistory {...props} />} /> 
 
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}
           </Switch>

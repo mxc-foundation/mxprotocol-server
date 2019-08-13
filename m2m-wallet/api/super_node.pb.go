@@ -9,6 +9,8 @@ import (
 	proto "github.com/golang/protobuf/proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -289,6 +291,17 @@ func (c *superNodeServiceClient) AddSuperNodeMoneyAccount(ctx context.Context, i
 type SuperNodeServiceServer interface {
 	GetSuperNodeActiveMoneyAccount(context.Context, *GetSuperNodeActiveMoneyAccountRequest) (*GetSuperNodeActiveMoneyAccountResponse, error)
 	AddSuperNodeMoneyAccount(context.Context, *AddSuperNodeMoneyAccountRequest) (*AddSuperNodeMoneyAccountResponse, error)
+}
+
+// UnimplementedSuperNodeServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedSuperNodeServiceServer struct {
+}
+
+func (*UnimplementedSuperNodeServiceServer) GetSuperNodeActiveMoneyAccount(ctx context.Context, req *GetSuperNodeActiveMoneyAccountRequest) (*GetSuperNodeActiveMoneyAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSuperNodeActiveMoneyAccount not implemented")
+}
+func (*UnimplementedSuperNodeServiceServer) AddSuperNodeMoneyAccount(ctx context.Context, req *AddSuperNodeMoneyAccountRequest) (*AddSuperNodeMoneyAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSuperNodeMoneyAccount not implemented")
 }
 
 func RegisterSuperNodeServiceServer(s *grpc.Server, srv SuperNodeServiceServer) {

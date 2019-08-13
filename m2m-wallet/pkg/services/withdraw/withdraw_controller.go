@@ -11,6 +11,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/wallet"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"strings"
 	"time"
 )
 
@@ -277,7 +278,11 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 					log.Info("Still pending...")
 					continue
 				} else {
-					timeStamp, err := time.Parse("", reply.TxSentTime)
+					layout := "2006-01-02 15:04:05"
+					idx := strings.Index(reply.TxSentTime, " +")
+					tt := reply.TxSentTime[:idx]
+
+					timeStamp, err := time.Parse(layout, tt)
 					if err != nil {
 						log.Error("Time format error: ", err)
 					}

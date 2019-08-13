@@ -43,6 +43,7 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/pkg/profile v1.3.0 // indirect
 	github.com/prometheus/client_golang v1.1.0 // indirect
+	github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4 // indirect
 	github.com/rogpeppe/fastuuid v1.2.0 // indirect
 	github.com/rs/cors v1.6.0 // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20190717103323-87ce952f7079
@@ -64,8 +65,8 @@ require (
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4 // indirect
 	golang.org/x/mobile v0.0.0-20190806162312-597adff16ade // indirect
 	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
-	golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa // indirect
-	golang.org/x/tools v0.0.0-20190809145639-6d4652c779c4 // indirect
+	golang.org/x/sys v0.0.0-20190812172437-4e8604ab3aff // indirect
+	golang.org/x/tools v0.0.0-20190812171329-f07d81a593a5 // indirect
 	google.golang.org/genproto v0.0.0-20190801165951-fa694d86fc64
 	google.golang.org/grpc v1.22.1
 	gopkg.in/gorp.v1 v1.7.2 // indirect
