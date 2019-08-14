@@ -152,7 +152,6 @@ class Withdraw extends Component {
     
     this.setState({loading: true});
     WithdrawStore.WithdrawReq(data, resp => {
-      console.log('sdfasdfasf',resp);
       this.setState({loading: false});
     });
 

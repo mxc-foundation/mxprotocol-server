@@ -65,7 +65,8 @@ class WithdrawForm extends FormComponent {
           id="txFee"
           label="Transaction fee"
           margin="normal"
-          value={this.props.txinfo.withdrawFee || ""}
+          
+          value={this.props.txinfo.withdrawFee || "0"}
           InputProps={{
             readOnly: true,
           }}

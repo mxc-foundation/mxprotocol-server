@@ -34,7 +34,7 @@ export default function ConfirmDialog(props) {
           <Button onClick={onClose} color="primary25" autoFocus>
             CANCEL
           </Button>
-          <Button onClick={agree} color="primary25" autoFocus>
+          <Button onClick={agree} color="primary25">
             PROCEED
           </Button>
         </DialogActions>

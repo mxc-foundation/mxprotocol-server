@@ -3,6 +3,8 @@ import { createMuiTheme } from "@material-ui/core/styles";
 
 const tealHighLight = '#00FFD9';
 const tealHighLight20 = '#00FFD920';
+const blueHighLight = '#4D89E5';
+const blueHighLight20 = '#4D89E520';
 const blueMxcBrand = '#09006E';
 const blueBG = '#090046';
 const white = '#F9FAFC';
@@ -10,7 +12,7 @@ const linkTextColor = '#CAFCF5';
 
 const theme = createMuiTheme({
     palette: {
-      primary: { main: tealHighLight, secondary: tealHighLight20 }, 
+      primary: { main: blueHighLight, secondary: blueHighLight20 }, 
       secondary: { main: blueMxcBrand }, 
       darkBG: { main: blueBG }, 
       textPrimary: {main: white}, 
@@ -137,46 +139,38 @@ const theme = createMuiTheme({
       },
       MuiButton: { 
         root: {
-          background: tealHighLight,
+          background: blueHighLight,
           color: blueMxcBrand,
-          width: 135,
+          width: 160,
           height: 50,
           fontWeight: 'bolder',
           marginRight: 5,
           boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
           "&:hover": {
-            backgroundColor: "#00CCAE",
+            backgroundColor: "#206CDF",
+            fontSize:'1rem'
           },
         },
         outlined: {
           backgroundColor: blueBG,
-          color: tealHighLight,
-          //padding: 30,
-          fontWeight: 900,
+          color: blueHighLight,
           lineHeight: 1.5,
           borderWidth: 2,
-          borderColor: tealHighLight,
+          borderColor: blueHighLight,
           "&:hover": {
-            backgroundColor: tealHighLight20,
-            borderColor: "#00CCAE",
-            color: "#00CCAE",
+            backgroundColor: blueHighLight20,
+            borderColor: "#206CDF",
+            color: "#206CDF",
           },
         },
-/*         link: {
-          color: tealHighLight,
-          //padding: 30,
-          fontWeight: 900,
-          lineHeight: 1.5,
-          "&:hover": {
-            color: "#00CCAE",
-          },
+        /* text: { 
+          color: blueMxcBrand, 
         }, */
-        label: {
-          color: blueMxcBrand
-        },
-        text: { 
-          color: white, 
-          padding: 6,
+        textPrimary: {
+          color: blueMxcBrand,
+          "&:hover": {
+            backgroundColor: "#206CDF",
+          },
         },
       },
       MuiFormLabel: { 
