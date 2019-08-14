@@ -30,7 +30,7 @@ const theme = createMuiTheme({
         color: white,
       },
       colorTextSecondary: {
-        color: 'red',
+        color: white,
       },
     },
     typography: {
