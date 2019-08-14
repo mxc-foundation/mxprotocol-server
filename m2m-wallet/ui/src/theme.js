@@ -49,6 +49,17 @@ const theme = createMuiTheme({
       ].join(','),
     },
     overrides: {
+      MuiTypography: {
+        root: {
+          color: white,
+        },
+        body1: {
+          color: white,
+        },
+        colorTextSecondary: {
+          color: white,
+        },
+      },
       MuiInput: {
         root: {
           color: white
@@ -139,13 +150,14 @@ const theme = createMuiTheme({
         root: {
           background: tealHighLight,
           color: blueMxcBrand,
-          width: 135,
+          width: 160,
           height: 50,
           fontWeight: 'bolder',
           marginRight: 5,
           boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
           "&:hover": {
             backgroundColor: "#00CCAE",
+            fontSize: '1rem'
           },
         },
         outlined: {
