@@ -121,8 +121,12 @@ func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWith
 			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetWithdrawFee")
 
-		extCurrencyAbbr := api.Money_name[int32(req.MoneyAbbr)]
-		return &api.GetWithdrawFeeResponse{WithdrawFee: ctxWithdraw.withdrawFee[extCurrencyAbbr], UserProfile: &userProfile}, nil
+		withdrawFee, err := db.DbGetActiveWithdrawFee(api.Money_name[int32(req.MoneyAbbr)])
+		if err != nil {
+			return &api.GetWithdrawFeeResponse{UserProfile: &userProfile}, nil
+		}
+
+		return &api.GetWithdrawFeeResponse{WithdrawFee: withdrawFee, UserProfile: &userProfile}, nil
 
 	}
 
