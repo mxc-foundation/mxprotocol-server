@@ -26,7 +26,7 @@ class TopupHistory extends Component {
           });
       }); 
   }
-
+  
   getRow(obj, index) {
     return(
       <TableRow key={index}>
@@ -34,6 +34,7 @@ class TopupHistory extends Component {
         <TableCell>{obj.to}</TableCell>
         <TableCell>{obj.moneyType}</TableCell>
         <TableCell>{obj.amount}</TableCell>
+        <TableCell>{obj.txHash}</TableCell>
         <TableCell>{obj.createdAt}</TableCell>
       </TableRow>
     );
@@ -62,6 +63,7 @@ class TopupHistory extends Component {
                 <TableCell>To</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell>VMXC Amount</TableCell>
+                <TableCell>TxHash</TableCell>
                 <TableCell>Date</TableCell>
               </TableRow>
             }
