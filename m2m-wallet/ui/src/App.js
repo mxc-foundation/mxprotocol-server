@@ -11,6 +11,7 @@ import history from "./history";
 import theme from "./theme";
 
 import TopNav from "./components/TopNav";
+import TopBanner from "./components/TopBanner";
 import SideNav from "./components/SideNav";
 import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
@@ -131,9 +132,11 @@ class App extends Component {
   render() {
     let topNav = null;
     let sideNav = null;
+    let topbanner = null;
 
     if (this.state.user !== null) {
       topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} username={SessionStore.getUsername()} />;
+      topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>;
       sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
     }
     
@@ -145,6 +148,7 @@ class App extends Component {
             <div className={this.props.classes.outerRoot}>
             <div className={this.props.classes.root}>
               {topNav}
+              {topbanner}
               {sideNav}
               <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
                 <Grid container spacing={24}>
