@@ -68,11 +68,11 @@ class WithdrawHistory extends Component {
                 <TableCell>To</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell>VMXC Amount</TableCell>
-                <TableCell>withdrawFee</TableCell>
-                <TableCell>txSentTime</TableCell>
-                <TableCell>txApprovedTime</TableCell>
-                <TableCell>txStatus</TableCell>
-                <TableCell>txHash</TableCell>
+                <TableCell>Withdraw Fee</TableCell>
+                <TableCell>TxSentTime</TableCell>
+                <TableCell>TxApprovedTime</TableCell>
+                <TableCell>TxStatus</TableCell>
+                <TableCell>TxHash</TableCell>
                 {/* <TableCell>Date</TableCell> */}
               </TableRow>
             }
