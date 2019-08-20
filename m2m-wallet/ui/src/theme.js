@@ -136,7 +136,7 @@ const theme = createMuiTheme({
       },
       MuiPaper: {
         root: {
-          backgroundColor: blueBG,
+          backgroundColor: overlayBG,
           padding: 10,
         }
       },
