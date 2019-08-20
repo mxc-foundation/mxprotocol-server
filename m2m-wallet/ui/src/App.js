@@ -42,12 +42,12 @@ const styles = {
     display: "flex",
     minHeight: "100vh",
     flexDirection: "column",
-    backgroundColor: "#090046",
-    background: "#311b92",
+    backgroundColor: theme.palette.darkBG.main,
+    background: theme.palette.secondary.secondary,
     fontFamily: "Montserrat",
   },
   input: {
-    color: '#FFFFFF',
+    color: theme.palette.textPrimary.main,
   },
   paper: {
     padding: theme.spacing.unit * 2,
@@ -68,7 +68,7 @@ const styles = {
     paddingLeft: drawerWidth,
   },
   color: {
-    backgroundColor: "#090046",
+    backgroundColor: theme.palette.darkBG.main,
   },
 };
 

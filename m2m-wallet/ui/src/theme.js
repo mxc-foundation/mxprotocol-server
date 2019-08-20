@@ -4,14 +4,15 @@ import { createMuiTheme } from "@material-ui/core/styles";
 const tealHighLight = '#00FFD9';
 const tealHighLight20 = '#00FFD920';
 const blueMxcBrand = '#09006E';
-const blueBG = '#090046';
+const blueBG = '#070033';
+const overlayBG = '#0C027060';
 const white = '#F9FAFC';
 const linkTextColor = '#CAFCF5';
 
 const theme = createMuiTheme({
     palette: {
       primary: { main: tealHighLight, secondary: tealHighLight20 }, 
-      secondary: { main: blueMxcBrand }, 
+      secondary: { main: blueMxcBrand, secondary: overlayBG }, 
       darkBG: { main: blueBG }, 
       textPrimary: {main: white}, 
       textSecondary: {main: linkTextColor} 
@@ -36,9 +37,9 @@ const theme = createMuiTheme({
     typography: {
       //useNextVariants: true,
       subheading: {
-        color: '#F9FAFC70',
+        color: white,
         "&:hover": {
-          color: white,
+          color: 'white',
         },
       },
       title: {
@@ -107,7 +108,7 @@ const theme = createMuiTheme({
       }, */
       MuiTable: {
         root: {
-          background: white,
+          background: 'transparent',
         }
       },
       MuiDivider: {
@@ -121,13 +122,12 @@ const theme = createMuiTheme({
       },
       MuiTableCell: {
         head: {
-          background: '#0C0270',
           color: white,
           fontWeight: 'bold',
           padding: 10, 
         },
         body: {
-          background: '#0C0270',
+          background: 'none',
           color: white,
         },
         root: {
@@ -136,14 +136,14 @@ const theme = createMuiTheme({
       },
       MuiPaper: {
         root: {
-          backgroundColor: '#0C0270',
+          backgroundColor: overlayBG,
           padding: 10,
         }
       },
       MuiTablePagination: {
         root: {
           color: white,
-          background: '#0C0270',
+          background: 'none',
         }
       },
       MuiButton: { 
@@ -226,6 +226,12 @@ const theme = createMuiTheme({
           boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
         },
       },
+      MuiMenu: {
+        paper: {
+          backgroundColor: blueBG,
+          marginTop: '50px',
+        }
+      }
     },
 });
   
