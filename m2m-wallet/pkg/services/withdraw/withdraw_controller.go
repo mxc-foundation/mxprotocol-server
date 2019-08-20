@@ -248,61 +248,69 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get wallet withdrawID from DB: %s", err)
 		}
 
-		//reqIdClient, err := db.DbInitWithdrawReq(walletID, req.Amount, req.MoneyAbbr.String())
-		amount := fmt.Sprintf("%f", req.Amount)
-		reply, err := paymentReq(ctx, &config.Cstruct, amount, receiverAdd, withdrawID)
-		if err != nil {
-			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.FailedPrecondition, "send payment request failed: %s", err)
-		}
-
-		// save reqqeryref to db
-		err = db.DbUpdateWithdrawPaymentQueryId(walletID, reply.ReqQueryRef)
-		if err != nil {
-			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot update queryID to DB: %s", err)
-		}
-
 		// make a new goroutine for checking the payment service
 		go func() {
-			for {
-				time.Sleep(30 * time.Second)
-
-				reply, err := CheckTxStatus(&config.Cstruct, reply.ReqQueryRef)
-				if err != nil {
-					log.Error("Cannot get the reply from paymentService: ", err)
-					continue
-				}
-
-				if reply.Error != "" {
-					log.Error("CheckTxStatusReply Error: ", reply.Error)
-					continue
-				}
-
-				status := fmt.Sprintf("%s", reply.TxPaymentStatusEnum)
-				if status != SUCCESSFUL {
-					log.Info("Still pending...")
-					continue
-				} else {
-					layout := "2006-01-02 15:04:05"
-					idx := strings.Index(reply.TxSentTime, " +")
-					tt := reply.TxSentTime[:idx]
-
-					timeStamp, err := time.Parse(layout, tt)
-					if err != nil {
-						log.Error("Time format error: ", err)
-					}
-
-					//Update withdrawID it into db
-					err = db.DbUpdateWithdrawSuccessful(withdrawID, reply.TxHash, timeStamp)
-					if err != nil {
-						log.Error("Cannot update withdrawID to db: ", err)
-						continue
-					}
-					return
-				}
-			}
+			paymentRoutine(ctx, &config.Cstruct, receiverAdd, walletID, withdrawID, req)
 		}()
 		return &api.WithdrawReqResponse{Status: true, UserProfile: &userProfile}, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")
+}
+
+func paymentRoutine(ctx context.Context, conf *config.MxpConfig, receiverAdd string, walletID, withdrawID int64, req *api.WithdrawReqRequest) {
+	amount := fmt.Sprintf("%f", req.Amount)
+	paymentReply, err := paymentReq(ctx, &config.Cstruct, amount, receiverAdd, withdrawID)
+	if err != nil {
+		log.Error("send payment request failed: %s", err)
+		for {
+			time.Sleep(time.Duration(config.Cstruct.Withdraw.ResendToPS) * time.Minute)
+			paymentReply, err = paymentReq(ctx, &config.Cstruct, amount, receiverAdd, withdrawID)
+			if err != nil {
+				continue
+			}
+		}
+	}
+
+	// save fk_query_id_payment_service to db
+	err = db.DbUpdateWithdrawPaymentQueryId(walletID, paymentReply.ReqQueryRef)
+	if err != nil {
+		log.Error(codes.DataLoss, "Cannot update queryID to DB: %s", err)
+	}
+
+	for {
+		time.Sleep(time.Duration(config.Cstruct.Withdraw.RecheckStat) * time.Second)
+		statusReply, err := CheckTxStatus(&config.Cstruct, paymentReply.ReqQueryRef)
+		if err != nil {
+			log.Error("Cannot get the reply from paymentService: ", err)
+			continue
+		}
+
+		if statusReply.Error != "" {
+			log.Error("CheckTxStatusReply Error: ", statusReply.Error)
+			continue
+		}
+
+		status := fmt.Sprintf("%s", statusReply.TxPaymentStatusEnum)
+		if status != SUCCESSFUL {
+			log.Info("Still pending...")
+			continue
+		} else {
+			layout := "2006-01-02 15:04:05"
+			idx := strings.Index(statusReply.TxSentTime, " +")
+			tt := statusReply.TxSentTime[:idx]
+
+			timeStamp, err := time.Parse(layout, tt)
+			if err != nil {
+				log.Error("Time format error: ", err)
+			}
+
+			//Update withdrawID it into db
+			err = db.DbUpdateWithdrawSuccessful(withdrawID, statusReply.TxHash, timeStamp)
+			if err != nil {
+				log.Error("Cannot update withdrawID to db: ", err)
+				continue
+			}
+		}
+	}
 }

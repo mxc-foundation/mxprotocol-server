@@ -1,6 +1,8 @@
 package config
 
-import "time"
+import (
+	"time"
+)
 
 // Config defines the configuration structure.
 type MxpConfig struct {
@@ -46,6 +48,11 @@ type MxpConfig struct {
 		CheckAccountSeconds int    `mapstructure:"check_account_seconds"`
 		ExtCurrAbv          string `mapstructure:"external_currency_abv"`
 		TestNet             bool   `mapstructure:"ether_test_net"`
+	}
+
+	Withdraw struct {
+		ResendToPS  int `mapstructure:"resend_ps_time"`
+		RecheckStat int `mapstructure:"recheck_status_time"`
 	}
 }
 
