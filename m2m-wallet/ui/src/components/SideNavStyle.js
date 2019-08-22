@@ -8,7 +8,7 @@ const SideNavStyle = {
       paddingLeft: 0,
       paddingRight: 0,
       backgroundColor: theme.palette.secondary.secondary,
-      color: theme.palette.secondary.main,
+      color: theme.palette.textPrimary.main,
       fontSize: 'bold',
       boxShadow: '1px 1px 5px 0px rgba(29, 30, 33, 0.5)',
     },

@@ -3,6 +3,39 @@ import AsyncSelect from 'react-select/async';
 import ProfileStore from '../stores/ProfileStore'
 import SessionStore from "../stores/SessionStore";
 
+const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      margin: 20,
+      // match with the menu
+      borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
+      // Overwrittes the different states of border
+      borderColor: state.isFocused ? "#00FFD9" : "white",
+      // Removes weird border around container
+      boxShadow: state.isFocused ? null : null,
+      "&:hover": {
+        // Overwrittes the different states of border
+        borderColor: state.isFocused ? "#00FFD9" : "white"
+      }
+    }),
+    menu: base => ({
+      ...base,
+      background:'#101c4a',
+      // override border radius to match the box
+      borderRadius: 0,
+      // kill the gap
+      marginTop: 0,
+      paddingLeft: 20,
+      paddingRight: 20,
+    }),
+    menuList: base => ({
+      ...base,
+      background: '#1a2d6e',
+      // kill the white space on first and last option
+      paddingTop: 0,
+    })
+  };
+ 
 const getOrgList = (organizations) => {
     let organizationList = null;
     if(organizations){
@@ -62,6 +95,15 @@ export default class WithPromises extends Component {
             <AsyncSelect 
                 cacheOptions 
                 defaultOptions
+                styles={customStyles}
+                theme={(theme) => ({
+                    ...theme,
+                    borderRadius: 4,
+                    colors: {
+                        primary25: '#00FFD950',
+                        primary: '#00FFD950',
+                    },
+                })}
                 defaultValue={dValue}
                 onClick={this.onClick}
                 //defaultValue={this.state.value}
