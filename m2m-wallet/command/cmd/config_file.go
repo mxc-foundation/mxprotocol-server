@@ -96,7 +96,8 @@ contract_address={{ .SuperNode.ContractAddress }}
 supernode_address={{ .SuperNode.SuperNodeAddress }}
 api_key={{ .SuperNode.APIKey }}
 check_account_seconds={{ .SuperNode.CheckAccountSeconds }}
-check_payment_seconds={{ .SuperNode.CheckPaymentSecond }}
+external_currency_abv={{ .SuperNode.ExtCurrAbv }}
+ether_test_net={{ .SuperNode.TestNet }}
 
 [paymentserver]
 payment_service_address={{ .PaymentServer.PaymentServiceAddress }}

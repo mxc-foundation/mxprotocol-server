@@ -12,11 +12,6 @@ host_server="localhost"
 auth_server="http://appserver:8080"
 auth_url="/api/internal/profile"
 
-# Lora-app-server settings
-[Lora-app_server]
-lora_app_server="https://lora.demo.cloud.mxc.org"
-lora_app_server_development="http://localhost:3001"
-
 # PostgreSQL settings.
 #
 # Please note that PostgreSQL 9.5+ is required.
