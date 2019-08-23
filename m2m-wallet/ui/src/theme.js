@@ -113,8 +113,8 @@ const theme = createMuiTheme({
       },
       MuiDivider: {
         root: {
-          backgroundColor: '#FFFFFF50',
-          margin: 15,
+          backgroundColor: '#00000040',
+          margin: '5px 10px',
         },
         light: {
           backgroundColor: '#FFFFFF50',
@@ -216,7 +216,7 @@ const theme = createMuiTheme({
       },
       MuiSvgIcon: {
         root: {
-          fill: '#F9FAFC',
+          fill: '#F9FAFC80',
         },
       },
       MuiDialog: {
