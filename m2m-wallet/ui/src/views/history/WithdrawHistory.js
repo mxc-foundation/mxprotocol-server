@@ -36,8 +36,8 @@ class WithdrawHistory extends Component {
         <TableCell>{obj.moneyType}</TableCell>
         <TableCell>{obj.amount}</TableCell>
         <TableCell>{obj.withdrawFee}</TableCell>
-        <TableCell>{obj.txSentTime}</TableCell>
-        <TableCell>{obj.txApprovedTime}</TableCell>
+        <TableCell>{obj.txSentTime.substring(0,19)}</TableCell>
+        <TableCell>{obj.txApprovedTime.substring(0,19)}</TableCell>
         <TableCell>{obj.txStatus}</TableCell>
         <TableCell>{obj.txHash}</TableCell> 
         {/* <TableCell>{obj.createdAt}</TableCell> */}

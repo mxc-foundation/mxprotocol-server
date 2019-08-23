@@ -112,13 +112,13 @@ const theme = createMuiTheme({
         }
       },
       MuiDivider: {
+        root: {
+          backgroundColor: '#FFFFFF50',
+          margin: 15,
+        },
         light: {
           backgroundColor: '#FFFFFF50',
-        },
-        /* dark: {
-          backgroundColor: '#1C147870',
-          padding: 500, 
-        } */
+        }
       },
       MuiTableCell: {
         head: {

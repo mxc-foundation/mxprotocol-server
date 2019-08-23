@@ -27,7 +27,7 @@ const SideNavStyle = {
       height: 250,
       position: 'absolute',
       bottom: 5,
-      backgroundColor: '#09006E20',
+      backgroundColor: '#121c4a',
       color: theme.palette.textPrimary.main,
       fontSize: 14,
       paddingLeft: 0,
