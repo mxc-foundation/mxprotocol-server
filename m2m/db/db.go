@@ -3,14 +3,14 @@ package db
 import (
 	"database/sql"
 	migrate "github.com/rubenv/sql-migrate"
-	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/migrations"
+	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/migrations"
 	"time"
 
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 )
 
 func Setup(conf config.MxpConfig) error {

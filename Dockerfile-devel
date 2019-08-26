@@ -14,5 +14,5 @@ WORKDIR $PROJECT_PATH
 RUN mkdir -p /etc/mxprotocol-server/certs
 RUN openssl req -x509 -newkey rsa:4096 -keyout /etc/mxprotocol-server/certs/http-key.pem -out /etc/mxprotocol-server/certs/http.pem -days 365 -nodes -batch -subj "/CN=localhost"
 
-RUN make dev-requirements
+RUN make dev-requirements ui-requirements
 

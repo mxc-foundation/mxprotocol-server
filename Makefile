@@ -1,5 +1,5 @@
 .PHONY: subdirs all clean ui-subdirs ui-requirements dev-requirements
-SUBDIRS=m2m-wallet
+SUBDIRS=m2m
 
 subdirs:
 	@for subdir in $(SUBDIRS); \
@@ -35,6 +35,5 @@ dev-requirements:
 	go install github.com/elazarl/go-bindata-assetfs/go-bindata-assetfs
 	go install github.com/jteeuwen/go-bindata/go-bindata
 	go install golang.org/x/tools/cmd/stringer
-	go install github.com/goreleaser/goreleaser
 	go install github.com/goreleaser/nfpm
 

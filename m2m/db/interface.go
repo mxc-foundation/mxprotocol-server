@@ -2,7 +2,7 @@ package db
 
 import (
 	"database/sql"
-	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
+	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
 )
 
 var i DBInterface

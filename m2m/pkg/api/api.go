@@ -11,15 +11,15 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/tmc/grpc-websocket-proxy/wsproxy"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/ext_account"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/supernode"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/topup"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/wallet"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/withdraw"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/static"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/ext_account"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/supernode"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/topup"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/withdraw"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/static"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc"
@@ -85,7 +85,7 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 			"bind":     bind,
 			"tls-cert": tlsCert,
 			"tls-key":  tlsKey,
-		}).Info("pkg/api: starting m2m-wallet api")
+		}).Info("pkg/api: starting m2m api")
 
 		if tlsCert == "" || tlsKey == "" {
 			log.Fatal(http.ListenAndServe(bind, h2c.NewHandler(handler, &http2.Server{})))

@@ -11,13 +11,12 @@ RUN mkdir -p $PROJECT_PATH
 COPY . $PROJECT_PATH
 WORKDIR $PROJECT_PATH
 
-RUN make dev-requirements ui-requirements
-RUN make clean
-RUN make all
+RUN make dev-requirements ui-requirements clean all
 
 FROM alpine:latest AS production
 
 WORKDIR /root/
 RUN apk --no-cache add ca-certificates
-COPY --from=development /mxprotocol-server/m2m-wallet/build .
-ENTRYPOINT ["./m2m-wallet"]
+RUN mkdir /etc/mxprotocol-server
+COPY --from=development /mxprotocol-server/m2m/build .
+ENTRYPOINT ["./m2m"]

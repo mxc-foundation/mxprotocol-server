@@ -3,10 +3,10 @@ package topup
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/auth"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services/wallet"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

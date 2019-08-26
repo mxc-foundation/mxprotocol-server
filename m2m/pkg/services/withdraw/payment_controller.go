@@ -5,7 +5,7 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	ps "gitlab.com/MXCFoundation/cloud/mxprotocol-server/grpc_api-paymemt_service"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"google.golang.org/grpc"
 )
 
