@@ -5,7 +5,7 @@ VERSION := $(shell git describe --always |sed -e "s/^v//")
 
 build: ui/build pkg/static pkg/migrations
 	mkdir -p build
-	go build $(GO_EXTRA_BUILD_ARGS) -ldflags "-s -w -X main.version=$(VERSION)" -o build/m2m-wallet command/main.go
+	go build $(GO_EXTRA_BUILD_ARGS) -ldflags "-s -w -X main.version=$(VERSION)" -o build/m2m command/main.go
 
 clean:
 	@echo "Cleaning up workspace"
