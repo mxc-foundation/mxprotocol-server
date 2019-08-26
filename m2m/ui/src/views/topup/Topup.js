@@ -82,14 +82,14 @@ class Topup extends Component {
                 <TitleBar className={this.props.classes.padding}>
                   <TitleBarTitle title="Top up" />
                 </TitleBar>
-                <Divider light={true}/>
+                {/* <Divider light={true}/>
                 <div className={this.props.classes.breadcrumb}>
                 <TitleBar>
                   <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
                   <TitleBarTitle title="/" className={this.props.classes.navText}/>
                   <TitleBarTitle component={Link} to="#" title="Top up" className={this.props.classes.link}/>
                 </TitleBar>
-                </div>
+                </div> */}
             </div>
         </Grid>
         <Grid item xs={6} className={this.props.classes.column}>

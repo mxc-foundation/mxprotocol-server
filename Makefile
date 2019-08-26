@@ -35,6 +35,5 @@ dev-requirements:
 	go install github.com/elazarl/go-bindata-assetfs/go-bindata-assetfs
 	go install github.com/jteeuwen/go-bindata/go-bindata
 	go install golang.org/x/tools/cmd/stringer
-	go install github.com/goreleaser/goreleaser
 	go install github.com/goreleaser/nfpm
 

@@ -107,10 +107,10 @@ class SideNav extends Component {
       >
         {organizationID && <List className={this.props.classes.static}>
           {/* <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}> */}
-          <Divider />
           <div>
-          <DropdownMenu default={ this.state.default } onChange={this.onChange} />
-        </div>
+            <DropdownMenu default={ this.state.default } onChange={this.onChange} />
+          </div>
+          {/* <Divider /> */}
           <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${organizationID}`}>
             <ListItemIcon className={this.props.classes.iconStyle}>
               <PagePreviousOutline />
@@ -135,15 +135,15 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
           </ListItem>
+          
               <List className={this.props.classes.card}>
+              <Divider />
                 <ListItem button component={LinkToLora} className={this.props.classes.static}>  
                   <ListItemIcon>
                     <AccessPoint />
                   </ListItemIcon>
                   <ListItemText primary="LoRa Server" />
                 </ListItem>
-                <Divider />
-                <Divider />
                 <ListItem>
                   <ListItemText primary="Powered by" />
                   <ListItemIcon>
