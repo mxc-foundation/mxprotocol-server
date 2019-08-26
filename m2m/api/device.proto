@@ -42,7 +42,8 @@ message GetDeviceListResponse {
 }
 
 message GetDeviceProfileRequest {
-    int64 dev_id = 1;
+    int64 org_id = 1;
+    int64 dev_id = 2;
 }
 
 message GetDeviceProfileResponse {
@@ -51,7 +52,8 @@ message GetDeviceProfileResponse {
 }
 
 message GetDeviceHistoryRequest {
-    int64 dev_id = 1;
+    int64 org_id = 1;
+    int64 dev_id = 2;
 }
 
 message GetDeviceHistoryResponse {
@@ -60,8 +62,9 @@ message GetDeviceHistoryResponse {
 }
 
 message SetDeviceModeRequest {
-    int64 dev_id = 1;
-    string dev_mode = 2;
+    int64 org_id = 1;
+    int64 dev_id = 2;
+    string dev_mode = 3;
 }
 
 message SetDeviceModeResponse {

@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package api;
+
+import "google/api/annotations.proto";
+import "profile.proto";
+
+service GatewayService {
+    rpc GetGatewayList(GetGatewayListRequest) returns (GetGatewayListResponse){
+        option(google.api.http) = {
+			get: "/api/device/getGwList"
+		};
+    }
+
+    rpc GetGatewayProfile(GetGatewayProfileRequest) returns (GetGatewayProfileResponse){
+        option(google.api.http) = {
+			get: "/api/device/getGwProfile"
+		};
+    }
+
+    rpc SetGatewayMode(SetGatewayModeRequest) returns (SetGatewayModeResponse) {
+            option (google.api.http) = {
+    			post: "/api/device/setGwMode"
+    			body: "*"
+    		};
+        }
+}
+
+message GetGatewayListRequest {
+    int64 org_id = 1;
+}
+
+message GetGatewayListResponse {
+    string gw_list = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message GetGatewayProfileRequest {
+    int64 org_id = 1;
+    int64 gw_id = 2;
+}
+
+message GetGatewayProfileResponse {
+    string gw_profile = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message SetGatewayModeRequest {
+    int64 org_id = 1;
+    int64 gw_id = 2;
+    string gw_mode = 3;
+}
+
+message SetGatewayModeResponse {
+    string gw_mode = 1;
+    ProfileResponse user_profile = 2;
+}

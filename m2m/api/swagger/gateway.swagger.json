@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "device.proto",
+    "title": "gateway.proto",
     "version": "version not set"
   },
   "schemes": [
@@ -15,14 +15,39 @@
     "application/json"
   ],
   "paths": {
-    "/api/device/getDvHist": {
+    "/api/device/getGwList": {
       "get": {
-        "operationId": "GetDeviceHistory",
+        "operationId": "GetGatewayList",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetDeviceHistoryResponse"
+              "$ref": "#/definitions/apiGetGatewayListResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "GatewayService"
+        ]
+      }
+    },
+    "/api/device/getGwProfile": {
+      "get": {
+        "operationId": "GetGatewayProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetGatewayProfileResponse"
             }
           }
         },
@@ -35,7 +60,7 @@
             "format": "int64"
           },
           {
-            "name": "devId",
+            "name": "gwId",
             "in": "query",
             "required": false,
             "type": "string",
@@ -43,75 +68,18 @@
           }
         ],
         "tags": [
-          "DeviceService"
+          "GatewayService"
         ]
       }
     },
-    "/api/device/getDvList": {
-      "get": {
-        "operationId": "GetDeviceList",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiGetDeviceListResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "orgId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "DeviceService"
-        ]
-      }
-    },
-    "/api/device/getDvProfile": {
-      "get": {
-        "operationId": "GetDeviceProfile",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiGetDeviceProfileResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "orgId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "devId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "DeviceService"
-        ]
-      }
-    },
-    "/api/device/setDevMode": {
+    "/api/device/setGwMode": {
       "post": {
-        "operationId": "SetDeviceMode",
+        "operationId": "SetGatewayMode",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiSetDeviceModeResponse"
+              "$ref": "#/definitions/apiSetGatewayModeResponse"
             }
           }
         },
@@ -121,21 +89,21 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiSetDeviceModeRequest"
+              "$ref": "#/definitions/apiSetGatewayModeRequest"
             }
           }
         ],
         "tags": [
-          "DeviceService"
+          "GatewayService"
         ]
       }
     }
   },
   "definitions": {
-    "apiGetDeviceHistoryResponse": {
+    "apiGetGatewayListResponse": {
       "type": "object",
       "properties": {
-        "devHistory": {
+        "gwList": {
           "type": "string"
         },
         "userProfile": {
@@ -143,21 +111,10 @@
         }
       }
     },
-    "apiGetDeviceListResponse": {
+    "apiGetGatewayProfileResponse": {
       "type": "object",
       "properties": {
-        "devList": {
-          "type": "string"
-        },
-        "userProfile": {
-          "$ref": "#/definitions/apiProfileResponse"
-        }
-      }
-    },
-    "apiGetDeviceProfileResponse": {
-      "type": "object",
-      "properties": {
-        "devProfile": {
+        "gwProfile": {
           "type": "string"
         },
         "userProfile": {
@@ -225,26 +182,26 @@
         }
       }
     },
-    "apiSetDeviceModeRequest": {
+    "apiSetGatewayModeRequest": {
       "type": "object",
       "properties": {
         "orgId": {
           "type": "string",
           "format": "int64"
         },
-        "devId": {
+        "gwId": {
           "type": "string",
           "format": "int64"
         },
-        "devMode": {
+        "gwMode": {
           "type": "string"
         }
       }
     },
-    "apiSetDeviceModeResponse": {
+    "apiSetGatewayModeResponse": {
       "type": "object",
       "properties": {
-        "devMode": {
+        "gwMode": {
           "type": "string"
         },
         "userProfile": {
