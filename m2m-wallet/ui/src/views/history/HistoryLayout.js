@@ -77,14 +77,14 @@ class HistoryLayout extends Component {
                 <TitleBar className={this.props.classes.padding}>
                   <TitleBarTitle title="History" />
                 </TitleBar>
-                <Divider light={true}/>
+                {/* <Divider light={true}/>
                 <div className={this.props.classes.breadcrumb}>
                 <TitleBar>
                   <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
                   <TitleBarTitle title="/" className={this.props.classes.navText}/>
                   <TitleBarTitle component={Link} to="#" title="History" className={this.props.classes.link}/>
                 </TitleBar>
-                </div>
+                </div> */}
             </div>
         </Grid>
 
