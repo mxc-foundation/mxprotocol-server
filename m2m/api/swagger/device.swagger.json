@@ -28,6 +28,13 @@
         },
         "parameters": [
           {
+            "name": "orgId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
             "name": "devId",
             "in": "query",
             "required": false,
@@ -77,6 +84,13 @@
           }
         },
         "parameters": [
+          {
+            "name": "orgId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
           {
             "name": "devId",
             "in": "query",
@@ -214,6 +228,10 @@
     "apiSetDeviceModeRequest": {
       "type": "object",
       "properties": {
+        "orgId": {
+          "type": "string",
+          "format": "int64"
+        },
         "devId": {
           "type": "string",
           "format": "int64"
