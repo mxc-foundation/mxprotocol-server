@@ -6,7 +6,7 @@ import "google/api/annotations.proto";
 import "profile.proto";
 
 service DeviceService {
-    rpc GetDevice(GetDeviceListRequest) returns (GetDeviceListResponse){
+    rpc GetDeviceList(GetDeviceListRequest) returns (GetDeviceListResponse){
         option(google.api.http) = {
 			get: "/api/device/getDvList"
 		};
@@ -24,9 +24,9 @@ service DeviceService {
 		};
     }
 
-    rpc SetDeviceStatus(SetDeviceStatusRequest) returns (SetDeviceStatusResponse) {
+    rpc SetDeviceMode(SetDeviceModeRequest) returns (SetDeviceModeResponse) {
             option (google.api.http) = {
-    			post: "/api/device/setDvStat"
+    			post: "/api/device/setDevMode"
     			body: "*"
     		};
         }
@@ -37,30 +37,34 @@ message GetDeviceListRequest {
 }
 
 message GetDeviceListResponse {
-
+    string dev_list = 1;
+    ProfileResponse user_profile = 2;
 }
 
 message GetDeviceProfileRequest {
-    int64 dv_id = 1;
+    int64 dev_id = 1;
 }
 
 message GetDeviceProfileResponse {
-
+    string dev_profile = 1;
+    ProfileResponse user_profile = 2;
 }
 
 message GetDeviceHistoryRequest {
-    int64 dv_id = 1;
+    int64 dev_id = 1;
 }
 
 message GetDeviceHistoryResponse {
-
+    string dev_history = 1;
+    ProfileResponse user_profile = 2;
 }
 
-message SetDeviceStatusRequest {
-    int64 dv_id = 1;
-    string dv_stat = 2;
+message SetDeviceModeRequest {
+    int64 dev_id = 1;
+    string dev_mode = 2;
 }
 
-message SetDeviceStatusResponse {
-
+message SetDeviceModeResponse {
+    string dev_mode = 1;
+    ProfileResponse user_profile = 2;
 }

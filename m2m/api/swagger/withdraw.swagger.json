@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/withdraw/{money_abbr}": {
+    "/api/withdraw/{moneyAbbr}": {
       "post": {
         "operationId": "WithdrawReq",
         "responses": {
@@ -28,7 +28,7 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",
@@ -50,7 +50,7 @@
         ]
       }
     },
-    "/api/withdraw/{money_abbr}/history": {
+    "/api/withdraw/{moneyAbbr}/history": {
       "get": {
         "operationId": "GetWithdrawHistory",
         "responses": {
@@ -63,7 +63,7 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",
@@ -98,7 +98,7 @@
         ]
       }
     },
-    "/api/withdraw/{money_abbr}/withdrawfee": {
+    "/api/withdraw/{moneyAbbr}/withdrawfee": {
       "get": {
         "summary": "Get data for current withdraw fee",
         "operationId": "GetWithdrawFee",
@@ -112,7 +112,7 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "moneyAbbr",
             "description": "type of crypto currency",
             "in": "path",
             "required": true,
@@ -145,7 +145,7 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",

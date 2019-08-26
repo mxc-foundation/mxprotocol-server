@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "topup.proto",
+    "title": "device.proto",
     "version": "version not set"
   },
   "schemes": [
@@ -15,34 +15,20 @@
     "application/json"
   ],
   "paths": {
-    "/api/top_up/history": {
+    "/api/device/getDvHist": {
       "get": {
-        "operationId": "GetTopUpHistory",
+        "operationId": "GetDeviceHistory",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetTopUpHistoryResponse"
+              "$ref": "#/definitions/apiGetDeviceHistoryResponse"
             }
           }
         },
         "parameters": [
           {
-            "name": "orgId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "limit",
+            "name": "devId",
             "in": "query",
             "required": false,
             "type": "string",
@@ -50,31 +36,22 @@
           }
         ],
         "tags": [
-          "TopUpService"
+          "DeviceService"
         ]
       }
     },
-    "/api/top_up/{moneyAbbr}/supernode_account": {
+    "/api/device/getDvList": {
       "get": {
-        "operationId": "GetTopUpDestination",
+        "operationId": "GetDeviceList",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetTopUpDestinationResponse"
+              "$ref": "#/definitions/apiGetDeviceListResponse"
             }
           }
         },
         "parameters": [
-          {
-            "name": "moneyAbbr",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "enum": [
-              "Ether"
-            ]
-          },
           {
             "name": "orgId",
             "in": "query",
@@ -84,16 +61,67 @@
           }
         ],
         "tags": [
-          "TopUpService"
+          "DeviceService"
+        ]
+      }
+    },
+    "/api/device/getDvProfile": {
+      "get": {
+        "operationId": "GetDeviceProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetDeviceProfileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "devId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/api/device/setDevMode": {
+      "post": {
+        "operationId": "SetDeviceMode",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiSetDeviceModeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiSetDeviceModeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DeviceService"
         ]
       }
     }
   },
   "definitions": {
-    "apiGetTopUpDestinationResponse": {
+    "apiGetDeviceHistoryResponse": {
       "type": "object",
       "properties": {
-        "activeAccount": {
+        "devHistory": {
           "type": "string"
         },
         "userProfile": {
@@ -101,30 +129,27 @@
         }
       }
     },
-    "apiGetTopUpHistoryResponse": {
+    "apiGetDeviceListResponse": {
       "type": "object",
       "properties": {
-        "count": {
-          "type": "string",
-          "format": "int64"
-        },
-        "topupHistory": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/apiTopUpHistory"
-          }
+        "devList": {
+          "type": "string"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
         }
       }
     },
-    "apiMoney": {
-      "type": "string",
-      "enum": [
-        "Ether"
-      ],
-      "default": "Ether"
+    "apiGetDeviceProfileResponse": {
+      "type": "object",
+      "properties": {
+        "devProfile": {
+          "type": "string"
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
+        }
+      }
     },
     "apiOrganizationLink": {
       "type": "object",
@@ -186,27 +211,26 @@
         }
       }
     },
-    "apiTopUpHistory": {
+    "apiSetDeviceModeRequest": {
       "type": "object",
       "properties": {
-        "from": {
+        "devId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "devMode": {
+          "type": "string"
+        }
+      }
+    },
+    "apiSetDeviceModeResponse": {
+      "type": "object",
+      "properties": {
+        "devMode": {
           "type": "string"
         },
-        "to": {
-          "type": "string"
-        },
-        "amount": {
-          "type": "number",
-          "format": "double"
-        },
-        "createdAt": {
-          "type": "string"
-        },
-        "moneyType": {
-          "type": "string"
-        },
-        "txHash": {
-          "type": "string"
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
         }
       }
     },
