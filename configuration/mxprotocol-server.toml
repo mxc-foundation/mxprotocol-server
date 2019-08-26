@@ -42,7 +42,7 @@ auth_url="/api/internal/profile"
 # * require - Always SSL (skip verification)
 # * verify-ca - Always SSL (verify that the certificate presented by the server was signed by a trusted CA)
 # * verify-full - Always SSL (verify that the certification presented by the server was signed by a trusted CA and the server host name matches the one in the certificate)
-dsn="postgres://postgres@postgres:5432/postgres?sslmode=disable"
+dsn="postgres://postgres@postgresql:5432/postgres?sslmode=disable"
 automigrate=false
 
 [redis]

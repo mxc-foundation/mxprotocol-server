@@ -11,9 +11,9 @@ services:
       - postgres
       - redis
       - mosquitto
-    environment:
-      - TEST_POSTGRES_DSN=postgres://test:test@postgres/test?sslmode=disable
-      - TEST_LORA_APP_SERVER=http://appserver:8080
+    #environment:
+    #  - TEST_POSTGRES_DSN=postgres://test:test@postgres/test?sslmode=disable
+    #  - TEST_LORA_APP_SERVER=http://appserver:8080
     tty: true
     ports:
       - 4000:4000
@@ -21,7 +21,7 @@ services:
     #  - seccomp:unconfined
     #cap_add:
     #  - SYS_PTRACE
-  postgres:
+  postgresql:
     image: postgres:9.6-alpine
     volumes:
       - ./.docker-compose/postgresql/initdb:/docker-entrypoint-initdb.d
