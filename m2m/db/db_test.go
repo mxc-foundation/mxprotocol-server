@@ -2,7 +2,7 @@ package db
 
 import (
 	"github.com/stretchr/testify/suite"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/tests"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/tests"
 	"testing"
 )
 

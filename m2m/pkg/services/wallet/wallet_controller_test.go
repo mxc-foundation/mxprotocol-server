@@ -2,9 +2,9 @@ package wallet
 
 import (
 	"github.com/smartystreets/assertions"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/services"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/tests"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/tests"
 	"testing"
 )
 

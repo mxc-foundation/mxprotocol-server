@@ -1,5 +1,5 @@
 .PHONY: subdirs all clean ui-subdirs ui-requirements dev-requirements
-SUBDIRS=m2m-wallet
+SUBDIRS=m2m
 
 subdirs:
 	@for subdir in $(SUBDIRS); \

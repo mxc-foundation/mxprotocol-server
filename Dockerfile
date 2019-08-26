@@ -19,5 +19,5 @@ FROM alpine:latest AS production
 
 WORKDIR /root/
 RUN apk --no-cache add ca-certificates
-COPY --from=development /mxprotocol-server/m2m-wallet/build .
-ENTRYPOINT ["./m2m-wallet"]
+COPY --from=development /mxprotocol-server/m2m/build .
+ENTRYPOINT ["./m2m"]

@@ -1,8 +1,8 @@
 package db
 
 import (
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/api"
-	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db/postgres_db"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
+	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
 )
 
 var CurrencyList = []pg.ExtCurrency{}

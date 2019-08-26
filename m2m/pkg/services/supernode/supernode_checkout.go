@@ -3,8 +3,8 @@ package supernode
 import (
 	"github.com/nanmu42/etherscan-api"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m-wallet/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"math"
 	"math/big"
 	"strings"
