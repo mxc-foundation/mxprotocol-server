@@ -32,13 +32,20 @@ service DeviceService {
         }
 }
 
+enum DeviceMode {
+    inactive = 0;
+    free_gateways_limited = 1;
+    whole_network = 3;
+}
+
 message GetDeviceListRequest {
     int64 org_id = 1;
 }
 
 message GetDeviceListResponse {
-    string dev_list = 1;
+    repeated DeviceProfile dev_profile = 1;
     ProfileResponse user_profile = 2;
+
 }
 
 message GetDeviceProfileRequest {
@@ -46,8 +53,14 @@ message GetDeviceProfileRequest {
     int64 dev_id = 2;
 }
 
+message DeviceProfile {
+    int64 id = 1;
+    int64 fk_device_la = 2;
+    string mode = 3;
+}
+
 message GetDeviceProfileResponse {
-    string dev_profile = 1;
+    repeated DeviceProfile dev_profile = 1;
     ProfileResponse user_profile = 2;
 }
 
@@ -68,6 +81,7 @@ message SetDeviceModeRequest {
 }
 
 message SetDeviceModeResponse {
-    string dev_mode = 1;
-    ProfileResponse user_profile = 2;
+    bool status = 1;
+    DeviceMode dev_mode = 2;
+    ProfileResponse user_profile = 3;
 }

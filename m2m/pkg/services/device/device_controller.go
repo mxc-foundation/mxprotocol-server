@@ -7,7 +7,6 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"strings"
 )
 
 func Setup() error {
