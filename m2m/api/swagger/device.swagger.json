@@ -132,15 +132,6 @@
     }
   },
   "definitions": {
-    "apiDeviceMode": {
-      "type": "string",
-      "enum": [
-        "inactive",
-        "free_gateways_limited",
-        "whole_network"
-      ],
-      "default": "inactive"
-    },
     "apiDeviceProfile": {
       "type": "object",
       "properties": {
@@ -278,9 +269,6 @@
         "status": {
           "type": "boolean",
           "format": "boolean"
-        },
-        "devMode": {
-          "$ref": "#/definitions/apiDeviceMode"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
