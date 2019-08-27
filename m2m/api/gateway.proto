@@ -26,6 +26,12 @@ service GatewayService {
         }
 }
 
+enum GatewayMode {
+    gw_inactive = 0;
+    gw_free_gateways_limited = 1;
+    gw_whole_network = 3;
+}
+
 message GetGatewayListRequest {
     int64 org_id = 1;
 }
@@ -40,18 +46,24 @@ message GetGatewayProfileRequest {
     int64 gw_id = 2;
 }
 
+message GatewayProfile {
+    int64 id = 1;
+    int64 fk_gateway_la = 2;
+    string mode = 3;
+}
+
 message GetGatewayProfileResponse {
-    string gw_profile = 1;
+    repeated GatewayProfile gw_profile = 1;
     ProfileResponse user_profile = 2;
 }
 
 message SetGatewayModeRequest {
     int64 org_id = 1;
     int64 gw_id = 2;
-    string gw_mode = 3;
+    GatewayMode gw_mode = 3;
 }
 
 message SetGatewayModeResponse {
-    string gw_mode = 1;
-    ProfileResponse user_profile = 2;
+    bool status = 1;
+    ProfileResponse user_profile = 3;
 }

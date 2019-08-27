@@ -33,9 +33,9 @@ service DeviceService {
 }
 
 enum DeviceMode {
-    inactive = 0;
-    free_gateways_limited = 1;
-    whole_network = 3;
+    dv_inactive = 0;
+    dv_free_gateways_limited = 1;
+    dv_whole_network = 3;
 }
 
 message GetDeviceListRequest {
@@ -45,7 +45,6 @@ message GetDeviceListRequest {
 message GetDeviceListResponse {
     repeated DeviceProfile dev_profile = 1;
     ProfileResponse user_profile = 2;
-
 }
 
 message GetDeviceProfileRequest {
@@ -82,6 +81,5 @@ message SetDeviceModeRequest {
 
 message SetDeviceModeResponse {
     bool status = 1;
-    DeviceMode dev_mode = 2;
     ProfileResponse user_profile = 3;
 }

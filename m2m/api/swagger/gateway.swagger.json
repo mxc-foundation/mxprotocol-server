@@ -100,6 +100,31 @@
     }
   },
   "definitions": {
+    "apiGatewayMode": {
+      "type": "string",
+      "enum": [
+        "gw_inactive",
+        "gw_free_gateways_limited",
+        "gw_whole_network"
+      ],
+      "default": "gw_inactive"
+    },
+    "apiGatewayProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "fkGatewayLa": {
+          "type": "string",
+          "format": "int64"
+        },
+        "mode": {
+          "type": "string"
+        }
+      }
+    },
     "apiGetGatewayListResponse": {
       "type": "object",
       "properties": {
@@ -115,7 +140,10 @@
       "type": "object",
       "properties": {
         "gwProfile": {
-          "type": "string"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiGatewayProfile"
+          }
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
@@ -194,15 +222,16 @@
           "format": "int64"
         },
         "gwMode": {
-          "type": "string"
+          "$ref": "#/definitions/apiGatewayMode"
         }
       }
     },
     "apiSetGatewayModeResponse": {
       "type": "object",
       "properties": {
-        "gwMode": {
-          "type": "string"
+        "status": {
+          "type": "boolean",
+          "format": "boolean"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
