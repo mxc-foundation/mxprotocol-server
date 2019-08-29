@@ -29,7 +29,7 @@ service GatewayService {
 enum GatewayMode {
     gw_inactive = 0;
     gw_free_gateways_limited = 1;
-    gw_whole_network = 3;
+    gw_whole_network = 2;
 }
 
 message GetGatewayListRequest {
