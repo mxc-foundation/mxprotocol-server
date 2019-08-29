@@ -35,7 +35,7 @@ service DeviceService {
 enum DeviceMode {
     dv_inactive = 0;
     dv_free_gateways_limited = 1;
-    dv_whole_network = 3;
+    dv_whole_network = 2;
 }
 
 message GetDeviceListRequest {
