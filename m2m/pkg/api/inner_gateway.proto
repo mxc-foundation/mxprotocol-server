@@ -4,7 +4,7 @@ package api;
 import "gateway.proto";
 import "profile.proto";
 
-service Gateway {
+service InnerGatewayService {
     rpc AddGateway (AddGatewayRequest) returns (AddGatewayResponse);
     rpc DeleteGateway (DeleteGatewayRequest) returns (DeleteGatewayResponse);
 }
