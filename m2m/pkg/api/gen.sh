@@ -4,4 +4,5 @@ GRPC_GW_PATH="${GRPC_GW_PATH}/../third_party/googleapis"
 
 # generate the gRPC code
 protoc -I. -I${GRPC_GW_PATH} -I../../api --go_out=plugins=grpc:. \
-    inner_gateway.proto
+    inner_gateway.proto \
+    inner_device.proto
