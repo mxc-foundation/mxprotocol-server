@@ -135,7 +135,6 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
           </ListItem>
-          
               <List className={this.props.classes.card}>
               <Divider />
                 <ListItem button component={LinkToLora} className={this.props.classes.static}>  

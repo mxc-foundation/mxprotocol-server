@@ -15,10 +15,9 @@ const TopNavStyle = {
     },
     flex: {
         flex: 1,
-        paddingLeft: 40,
     },
     logo: {
-        height: 32,
+        height: 48,
     },
     search: {
         marginRight: 3 * theme.spacing.unit,
