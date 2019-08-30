@@ -57,8 +57,17 @@ const theme = createMuiTheme({
         body1: {
           color: white,
         },
+        body2: {
+          color: white,
+        },
         colorTextSecondary: {
           color: white,
+        },
+        headline: {
+          color: white
+        },
+        caption: {
+          color: white
         },
       },
       MuiInput: {
@@ -114,7 +123,7 @@ const theme = createMuiTheme({
       MuiDivider: {
         root: {
           backgroundColor: '#00000040',
-          margin: '5px 10px',
+          margin: '5px 10px 5px 0px',
         },
         light: {
           backgroundColor: '#FFFFFF50',
