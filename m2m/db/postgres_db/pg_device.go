@@ -9,7 +9,7 @@ import (
 
 type Device struct {
 	id            int64     `db:"id"`
-	DevEui        string    `db:"dev_eui"`
+	DevEui        string    `db:"dev_eui"` // fk in App server
 	FkWallet      int64     `db:"fk_wallet"`
 	Mode          string    `db:"mode"`
 	CreatedAt     time.Time `db:"created_at"`
@@ -34,13 +34,13 @@ func (pgDbp *PGHandler) CreateDeviceTable() error {
 		END IF;
 			CREATE TABLE IF NOT EXISTS device (
 			id SERIAL PRIMARY KEY,
-			dev_eui VARCHAR(64),
+			dev_eui VARCHAR(64) NOT NULL,
 			fk_wallet INT REFERENCES wallet (id) NOT NULL,
 			mode DEVICE_MODE    NOT NULL,
 			created_at     TIMESTAMP,
 			last_seen_at    TIMESTAMP,
 			application_id INT    ,
-			Name  varchar(128)    
+			name  varchar(128)    
 		);
 
 		END$$;

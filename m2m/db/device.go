@@ -30,7 +30,3 @@ func DbInsertDevice(devEui string, fkWallet int64, mode DeviceMode, appId int64,
 	}
 	return pg.PgDB.InsertDevice(dv)
 }
-
-// func DbGetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
-// 	return pg.PgDB.GetWalletIdFromOrgId(orgIdLora)
-// }
