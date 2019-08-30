@@ -9,6 +9,7 @@ import theme from "../theme";
 const styles = {
   root: {
     padding: theme.spacing.unit * 2,
+    minWidth: 880
   },
 };
 
