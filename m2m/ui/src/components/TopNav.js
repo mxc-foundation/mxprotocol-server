@@ -10,6 +10,8 @@ import SessionStore from "../stores/SessionStore";
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import AccountCircle from "mdi-material-ui/AccountCircle";
+import { IconButton } from "@material-ui/core";
+import HelpCircle from "mdi-material-ui/HelpCircle";
 
 import WithdrawStore from "../stores/WithdrawStore";
 import WalletStore from "../stores/WalletStore";
@@ -159,7 +161,11 @@ class TopNav extends Component {
               <ListItemText primary={ balanceEl } classes={{ primary: this.props.classes.noPadding }}/>
             </ListItem>
           </List>
-
+          <a href="https://www.mxc.org/support" target="mxc-support">
+            <IconButton className={this.props.classes.iconButton}>
+              <HelpCircle />
+            </IconButton>
+          </a>
         </Toolbar>
       </AppBar>
     );
