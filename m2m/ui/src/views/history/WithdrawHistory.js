@@ -11,6 +11,17 @@ import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
 import { ETHER } from "../../util/Coin-type";
+import { withRouter } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = {
+  maxW140: {
+    maxWidth: 140,
+    whiteSpace: 'nowrap', 
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
+};
 
 class WithdrawHistory extends Component {
   constructor() {
@@ -65,14 +76,14 @@ class WithdrawHistory extends Component {
             header={
               <TableRow>
                 {/* <TableCell>From</TableCell> */}
-                <TableCell>To</TableCell>
+                <TableCell className={this.props.classes.maxW140}>To</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell>VMXC Amount</TableCell>
                 <TableCell>Withdraw Fee</TableCell>
                 <TableCell>TxSentTime</TableCell>
                 <TableCell>TxApprovedTime</TableCell>
                 <TableCell>TxStatus</TableCell>
-                <TableCell>TxHash</TableCell>
+                <TableCell className={this.props.classes.maxW140}>TxHash</TableCell>
                 {/* <TableCell>Date</TableCell> */}
               </TableRow>
             }
@@ -85,4 +96,4 @@ class WithdrawHistory extends Component {
   }
 }
 
-export default WithdrawHistory;
+export default withStyles(styles)(withRouter(WithdrawHistory));

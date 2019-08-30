@@ -108,7 +108,8 @@ const theme = createMuiTheme({
       }, */
       MuiTable: {
         root: {
-          background: 'transparent',
+          //background: 'transparent',
+          minWidth: 840,
         }
       },
       MuiDivider: {
@@ -129,9 +130,17 @@ const theme = createMuiTheme({
         body: {
           background: 'none',
           color: white,
+          //maxWidth: 140,
+          whiteSpace: 'nowrap', 
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
         },
         root: {
-          padding: '4px 5px'
+          padding: '4px 5px',
+          //maxWidth: 140,
+          whiteSpace: 'nowrap', 
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
         }
       },
       MuiPaper: {

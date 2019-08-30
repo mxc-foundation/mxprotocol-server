@@ -33,7 +33,7 @@ class EthAccount extends Component {
       <TableRow key={index}>
         <TableCell>{obj.addr}</TableCell>
         <TableCell>{obj.status}</TableCell>
-        <TableCell>{obj.createdAt}</TableCell>
+        <TableCell>{obj.createdAt.substring(0,19)}</TableCell>
       </TableRow>
     );
   }
