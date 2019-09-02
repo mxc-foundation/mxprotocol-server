@@ -15,6 +15,8 @@ const (
 	DELETED               DeviceMode = "DELETED"
 )
 
+type Device pg.Device
+
 func DbCreateDeviceTable() error {
 	return pg.PgDB.CreateDeviceTable()
 }
@@ -29,4 +31,32 @@ func DbInsertDevice(devEui string, fkWallet int64, mode DeviceMode, appId int64,
 		Name:          name,
 	}
 	return pg.PgDB.InsertDevice(dv)
+}
+
+func DbGetDeviceListByWallet(walletId int64) (dvList []Device, err error) {
+	return nil, nil
+}
+
+func DbGetDeviceProfile(dvId int64) (dv Device, err error) {
+	return Device{}, nil
+}
+
+func DbGetDeviceMode(dvId int64) (dvMode DeviceMode, err error) {
+	return INACTIVE, nil
+}
+
+func DbSetDeviceMode(dvId int64, dvMode DeviceMode) (err error) {
+	return nil
+}
+
+func DbDeletDevice(dvId int64) (err error) {
+	return DbSetDeviceMode(dvId, DELETED)
+}
+
+func DbGetDeviceIdByDevEui(devEui string) (devId int64, err error) {
+	return 1, nil
+}
+
+func DbUpdateDeviceLastSeen(newTime time.Time, err error) {
+
 }
