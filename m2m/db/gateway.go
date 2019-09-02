@@ -6,20 +6,22 @@ import (
 	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
 )
 
-type GatewayeMode string
+type GatewayMode string
 
 const (
-	GW_INACTIVE              GatewayeMode = "INACTIVE"
-	GW_FREE_GATEWAYS_LIMITED GatewayeMode = "FREE_GATEWAYS_LIMITED"
-	GW_WHOLE_NETWORK         GatewayeMode = "WHOLE_NETWORK"
-	GW_DELETED               GatewayeMode = "DELETED"
+	GW_INACTIVE              GatewayMode = "INACTIVE"
+	GW_FREE_GATEWAYS_LIMITED GatewayMode = "FREE_GATEWAYS_LIMITED"
+	GW_WHOLE_NETWORK         GatewayMode = "WHOLE_NETWORK"
+	GW_DELETED               GatewayMode = "DELETED"
 )
+
+type Gateway pg.Gateway
 
 func DbCreateGatewayTable() error {
 	return pg.PgDB.CreateGatewayTable()
 }
 
-func DbInsertGateway(mac string, fkGatewayNs int64, fkWallet int64, mode DeviceMode, orgId int64, description string, name string) (insertIndex int64, err error) {
+func DbInsertGateway(mac string, fkGatewayNs int64, fkWallet int64, mode GatewayMode, orgId int64, description string, name string) (insertIndex int64, err error) {
 	gw := pg.Gateway{
 		Mac:         mac,
 		FkGatewayNs: fkGatewayNs,
@@ -31,4 +33,32 @@ func DbInsertGateway(mac string, fkGatewayNs int64, fkWallet int64, mode DeviceM
 		Name:        name,
 	}
 	return pg.PgDB.InsertGateway(gw)
+}
+
+func DbGetGatewayListByWalletId(walletId int64) (gwList []Gateway, err error) {
+	return nil, nil
+}
+
+func DbGetGatewayProfile(gwId int64) (gw Gateway, err error) {
+	return Gateway{}, nil
+}
+
+func DbGetGatewayMode(gwId int64) (gwMode GatewayMode, err error) {
+	return GW_INACTIVE, nil
+}
+
+func DbSetGatewayMode(gwId int64, gwMode GatewayMode) (err error) {
+	return nil
+}
+
+func DbDeletGateway(gwId int64) (err error) {
+	return DbSetGatewayMode(gwId, GW_DELETED)
+}
+
+func DbGetGatewayIdByMac(mac string) (gwId int64, err error) {
+	return 1, nil
+}
+
+func DbUpdateGatewayLastSeen(newTime time.Time, err error) {
+
 }
