@@ -9,10 +9,10 @@ import (
 type DeviceMode string
 
 const (
-	INACTIVE              DeviceMode = "INACTIVE"
-	FREE_GATEWAYS_LIMITED DeviceMode = "FREE_GATEWAYS_LIMITED"
-	WHOLE_NETWORK         DeviceMode = "WHOLE_NETWORK"
-	DELETED               DeviceMode = "DELETED"
+	DV_INACTIVE              DeviceMode = "INACTIVE"
+	DV_FREE_GATEWAYS_LIMITED DeviceMode = "FREE_GATEWAYS_LIMITED"
+	DV_WHOLE_NETWORK         DeviceMode = "WHOLE_NETWORK"
+	DV_DELETED               DeviceMode = "DELETED"
 )
 
 type Device pg.Device
@@ -33,30 +33,43 @@ func DbInsertDevice(devEui string, fkWallet int64, mode DeviceMode, appId int64,
 	return pg.PgDB.InsertDevice(dv)
 }
 
-func DbGetDeviceListByWallet(walletId int64) (dvList []Device, err error) {
-	return nil, nil
-}
-
-func DbGetDeviceProfile(dvId int64) (dv Device, err error) {
-	return Device{}, nil
-}
-
-func DbGetDeviceMode(dvId int64) (dvMode DeviceMode, err error) {
-	return INACTIVE, nil
+func DbGetDeviceMode(dvId int64) (dvMode string, err error) {
+	return pg.PgDB.GetDeviceMode(dvId)
 }
 
 func DbSetDeviceMode(dvId int64, dvMode DeviceMode) (err error) {
-	return nil
+	return pg.PgDB.SetDeviceMode(dvId, string(dvMode))
 }
 
-func DbDeletDevice(dvId int64) (err error) {
-	return DbSetDeviceMode(dvId, DELETED)
+func DbDeleteDevice(dvId int64) (err error) {
+	return DbSetDeviceMode(dvId, DV_DELETED)
 }
 
 func DbGetDeviceIdByDevEui(devEui string) (devId int64, err error) {
-	return 1, nil
+	return pg.PgDB.GetDeviceIdByDevEui(devEui)
 }
 
-func DbUpdateDeviceLastSeen(newTime time.Time, err error) {
+func DbUpdateDeviceLastSeen(dvId int64, newTime time.Time) (err error) {
+	return pg.PgDB.UpdateDeviceLastSeen(dvId, newTime)
+}
 
+func castDeviceList(dvList []pg.Device, err error) ([]Device, error) {
+	var castedVal []Device
+	for _, v := range dvList {
+		castedVal = append(castedVal, Device(v))
+	}
+	return castedVal, err
+}
+
+func DbGetDeviceProfile(dvId int64) (Device, error) {
+	prf, err := pg.PgDB.GetDeviceProfile(dvId)
+	return Device(prf), err
+}
+
+func DbGetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []Device, err error) {
+	return castDeviceList(pg.PgDB.GetDeviceListOfWallet(walletId, offset, limit))
+}
+
+func DbGetDeviceRecCnt(walletId int64) (recCnt int64, err error) {
+	return pg.PgDB.GetDeviceRecCnt(walletId)
 }
