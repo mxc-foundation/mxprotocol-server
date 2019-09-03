@@ -8,7 +8,7 @@ import (
 )
 
 type Gateway struct {
-	id          int64     `db:"id"`
+	Id          int64     `db:"id"`
 	Mac         string    `db:"mac"` // fk in AS (App Server)
 	FkGatewayNs int64     `db:"fk_gateway_ns"`
 	FkWallet    int64     `db:"fk_wallet"`
@@ -136,4 +136,77 @@ func (pgDbp *PGHandler) UpdateGatewayLastSeen(gwId int64, newTime time.Time) (er
 		`, newTime, gwId)
 
 	return errors.Wrap(err, "db/pg_gateway/UpdateGatewayLastSeen")
+}
+
+func (pgDbp *PGHandler) GetGatewayProfile(gwId int64) (gw Gateway, err error) {
+
+	err = pgDbp.DB.QueryRow(
+		`SELECT
+			*
+		FROM
+			gateway 
+		WHERE
+			id = $1 
+		;`, gwId).Scan(
+		&gw.Id,
+		&gw.Mac,
+		&gw.FkGatewayNs,
+		&gw.FkWallet,
+		&gw.Mode,
+		&gw.CreatedAt,
+		&gw.LastSeenAt,
+		&gw.OrgId,
+		&gw.Description,
+		&gw.Name)
+	return gw, errors.Wrap(err, "db/pg_gateway/GetGatewayProfile")
+}
+
+func (pgDbp *PGHandler) GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []Gateway, err error) {
+	rows, err := pgDbp.DB.Query(
+		`SELECT
+			*
+		FROM
+			gateway 
+		WHERE
+			fk_wallet = $1 
+		ORDER BY id DESC
+		LIMIT $2 
+		OFFSET $3
+	;`, walletId, limit, offset)
+
+	defer rows.Close()
+
+	// res := make([]WithdrawHistRet, 0)
+	var gw Gateway
+
+	for rows.Next() {
+		rows.Scan(
+			&gw.Id,
+			&gw.Mac,
+			&gw.FkGatewayNs,
+			&gw.FkWallet,
+			&gw.Mode,
+			&gw.CreatedAt,
+			&gw.LastSeenAt,
+			&gw.OrgId,
+			&gw.Description,
+			&gw.Name)
+
+		gwList = append(gwList, gw)
+	}
+	return gwList, errors.Wrap(err, "db/pg_gateway/GetGatewayListOfWallet")
+}
+
+func (pgDbp *PGHandler) GetGatewayRecCnt(walletId int64) (recCnt int64, err error) {
+
+	err = pgDbp.DB.QueryRow(`
+		SELECT
+			COUNT(*)
+		FROM
+			gateway 
+		WHERE
+			fk_wallet = $1 
+	`, walletId).Scan(&recCnt)
+
+	return recCnt, errors.Wrap(err, "db/pg_gateway/GetGatewayRecCnt")
 }

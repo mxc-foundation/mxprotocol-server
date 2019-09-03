@@ -8,7 +8,7 @@ import (
 )
 
 type Device struct {
-	id            int64     `db:"id"`
+	Id            int64     `db:"id"`
 	DevEui        string    `db:"dev_eui"` // fk in App server
 	FkWallet      int64     `db:"fk_wallet"`
 	Mode          string    `db:"mode"`
@@ -140,7 +140,7 @@ func (pgDbp *PGHandler) GetDeviceProfile(dvId int64) (dv Device, err error) {
 		WHERE
 			id = $1 
 		;`, dvId).Scan(
-		&dv.id,
+		&dv.Id,
 		&dv.DevEui,
 		&dv.FkWallet,
 		&dv.Mode,
@@ -171,7 +171,7 @@ func (pgDbp *PGHandler) GetDeviceListOfWallet(walletId int64, offset int64, limi
 
 	for rows.Next() {
 		rows.Scan(
-			&dv.id,
+			&dv.Id,
 			&dv.DevEui,
 			&dv.FkWallet,
 			&dv.Mode,
@@ -197,5 +197,5 @@ func (pgDbp *PGHandler) GetDeviceRecCnt(walletId int64) (recCnt int64, err error
 			fk_wallet = $1 
 	`, walletId).Scan(&recCnt)
 
-	return recCnt, err
+	return recCnt, errors.Wrap(err, "db/pg_device/GetDeviceRecCnt")
 }
