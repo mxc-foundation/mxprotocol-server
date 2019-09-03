@@ -40,6 +40,8 @@ enum DeviceMode {
 
 message GetDeviceListRequest {
     int64 org_id = 1;
+    int64 offset = 2;
+    int64 limit = 3;
 }
 
 message GetDeviceListResponse {
@@ -50,6 +52,8 @@ message GetDeviceListResponse {
 message GetDeviceProfileRequest {
     int64 org_id = 1;
     int64 dev_id = 2;
+    int64 offset = 3;
+    int64 limit = 4;
 }
 
 message DeviceProfile {
@@ -66,6 +70,8 @@ message GetDeviceProfileResponse {
 message GetDeviceHistoryRequest {
     int64 org_id = 1;
     int64 dev_id = 2;
+    int64 offset = 3;
+    int64 limit = 4;
 }
 
 message GetDeviceHistoryResponse {
