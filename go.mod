@@ -3,7 +3,6 @@ module gitlab.com/MXCFoundation/cloud/mxprotocol-server
 go 1.12
 
 require (
-	cloud.google.com/go v0.44.3 // indirect
 	github.com/allegro/bigcache v1.2.1 // indirect
 	github.com/apilayer/freegeoip v3.5.0+incompatible // indirect
 	github.com/aristanetworks/goarista v0.0.0-20190712234253-ed1100a1c015 // indirect
@@ -20,21 +19,11 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/gobuffalo/packr v1.30.1 // indirect
 	github.com/golang/protobuf v1.3.2
-<<<<<<< HEAD
-	github.com/google/go-cmp v0.3.1 // indirect
-	github.com/google/pprof v0.0.0-20190723021845-34ac40c74b70 // indirect
-	github.com/gorilla/mux v1.7.2
-	github.com/grpc-ecosystem/grpc-gateway v1.9.6
-	github.com/hashicorp/golang-lru v0.5.3 // indirect
-	github.com/kr/pty v1.1.8 // indirect
-	github.com/lib/pq v1.0.0
-	github.com/magiconair/properties v1.8.1 // indirect
-=======
-	github.com/golang/snappy v0.0.1 // indirect
 	github.com/gorilla/mux v1.7.3
-	github.com/graph-gophers/graphql-go v0.0.0-20190724201507-010347b5f9e6 // indirect
-	github.com/grpc-ecosystem/grpc-gateway v1.9.6
-	github.com/hashicorp/golang-lru v0.5.3 // indirect
+	github.com/gorilla/websocket v1.4.1 // indirect
+	github.com/graph-gophers/graphql-go v0.0.0-20190902214650-641ae197eec7 // indirect
+	github.com/grpc-ecosystem/grpc-gateway v1.11.1
+	github.com/hashicorp/golang-lru v0.5.1 // indirect
 	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/huin/goupnp v1.0.0 // indirect
 	github.com/influxdata/influxdb v1.7.7 // indirect
@@ -44,54 +33,35 @@ require (
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mattn/go-isatty v0.0.9 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
->>>>>>> origin/aslan/feature/db-mvp
 	github.com/mattn/go-sqlite3 v1.11.0 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/nanmu42/etherscan-api v1.0.4
 	github.com/olekukonko/tablewriter v0.0.1 // indirect
-	github.com/oschwald/maxminddb-golang v1.3.1 // indirect
+	github.com/oschwald/maxminddb-golang v1.4.0 // indirect
 	github.com/pborman/uuid v1.2.0 // indirect
 	github.com/pkg/errors v0.8.1
-<<<<<<< HEAD
-	github.com/rogpeppe/fastuuid v1.2.0 // indirect
-	github.com/rs/cors v1.6.0 // indirect
-=======
+	github.com/prometheus/tsdb v0.10.0 // indirect
 	github.com/rjeczalik/notify v0.9.2 // indirect
 	github.com/rs/cors v1.7.0 // indirect
->>>>>>> origin/aslan/feature/db-mvp
-	github.com/rubenv/sql-migrate v0.0.0-20190717103323-87ce952f7079
+	github.com/rubenv/sql-migrate v0.0.0-20190902133344-8926f37f0bc1
 	github.com/sirupsen/logrus v1.4.2
 	github.com/smartystreets/assertions v1.0.1
 	github.com/spf13/cobra v0.0.5
-	github.com/spf13/viper v1.4.0
+	github.com/spf13/viper v1.3.2
 	github.com/status-im/keycard-go v0.0.0-20190424133014-d95853db0f48 // indirect
 	github.com/steakknife/bloomfilter v0.0.0-20180922174646-6819c0d2a570 // indirect
 	github.com/steakknife/hamming v0.0.0-20180906055917-c99c65617cd3 // indirect
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.3.0
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5
 	github.com/tyler-smith/go-bip39 v1.0.2 // indirect
 	github.com/wsddn/go-ecdh v0.0.0-20161211032359-48726bab9208 // indirect
 	github.com/ziutek/mymysql v1.5.4 // indirect
-<<<<<<< HEAD
-	golang.org/x/crypto v0.0.0-20190820162420-60c769a6c586 // indirect
-	golang.org/x/image v0.0.0-20190823064033-3a9bac650e44 // indirect
-	golang.org/x/mobile v0.0.0-20190823173732-30c70e3810e9 // indirect
-	golang.org/x/net v0.0.0-20190813141303-74dc4d7220e7
-	golang.org/x/sys v0.0.0-20190825160603-fb81701db80f // indirect
-	golang.org/x/tools v0.0.0-20190826060629-95c3470cfb70 // indirect
-	google.golang.org/api v0.9.0 // indirect
-=======
-	golang.org/x/net v0.0.0-20190813141303-74dc4d7220e7
-	google.golang.org/appengine v1.4.0 // indirect
->>>>>>> origin/aslan/feature/db-mvp
-	google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55
-	google.golang.org/grpc v1.23.0
+	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
+	google.golang.org/appengine v1.6.1 // indirect
+	google.golang.org/genproto v0.0.0-20190801165951-fa694d86fc64
+	google.golang.org/grpc v1.21.1
 	gopkg.in/gorp.v1 v1.7.2 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
-<<<<<<< HEAD
-	honnef.co/go/tools v0.0.1-2019.2.2 // indirect
-=======
 	gopkg.in/olebedev/go-duktape.v3 v3.0.0-20190709231704-1e4459ed25ff // indirect
->>>>>>> origin/aslan/feature/db-mvp
 )

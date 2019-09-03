@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"context"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/device"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/gateway"
 	"os"
 	"os/signal"
 	"syscall"
@@ -35,6 +37,8 @@ func run(cmd *cobra.Command, args []string) error {
 		setupWithdraw,
 		setupTopUp,
 		setupSupernode,
+		setupDevice,
+		setupGateway,
 		setupAPI,
 	}
 
@@ -118,6 +122,20 @@ func setupSupernode() error {
 func setupMoney() error {
 	if err := ext_account.Setup(); err != nil {
 		return errors.Wrap(err, "setup service ext_account error")
+	}
+	return nil
+}
+
+func setupDevice() error {
+	if err := device.Setup(); err != nil {
+		return errors.Wrap(err, "setup service device error")
+	}
+	return nil
+}
+
+func setupGateway() error {
+	if err := gateway.Setup(); err != nil {
+		return errors.Wrap(err, "setup service gateway error")
 	}
 	return nil
 }

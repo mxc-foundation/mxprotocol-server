@@ -58,12 +58,17 @@ message GetDeviceProfileRequest {
 
 message DeviceProfile {
     int64 id = 1;
-    int64 fk_device_la = 2;
-    string mode = 3;
+    string dev_eui = 2;
+    int64 fk_wallet = 3;
+    string mode = 4;
+    string created_at = 5;
+    string last_seen_at = 6;
+    int64 application_id = 7;
+    string name = 8;
 }
 
 message GetDeviceProfileResponse {
-    repeated DeviceProfile dev_profile = 1;
+    DeviceProfile dev_profile = 1;
     ProfileResponse user_profile = 2;
 }
 

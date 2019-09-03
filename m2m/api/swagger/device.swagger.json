@@ -181,11 +181,27 @@
           "type": "string",
           "format": "int64"
         },
-        "fkDeviceLa": {
+        "devEui": {
+          "type": "string"
+        },
+        "fkWallet": {
           "type": "string",
           "format": "int64"
         },
         "mode": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "lastSeenAt": {
+          "type": "string"
+        },
+        "applicationId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
           "type": "string"
         }
       }
@@ -219,10 +235,7 @@
       "type": "object",
       "properties": {
         "devProfile": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/apiDeviceProfile"
-          }
+          "$ref": "#/definitions/apiDeviceProfile"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
