@@ -8,7 +8,7 @@ import (
 )
 
 type Gateway struct {
-	id          int64     `db:"id"`
+	Id          int64     `db:"id"`
 	Mac         string    `db:"mac"` // fk in AS (App Server)
 	FkGatewayNs int64     `db:"fk_gateway_ns"`
 	FkWallet    int64     `db:"fk_wallet"`
@@ -148,7 +148,7 @@ func (pgDbp *PGHandler) GetGatewayProfile(gwId int64) (gw Gateway, err error) {
 		WHERE
 			id = $1 
 		;`, gwId).Scan(
-		&gw.id,
+		&gw.Id,
 		&gw.Mac,
 		&gw.FkGatewayNs,
 		&gw.FkWallet,
@@ -181,7 +181,7 @@ func (pgDbp *PGHandler) GetGatewayListOfWallet(walletId int64, offset int64, lim
 
 	for rows.Next() {
 		rows.Scan(
-			&gw.id,
+			&gw.Id,
 			&gw.Mac,
 			&gw.FkGatewayNs,
 			&gw.FkWallet,
