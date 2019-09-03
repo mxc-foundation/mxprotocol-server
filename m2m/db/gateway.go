@@ -35,24 +35,24 @@ func DbInsertGateway(mac string, fkGatewayNs int64, fkWallet int64, mode Gateway
 	return pg.PgDB.InsertGateway(gw)
 }
 
-func DbGetGatewayMode(gwId int64) (gwMode GatewayMode, err error) {
-	return GW_INACTIVE, nil
+func DbGetGatewayMode(gwId int64) (gwMode string, err error) {
+	return pg.PgDB.GetGatewayMode(gwId)
 }
 
 func DbSetGatewayMode(gwId int64, gwMode GatewayMode) (err error) {
-	return nil
+	return pg.PgDB.SetGatewayMode(gwId, string(gwMode))
 }
 
-func DbDeletGateway(gwId int64) (err error) {
+func DbDeleteGateway(gwId int64) (err error) {
 	return DbSetGatewayMode(gwId, GW_DELETED)
 }
 
 func DbGetGatewayIdByMac(mac string) (gwId int64, err error) {
-	return 1, nil
+	return pg.PgDB.GetGatewayIdByMac(mac)
 }
 
 func DbUpdateGatewayLastSeen(gwId int64, newTime time.Time) (err error) {
-	return nil
+	return pg.PgDB.UpdateGatewayLastSeen(gwId, newTime)
 }
 
 func DbGetGatewayProfile(gwId int64) (gw Gateway, err error) {

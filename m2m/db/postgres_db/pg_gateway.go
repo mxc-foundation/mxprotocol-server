@@ -50,7 +50,7 @@ func (pgDbp *PGHandler) CreateGatewayTable() error {
 		END$$;
 		
 	`)
-	return errors.Wrap(err, "db/CreateGateway")
+	return errors.Wrap(err, "db/pg_gateway/CreateGateway")
 }
 
 func (pgDbp *PGHandler) InsertGateway(gw Gateway) (insertIndex int64, err error) {
@@ -80,5 +80,60 @@ func (pgDbp *PGHandler) InsertGateway(gw Gateway) (insertIndex int64, err error)
 		gw.Description,
 		gw.Name,
 	).Scan(&insertIndex)
-	return insertIndex, errors.Wrap(err, "db/InsertGateway")
+	return insertIndex, errors.Wrap(err, "db/pg_gateway/InsertGateway")
+}
+
+func (pgDbp *PGHandler) GetGatewayMode(gwId int64) (gwMode string, err error) {
+	err = pgDbp.DB.QueryRow(
+		`SELECT
+			mode
+		FROM
+			gateway 
+		WHERE
+			id = $1 
+		;`, gwId).Scan(&gwMode)
+	return gwMode, errors.Wrap(err, "db/pg_gateway/GetGatewayMode")
+}
+
+func (pgDbp *PGHandler) SetGatewayMode(gwId int64, gwMode string) (err error) {
+	_, err = pgDbp.DB.Exec(`
+		UPDATE
+			gateway 
+		SET
+			mode = $1
+		WHERE
+			id = $2
+		;
+		`, gwMode, gwId)
+
+	return errors.Wrap(err, "db/pg_gateway/SetGatewayMode")
+
+}
+
+func (pgDbp *PGHandler) GetGatewayIdByMac(mac string) (gwId int64, err error) {
+	err = pgDbp.DB.QueryRow(
+		`SELECT
+			id
+		FROM
+			gateway 
+		WHERE
+			mac = $1 
+		ORDER BY id DESC 
+		LIMIT 1  
+		;`, mac).Scan(&gwId)
+	return gwId, errors.Wrap(err, "db/pg_gateway/GetGatewayIdByMac")
+}
+
+func (pgDbp *PGHandler) UpdateGatewayLastSeen(gwId int64, newTime time.Time) (err error) {
+	_, err = pgDbp.DB.Exec(`
+		UPDATE
+			gateway
+		SET
+			last_seen_at = $1
+		WHERE
+			id = $2
+		;
+		`, newTime, gwId)
+
+	return errors.Wrap(err, "db/pg_gateway/UpdateGatewayLastSeen")
 }
