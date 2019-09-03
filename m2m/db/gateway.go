@@ -35,14 +35,6 @@ func DbInsertGateway(mac string, fkGatewayNs int64, fkWallet int64, mode Gateway
 	return pg.PgDB.InsertGateway(gw)
 }
 
-func DbGetGatewayListByWalletId(walletId int64) (gwList []Gateway, err error) {
-	return nil, nil
-}
-
-func DbGetGatewayProfile(gwId int64) (gw Gateway, err error) {
-	return Gateway{}, nil
-}
-
 func DbGetGatewayMode(gwId int64) (gwMode GatewayMode, err error) {
 	return GW_INACTIVE, nil
 }
@@ -59,6 +51,27 @@ func DbGetGatewayIdByMac(mac string) (gwId int64, err error) {
 	return 1, nil
 }
 
-func DbUpdateGatewayLastSeen(newTime time.Time, err error) {
+func DbUpdateGatewayLastSeen(gwId int64, newTime time.Time) (err error) {
+	return nil
+}
 
+func DbGetGatewayProfile(gwId int64) (gw Gateway, err error) {
+	return Gateway{}, nil
+}
+
+func castGatewayList(gwList []pg.Gateway, err error) ([]Gateway, error) {
+	var castedVal []Gateway
+	for _, v := range gwList {
+		castedVal = append(castedVal, Gateway(v))
+	}
+	return castedVal, err
+}
+
+func DbGetGatewayListByWalletId(walletId int64) (gwList []Gateway, err error) {
+	return nil, nil
+}
+
+func DbGetGatewayRecCnt(walletId int64) (recCnt int64, err error) {
+	// return pg.PgDB.GetDeviceRecCnt(walletId)
+	return 1, nil
 }
