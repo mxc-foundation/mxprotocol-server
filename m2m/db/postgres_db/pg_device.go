@@ -197,5 +197,5 @@ func (pgDbp *PGHandler) GetDeviceRecCnt(walletId int64) (recCnt int64, err error
 			fk_wallet = $1 
 	`, walletId).Scan(&recCnt)
 
-	return recCnt, err
+	return recCnt, errors.Wrap(err, "db/pg_device/GetDeviceRecCnt")
 }
