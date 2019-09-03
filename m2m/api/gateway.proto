@@ -34,6 +34,8 @@ enum GatewayMode {
 
 message GetGatewayListRequest {
     int64 org_id = 1;
+    int64 offset = 2;
+    int64 limit = 3;
 }
 
 message GetGatewayListResponse {
@@ -44,6 +46,8 @@ message GetGatewayListResponse {
 message GetGatewayProfileRequest {
     int64 org_id = 1;
     int64 gw_id = 2;
+    int64 offset = 3;
+    int64 limit = 4;
 }
 
 message GatewayProfile {
