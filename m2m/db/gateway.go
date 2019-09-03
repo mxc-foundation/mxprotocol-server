@@ -56,7 +56,8 @@ func DbUpdateGatewayLastSeen(gwId int64, newTime time.Time) (err error) {
 }
 
 func DbGetGatewayProfile(gwId int64) (gw Gateway, err error) {
-	return Gateway{}, nil
+	prf, err := pg.PgDB.GetGatewayProfile(gwId)
+	return Gateway(prf), err
 }
 
 func castGatewayList(gwList []pg.Gateway, err error) ([]Gateway, error) {
@@ -67,11 +68,10 @@ func castGatewayList(gwList []pg.Gateway, err error) ([]Gateway, error) {
 	return castedVal, err
 }
 
-func DbGetGatewayListByWalletId(walletId int64) (gwList []Gateway, err error) {
-	return nil, nil
+func DbGetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []Gateway, err error) {
+	return castGatewayList(pg.PgDB.GetGatewayListOfWallet(walletId, offset, limit))
 }
 
 func DbGetGatewayRecCnt(walletId int64) (recCnt int64, err error) {
-	// return pg.PgDB.GetDeviceRecCnt(walletId)
-	return 1, nil
+	return pg.PgDB.GetGatewayRecCnt(walletId)
 }
