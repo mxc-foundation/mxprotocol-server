@@ -33,15 +33,17 @@ service DeviceService {
 }
 
 enum DeviceMode {
-    dv_inactive = 0;
-    dv_free_gateways_limited = 1;
-    dv_whole_network = 3;
+    DV_INACTIVE = 0;
+    DV_FREE_GATEWAYS_LIMITED = 1;
+    DV_WHOLE_NETWORK = 2;
+    DV_DELETED = 3;
 }
 
 message GetDeviceListRequest {
     int64 org_id = 1;
     int64 offset = 2;
     int64 limit = 3;
+    int64 wallet_id = 4;
 }
 
 message GetDeviceListResponse {
@@ -87,7 +89,7 @@ message GetDeviceHistoryResponse {
 message SetDeviceModeRequest {
     int64 org_id = 1;
     int64 dev_id = 2;
-    string dev_mode = 3;
+    DeviceMode dev_mode = 3;
 }
 
 message SetDeviceModeResponse {

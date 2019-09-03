@@ -93,6 +93,13 @@
             "required": false,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "walletId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -174,6 +181,16 @@
     }
   },
   "definitions": {
+    "apiDeviceMode": {
+      "type": "string",
+      "enum": [
+        "DV_INACTIVE",
+        "DV_FREE_GATEWAYS_LIMITED",
+        "DV_WHOLE_NETWORK",
+        "DV_DELETED"
+      ],
+      "default": "DV_INACTIVE"
+    },
     "apiDeviceProfile": {
       "type": "object",
       "properties": {
@@ -314,7 +331,7 @@
           "format": "int64"
         },
         "devMode": {
-          "type": "string"
+          "$ref": "#/definitions/apiDeviceMode"
         }
       }
     },
