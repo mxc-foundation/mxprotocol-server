@@ -15,12 +15,12 @@ func DbInsertGateway(gw types.Gateway) (insertIndex int64, err error) {
 	return pg.PgDB.InsertGateway(gw)
 }
 
-func DbGetGatewayMode(gwId int64) (gwMode string, err error) {
+func DbGetGatewayMode(gwId int64) (gwMode types.GatewayMode, err error) {
 	return pg.PgDB.GetGatewayMode(gwId)
 }
 
 func DbSetGatewayMode(gwId int64, gwMode types.GatewayMode) (err error) {
-	return pg.PgDB.SetGatewayMode(gwId, string(gwMode))
+	return pg.PgDB.SetGatewayMode(gwId, gwMode)
 }
 
 func DbDeleteGateway(gwId int64) (err error) {

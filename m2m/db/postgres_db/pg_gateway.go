@@ -71,7 +71,7 @@ func (pgDbp *PGHandler) InsertGateway(gw types.Gateway) (insertIndex int64, err 
 	return insertIndex, errors.Wrap(err, "db/pg_gateway/InsertGateway")
 }
 
-func (pgDbp *PGHandler) GetGatewayMode(gwId int64) (gwMode string, err error) {
+func (pgDbp *PGHandler) GetGatewayMode(gwId int64) (gwMode types.GatewayMode, err error) {
 	err = pgDbp.DB.QueryRow(
 		`SELECT
 			mode
@@ -83,7 +83,7 @@ func (pgDbp *PGHandler) GetGatewayMode(gwId int64) (gwMode string, err error) {
 	return gwMode, errors.Wrap(err, "db/pg_gateway/GetGatewayMode")
 }
 
-func (pgDbp *PGHandler) SetGatewayMode(gwId int64, gwMode string) (err error) {
+func (pgDbp *PGHandler) SetGatewayMode(gwId int64, gwMode types.GatewayMode) (err error) {
 	_, err = pgDbp.DB.Exec(`
 		UPDATE
 			gateway 
