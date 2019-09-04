@@ -1,21 +1,10 @@
 package postgres_db
 
 import (
-	"time"
-
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
-
-type DlPkt struct {
-	Id        int64     `db:"id"`
-	FkDevice  int64     `db:"dev_eui"` // fk in App server
-	FkGateway int64     `db:"fk_gateway"`
-	Nonce     int64     `db:"nonce"`
-	SentAt    time.Time `db:"sent_at"`
-	Size      float64   `db:"size"`
-	Category  string    `db:"category"`
-}
 
 func (pgDbp *PGHandler) CreateDlPktTable() error {
 	_, err := pgDbp.DB.Exec(`
@@ -47,7 +36,7 @@ func (pgDbp *PGHandler) CreateDlPktTable() error {
 	return errors.Wrap(err, "db/pg_dl_pkt/CreateDlPktTable")
 }
 
-func (pgDbp *PGHandler) InsertDlPkt(dlPkt DlPkt) (insertIndex int64, err error) {
+func (pgDbp *PGHandler) InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err error) {
 	err = pgDbp.DB.QueryRow(`
 		INSERT INTO dl_pkt (
 			fk_device,
