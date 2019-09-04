@@ -7,43 +7,24 @@ import (
 	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-// testing separated branch
-
-type DeviceMode string
-
-const (
-	DV_INACTIVE              DeviceMode = "INACTIVE"
-	DV_FREE_GATEWAYS_LIMITED DeviceMode = "FREE_GATEWAYS_LIMITED"
-	DV_WHOLE_NETWORK         DeviceMode = "WHOLE_NETWORK"
-	DV_DELETED               DeviceMode = "DELETED"
-)
-
 func DbCreateDeviceTable() error {
 	return pg.PgDB.CreateDeviceTable()
 }
 
-func DbInsertDevice(devEui string, fkWallet int64, mode DeviceMode, appId int64, name string) (insertIndex int64, err error) {
-	dv := types.Device{
-		DevEui:        devEui,
-		FkWallet:      fkWallet,
-		Mode:          string(mode),
-		CreatedAt:     time.Now().UTC(),
-		ApplicationId: appId,
-		Name:          name,
-	}
+func DbInsertDevice(dv types.Device) (insertIndex int64, err error) {
 	return pg.PgDB.InsertDevice(dv)
 }
 
-func DbGetDeviceMode(dvId int64) (dvMode string, err error) {
+func DbGetDeviceMode(dvId int64) (dvMode types.DeviceMode, err error) {
 	return pg.PgDB.GetDeviceMode(dvId)
 }
 
-func DbSetDeviceMode(dvId int64, dvMode DeviceMode) (err error) {
-	return pg.PgDB.SetDeviceMode(dvId, string(dvMode))
+func DbSetDeviceMode(dvId int64, dvMode types.DeviceMode) (err error) {
+	return pg.PgDB.SetDeviceMode(dvId, dvMode)
 }
 
 func DbDeleteDevice(dvId int64) (err error) {
-	return DbSetDeviceMode(dvId, DV_DELETED)
+	return DbSetDeviceMode(dvId, types.DV_DELETED)
 }
 
 func DbGetDeviceIdByDevEui(devEui string) (devId int64, err error) {

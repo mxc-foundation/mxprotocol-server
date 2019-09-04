@@ -65,7 +65,7 @@ func (pgDbp *PGHandler) InsertDevice(dv types.Device) (insertIndex int64, err er
 	return insertIndex, errors.Wrap(err, "db/pg_device/InsertDevice")
 }
 
-func (pgDbp *PGHandler) GetDeviceMode(dvId int64) (dvMode string, err error) {
+func (pgDbp *PGHandler) GetDeviceMode(dvId int64) (dvMode types.DeviceMode, err error) {
 	err = pgDbp.DB.QueryRow(
 		`SELECT
 			mode
@@ -77,7 +77,7 @@ func (pgDbp *PGHandler) GetDeviceMode(dvId int64) (dvMode string, err error) {
 	return dvMode, errors.Wrap(err, "db/pg_device/GetDeviceMode")
 }
 
-func (pgDbp *PGHandler) SetDeviceMode(dvId int64, dvMode string) (err error) {
+func (pgDbp *PGHandler) SetDeviceMode(dvId int64, dvMode types.DeviceMode) (err error) {
 	_, err = pgDbp.DB.Exec(`
 		UPDATE
 			device 
