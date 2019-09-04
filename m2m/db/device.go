@@ -4,7 +4,10 @@ import (
 	"time"
 
 	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
+	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
+
+// testing separated branch
 
 type DeviceMode string
 
@@ -15,14 +18,12 @@ const (
 	DV_DELETED               DeviceMode = "DELETED"
 )
 
-type Device pg.Device
-
 func DbCreateDeviceTable() error {
 	return pg.PgDB.CreateDeviceTable()
 }
 
 func DbInsertDevice(devEui string, fkWallet int64, mode DeviceMode, appId int64, name string) (insertIndex int64, err error) {
-	dv := pg.Device{
+	dv := types.Device{
 		DevEui:        devEui,
 		FkWallet:      fkWallet,
 		Mode:          string(mode),
@@ -53,21 +54,12 @@ func DbUpdateDeviceLastSeen(dvId int64, newTime time.Time) (err error) {
 	return pg.PgDB.UpdateDeviceLastSeen(dvId, newTime)
 }
 
-func castDeviceList(dvList []pg.Device, err error) ([]Device, error) {
-	var castedVal []Device
-	for _, v := range dvList {
-		castedVal = append(castedVal, Device(v))
-	}
-	return castedVal, err
+func DbGetDeviceProfile(dvId int64) (types.Device, error) {
+	return pg.PgDB.GetDeviceProfile(dvId)
 }
 
-func DbGetDeviceProfile(dvId int64) (Device, error) {
-	prf, err := pg.PgDB.GetDeviceProfile(dvId)
-	return Device(prf), err
-}
-
-func DbGetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []Device, err error) {
-	return castDeviceList(pg.PgDB.GetDeviceListOfWallet(walletId, offset, limit))
+func DbGetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error) {
+	return pg.PgDB.GetDeviceListOfWallet(walletId, offset, limit)
 }
 
 func DbGetDeviceRecCnt(walletId int64) (recCnt int64, err error) {
