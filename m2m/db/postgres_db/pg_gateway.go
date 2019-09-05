@@ -5,20 +5,8 @@ import (
 
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
-
-type Gateway struct {
-	Id          int64     `db:"id"`
-	Mac         string    `db:"mac"` // fk in AS (App Server)
-	FkGatewayNs int64     `db:"fk_gateway_ns"`
-	FkWallet    int64     `db:"fk_wallet"`
-	Mode        string    `db:"mode"`
-	CreatedAt   time.Time `db:"created_at"`
-	LastSeenAt  time.Time `db:"last_seen_at"`
-	OrgId       int64     `db:"org_id"`
-	Description string    `db:"description"`
-	Name        string    `db:"name"`
-}
 
 func (pgDbp *PGHandler) CreateGatewayTable() error {
 	_, err := pgDbp.DB.Exec(`
@@ -53,7 +41,7 @@ func (pgDbp *PGHandler) CreateGatewayTable() error {
 	return errors.Wrap(err, "db/pg_gateway/CreateGateway")
 }
 
-func (pgDbp *PGHandler) InsertGateway(gw Gateway) (insertIndex int64, err error) {
+func (pgDbp *PGHandler) InsertGateway(gw types.Gateway) (insertIndex int64, err error) {
 	err = pgDbp.DB.QueryRow(`
 		INSERT INTO gateway (
 			mac ,
@@ -83,7 +71,7 @@ func (pgDbp *PGHandler) InsertGateway(gw Gateway) (insertIndex int64, err error)
 	return insertIndex, errors.Wrap(err, "db/pg_gateway/InsertGateway")
 }
 
-func (pgDbp *PGHandler) GetGatewayMode(gwId int64) (gwMode string, err error) {
+func (pgDbp *PGHandler) GetGatewayMode(gwId int64) (gwMode types.GatewayMode, err error) {
 	err = pgDbp.DB.QueryRow(
 		`SELECT
 			mode
@@ -95,7 +83,7 @@ func (pgDbp *PGHandler) GetGatewayMode(gwId int64) (gwMode string, err error) {
 	return gwMode, errors.Wrap(err, "db/pg_gateway/GetGatewayMode")
 }
 
-func (pgDbp *PGHandler) SetGatewayMode(gwId int64, gwMode string) (err error) {
+func (pgDbp *PGHandler) SetGatewayMode(gwId int64, gwMode types.GatewayMode) (err error) {
 	_, err = pgDbp.DB.Exec(`
 		UPDATE
 			gateway 
@@ -138,7 +126,7 @@ func (pgDbp *PGHandler) UpdateGatewayLastSeen(gwId int64, newTime time.Time) (er
 	return errors.Wrap(err, "db/pg_gateway/UpdateGatewayLastSeen")
 }
 
-func (pgDbp *PGHandler) GetGatewayProfile(gwId int64) (gw Gateway, err error) {
+func (pgDbp *PGHandler) GetGatewayProfile(gwId int64) (gw types.Gateway, err error) {
 
 	err = pgDbp.DB.QueryRow(
 		`SELECT
@@ -161,7 +149,7 @@ func (pgDbp *PGHandler) GetGatewayProfile(gwId int64) (gw Gateway, err error) {
 	return gw, errors.Wrap(err, "db/pg_gateway/GetGatewayProfile")
 }
 
-func (pgDbp *PGHandler) GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []Gateway, err error) {
+func (pgDbp *PGHandler) GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {
 	rows, err := pgDbp.DB.Query(
 		`SELECT
 			*
@@ -176,8 +164,7 @@ func (pgDbp *PGHandler) GetGatewayListOfWallet(walletId int64, offset int64, lim
 
 	defer rows.Close()
 
-	// res := make([]WithdrawHistRet, 0)
-	var gw Gateway
+	var gw types.Gateway
 
 	for rows.Next() {
 		rows.Scan(
