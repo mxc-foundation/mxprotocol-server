@@ -6,6 +6,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -55,7 +56,7 @@ func (s *DeviceServerAPI) GetDeviceList(ctx context.Context, req *api.GetDeviceL
 			dvProfile.Id = v.Id
 			dvProfile.DevEui = v.DevEui
 			dvProfile.FkWallet = v.FkWallet
-			dvProfile.Mode = v.Mode
+			dvProfile.Mode = string(v.Mode)
 			dvProfile.CreatedAt = v.CreatedAt.String()
 			dvProfile.LastSeenAt = v.LastSeenAt.String()
 			dvProfile.ApplicationId = v.ApplicationId
@@ -101,15 +102,13 @@ func (s *DeviceServerAPI) GetDeviceProfile(ctx context.Context, req *api.GetDevi
 			Id:devProfile.Id,
 			DevEui:devProfile.DevEui,
 			FkWallet:devProfile.FkWallet,
-			Mode:devProfile.Mode,
+			Mode:string(devProfile.Mode),
 			CreatedAt:devProfile.CreatedAt.String(),
 			LastSeenAt:devProfile.LastSeenAt.String(),
 			ApplicationId:devProfile.ApplicationId,
 			Name:devProfile.Name,
 		}
 
-		//var devProfileArray []db.Device
-		//devProfileArray = append(devProfileArray,devProfile)
 		return &api.GetDeviceProfileResponse{UserProfile: &userProfile, DevProfile: &resp}, nil
 	}
 
@@ -158,22 +157,22 @@ func (s *DeviceServerAPI) SetDeviceMode(ctx context.Context, req *api.SetDeviceM
 
 		switch req.DevMode.String() {
 		case "DV_INACTIVE":
-			if err := db.DbSetDeviceMode(req.DevId, db.DV_INACTIVE); err != nil {
+			if err := db.DbSetDeviceMode(req.DevId, types.DV_INACTIVE); err != nil {
 			log.WithError(err).Error("grpc_api/SetDeviceMode")
 			return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
 		}
 		case "DV_FREE_GATEWAYS_LIMITED":
-			if err := db.DbSetDeviceMode(req.DevId, db.DV_FREE_GATEWAYS_LIMITED); err != nil {
+			if err := db.DbSetDeviceMode(req.DevId, types.DV_FREE_GATEWAYS_LIMITED); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
 		case "DV_WHOLE_NETWORK":
-			if err := db.DbSetDeviceMode(req.DevId, db.DV_WHOLE_NETWORK); err != nil {
+			if err := db.DbSetDeviceMode(req.DevId, types.DV_WHOLE_NETWORK); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
 		case "DV_DELETED":
-			if err := db.DbSetDeviceMode(req.DevId, db.DV_DELETED); err != nil {
+			if err := db.DbSetDeviceMode(req.DevId, types.DV_DELETED); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
