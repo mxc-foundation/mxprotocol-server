@@ -345,5 +345,5 @@ func (pgDbp *PGHandler) GetExtAcntHistRecCnt(walletId int64) (recCnt int64, err 
 		;
 	`, walletId).Scan(&recCnt)
 
-	return recCnt, err
+	return recCnt, errors.Wrap(err, "db/GetExtAcntHistRecCnt")
 }
