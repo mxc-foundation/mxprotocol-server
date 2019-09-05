@@ -6,8 +6,11 @@ import (
 	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-func (pgDbp *PGHandler) CreateAggDvUsgTable() error {
-	_, err := pgDbp.DB.Exec(`
+type aggDeviceUsageInterface struct {}
+var PgAggDeviceUsage aggDeviceUsageInterface
+
+func  (*aggDeviceUsageInterface)CreateAggDvUsgTable() error {
+	_, err := PgDB.Exec(`
 	
 		CREATE TABLE IF NOT EXISTS agg_device_usage (
 			id SERIAL PRIMARY KEY,
@@ -27,8 +30,8 @@ func (pgDbp *PGHandler) CreateAggDvUsgTable() error {
 	return errors.Wrap(err, "db/pg_agg_device_usage/CreateAggDvUsgTable")
 }
 
-func (pgDbp *PGHandler) InsertAggDvUsg(adu types.AggDvUsg) (insertIndex int64, err error) {
-	err = pgDbp.DB.QueryRow(`
+func  (* aggDeviceUsageInterface)InsertAggDvUsg(adu types.AggDvUsg) (insertIndex int64, err error) {
+	err = PgDB.QueryRow(`
 		INSERT INTO agg_device_usage (
 			fk_device ,
 			fk_agg_wallet_usage ,

@@ -1,29 +1,19 @@
 package db
 
 import (
-	"database/sql"
-	migrate "github.com/rubenv/sql-migrate"
-	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/migrations"
-	"time"
-
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+	migrate "github.com/rubenv/sql-migrate"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/migrations"
 )
 
 func Setup(conf config.MxpConfig) error {
-	dbp, err := openPostgresDBWithPing(conf)
-	var db DBHandler
-	i = &pg.PgDB
+	i = &dbM2M
+	err := openDB(i, conf)
 	if err != nil {
 		return err
-	} else {
-		db = addDB(i, dbp)
-		if db.DB == nil {
-			return errors.New("db/Setup: wrong db driver")
-		}
 	}
 
 	dbInit()
@@ -35,7 +25,7 @@ func Setup(conf config.MxpConfig) error {
 			AssetDir: migrations.AssetDir,
 			Dir:      "",
 		}
-		n, err := migrate.Exec(db.DB, "postgres", m, migrate.Up)
+		n, err := migrate.Exec(dbM2M.DB, "postgres", m, migrate.Up)
 		if err != nil {
 			return errors.Wrap(err, "db/applying PostgreSQL data migrations error")
 		}
@@ -45,27 +35,6 @@ func Setup(conf config.MxpConfig) error {
 	return nil
 }
 
-func openPostgresDBWithPing(conf config.MxpConfig) (*sql.DB, error) {
-	log.Debug("db/connect_db")
-
-	d, err := sql.Open("postgres", conf.PostgreSQL.DSN)
-	if err != nil {
-		log.WithError(err).Error("db/connect_db")
-		return nil, err
-	}
-	for i := 0; i <= 3; i++ {
-		if err := d.Ping(); err != nil {
-			log.WithError(err).Warning("db/ping_db")
-			time.Sleep(2 * time.Second) // to be modified
-		} else {
-			return d, nil
-		}
-	}
-
-	err = errors.New("db/ping_db: failed")
-	log.Error(err)
-	return nil, err
-}
 
 func dbInit() {
 	dbErrorInit()

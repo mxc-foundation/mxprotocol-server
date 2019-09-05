@@ -5,9 +5,9 @@ import (
 )
 
 func dbCreateInternalTxTable() error {
-	return pg.PgDB.CreateInternalTxTable()
+	return pg.CreateInternalTxTable()
 }
 
 func DbInsertInternalTx(it pg.InternalTx) (insertIndex int64, err error) {
-	return pg.PgDB.InsertInternalTx(it)
+	return pg.InsertInternalTx(it)
 }

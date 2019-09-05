@@ -4,23 +4,37 @@ import (
 	"time"
 
 	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
-	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
+type deviceDBInterface interface {
+	CreateDeviceTable() error
+	InsertDevice(dv types.Device) (insertIndex int64, err error)
+	GetDeviceMode(dvId int64) (dvMode types.DeviceMode, err error)
+	SetDeviceMode(dvId int64, dvMode types.DeviceMode) (err error)
+	GetDeviceIdByDevEui(devEui string) (devId int64, err error)
+	UpdateDeviceLastSeen(dvId int64, newTime time.Time) (err error)
+	GetDeviceProfile(dvId int64) (dv types.Device, err error)
+	GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error)
+	GetDeviceRecCnt(walletId int64) (recCnt int64, err error)
+}
+var device deviceDBInterface
+
 func DbCreateDeviceTable() error {
-	return pg.PgDB.CreateDeviceTable()
+	device = &pg.PgDevice
+	return device.CreateDeviceTable()
 }
 
 func DbInsertDevice(dv types.Device) (insertIndex int64, err error) {
-	return pg.PgDB.InsertDevice(dv)
+	return device.InsertDevice(dv)
 }
 
 func DbGetDeviceMode(dvId int64) (dvMode types.DeviceMode, err error) {
-	return pg.PgDB.GetDeviceMode(dvId)
+	return device.GetDeviceMode(dvId)
 }
 
 func DbSetDeviceMode(dvId int64, dvMode types.DeviceMode) (err error) {
-	return pg.PgDB.SetDeviceMode(dvId, dvMode)
+	return device.SetDeviceMode(dvId, dvMode)
 }
 
 func DbDeleteDevice(dvId int64) (err error) {
@@ -28,21 +42,21 @@ func DbDeleteDevice(dvId int64) (err error) {
 }
 
 func DbGetDeviceIdByDevEui(devEui string) (devId int64, err error) {
-	return pg.PgDB.GetDeviceIdByDevEui(devEui)
+	return device.GetDeviceIdByDevEui(devEui)
 }
 
 func DbUpdateDeviceLastSeen(dvId int64, newTime time.Time) (err error) {
-	return pg.PgDB.UpdateDeviceLastSeen(dvId, newTime)
+	return device.UpdateDeviceLastSeen(dvId, newTime)
 }
 
 func DbGetDeviceProfile(dvId int64) (types.Device, error) {
-	return pg.PgDB.GetDeviceProfile(dvId)
+	return device.GetDeviceProfile(dvId)
 }
 
 func DbGetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error) {
-	return pg.PgDB.GetDeviceListOfWallet(walletId, offset, limit)
+	return device.GetDeviceListOfWallet(walletId, offset, limit)
 }
 
 func DbGetDeviceRecCnt(walletId int64) (recCnt int64, err error) {
-	return pg.PgDB.GetDeviceRecCnt(walletId)
+	return device.GetDeviceRecCnt(walletId)
 }

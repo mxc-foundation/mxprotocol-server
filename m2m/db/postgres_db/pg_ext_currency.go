@@ -12,8 +12,8 @@ type ExtCurrency struct {
 	Abv  string `db:"abv"`
 }
 
-func (pgDbp *PGHandler) CreateExtCurrencyTable() error {
-	_, err := pgDbp.DB.Exec(`
+func  CreateExtCurrencyTable() error {
+	_, err := PgDB.Exec(`
 		CREATE TABLE IF NOT EXISTS 
 		ext_currency (
 			id SERIAL PRIMARY KEY,
@@ -24,12 +24,12 @@ func (pgDbp *PGHandler) CreateExtCurrencyTable() error {
 	return errors.Wrap(err, "db/CreateExtCurrencyTable")
 }
 
-func (pgDbp *PGHandler) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
+func  InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
 	log.WithFields(log.Fields{
 		"name": ec.Name,
 		"abbr": ec.Abv,
 	}).Info("/db/ext_currency_interface: insert ext_currency")
-	err = pgDbp.DB.QueryRow(`
+	err = PgDB.QueryRow(`
 	INSERT INTO ext_currency (
 		name ,
 		abv)
@@ -46,9 +46,9 @@ func (pgDbp *PGHandler) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err er
 	return insertIndex, errors.Wrap(err, "db/InsertExtCurr")
 }
 
-func (pgDbp *PGHandler) GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
+func  GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
 	var extCurrencyId int64
-	err := pgDbp.DB.QueryRow(`
+	err := PgDB.QueryRow(`
 		select id 
 		from 
 			ext_currency 

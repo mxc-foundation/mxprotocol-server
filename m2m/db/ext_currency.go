@@ -29,13 +29,13 @@ func initExtCurrencyTable() error {
 }
 
 func dbCreateExtCurrencyTable() error {
-	return pg.PgDB.CreateExtCurrencyTable()
+	return pg.CreateExtCurrencyTable()
 }
 
 func dbInsertExtCurr(ec pg.ExtCurrency) (insertIndex int64, err error) {
-	return pg.PgDB.InsertExtCurr(ec)
+	return pg.InsertExtCurr(ec)
 }
 
 func DbGetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
-	return pg.PgDB.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
+	return pg.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
 }

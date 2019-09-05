@@ -5,11 +5,14 @@ import (
 
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
-	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-func (pgDbp *PGHandler) CreateDeviceTable() error {
-	_, err := pgDbp.DB.Exec(`
+type deviceInterface struct {}
+var PgDevice deviceInterface
+
+func  (*deviceInterface)CreateDeviceTable() error {
+	_, err := PgDB.Exec(`
 		DO $$
 		BEGIN
 			IF NOT EXISTS 
@@ -39,8 +42,8 @@ func (pgDbp *PGHandler) CreateDeviceTable() error {
 	return errors.Wrap(err, "db/pg_device/CreateDevice")
 }
 
-func (pgDbp *PGHandler) InsertDevice(dv types.Device) (insertIndex int64, err error) {
-	err = pgDbp.DB.QueryRow(`
+func  (*deviceInterface)InsertDevice(dv types.Device) (insertIndex int64, err error) {
+	err = PgDB.QueryRow(`
 		INSERT INTO device (
 			dev_eui ,
 			fk_wallet,
@@ -65,8 +68,8 @@ func (pgDbp *PGHandler) InsertDevice(dv types.Device) (insertIndex int64, err er
 	return insertIndex, errors.Wrap(err, "db/pg_device/InsertDevice")
 }
 
-func (pgDbp *PGHandler) GetDeviceMode(dvId int64) (dvMode types.DeviceMode, err error) {
-	err = pgDbp.DB.QueryRow(
+func  (*deviceInterface)GetDeviceMode(dvId int64) (dvMode types.DeviceMode, err error) {
+	err = PgDB.QueryRow(
 		`SELECT
 			mode
 		FROM
@@ -77,8 +80,8 @@ func (pgDbp *PGHandler) GetDeviceMode(dvId int64) (dvMode types.DeviceMode, err 
 	return dvMode, errors.Wrap(err, "db/pg_device/GetDeviceMode")
 }
 
-func (pgDbp *PGHandler) SetDeviceMode(dvId int64, dvMode types.DeviceMode) (err error) {
-	_, err = pgDbp.DB.Exec(`
+func  (*deviceInterface)SetDeviceMode(dvId int64, dvMode types.DeviceMode) (err error) {
+	_, err = PgDB.Exec(`
 		UPDATE
 			device 
 		SET
@@ -92,8 +95,8 @@ func (pgDbp *PGHandler) SetDeviceMode(dvId int64, dvMode types.DeviceMode) (err 
 
 }
 
-func (pgDbp *PGHandler) GetDeviceIdByDevEui(devEui string) (devId int64, err error) {
-	err = pgDbp.DB.QueryRow(
+func  (*deviceInterface)GetDeviceIdByDevEui(devEui string) (devId int64, err error) {
+	err = PgDB.QueryRow(
 		`SELECT
 			id
 		FROM
@@ -106,8 +109,8 @@ func (pgDbp *PGHandler) GetDeviceIdByDevEui(devEui string) (devId int64, err err
 	return devId, errors.Wrap(err, "db/pg_device/GetDeviceIdByDevEui")
 }
 
-func (pgDbp *PGHandler) UpdateDeviceLastSeen(dvId int64, newTime time.Time) (err error) {
-	_, err = pgDbp.DB.Exec(`
+func  (*deviceInterface)UpdateDeviceLastSeen(dvId int64, newTime time.Time) (err error) {
+	_, err = PgDB.Exec(`
 		UPDATE
 			device 
 		SET
@@ -120,9 +123,9 @@ func (pgDbp *PGHandler) UpdateDeviceLastSeen(dvId int64, newTime time.Time) (err
 	return errors.Wrap(err, "db/pg_device/UpdateDeviceLastSeen")
 }
 
-func (pgDbp *PGHandler) GetDeviceProfile(dvId int64) (dv types.Device, err error) {
+func  (*deviceInterface)GetDeviceProfile(dvId int64) (dv types.Device, err error) {
 
-	err = pgDbp.DB.QueryRow(
+	err = PgDB.QueryRow(
 		`SELECT
 			*
 		FROM
@@ -141,8 +144,8 @@ func (pgDbp *PGHandler) GetDeviceProfile(dvId int64) (dv types.Device, err error
 	return dv, errors.Wrap(err, "db/pg_device/GetDeviceProfile")
 }
 
-func (pgDbp *PGHandler) GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error) {
-	rows, err := pgDbp.DB.Query(
+func  (*deviceInterface)GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error) {
+	rows, err := PgDB.Query(
 		`SELECT
 			*
 		FROM
@@ -176,9 +179,9 @@ func (pgDbp *PGHandler) GetDeviceListOfWallet(walletId int64, offset int64, limi
 	return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
 }
 
-func (pgDbp *PGHandler) GetDeviceRecCnt(walletId int64) (recCnt int64, err error) {
+func  (*deviceInterface)GetDeviceRecCnt(walletId int64) (recCnt int64, err error) {
 
-	err = pgDbp.DB.QueryRow(`
+	err = PgDB.QueryRow(`
 		SELECT
 			COUNT(*)
 		FROM

@@ -11,8 +11,20 @@ const (
 	SUPER_ADMIN WalletType = "SUPER_ADMIN"
 )
 
+type walletDBInterface interface {
+	CreateWalletTable() error
+	InsertWallet(w pg.Wallet) (insertIndex int64, err error)
+	GetWalletIdFromOrgId(orgIdLora int64) (int64, error)
+	GetWalletBalance(walletId int64) (float64, error)
+	GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error)
+	GetWalletIdSuperNode() (walletId int64, err error)
+	UpdateBalanceByWalletId(walletId int64, newBalance float64) error
+}
+var wallet walletDBInterface
+
 func dbCreateWalletTable() error {
-	return pg.PgDB.CreateWalletTable()
+	wallet = &pg.PgWallet
+	return wallet.CreateWalletTable()
 }
 
 func DbInsertWallet(orgId int64, walletType WalletType) (insertIndex int64, err error) {
@@ -21,21 +33,21 @@ func DbInsertWallet(orgId int64, walletType WalletType) (insertIndex int64, err 
 		TypeW:   string(walletType),
 		Balance: 0.0,
 	}
-	return pg.PgDB.InsertWallet(w)
+	return wallet.InsertWallet(w)
 }
 
 func DbGetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
-	return pg.PgDB.GetWalletIdFromOrgId(orgIdLora)
+	return wallet.GetWalletIdFromOrgId(orgIdLora)
 }
 
 func DbGetWalletBalance(walletId int64) (float64, error) {
-	return pg.PgDB.GetWalletBalance(walletId)
+	return wallet.GetWalletBalance(walletId)
 }
 
 func DbUpdateBalanceByWalletId(walletId int64, newBalance float64) error {
-	return pg.PgDB.UpdateBalanceByWalletId(walletId, newBalance)
+	return wallet.UpdateBalanceByWalletId(walletId, newBalance)
 }
 
 func DbGetWalletIdSuperNode() (walletId int64, err error) {
-	return pg.PgDB.GetWalletIdSuperNode()
+	return wallet.GetWalletIdSuperNode()
 }

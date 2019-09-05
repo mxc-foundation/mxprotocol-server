@@ -8,6 +8,9 @@ import (
 	"github.com/pkg/errors"
 )
 
+type topupInterface struct{}
+var PgTopup topupInterface
+
 type Topup struct {
 	Id              int64     `db:"id"`
 	FkExtAcntSender int64     `db:"fk_ext_account_sender"`
@@ -27,8 +30,8 @@ type TopupHistRet struct {
 	TxHash      string
 }
 
-func (pgDbp *PGHandler) CreateTopupTable() error {
-	_, err := pgDbp.DB.Exec(`
+func (*topupInterface)CreateTopupTable() error {
+	_, err := PgDB.Exec(`
 	CREATE TABLE IF NOT EXISTS topup (
 		id SERIAL PRIMARY KEY,
 		fk_ext_account_sender INT REFERENCES  ext_account(id) NOT NULL,
@@ -42,8 +45,8 @@ func (pgDbp *PGHandler) CreateTopupTable() error {
 	return errors.Wrap(err, "db/CreateTopupTable")
 }
 
-func (pgDbp *PGHandler) insertTopup(tu Topup) (insertIndex int64, err error) {
-	err = pgDbp.DB.QueryRow(`
+func  insertTopup(tu Topup) (insertIndex int64, err error) {
+	err = PgDB.QueryRow(`
 		INSERT INTO topup (
 			fk_ext_account_sender,
 			fk_ext_account_receiver,
@@ -67,8 +70,8 @@ func (pgDbp *PGHandler) insertTopup(tu Topup) (insertIndex int64, err error) {
 	return insertIndex, errors.Wrap(err, "db/InsertTopup")
 }
 
-func (pgDbp *PGHandler) CreateTopupFunctions() error {
-	_, err := pgDbp.DB.Exec(`
+func  (*topupInterface)CreateTopupFunctions() error {
+	_, err := PgDB.Exec(`
 
 	CREATE OR REPLACE FUNCTION topup_req_apply (
 			v_fk_ext_account_sender INT,
@@ -141,8 +144,8 @@ func (pgDbp *PGHandler) CreateTopupFunctions() error {
 	return errors.Wrap(err, "db/CreateTopupFunctions")
 }
 
-func (pgDbp *PGHandler) applyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
-	err = pgDbp.DB.QueryRow(`
+func  applyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
+	err = PgDB.QueryRow(`
 		SELECT topup_req_apply($1,$2,$3,$4,$5,$6,$7,$8,$9);
 		
 	`, tu.FkExtAcntSender,
@@ -159,7 +162,7 @@ func (pgDbp *PGHandler) applyTopup(tu Topup, it InternalTx) (topupId int64, err 
 
 }
 
-func (pgDbp *PGHandler) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string, txHash string, value float64, extCurAbv string) (topupId int64, err error) {
+func  (*topupInterface)AddTopUpRequest(acntAdrSender string, acntAdrRcvr string, txHash string, value float64, extCurAbv string) (topupId int64, err error) {
 
 	tu := Topup{
 		Value:       value,
@@ -167,17 +170,17 @@ func (pgDbp *PGHandler) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string
 		TxHash:      txHash,
 	}
 
-	tu.FkExtAcntSender, err = pgDbp.GetExtAccountIdByAdr(acntAdrSender, extCurAbv)
+	tu.FkExtAcntSender, err = GetExtAccountIdByAdr(acntAdrSender, extCurAbv)
 	if err != nil {
 		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
 
-	tu.FkExtAcntRcvr, err = pgDbp.GetExtAccountIdByAdr(acntAdrRcvr, extCurAbv)
+	tu.FkExtAcntRcvr, err = GetExtAccountIdByAdr(acntAdrRcvr, extCurAbv)
 	if err != nil {
 		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
 
-	tu.FkExtCurr, err = pgDbp.GetExtCurrencyIdByAbbr(extCurAbv)
+	tu.FkExtCurr, err = GetExtCurrencyIdByAbbr(extCurAbv)
 	if err != nil {
 		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
@@ -186,23 +189,24 @@ func (pgDbp *PGHandler) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string
 		PaymentCat: string(TOP_UP),
 	}
 
-	it.FkWalletRcvr, err = pgDbp.GetWalletIdofActiveAcnt(acntAdrSender, extCurAbv)
+
+	it.FkWalletRcvr, err = PgWallet.GetWalletIdofActiveAcnt(acntAdrSender, extCurAbv)
 	if err != nil {
 		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
 
-	it.FkWalletSender, err = pgDbp.getWalletIdofActiveAcntSuperAdmin(acntAdrRcvr, extCurAbv)
+	it.FkWalletSender, err = getWalletIdofActiveAcntSuperAdmin(acntAdrRcvr, extCurAbv)
 	if err != nil {
 		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
 
-	return pgDbp.applyTopup(tu, it)
+	return applyTopup(tu, it)
 
 }
 
-func (pgDbp *PGHandler) GetTopupHist(walletId int64, offset int64, limit int64) ([]TopupHistRet, error) {
+func  (*topupInterface)GetTopupHist(walletId int64, offset int64, limit int64) ([]TopupHistRet, error) {
 
-	rows, err := pgDbp.DB.Query(
+	rows, err := PgDB.Query(
 		`SELECT
 			ea.account_adr AS sender_adr, 
 			ea2.account_adr AS receiver_adr, 
@@ -254,9 +258,9 @@ func (pgDbp *PGHandler) GetTopupHist(walletId int64, offset int64, limit int64) 
 	return res, errors.Wrap(err, "db/GetTopupHist")
 }
 
-func (pgDbp *PGHandler) GetTopupHistRecCnt(walletId int64) (recCnt int64, err error) {
+func  (*topupInterface)GetTopupHistRecCnt(walletId int64) (recCnt int64, err error) {
 
-	err = pgDbp.DB.QueryRow(`
+	err = PgDB.QueryRow(`
 	SELECT
 		COUNT (*)
 	FROM

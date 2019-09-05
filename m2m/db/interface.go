@@ -2,34 +2,65 @@ package db
 
 import (
 	"database/sql"
-	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
+	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"time"
 )
 
-var i DBInterface
-
 type DBInterface interface {
-	GetDB(string) *sql.DB
-	AddDB(*sql.DB)
+	AddDB(d *sql.DB)
 }
-
-func addDB(inter DBInterface, db *sql.DB) DBHandler {
-	if _, ok := inter.(*pg.PGHandler); ok {
-		i.AddDB(db)
-		return DBHandler{db}
-	}
-
-	return DBHandler{nil}
-}
+var i DBInterface
 
 type TxHandler struct {
 	*sql.Tx
 }
 
-type DBHandler struct {
-	*sql.DB
+var dbM2M PostgresHandler
+
+func openDB(inter DBInterface, conf config.MxpConfig) (err error) {
+	var db *sql.DB
+	// postgres
+	if _, ok := inter.(*PostgresHandler); ok {
+		db, err = openDBWithPing("postgres", conf.PostgreSQL.DSN)
+		if err != nil {
+			log.WithError(err).Error("db/openDB")
+			return err
+		}
+
+		i.AddDB(db)
+		return nil
+
+	}
+
+	//if _, ok := inter.(*OtherDBHandler); ok {
+	//		db, err = openDBWithPing(driverName, dsn)
+	//		i.AddDB(db)
+	//		return nil
+	//	}
+
+	return errors.New("db/openDB: unknown db driver")
 }
 
-func (db *DBHandler) Begin() (*TxHandler, error) {
-	tx, err := db.DB.Begin()
-	return &TxHandler{tx}, err
+func openDBWithPing(driverName string, dsn string) (*sql.DB, error) {
+	log.Debug("db/openDBWithPing")
+
+	d, err := sql.Open(driverName, dsn)
+	if err != nil {
+		log.WithError(err).Error("db/openDBWithPing")
+		return nil, err
+	}
+	for i := 0; i <= 3; i++ {
+		if err := d.Ping(); err != nil {
+			log.WithError(err).Warning("db/ping_db")
+			time.Sleep(2 * time.Second) // to be modified
+		} else {
+			return d, nil
+		}
+	}
+
+	err = errors.New("db/ping_db: failed")
+	log.Error(err)
+	return nil, err
 }

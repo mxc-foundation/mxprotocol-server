@@ -6,7 +6,7 @@ import (
 )
 
 func dbCreateWithdrawFeeTable() error {
-	return pg.PgDB.CreateWithdrawFeeTable()
+	return pg.CreateWithdrawFeeTable()
 }
 
 func DbInsertWithdrawFee(extCurrencyAbbr string, withdrawFee float64) (insertIndex int64, err error) {
@@ -20,9 +20,9 @@ func DbInsertWithdrawFee(extCurrencyAbbr string, withdrawFee float64) (insertInd
 		InsertTime: time.Now().UTC(),
 		Status:     "ACTIVE",
 	}
-	return pg.PgDB.InsertWithdrawFee(w)
+	return pg.InsertWithdrawFee(w)
 }
 
 func DbGetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
-	return pg.PgDB.GetActiveWithdrawFee(extCurrAbv)
+	return pg.GetActiveWithdrawFee(extCurrAbv)
 }

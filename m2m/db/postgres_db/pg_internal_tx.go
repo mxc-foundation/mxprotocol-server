@@ -32,8 +32,8 @@ type InternalTx struct {
 	TimeTx         time.Time `db:"timestamp"`
 }
 
-func (pgDbp *PGHandler) CreateInternalTxTable() error {
-	_, err := pgDbp.DB.Exec(`
+func  CreateInternalTxTable() error {
+	_, err := PgDB.Exec(`
 	DO $$
 	BEGIN
 		IF 
@@ -73,8 +73,8 @@ func (pgDbp *PGHandler) CreateInternalTxTable() error {
 	return errors.Wrap(err, "db/CreateInternalTxTable")
 }
 
-func (pgDbp *PGHandler) InsertInternalTx(it InternalTx) (insertIndex int64, err error) {
-	err = pgDbp.DB.QueryRow(`
+func  InsertInternalTx(it InternalTx) (insertIndex int64, err error) {
+	err = PgDB.QueryRow(`
 	INSERT INTO internal_tx (
 		fk_wallet_sender,
 		fk_wallet_receiver,

@@ -9,27 +9,27 @@ import (
 type WithdrawHistRet pg.WithdrawHistRet
 
 func dbCreateWithdrawTable() error {
-	return pg.PgDB.CreateWithdrawTable()
+	return pg.CreateWithdrawTable()
 }
 
 func dbCreateWithdrawRelations() error {
-	return pg.PgDB.CreateWithdrawFunctions()
+	return pg.CreateWithdrawFunctions()
 }
 
 func DbGetWalletIdByActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
-	return pg.PgDB.GetWalletIdofActiveAcnt(acntAdr, externalCur)
+	return pg.GetWalletIdofActiveAcnt(acntAdr, externalCur)
 }
 
 func DbUpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
-	return pg.PgDB.UpdateWithdrawSuccessful(withdrawId, txHash, txApprovedTime)
+	return pg.UpdateWithdrawSuccessful(withdrawId, txHash, txApprovedTime)
 }
 
 func DbInitWithdrawReq(walletId int64, amount float64, extCurAbv string) (withdrawId int64, err error) {
-	return pg.PgDB.InitWithdrawReq(walletId, amount, extCurAbv)
+	return pg.InitWithdrawReq(walletId, amount, extCurAbv)
 }
 
 func DbUpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error {
-	return pg.PgDB.UpdateWithdrawPaymentQueryId(withdrawId, reqIdPaymentServ)
+	return pg.UpdateWithdrawPaymentQueryId(withdrawId, reqIdPaymentServ)
 }
 
 func castWithdrawHistRet(acntHist []pg.WithdrawHistRet, err1 error) (castedVal []WithdrawHistRet, err error) {
@@ -40,9 +40,9 @@ func castWithdrawHistRet(acntHist []pg.WithdrawHistRet, err1 error) (castedVal [
 }
 
 func DbGetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
-	return castWithdrawHistRet(pg.PgDB.GetWithdrawHist(walletId, offset, limit))
+	return castWithdrawHistRet(pg.GetWithdrawHist(walletId, offset, limit))
 }
 
 func DbGetWithdrawHistRecCnt(walletId int64) (int64, error) {
-	return pg.PgDB.GetWithdrawHistRecCnt(walletId)
+	return pg.GetWithdrawHistRecCnt(walletId)
 }
