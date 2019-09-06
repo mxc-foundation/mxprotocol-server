@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/supernode/active_account/{money_abbr}": {
+    "/api/supernode/active_account/{moneyAbbr}": {
       "get": {
         "operationId": "GetSuperNodeActiveMoneyAccount",
         "responses": {
@@ -28,7 +28,7 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",
@@ -42,7 +42,7 @@
         ]
       }
     },
-    "/api/supernode/{money_abbr}/add-account": {
+    "/api/supernode/{moneyAbbr}/add-account": {
       "post": {
         "operationId": "AddSuperNodeMoneyAccount",
         "responses": {
@@ -55,7 +55,7 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",

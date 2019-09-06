@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package api;
+
+import "google/api/annotations.proto";
+import "profile.proto";
+
+service GatewayService {
+    rpc GetGatewayList(GetGatewayListRequest) returns (GetGatewayListResponse){
+        option(google.api.http) = {
+			get: "/api/device/getGwList"
+		};
+    }
+
+    rpc GetGatewayProfile(GetGatewayProfileRequest) returns (GetGatewayProfileResponse){
+        option(google.api.http) = {
+			get: "/api/device/getGwProfile"
+		};
+    }
+
+    rpc SetGatewayMode(SetGatewayModeRequest) returns (SetGatewayModeResponse) {
+            option (google.api.http) = {
+    			post: "/api/device/setGwMode"
+    			body: "*"
+    		};
+        }
+}
+
+enum GatewayMode {
+    gw_inactive = 0;
+    gw_free_gateways_limited = 1;
+    gw_whole_network = 2;
+}
+
+message GetGatewayListRequest {
+    int64 org_id = 1;
+    int64 offset = 2;
+    int64 limit = 3;
+}
+
+message GetGatewayListResponse {
+    string gw_list = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message GetGatewayProfileRequest {
+    int64 org_id = 1;
+    int64 gw_id = 2;
+    int64 offset = 3;
+    int64 limit = 4;
+}
+
+message GatewayProfile {
+    int64 id = 1;
+    int64 fk_gateway_la = 2;
+    string mode = 3;
+}
+
+message GetGatewayProfileResponse {
+    repeated GatewayProfile gw_profile = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message SetGatewayModeRequest {
+    int64 org_id = 1;
+    int64 gw_id = 2;
+    GatewayMode gw_mode = 3;
+}
+
+message SetGatewayModeResponse {
+    bool status = 1;
+    ProfileResponse user_profile = 3;
+}

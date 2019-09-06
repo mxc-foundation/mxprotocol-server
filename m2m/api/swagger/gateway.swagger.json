@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "topup.proto",
+    "title": "gateway.proto",
     "version": "version not set"
   },
   "schemes": [
@@ -15,14 +15,14 @@
     "application/json"
   ],
   "paths": {
-    "/api/top_up/history": {
+    "/api/device/getGwList": {
       "get": {
-        "operationId": "GetTopUpHistory",
+        "operationId": "GetGatewayList",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetTopUpHistoryResponse"
+              "$ref": "#/definitions/apiGetGatewayListResponse"
             }
           }
         },
@@ -50,33 +50,45 @@
           }
         ],
         "tags": [
-          "TopUpService"
+          "GatewayService"
         ]
       }
     },
-    "/api/top_up/{moneyAbbr}/supernode_account": {
+    "/api/device/getGwProfile": {
       "get": {
-        "operationId": "GetTopUpDestination",
+        "operationId": "GetGatewayProfile",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetTopUpDestinationResponse"
+              "$ref": "#/definitions/apiGetGatewayProfileResponse"
             }
           }
         },
         "parameters": [
           {
-            "name": "moneyAbbr",
-            "in": "path",
-            "required": true,
+            "name": "orgId",
+            "in": "query",
+            "required": false,
             "type": "string",
-            "enum": [
-              "Ether"
-            ]
+            "format": "int64"
           },
           {
-            "name": "orgId",
+            "name": "gwId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
             "in": "query",
             "required": false,
             "type": "string",
@@ -84,16 +96,67 @@
           }
         ],
         "tags": [
-          "TopUpService"
+          "GatewayService"
+        ]
+      }
+    },
+    "/api/device/setGwMode": {
+      "post": {
+        "operationId": "SetGatewayMode",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiSetGatewayModeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiSetGatewayModeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "GatewayService"
         ]
       }
     }
   },
   "definitions": {
-    "apiGetTopUpDestinationResponse": {
+    "apiGatewayMode": {
+      "type": "string",
+      "enum": [
+        "gw_inactive",
+        "gw_free_gateways_limited",
+        "gw_whole_network"
+      ],
+      "default": "gw_inactive"
+    },
+    "apiGatewayProfile": {
       "type": "object",
       "properties": {
-        "activeAccount": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "fkGatewayLa": {
+          "type": "string",
+          "format": "int64"
+        },
+        "mode": {
+          "type": "string"
+        }
+      }
+    },
+    "apiGetGatewayListResponse": {
+      "type": "object",
+      "properties": {
+        "gwList": {
           "type": "string"
         },
         "userProfile": {
@@ -101,30 +164,19 @@
         }
       }
     },
-    "apiGetTopUpHistoryResponse": {
+    "apiGetGatewayProfileResponse": {
       "type": "object",
       "properties": {
-        "count": {
-          "type": "string",
-          "format": "int64"
-        },
-        "topupHistory": {
+        "gwProfile": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/apiTopUpHistory"
+            "$ref": "#/definitions/apiGatewayProfile"
           }
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
         }
       }
-    },
-    "apiMoney": {
-      "type": "string",
-      "enum": [
-        "Ether"
-      ],
-      "default": "Ether"
     },
     "apiOrganizationLink": {
       "type": "object",
@@ -186,27 +238,31 @@
         }
       }
     },
-    "apiTopUpHistory": {
+    "apiSetGatewayModeRequest": {
       "type": "object",
       "properties": {
-        "from": {
-          "type": "string"
+        "orgId": {
+          "type": "string",
+          "format": "int64"
         },
-        "to": {
-          "type": "string"
+        "gwId": {
+          "type": "string",
+          "format": "int64"
         },
-        "amount": {
-          "type": "number",
-          "format": "double"
+        "gwMode": {
+          "$ref": "#/definitions/apiGatewayMode"
+        }
+      }
+    },
+    "apiSetGatewayModeResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "format": "boolean"
         },
-        "createdAt": {
-          "type": "string"
-        },
-        "moneyType": {
-          "type": "string"
-        },
-        "txHash": {
-          "type": "string"
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
         }
       }
     },

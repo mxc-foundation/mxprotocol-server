@@ -6,72 +6,91 @@ import "google/api/annotations.proto";
 import "profile.proto";
 
 service DeviceService {
-    rpc GetDevice(GetDeviceListRequest) returns (GetDeviceListResponse){
+    rpc GetDeviceList(GetDeviceListRequest) returns (GetDeviceListResponse){
         option(google.api.http) = {
-			get: "/api/device/getDvList/org_id"
+			get: "/api/device/getDvList"
 		};
     }
 
     rpc GetDeviceProfile(GetDeviceProfileRequest) returns (GetDeviceProfileResponse){
         option(google.api.http) = {
-			get: "/api/device/getDvProfile/dv_id"
+			get: "/api/device/getDvProfile"
 		};
     }
 
     rpc GetDeviceHistory(GetDeviceHistoryRequest) returns (GetDeviceHistoryResponse) {
         option (google.api.http) = {
-			get: "/api/device/getDvHist/dv_id"
+			get: "/api/device/getDvHist"
 		};
     }
 
-    rpc SetDeviceStatus(SetDeviceStatusRequest) returns (SetDeviceStatusResponse) {
+    rpc SetDeviceMode(SetDeviceModeRequest) returns (SetDeviceModeResponse) {
             option (google.api.http) = {
-    			post: "/api/device/setDvStat/"
+    			post: "/api/device/setDevMode"
     			body: "*"
     		};
         }
 }
 
-enum Money {
-    Ether = 0;
+enum DeviceMode {
+    dv_inactive = 0;
+    dv_free_gateways_limited = 1;
+    dv_whole_network = 3;
 }
 
 message GetDeviceListRequest {
     int64 org_id = 1;
-    Money money_abbr = 2;
-    string current_account = 3;
+    int64 offset = 2;
+    int64 limit = 3;
 }
 
 message GetDeviceListResponse {
+    repeated DeviceProfile dev_profile = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message GetDeviceProfileRequest {
+    int64 org_id = 1;
+    int64 dev_id = 2;
+    int64 offset = 3;
+    int64 limit = 4;
+}
+
+message DeviceProfile {
+    int64 id = 1;
+    string dev_eui = 2;
+    int64 fk_wallet = 3;
+    string mode = 4;
+    string created_at = 5;
+    string last_seen_at = 6;
+    int64 application_id = 7;
+    string name = 8;
+}
+
+message GetDeviceProfileResponse {
+    DeviceProfile dev_profile = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message GetDeviceHistoryRequest {
+    int64 org_id = 1;
+    int64 dev_id = 2;
+    int64 offset = 3;
+    int64 limit = 4;
+}
+
+message GetDeviceHistoryResponse {
+    string dev_history = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message SetDeviceModeRequest {
+    int64 org_id = 1;
+    int64 dev_id = 2;
+    string dev_mode = 3;
+}
+
+message SetDeviceModeResponse {
     bool status = 1;
-    ProfileResponse user_profile = 2;
-}
-
-message GetMoneyAccountChangeHistoryRequest {
-    int64 org_id = 1;
-    int64 offset = 2;
-    int64 limit = 3;
-    Money money_abbr = 4;
-}
-
-message MoneyAccountChangeHistory {
-    string addr = 1;
-    string status = 2;
-    string created_at = 3;
-}
-
-message GetMoneyAccountChangeHistoryResponse {
-    int64 count = 1;
-    repeated MoneyAccountChangeHistory change_history = 2;
     ProfileResponse user_profile = 3;
-}
-
-message GetActiveMoneyAccountRequest {
-    int64 org_id = 1;
-    Money money_abbr = 2;
-}
-
-message GetActiveMoneyAccountResponse {
-    string active_account = 1;
-    ProfileResponse user_profile = 2;
 }
