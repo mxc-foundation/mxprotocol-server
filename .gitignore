@@ -1,2 +1,7 @@
 vendor/
 .*
+
+docker-compose.yml
+Dockerfile
+
+go.sum
