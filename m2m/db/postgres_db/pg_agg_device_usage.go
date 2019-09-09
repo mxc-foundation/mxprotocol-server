@@ -21,7 +21,7 @@ func (pgDbp *PGHandler) CreateAggDvUsgTable() error {
 			ul_size_sum  FLOAT DEFAULT 0,
 			start_at TIMESTAMP NOT NULL,
 			duration_minutes   INT ,
-			cost  NUMERIC(28,18) DEFAULT 0
+			spend  NUMERIC(28,18) DEFAULT 0
 		);		
 	`)
 	return errors.Wrap(err, "db/pg_agg_device_usage/CreateAggDvUsgTable")
@@ -40,7 +40,7 @@ func (pgDbp *PGHandler) InsertAggDvUsg(adu types.AggDvUsg) (insertIndex int64, e
 			ul_size_sum ,
 			start_at ,
 			duration_minutes ,
-			cost  
+			spend  
 			) 
 		VALUES 
 			($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
@@ -56,7 +56,7 @@ func (pgDbp *PGHandler) InsertAggDvUsg(adu types.AggDvUsg) (insertIndex int64, e
 		adu.UlSizeSum,
 		adu.StartAt,
 		adu.DurationMinutes,
-		adu.Cost,
+		adu.Spend,
 	).Scan(&insertIndex)
 	return insertIndex, errors.Wrap(err, "db/pg_agg_device_usage/InsertAggDvUsg")
 }

@@ -21,7 +21,7 @@ func (pgDbp *PGHandler) CreateAggGwUsgTable() error {
 			ul_size_sum  FLOAT DEFAULT 0,
 			start_at TIMESTAMP NOT NULL,
 			duration_minutes   INT ,
-			cost  NUMERIC(28,18) DEFAULT 0
+			income  NUMERIC(28,18) DEFAULT 0
 		);		
 	`)
 	return errors.Wrap(err, "db/pg_agg_gateway_usage/CreateAggGwUsgTable")
@@ -40,7 +40,7 @@ func (pgDbp *PGHandler) InsertAggGwUsg(agu types.AggGwUsg) (insertIndex int64, e
 			ul_size_sum ,
 			start_at ,
 			duration_minutes ,
-			cost  
+			income  
 			) 
 		VALUES 
 			($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
@@ -56,7 +56,7 @@ func (pgDbp *PGHandler) InsertAggGwUsg(agu types.AggGwUsg) (insertIndex int64, e
 		agu.UlSizeSum,
 		agu.StartAt,
 		agu.DurationMinutes,
-		agu.Cost,
+		agu.Income,
 	).Scan(&insertIndex)
 	return insertIndex, errors.Wrap(err, "db/pg_agg_gateway_usage/InsertAggGwUsg")
 }

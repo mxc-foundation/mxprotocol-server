@@ -14,5 +14,5 @@ type AggDvUsg struct {
 	UlSizeSum       float64   `db:"ul_size_sum"`
 	StartAt         time.Time `db:"start_at"`
 	DurationMinutes float64   `db:"duration_minutes"`
-	Cost            float64   `db:"cost"`
+	Spend           float64   `db:"spend"`
 }
