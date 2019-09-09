@@ -12,7 +12,7 @@ func (pgDbp *PGHandler) CreateAggGwUsgTable() error {
 		CREATE TABLE IF NOT EXISTS agg_gateway_usage (
 			id SERIAL PRIMARY KEY,
 			fk_gateway INT REFERENCES gateway (id) NOT NULL,
-			fk_agg_wallet_usage INT , -- REFERENCES agg_wallet_usage (id)   @@ to be added
+			fk_agg_wallet_usage INT  REFERENCES agg_wallet_usage (id) ,
 			dl_cnt INT    DEFAULT 0 ,
 			ul_cnt     INT DEFAULT 0,
 			dl_cnt_free    INT DEFAULT 0,
