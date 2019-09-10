@@ -7,6 +7,9 @@ import (
 	"github.com/pkg/errors"
 )
 
+type withdrawFeeInterface struct {}
+var PgWithdrawFee withdrawFeeInterface
+
 type WithdrawFee struct {
 	Id         int64     `db:"id"`
 	FkExtCurr  int64     `db:"fk_ext_currency"`
@@ -15,7 +18,7 @@ type WithdrawFee struct {
 	Status     string    `db:"status"`
 }
 
-func  CreateWithdrawFeeTable() error {
+func  (*withdrawFeeInterface)CreateWithdrawFeeTable() error {
 	_, err := PgDB.Exec(`
 
 		CREATE TABLE IF NOT EXISTS 
@@ -31,7 +34,7 @@ func  CreateWithdrawFeeTable() error {
 	return errors.Wrap(err, "db/CreateWithdrawFeeTable")
 }
 
-func  InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
+func  (*withdrawFeeInterface)InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO withdraw_fee (
 			fk_ext_currency,
@@ -81,7 +84,7 @@ func  changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
 	return errors.Wrap(err, "db/changeStatus2ArcOldRowWithdrawFee")
 }
 
-func  GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
+func  (*withdrawFeeInterface)GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
 	err = PgDB.QueryRow(`
 		SELECT 
 			wf.fee
@@ -99,7 +102,7 @@ func  GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
 	return withdrawFee, errors.Wrap(err, "db/GetActiveWithdrawFee")
 }
 
-func  GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
+func  (*withdrawFeeInterface)GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
 	err = PgDB.QueryRow(`
 		SELECT 
 			wf.id

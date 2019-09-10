@@ -4,10 +4,17 @@ import (
 	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
 )
 
+type internalTxDBInterface interface {
+	CreateInternalTxTable() error
+	InsertInternalTx(it pg.InternalTx) (insertIndex int64, err error)
+}
+var internalTx internalTxDBInterface
+
 func dbCreateInternalTxTable() error {
-	return pg.CreateInternalTxTable()
+	internalTx = &pg.PgInternalTx
+	return internalTx.CreateInternalTxTable()
 }
 
 func DbInsertInternalTx(it pg.InternalTx) (insertIndex int64, err error) {
-	return pg.InsertInternalTx(it)
+	return internalTx.InsertInternalTx(it)
 }

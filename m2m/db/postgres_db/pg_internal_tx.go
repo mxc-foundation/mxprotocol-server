@@ -6,6 +6,9 @@ import (
 	"github.com/pkg/errors"
 )
 
+type internalTxInterface struct {}
+var PgInternalTx internalTxInterface
+
 type FieldStatus string // db:field_status
 const (
 	ACTIVE FieldStatus = "ACTIVE"
@@ -32,7 +35,7 @@ type InternalTx struct {
 	TimeTx         time.Time `db:"timestamp"`
 }
 
-func  CreateInternalTxTable() error {
+func  (*internalTxInterface)CreateInternalTxTable() error {
 	_, err := PgDB.Exec(`
 	DO $$
 	BEGIN
@@ -73,7 +76,7 @@ func  CreateInternalTxTable() error {
 	return errors.Wrap(err, "db/CreateInternalTxTable")
 }
 
-func  InsertInternalTx(it InternalTx) (insertIndex int64, err error) {
+func  (*internalTxInterface)InsertInternalTx(it InternalTx) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 	INSERT INTO internal_tx (
 		fk_wallet_sender,

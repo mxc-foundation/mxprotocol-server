@@ -6,30 +6,38 @@ import (
 	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
 )
 
+type withdrawDBInterface interface {
+	CreateWithdrawTable() error
+	UpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error
+	CreateWithdrawFunctions() error
+	InitWithdrawReq(walletId int64, value float64, extCurrencyAbbr string) (withdrawId int64, err error)
+	UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error
+	GetWithdrawHist(walletId int64, offset int64, limit int64) ([]pg.WithdrawHistRet, error)
+	GetWithdrawHistRecCnt(walletId int64) (recCnt int64, err error)
+}
+var withdraw withdrawDBInterface
+
 type WithdrawHistRet pg.WithdrawHistRet
 
 func dbCreateWithdrawTable() error {
-	return pg.CreateWithdrawTable()
+	withdraw = &pg.PgWithdraw
+	return withdraw.CreateWithdrawTable()
 }
 
 func dbCreateWithdrawRelations() error {
-	return pg.CreateWithdrawFunctions()
-}
-
-func DbGetWalletIdByActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
-	return pg.GetWalletIdofActiveAcnt(acntAdr, externalCur)
+	return withdraw.CreateWithdrawFunctions()
 }
 
 func DbUpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
-	return pg.UpdateWithdrawSuccessful(withdrawId, txHash, txApprovedTime)
+	return withdraw.UpdateWithdrawSuccessful(withdrawId, txHash, txApprovedTime)
 }
 
 func DbInitWithdrawReq(walletId int64, amount float64, extCurAbv string) (withdrawId int64, err error) {
-	return pg.InitWithdrawReq(walletId, amount, extCurAbv)
+	return withdraw.InitWithdrawReq(walletId, amount, extCurAbv)
 }
 
 func DbUpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error {
-	return pg.UpdateWithdrawPaymentQueryId(withdrawId, reqIdPaymentServ)
+	return withdraw.UpdateWithdrawPaymentQueryId(withdrawId, reqIdPaymentServ)
 }
 
 func castWithdrawHistRet(acntHist []pg.WithdrawHistRet, err1 error) (castedVal []WithdrawHistRet, err error) {
@@ -40,9 +48,9 @@ func castWithdrawHistRet(acntHist []pg.WithdrawHistRet, err1 error) (castedVal [
 }
 
 func DbGetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
-	return castWithdrawHistRet(pg.GetWithdrawHist(walletId, offset, limit))
+	return castWithdrawHistRet(withdraw.GetWithdrawHist(walletId, offset, limit))
 }
 
 func DbGetWithdrawHistRecCnt(walletId int64) (int64, error) {
-	return pg.GetWithdrawHistRecCnt(walletId)
+	return withdraw.GetWithdrawHistRecCnt(walletId)
 }

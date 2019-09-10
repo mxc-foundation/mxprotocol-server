@@ -7,20 +7,34 @@ import (
 	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
+type gatewayDBInterface interface {
+	CreateGatewayTable() error
+	InsertGateway(gw types.Gateway) (insertIndex int64, err error)
+	GetGatewayMode(gwId int64) (gwMode types.GatewayMode, err error)
+	SetGatewayMode(gwId int64, gwMode types.GatewayMode) (err error)
+	GetGatewayIdByMac(mac string) (gwId int64, err error)
+	UpdateGatewayLastSeen(gwId int64, newTime time.Time) (err error)
+	GetGatewayProfile(gwId int64) (gw types.Gateway, err error)
+	GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error)
+	GetGatewayRecCnt(walletId int64) (recCnt int64, err error)
+}
+var gateway gatewayDBInterface
+
 func DbCreateGatewayTable() error {
-	return pg.CreateGatewayTable()
+	gateway = &pg.PgGateway
+	return gateway.CreateGatewayTable()
 }
 
 func DbInsertGateway(gw types.Gateway) (insertIndex int64, err error) {
-	return pg.InsertGateway(gw)
+	return gateway.InsertGateway(gw)
 }
 
 func DbGetGatewayMode(gwId int64) (gwMode types.GatewayMode, err error) {
-	return pg.GetGatewayMode(gwId)
+	return gateway.GetGatewayMode(gwId)
 }
 
 func DbSetGatewayMode(gwId int64, gwMode types.GatewayMode) (err error) {
-	return pg.SetGatewayMode(gwId, gwMode)
+	return gateway.SetGatewayMode(gwId, gwMode)
 }
 
 func DbDeleteGateway(gwId int64) (err error) {
@@ -28,21 +42,21 @@ func DbDeleteGateway(gwId int64) (err error) {
 }
 
 func DbGetGatewayIdByMac(mac string) (gwId int64, err error) {
-	return pg.GetGatewayIdByMac(mac)
+	return gateway.GetGatewayIdByMac(mac)
 }
 
 func DbUpdateGatewayLastSeen(gwId int64, newTime time.Time) (err error) {
-	return pg.UpdateGatewayLastSeen(gwId, newTime)
+	return gateway.UpdateGatewayLastSeen(gwId, newTime)
 }
 
 func DbGetGatewayProfile(gwId int64) (gw types.Gateway, err error) {
-	return pg.GetGatewayProfile(gwId)
+	return gateway.GetGatewayProfile(gwId)
 }
 
 func DbGetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {
-	return pg.GetGatewayListOfWallet(walletId, offset, limit)
+	return gateway.GetGatewayListOfWallet(walletId, offset, limit)
 }
 
 func DbGetGatewayRecCnt(walletId int64) (recCnt int64, err error) {
-	return pg.GetGatewayRecCnt(walletId)
+	return gateway.GetGatewayRecCnt(walletId)
 }

@@ -8,6 +8,9 @@ import (
 	"github.com/pkg/errors"
 )
 
+type withdrawInterface struct {}
+var PgWithdraw withdrawInterface
+
 type TxStatus string // db:tx_status
 const (
 	NOT_SENT_TO_PS TxStatus = "NOT_SENT_TO_PS"
@@ -41,7 +44,7 @@ type WithdrawHistRet struct {
 	TxHash      string
 }
 
-func  CreateWithdrawTable() error {
+func  (*withdrawInterface)CreateWithdrawTable() error {
 	_, err := PgDB.Exec(`
 
 	DO $$
@@ -110,7 +113,7 @@ func  insertWithdraw(wdr Withdraw) (insertIndex int64, err error) {
 	return insertIndex, errors.Wrap(err, "db/InsertWithdraw")
 }
 
-func  UpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
+func  (*withdrawInterface)UpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
 	_, err := PgDB.Exec(`
 		SELECT withdraw_success($1,$2,$3);
 		
@@ -118,7 +121,7 @@ func  UpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime t
 	return errors.Wrap(err, "db/UpdateWithdrawSuccessful")
 }
 
-func  CreateWithdrawFunctions() error {
+func  (*withdrawInterface)CreateWithdrawFunctions() error {
 	_, err := PgDB.Exec(`
 
 
@@ -233,7 +236,7 @@ func  initWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err e
 
 }
 
-func  InitWithdrawReq(walletId int64, value float64, extCurrencyAbbr string) (withdrawId int64, err error) {
+func  (*withdrawInterface)InitWithdrawReq(walletId int64, value float64, extCurrencyAbbr string) (withdrawId int64, err error) {
 
 	wdr := Withdraw{
 		Value:      value,
@@ -241,17 +244,17 @@ func  InitWithdrawReq(walletId int64, value float64, extCurrencyAbbr string) (wi
 		TxStatus:   string(NOT_SENT_TO_PS),
 	}
 
-	wdr.FkExtAcntRcvr, err = GetUserExtAccountId(walletId, extCurrencyAbbr)
+	wdr.FkExtAcntRcvr, err = PgExtAccount.GetUserExtAccountId(walletId, extCurrencyAbbr)
 	if err != nil {
 		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
-	wdr.FkExtAcntSender, err = GetSuperNodeExtAccountId(extCurrencyAbbr)
+	wdr.FkExtAcntSender, err = PgExtAccount.GetSuperNodeExtAccountId(extCurrencyAbbr)
 	if err != nil {
 		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
-	wdr.FkExtCurr, err = GetExtCurrencyIdByAbbr(extCurrencyAbbr)
+	wdr.FkExtCurr, err = PgExtCurrency.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
 	if err != nil {
 		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
@@ -273,7 +276,7 @@ func  InitWithdrawReq(walletId int64, value float64, extCurrencyAbbr string) (wi
 		Value:          value + withdrawFeeAmnt,
 	}
 
-	it.FkWalletRcvr, err = GetWalletIdSuperNode()
+	it.FkWalletRcvr, err = PgWallet.GetWalletIdSuperNode()
 	if err != nil {
 		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
@@ -282,7 +285,7 @@ func  InitWithdrawReq(walletId int64, value float64, extCurrencyAbbr string) (wi
 
 }
 
-func  UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error {
+func  (*withdrawInterface)UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error {
 	_, err := PgDB.Exec(`
 		UPDATE withdraw 
 		SET
@@ -298,7 +301,7 @@ func  UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) err
 	return errors.Wrap(err, "db/UpdateWithdrawPaymentQueryId")
 }
 
-func  GetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
+func  (*withdrawInterface)GetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
 
 	rows, err := PgDB.Query(
 		`SELECT
@@ -365,7 +368,7 @@ func  GetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHist
 	return res, errors.Wrap(err, "db/GetWithdrawHist")
 }
 
-func  GetWithdrawHistRecCnt(walletId int64) (recCnt int64, err error) {
+func  (*withdrawInterface)GetWithdrawHistRecCnt(walletId int64) (recCnt int64, err error) {
 
 	err = PgDB.QueryRow(`
 	SELECT

@@ -5,6 +5,13 @@ import (
 	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
 )
 
+type extCurrencyDBInterface interface {
+	CreateExtCurrencyTable() error
+	InsertExtCurr(ec pg.ExtCurrency) (insertIndex int64, err error)
+	GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error)
+}
+var extCurrency extCurrencyDBInterface
+
 var CurrencyList = []pg.ExtCurrency{}
 
 func initExtCurrencyTable() error {
@@ -29,13 +36,14 @@ func initExtCurrencyTable() error {
 }
 
 func dbCreateExtCurrencyTable() error {
-	return pg.CreateExtCurrencyTable()
+	extCurrency = &pg.PgExtCurrency
+	return extCurrency.CreateExtCurrencyTable()
 }
 
 func dbInsertExtCurr(ec pg.ExtCurrency) (insertIndex int64, err error) {
-	return pg.InsertExtCurr(ec)
+	return extCurrency.InsertExtCurr(ec)
 }
 
 func DbGetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
-	return pg.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
+	return extCurrency.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
 }
