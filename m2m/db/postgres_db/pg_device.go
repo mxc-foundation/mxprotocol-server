@@ -8,10 +8,11 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-type deviceInterface struct {}
+type deviceInterface struct{}
+
 var PgDevice deviceInterface
 
-func  (*deviceInterface)CreateDeviceTable() error {
+func (*deviceInterface) CreateDeviceTable() error {
 	_, err := PgDB.Exec(`
 		DO $$
 		BEGIN
@@ -42,7 +43,7 @@ func  (*deviceInterface)CreateDeviceTable() error {
 	return errors.Wrap(err, "db/pg_device/CreateDevice")
 }
 
-func  (*deviceInterface)InsertDevice(dv types.Device) (insertIndex int64, err error) {
+func (*deviceInterface) InsertDevice(dv types.Device) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO device (
 			dev_eui ,
@@ -68,7 +69,7 @@ func  (*deviceInterface)InsertDevice(dv types.Device) (insertIndex int64, err er
 	return insertIndex, errors.Wrap(err, "db/pg_device/InsertDevice")
 }
 
-func  (*deviceInterface)GetDeviceMode(dvId int64) (dvMode types.DeviceMode, err error) {
+func (*deviceInterface) GetDeviceMode(dvId int64) (dvMode types.DeviceMode, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
 			mode
@@ -80,7 +81,7 @@ func  (*deviceInterface)GetDeviceMode(dvId int64) (dvMode types.DeviceMode, err 
 	return dvMode, errors.Wrap(err, "db/pg_device/GetDeviceMode")
 }
 
-func  (*deviceInterface)SetDeviceMode(dvId int64, dvMode types.DeviceMode) (err error) {
+func (*deviceInterface) SetDeviceMode(dvId int64, dvMode types.DeviceMode) (err error) {
 	_, err = PgDB.Exec(`
 		UPDATE
 			device 
@@ -95,7 +96,7 @@ func  (*deviceInterface)SetDeviceMode(dvId int64, dvMode types.DeviceMode) (err 
 
 }
 
-func  (*deviceInterface)GetDeviceIdByDevEui(devEui string) (devId int64, err error) {
+func (*deviceInterface) GetDeviceIdByDevEui(devEui string) (devId int64, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
 			id
@@ -109,7 +110,7 @@ func  (*deviceInterface)GetDeviceIdByDevEui(devEui string) (devId int64, err err
 	return devId, errors.Wrap(err, "db/pg_device/GetDeviceIdByDevEui")
 }
 
-func  (*deviceInterface)UpdateDeviceLastSeen(dvId int64, newTime time.Time) (err error) {
+func (*deviceInterface) UpdateDeviceLastSeen(dvId int64, newTime time.Time) (err error) {
 	_, err = PgDB.Exec(`
 		UPDATE
 			device 
@@ -123,7 +124,7 @@ func  (*deviceInterface)UpdateDeviceLastSeen(dvId int64, newTime time.Time) (err
 	return errors.Wrap(err, "db/pg_device/UpdateDeviceLastSeen")
 }
 
-func  (*deviceInterface)GetDeviceProfile(dvId int64) (dv types.Device, err error) {
+func (*deviceInterface) GetDeviceProfile(dvId int64) (dv types.Device, err error) {
 
 	err = PgDB.QueryRow(
 		`SELECT
@@ -144,7 +145,7 @@ func  (*deviceInterface)GetDeviceProfile(dvId int64) (dv types.Device, err error
 	return dv, errors.Wrap(err, "db/pg_device/GetDeviceProfile")
 }
 
-func  (*deviceInterface)GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error) {
+func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error) {
 	rows, err := PgDB.Query(
 		`SELECT
 			*
@@ -179,7 +180,7 @@ func  (*deviceInterface)GetDeviceListOfWallet(walletId int64, offset int64, limi
 	return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
 }
 
-func  (*deviceInterface)GetDeviceRecCnt(walletId int64) (recCnt int64, err error) {
+func (*deviceInterface) GetDeviceRecCnt(walletId int64) (recCnt int64, err error) {
 
 	err = PgDB.QueryRow(`
 		SELECT

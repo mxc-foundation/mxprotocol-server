@@ -97,7 +97,7 @@ func (s *TopUpServerAPI) GetTopUpDestination(ctx context.Context, req *api.GetTo
 	case auth.OK:
 
 		log.WithFields(log.Fields{
-			"orgId":  req.OrgId,
+			"orgId":     req.OrgId,
 			"moneyType": api.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetTopUpDestination")
 

@@ -7,7 +7,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-type withdrawFeeInterface struct {}
+type withdrawFeeInterface struct{}
+
 var PgWithdrawFee withdrawFeeInterface
 
 type WithdrawFee struct {
@@ -18,7 +19,7 @@ type WithdrawFee struct {
 	Status     string    `db:"status"`
 }
 
-func  (*withdrawFeeInterface)CreateWithdrawFeeTable() error {
+func (*withdrawFeeInterface) CreateWithdrawFeeTable() error {
 	_, err := PgDB.Exec(`
 
 		CREATE TABLE IF NOT EXISTS 
@@ -34,7 +35,7 @@ func  (*withdrawFeeInterface)CreateWithdrawFeeTable() error {
 	return errors.Wrap(err, "db/CreateWithdrawFeeTable")
 }
 
-func  (*withdrawFeeInterface)InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
+func (*withdrawFeeInterface) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO withdraw_fee (
 			fk_ext_currency,
@@ -66,7 +67,7 @@ func  (*withdrawFeeInterface)InsertWithdrawFee(wf WithdrawFee) (insertIndex int6
 	return insertIndex, errors.Wrap(err, "db/InsertWithdrawFee")
 }
 
-func  changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
+func changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
 	_, err = PgDB.Exec(`
 	UPDATE 
 		withdraw_fee 
@@ -84,7 +85,7 @@ func  changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
 	return errors.Wrap(err, "db/changeStatus2ArcOldRowWithdrawFee")
 }
 
-func  (*withdrawFeeInterface)GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
+func (*withdrawFeeInterface) GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error) {
 	err = PgDB.QueryRow(`
 		SELECT 
 			wf.fee
@@ -102,7 +103,7 @@ func  (*withdrawFeeInterface)GetActiveWithdrawFee(extCurrAbv string) (withdrawFe
 	return withdrawFee, errors.Wrap(err, "db/GetActiveWithdrawFee")
 }
 
-func  (*withdrawFeeInterface)GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
+func (*withdrawFeeInterface) GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error) {
 	err = PgDB.QueryRow(`
 		SELECT 
 			wf.id

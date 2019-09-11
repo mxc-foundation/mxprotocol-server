@@ -18,6 +18,7 @@ type deviceDBInterface interface {
 	GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error)
 	GetDeviceRecCnt(walletId int64) (recCnt int64, err error)
 }
+
 var device deviceDBInterface
 
 func DbCreateDeviceTable() error {

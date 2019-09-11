@@ -8,7 +8,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-type withdrawInterface struct {}
+type withdrawInterface struct{}
+
 var PgWithdraw withdrawInterface
 
 type TxStatus string // db:tx_status
@@ -44,7 +45,7 @@ type WithdrawHistRet struct {
 	TxHash      string
 }
 
-func  (*withdrawInterface)CreateWithdrawTable() error {
+func (*withdrawInterface) CreateWithdrawTable() error {
 	_, err := PgDB.Exec(`
 
 	DO $$
@@ -80,7 +81,7 @@ func  (*withdrawInterface)CreateWithdrawTable() error {
 	return errors.Wrap(err, "db/CreateWithdrawTable")
 }
 
-func  insertWithdraw(wdr Withdraw) (insertIndex int64, err error) {
+func insertWithdraw(wdr Withdraw) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO withdraw (
 			fk_ext_account_sender,
@@ -113,7 +114,7 @@ func  insertWithdraw(wdr Withdraw) (insertIndex int64, err error) {
 	return insertIndex, errors.Wrap(err, "db/InsertWithdraw")
 }
 
-func  (*withdrawInterface)UpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
+func (*withdrawInterface) UpdateWithdrawSuccessful(withdrawId int64, txHash string, txApprovedTime time.Time) error {
 	_, err := PgDB.Exec(`
 		SELECT withdraw_success($1,$2,$3);
 		
@@ -121,7 +122,7 @@ func  (*withdrawInterface)UpdateWithdrawSuccessful(withdrawId int64, txHash stri
 	return errors.Wrap(err, "db/UpdateWithdrawSuccessful")
 }
 
-func  (*withdrawInterface)CreateWithdrawFunctions() error {
+func (*withdrawInterface) CreateWithdrawFunctions() error {
 	_, err := PgDB.Exec(`
 
 
@@ -215,7 +216,7 @@ func  (*withdrawInterface)CreateWithdrawFunctions() error {
 	return errors.Wrap(err, "db/CreateWithdrawFunctions")
 }
 
-func  initWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err error) {
+func initWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err error) {
 
 	err = PgDB.QueryRow(`
 		SELECT withdraw_req_init($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);
@@ -236,7 +237,7 @@ func  initWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err e
 
 }
 
-func  (*withdrawInterface)InitWithdrawReq(walletId int64, value float64, extCurrencyAbbr string) (withdrawId int64, err error) {
+func (*withdrawInterface) InitWithdrawReq(walletId int64, value float64, extCurrencyAbbr string) (withdrawId int64, err error) {
 
 	wdr := Withdraw{
 		Value:      value,
@@ -259,13 +260,13 @@ func  (*withdrawInterface)InitWithdrawReq(walletId int64, value float64, extCurr
 		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
-	wdr.FkWithdrawFee, err = GetActiveWithdrawFeeId(extCurrencyAbbr)
+	wdr.FkWithdrawFee, err = PgWithdrawFee.GetActiveWithdrawFeeId(extCurrencyAbbr)
 	if err != nil {
 		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
 	var withdrawFeeAmnt float64
-	withdrawFeeAmnt, err = GetActiveWithdrawFee(extCurrencyAbbr)
+	withdrawFeeAmnt, err = PgWithdrawFee.GetActiveWithdrawFee(extCurrencyAbbr)
 	if err != nil {
 		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
@@ -285,7 +286,7 @@ func  (*withdrawInterface)InitWithdrawReq(walletId int64, value float64, extCurr
 
 }
 
-func  (*withdrawInterface)UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error {
+func (*withdrawInterface) UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPaymentServ int64) error {
 	_, err := PgDB.Exec(`
 		UPDATE withdraw 
 		SET
@@ -301,7 +302,7 @@ func  (*withdrawInterface)UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPa
 	return errors.Wrap(err, "db/UpdateWithdrawPaymentQueryId")
 }
 
-func  (*withdrawInterface)GetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
+func (*withdrawInterface) GetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
 
 	rows, err := PgDB.Query(
 		`SELECT
@@ -368,7 +369,7 @@ func  (*withdrawInterface)GetWithdrawHist(walletId int64, offset int64, limit in
 	return res, errors.Wrap(err, "db/GetWithdrawHist")
 }
 
-func  (*withdrawInterface)GetWithdrawHistRecCnt(walletId int64) (recCnt int64, err error) {
+func (*withdrawInterface) GetWithdrawHistRecCnt(walletId int64) (recCnt int64, err error) {
 
 	err = PgDB.QueryRow(`
 	SELECT

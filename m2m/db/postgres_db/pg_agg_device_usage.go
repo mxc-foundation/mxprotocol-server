@@ -6,10 +6,11 @@ import (
 	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-type aggDeviceUsageInterface struct {}
+type aggDeviceUsageInterface struct{}
+
 var PgAggDeviceUsage aggDeviceUsageInterface
 
-func  (*aggDeviceUsageInterface)CreateAggDvUsgTable() error {
+func (*aggDeviceUsageInterface) CreateAggDvUsgTable() error {
 	_, err := PgDB.Exec(`
 	
 		CREATE TABLE IF NOT EXISTS agg_device_usage (
@@ -30,7 +31,7 @@ func  (*aggDeviceUsageInterface)CreateAggDvUsgTable() error {
 	return errors.Wrap(err, "db/pg_agg_device_usage/CreateAggDvUsgTable")
 }
 
-func  (* aggDeviceUsageInterface)InsertAggDvUsg(adu types.AggDvUsg) (insertIndex int64, err error) {
+func (*aggDeviceUsageInterface) InsertAggDvUsg(adu types.AggDvUsg) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO agg_device_usage (
 			fk_device ,

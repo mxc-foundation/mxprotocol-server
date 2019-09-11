@@ -25,10 +25,11 @@ type ExtAccountHistRet struct {
 	ExtCurrencyAbv string
 }
 
-type extAccountInterface struct {}
+type extAccountInterface struct{}
+
 var PgExtAccount extAccountInterface
 
-func  (*extAccountInterface)CreateExtAccountTable() error {
+func (*extAccountInterface) CreateExtAccountTable() error {
 	_, err := PgDB.Exec(`
 		CREATE TABLE IF NOT EXISTS ext_account (
 			id SERIAL PRIMARY KEY,
@@ -44,7 +45,7 @@ func  (*extAccountInterface)CreateExtAccountTable() error {
 	return errors.Wrap(err, "db/CreateExtAccountTable")
 }
 
-func  (*extAccountInterface)InsertExtAccount(ea ExtAccount) (insertIndex int64, err error) {
+func (*extAccountInterface) InsertExtAccount(ea ExtAccount) (insertIndex int64, err error) {
 
 	alreadyExist, errAlreadyExist := alreadyExistActiveAcnt(ea.AccountAdr, ea.FkExtCurrency)
 	if errAlreadyExist != nil {
@@ -84,7 +85,7 @@ func  (*extAccountInterface)InsertExtAccount(ea ExtAccount) (insertIndex int64, 
 	return insertIndex, errors.Wrap(err, "db/InsertExtAccount")
 }
 
-func  alreadyExistActiveAcnt(acntAdr string, extCurrId int64) (bool, error) {
+func alreadyExistActiveAcnt(acntAdr string, extCurrId int64) (bool, error) {
 
 	var nRow int64
 
@@ -108,7 +109,7 @@ func  alreadyExistActiveAcnt(acntAdr string, extCurrId int64) (bool, error) {
 	return res, errors.Wrap(err, "db/alreadyExistActiveAcnt")
 }
 
-func  changeStatus2ArcOldRowExtAcnt(ea ExtAccount) (err error) {
+func changeStatus2ArcOldRowExtAcnt(ea ExtAccount) (err error) {
 	_, err = PgDB.Exec(`
 	UPDATE 
 		ext_account 
@@ -129,7 +130,7 @@ func  changeStatus2ArcOldRowExtAcnt(ea ExtAccount) (err error) {
 	return errors.Wrap(err, "db/changeStatus2ArcOldRowExtAcnt")
 }
 
-func  (*extAccountInterface)GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error) {
+func (*extAccountInterface) GetSuperNodeExtAccountAdr(extCurrAbv string) (string, error) {
 
 	var res string
 
@@ -156,7 +157,7 @@ func  (*extAccountInterface)GetSuperNodeExtAccountAdr(extCurrAbv string) (string
 	return res, errors.Wrap(err, "db/GetSuperNodeExtAccountAdr")
 }
 
-func  (*extAccountInterface)GetSuperNodeExtAccountId(extCurrAbv string) (int64, error) {
+func (*extAccountInterface) GetSuperNodeExtAccountId(extCurrAbv string) (int64, error) {
 	var res int64
 
 	err := PgDB.QueryRow(`
@@ -182,7 +183,7 @@ func  (*extAccountInterface)GetSuperNodeExtAccountId(extCurrAbv string) (int64, 
 	return res, errors.Wrap(err, "db/GetSuperNodeExtAccountId")
 }
 
-func  (*extAccountInterface)GetUserExtAccountAdr(walletId int64, extCurrAbv string) (string, error) {
+func (*extAccountInterface) GetUserExtAccountAdr(walletId int64, extCurrAbv string) (string, error) {
 
 	var res string
 
@@ -207,7 +208,7 @@ func  (*extAccountInterface)GetUserExtAccountAdr(walletId int64, extCurrAbv stri
 	return res, errors.Wrap(err, "db/GetUserExtAccountAdr")
 }
 
-func  (*extAccountInterface)GetUserExtAccountId(walletId int64, extCurrAbv string) (int64, error) {
+func (*extAccountInterface) GetUserExtAccountId(walletId int64, extCurrAbv string) (int64, error) {
 
 	var res int64
 
@@ -232,7 +233,7 @@ func  (*extAccountInterface)GetUserExtAccountId(walletId int64, extCurrAbv strin
 	return res, errors.Wrap(err, "db/GetUserExtAccountId")
 }
 
-func  (*extAccountInterface)GetExtAccountIdByAdr(acntAdr string, extCurrAbv string) (int64, error) {
+func (*extAccountInterface) GetExtAccountIdByAdr(acntAdr string, extCurrAbv string) (int64, error) {
 
 	var res int64
 
@@ -258,7 +259,7 @@ func  (*extAccountInterface)GetExtAccountIdByAdr(acntAdr string, extCurrAbv stri
 	return res, errors.Wrap(err, "db/GetExtAccountIdByAdr")
 }
 
-func  (*extAccountInterface)GetLatestCheckedBlock(extAcntId int64) (int64, error) {
+func (*extAccountInterface) GetLatestCheckedBlock(extAcntId int64) (int64, error) {
 
 	var res int64
 
@@ -275,7 +276,7 @@ func  (*extAccountInterface)GetLatestCheckedBlock(extAcntId int64) (int64, error
 	return res, errors.Wrap(err, "db/GetLatestCheckedBlock")
 }
 
-func  (*extAccountInterface)UpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum int64) error {
+func (*extAccountInterface) UpdateLatestCheckedBlock(extAcntId int64, updatedBlockNum int64) error {
 
 	_, err := PgDB.Exec(`
 		UPDATE ext_account 
@@ -289,7 +290,7 @@ func  (*extAccountInterface)UpdateLatestCheckedBlock(extAcntId int64, updatedBlo
 	return errors.Wrap(err, "db/UpdateLatestCheckedBlock")
 }
 
-func  (*extAccountInterface)GetExtAcntHist(walletId int64, offset int64, limit int64) ([]ExtAccountHistRet, error) {
+func (*extAccountInterface) GetExtAcntHist(walletId int64, offset int64, limit int64) ([]ExtAccountHistRet, error) {
 
 	rows, err := PgDB.Query(
 		`select
@@ -334,7 +335,7 @@ func  (*extAccountInterface)GetExtAcntHist(walletId int64, offset int64, limit i
 	return res, errors.Wrap(err, "db/GetExtAcntHist")
 }
 
-func  (*extAccountInterface)GetExtAcntHistRecCnt(walletId int64) (recCnt int64, err error) {
+func (*extAccountInterface) GetExtAcntHistRecCnt(walletId int64) (recCnt int64, err error) {
 
 	err = PgDB.QueryRow(`
 		SELECT

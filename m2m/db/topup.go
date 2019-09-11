@@ -11,6 +11,7 @@ type topupDBInterface interface {
 	GetTopupHist(walletId int64, offset int64, limit int64) ([]pg.TopupHistRet, error)
 	GetTopupHistRecCnt(walletId int64) (recCnt int64, err error)
 }
+
 var topup topupDBInterface
 
 func dbCreateTopupTable() error {

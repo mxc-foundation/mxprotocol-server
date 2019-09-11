@@ -20,6 +20,7 @@ type walletDBInterface interface {
 	GetWalletIdSuperNode() (walletId int64, err error)
 	UpdateBalanceByWalletId(walletId int64, newBalance float64) error
 }
+
 var wallet walletDBInterface
 
 func dbCreateWalletTable() error {

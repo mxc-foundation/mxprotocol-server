@@ -11,6 +11,7 @@ type withdrawFeeDBInterface interface {
 	GetActiveWithdrawFee(extCurrAbv string) (withdrawFee float64, err error)
 	GetActiveWithdrawFeeId(extCurrAbv string) (withdrawFee int64, err error)
 }
+
 var withdrawFee withdrawFeeDBInterface
 
 func dbCreateWithdrawFeeTable() error {

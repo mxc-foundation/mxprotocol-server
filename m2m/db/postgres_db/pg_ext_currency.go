@@ -12,10 +12,11 @@ type ExtCurrency struct {
 	Abv  string `db:"abv"`
 }
 
-type extCurrencyInterface struct {}
+type extCurrencyInterface struct{}
+
 var PgExtCurrency extCurrencyInterface
 
-func  (*extCurrencyInterface)CreateExtCurrencyTable() error {
+func (*extCurrencyInterface) CreateExtCurrencyTable() error {
 	_, err := PgDB.Exec(`
 		CREATE TABLE IF NOT EXISTS 
 		ext_currency (
@@ -27,7 +28,7 @@ func  (*extCurrencyInterface)CreateExtCurrencyTable() error {
 	return errors.Wrap(err, "db/CreateExtCurrencyTable")
 }
 
-func  (*extCurrencyInterface)InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
+func (*extCurrencyInterface) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
 	log.WithFields(log.Fields{
 		"name": ec.Name,
 		"abbr": ec.Abv,
@@ -49,7 +50,7 @@ func  (*extCurrencyInterface)InsertExtCurr(ec ExtCurrency) (insertIndex int64, e
 	return insertIndex, errors.Wrap(err, "db/InsertExtCurr")
 }
 
-func  (*extCurrencyInterface)GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
+func (*extCurrencyInterface) GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error) {
 	var extCurrencyId int64
 	err := PgDB.QueryRow(`
 		select id 

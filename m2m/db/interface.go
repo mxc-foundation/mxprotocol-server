@@ -11,6 +11,7 @@ import (
 type DBInterface interface {
 	AddDB(d *sql.DB)
 }
+
 var i DBInterface
 
 type TxHandler struct {

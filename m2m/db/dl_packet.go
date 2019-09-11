@@ -9,6 +9,7 @@ type dlPacketDBInterface interface {
 	CreateDlPktTable() error
 	InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err error)
 }
+
 var dlPacket dlPacketDBInterface
 
 func DbCreateDlPktTable() error {

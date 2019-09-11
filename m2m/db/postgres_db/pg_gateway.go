@@ -8,10 +8,11 @@ import (
 	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-type gatewayInterface struct {}
+type gatewayInterface struct{}
+
 var PgGateway gatewayInterface
 
-func  (*gatewayInterface)CreateGatewayTable() error {
+func (*gatewayInterface) CreateGatewayTable() error {
 	_, err := PgDB.Exec(`
 		DO $$
 		BEGIN
@@ -44,7 +45,7 @@ func  (*gatewayInterface)CreateGatewayTable() error {
 	return errors.Wrap(err, "db/pg_gateway/CreateGateway")
 }
 
-func  (*gatewayInterface)InsertGateway(gw types.Gateway) (insertIndex int64, err error) {
+func (*gatewayInterface) InsertGateway(gw types.Gateway) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO gateway (
 			mac ,
@@ -74,7 +75,7 @@ func  (*gatewayInterface)InsertGateway(gw types.Gateway) (insertIndex int64, err
 	return insertIndex, errors.Wrap(err, "db/pg_gateway/InsertGateway")
 }
 
-func  (*gatewayInterface)GetGatewayMode(gwId int64) (gwMode types.GatewayMode, err error) {
+func (*gatewayInterface) GetGatewayMode(gwId int64) (gwMode types.GatewayMode, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
 			mode
@@ -86,7 +87,7 @@ func  (*gatewayInterface)GetGatewayMode(gwId int64) (gwMode types.GatewayMode, e
 	return gwMode, errors.Wrap(err, "db/pg_gateway/GetGatewayMode")
 }
 
-func  (*gatewayInterface)SetGatewayMode(gwId int64, gwMode types.GatewayMode) (err error) {
+func (*gatewayInterface) SetGatewayMode(gwId int64, gwMode types.GatewayMode) (err error) {
 	_, err = PgDB.Exec(`
 		UPDATE
 			gateway 
@@ -101,7 +102,7 @@ func  (*gatewayInterface)SetGatewayMode(gwId int64, gwMode types.GatewayMode) (e
 
 }
 
-func  (*gatewayInterface)GetGatewayIdByMac(mac string) (gwId int64, err error) {
+func (*gatewayInterface) GetGatewayIdByMac(mac string) (gwId int64, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
 			id
@@ -115,7 +116,7 @@ func  (*gatewayInterface)GetGatewayIdByMac(mac string) (gwId int64, err error) {
 	return gwId, errors.Wrap(err, "db/pg_gateway/GetGatewayIdByMac")
 }
 
-func  (*gatewayInterface)UpdateGatewayLastSeen(gwId int64, newTime time.Time) (err error) {
+func (*gatewayInterface) UpdateGatewayLastSeen(gwId int64, newTime time.Time) (err error) {
 	_, err = PgDB.Exec(`
 		UPDATE
 			gateway
@@ -129,7 +130,7 @@ func  (*gatewayInterface)UpdateGatewayLastSeen(gwId int64, newTime time.Time) (e
 	return errors.Wrap(err, "db/pg_gateway/UpdateGatewayLastSeen")
 }
 
-func  (*gatewayInterface)GetGatewayProfile(gwId int64) (gw types.Gateway, err error) {
+func (*gatewayInterface) GetGatewayProfile(gwId int64) (gw types.Gateway, err error) {
 
 	err = PgDB.QueryRow(
 		`SELECT
@@ -152,7 +153,7 @@ func  (*gatewayInterface)GetGatewayProfile(gwId int64) (gw types.Gateway, err er
 	return gw, errors.Wrap(err, "db/pg_gateway/GetGatewayProfile")
 }
 
-func  (*gatewayInterface)GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {
+func (*gatewayInterface) GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {
 	rows, err := PgDB.Query(
 		`SELECT
 			*
@@ -187,7 +188,7 @@ func  (*gatewayInterface)GetGatewayListOfWallet(walletId int64, offset int64, li
 	return gwList, errors.Wrap(err, "db/pg_gateway/GetGatewayListOfWallet")
 }
 
-func  (*gatewayInterface)GetGatewayRecCnt(walletId int64) (recCnt int64, err error) {
+func (*gatewayInterface) GetGatewayRecCnt(walletId int64) (recCnt int64, err error) {
 
 	err = PgDB.QueryRow(`
 		SELECT

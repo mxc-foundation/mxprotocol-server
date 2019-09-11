@@ -78,13 +78,13 @@ func (s *DeviceServerAPI) GetDeviceProfile(ctx context.Context, req *api.GetDevi
 		}
 
 		resp := api.DeviceProfile{
-			DevEui:devProfile.DevEui,
-			FkWallet:devProfile.FkWallet,
-			Mode:devProfile.Mode,
-			CreatedAt:devProfile.CreatedAt.String(),
-			LastSeenAt:devProfile.LastSeenAt.String(),
-			ApplicationId:devProfile.ApplicationId,
-			Name:devProfile.Name,
+			DevEui:        devProfile.DevEui,
+			FkWallet:      devProfile.FkWallet,
+			Mode:          string(devProfile.Mode),
+			CreatedAt:     devProfile.CreatedAt.String(),
+			LastSeenAt:    devProfile.LastSeenAt.String(),
+			ApplicationId: devProfile.ApplicationId,
+			Name:          devProfile.Name,
 		}
 
 		//var devProfileArray []db.Device
@@ -131,10 +131,9 @@ func (s *DeviceServerAPI) SetDeviceMode(ctx context.Context, req *api.SetDeviceM
 	case auth.OK:
 		log.WithFields(log.Fields{
 			"orgId":  req.OrgId,
-			"devID": req.DevId,
-			"devMod":  req.DevMode,
+			"devID":  req.DevId,
+			"devMod": req.DevMode,
 		})
-
 
 		return &api.SetDeviceModeResponse{UserProfile: &userProfile}, nil
 	}

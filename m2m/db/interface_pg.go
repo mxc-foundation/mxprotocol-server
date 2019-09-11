@@ -18,4 +18,3 @@ func (h *PostgresHandler) AddDB(d *sql.DB) {
 	h.DB = d
 	pg.PgDB = d
 }
-

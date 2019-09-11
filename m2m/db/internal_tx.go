@@ -8,6 +8,7 @@ type internalTxDBInterface interface {
 	CreateInternalTxTable() error
 	InsertInternalTx(it pg.InternalTx) (insertIndex int64, err error)
 }
+
 var internalTx internalTxDBInterface
 
 func dbCreateInternalTxTable() error {

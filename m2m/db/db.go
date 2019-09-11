@@ -35,7 +35,6 @@ func Setup(conf config.MxpConfig) error {
 	return nil
 }
 
-
 func dbInit() {
 	dbErrorInit()
 

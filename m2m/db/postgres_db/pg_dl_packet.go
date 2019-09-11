@@ -7,9 +7,10 @@ import (
 )
 
 type dlPacketInterface struct{}
+
 var PgDlPacket dlPacketInterface
 
-func  (*dlPacketInterface)CreateDlPktTable() error {
+func (*dlPacketInterface) CreateDlPktTable() error {
 	_, err := PgDB.Exec(`
 		DO $$
 		BEGIN
@@ -39,7 +40,7 @@ func  (*dlPacketInterface)CreateDlPktTable() error {
 	return errors.Wrap(err, "db/pg_dl_pkt/CreateDlPktTable")
 }
 
-func  (*dlPacketInterface)InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err error) {
+func (*dlPacketInterface) InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO dl_pkt (
 			fk_device,

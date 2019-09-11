@@ -15,6 +15,7 @@ type withdrawDBInterface interface {
 	GetWithdrawHist(walletId int64, offset int64, limit int64) ([]pg.WithdrawHistRet, error)
 	GetWithdrawHistRecCnt(walletId int64) (recCnt int64, err error)
 }
+
 var withdraw withdrawDBInterface
 
 type WithdrawHistRet pg.WithdrawHistRet

@@ -1,12 +1,12 @@
 package gateway
 
 import (
-"context"
-log "github.com/sirupsen/logrus"
-"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
-"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
-"google.golang.org/grpc/codes"
-"google.golang.org/grpc/status"
+	"context"
+	log "github.com/sirupsen/logrus"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func Setup() error {
@@ -61,6 +61,7 @@ func (s *GatewayServerAPI) GetGatewayProfile(ctx context.Context, req *api.GetGa
 
 	return nil, status.Errorf(codes.Unknown, "")
 }
+
 /*
 func (s *GatewayServerAPI) GetGatewayHistory(ctx context.Context, req *api.GetGatewayHistoryRequest) (*api.GetGatewayHistoryResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
@@ -82,7 +83,7 @@ func (s *GatewayServerAPI) GetGatewayHistory(ctx context.Context, req *api.GetGa
 	return nil, status.Errorf(codes.Unknown, "")
 }
 */
-func (s *GatewayServerAPI) SetGatewayMode (ctx context.Context, req *api.SetGatewayModeRequest) (*api.SetGatewayModeResponse, error) {
+func (s *GatewayServerAPI) SetGatewayMode(ctx context.Context, req *api.SetGatewayModeRequest) (*api.SetGatewayModeResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {

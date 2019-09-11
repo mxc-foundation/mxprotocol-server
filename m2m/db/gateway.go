@@ -18,6 +18,7 @@ type gatewayDBInterface interface {
 	GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error)
 	GetGatewayRecCnt(walletId int64) (recCnt int64, err error)
 }
+
 var gateway gatewayDBInterface
 
 func DbCreateGatewayTable() error {
