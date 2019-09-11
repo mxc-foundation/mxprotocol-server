@@ -6,10 +6,11 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-type aggGatewayUsageInterface struct {}
+type aggGatewayUsageInterface struct{}
+
 var PgAggGatewayUsage aggGatewayUsageInterface
 
-func (*aggGatewayUsageInterface)CreateAggGwUsgTable() error {
+func (*aggGatewayUsageInterface) CreateAggGwUsgTable() error {
 	_, err := PgDB.Exec(`
 	
 		CREATE TABLE IF NOT EXISTS agg_gateway_usage (
@@ -30,7 +31,7 @@ func (*aggGatewayUsageInterface)CreateAggGwUsgTable() error {
 	return errors.Wrap(err, "db/pg_agg_gateway_usage/CreateAggGwUsgTable")
 }
 
-func (*aggGatewayUsageInterface)InsertAggGwUsg(agu types.AggGwUsg) (insertIndex int64, err error) {
+func (*aggGatewayUsageInterface) InsertAggGwUsg(agu types.AggGwUsg) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO agg_gateway_usage (
 			fk_gateway ,

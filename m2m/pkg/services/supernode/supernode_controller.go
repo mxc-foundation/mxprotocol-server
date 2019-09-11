@@ -2,11 +2,11 @@ package supernode
 
 import (
 	"context"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
 	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/ext_account"
@@ -55,7 +55,7 @@ func NewSupernodeServerAPI() *SupernodeServerAPI {
 	return &SupernodeServerAPI{serviceName: "supernode"}
 }
 
-func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *api.AddSuperNodeMoneyAccountRequest) (*api.AddSuperNodeMoneyAccountResponse, error) {
+func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *m2m.AddSuperNodeMoneyAccountRequest) (*m2m.AddSuperNodeMoneyAccountResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
 
 	switch res.Type {
@@ -67,27 +67,27 @@ func (s *SupernodeServerAPI) AddSuperNodeMoneyAccount(ctx context.Context, in *a
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
-		return &api.AddSuperNodeMoneyAccountResponse{UserProfile: &userProfile},
+		return &m2m.AddSuperNodeMoneyAccountResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 	case auth.OK:
 		log.WithFields(log.Fields{
-			"moneyAbbr":   api.Money_name[int32(in.MoneyAbbr)],
+			"moneyAbbr":   m2m.Money_name[int32(in.MoneyAbbr)],
 			"accountAddr": strings.ToLower(in.AccountAddr),
 		}).Debug("grpc_api/AddSuperNodeMoneyAccount")
 
-		err := ext_account.UpdateActiveExtAccount(0, in.AccountAddr, api.Money_name[int32(in.MoneyAbbr)])
+		err := ext_account.UpdateActiveExtAccount(0, in.AccountAddr, m2m.Money_name[int32(in.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/AddSuperNodeMoneyAccount")
-			return &api.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
+			return &m2m.AddSuperNodeMoneyAccountResponse{Status: false, UserProfile: &userProfile}, nil
 		}
 
-		return &api.AddSuperNodeMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
+		return &m2m.AddSuperNodeMoneyAccountResponse{Status: true, UserProfile: &userProfile}, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")
 }
 
-func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context, req *api.GetSuperNodeActiveMoneyAccountRequest) (*api.GetSuperNodeActiveMoneyAccountResponse, error) {
+func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context, req *m2m.GetSuperNodeActiveMoneyAccountRequest) (*m2m.GetSuperNodeActiveMoneyAccountResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
 
 	switch res.Type {
@@ -99,22 +99,22 @@ func (s *SupernodeServerAPI) GetSuperNodeActiveMoneyAccount(ctx context.Context,
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
-		return &api.GetSuperNodeActiveMoneyAccountResponse{UserProfile: &userProfile},
+		return &m2m.GetSuperNodeActiveMoneyAccountResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
 
 		log.WithFields(log.Fields{
-			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
+			"moneyAbbr": m2m.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetSuperNodeActiveMoneyAccount")
 
-		accountAddr, err := ext_account.GetActiveExtAccount(0, api.Money_name[int32(req.MoneyAbbr)])
+		accountAddr, err := ext_account.GetActiveExtAccount(0, m2m.Money_name[int32(req.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetSuperNodeActiveMoneyAccount")
-			return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "", UserProfile: &userProfile}, nil
+			return &m2m.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: "", UserProfile: &userProfile}, nil
 		}
 
-		return &api.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: accountAddr, UserProfile: &userProfile}, nil
+		return &m2m.GetSuperNodeActiveMoneyAccountResponse{SupernodeActiveAccount: accountAddr, UserProfile: &userProfile}, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")

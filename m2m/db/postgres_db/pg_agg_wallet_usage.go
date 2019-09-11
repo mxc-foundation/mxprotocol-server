@@ -6,10 +6,11 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-type aggWalletUsageInterface struct {}
+type aggWalletUsageInterface struct{}
+
 var PgAggWalletUsage aggWalletUsageInterface
 
-func (*aggWalletUsageInterface)CreateAggWltUsgTable() error {
+func (*aggWalletUsageInterface) CreateAggWltUsgTable() error {
 	_, err := PgDB.Exec(`
 	
 		CREATE TABLE IF NOT EXISTS agg_wallet_usage (
@@ -33,7 +34,7 @@ func (*aggWalletUsageInterface)CreateAggWltUsgTable() error {
 	return errors.Wrap(err, "db/pg_agg_wallet_usage/CreateAggWltUsgTable")
 }
 
-func (*aggWalletUsageInterface)InsertAggWltUsg(awu types.AggWltUsg) (insertIndex int64, err error) {
+func (*aggWalletUsageInterface) InsertAggWltUsg(awu types.AggWltUsg) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO agg_wallet_usage (
 			fk_wallet ,

@@ -78,7 +78,7 @@ func dbInit() {
 		log.WithError(err).Fatal("db/CreateDeviceTable")
 	}
 
-	if err := Gateway.CreateGatewayTable();err != nil {
+	if err := Gateway.CreateGatewayTable(); err != nil {
 		log.WithError(err).Fatal("db/CreateGatewayTable")
 	}
 

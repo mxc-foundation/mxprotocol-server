@@ -30,7 +30,8 @@ ui/build:
 api:
 	@echo "Generating API code from .proto files"
 	@go mod vendor
-	@go generate api/api.go
+	@go generate api/m2m/api.go 
+	@go generate api/appserver/api.go
 	@rm -rf vendor/
 
 pkg/static pkg/migrations: static/swagger/api.swagger.json

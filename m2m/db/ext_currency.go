@@ -10,5 +10,5 @@ type extCurrencyDBInterface interface {
 	InsertExtCurr(ec types.ExtCurrency) (insertIndex int64, err error)
 	GetExtCurrencyIdByAbbr(extCurrencyAbbr string) (int64, error)
 }
-var ExtCurrency = extCurrencyDBInterface(&pg.PgExtCurrency)
 
+var ExtCurrency = extCurrencyDBInterface(&pg.PgExtCurrency)

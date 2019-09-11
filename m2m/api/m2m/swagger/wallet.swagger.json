@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "gateway.proto",
+    "title": "wallet.proto",
     "version": "version not set"
   },
   "schemes": [
@@ -15,162 +15,173 @@
     "application/json"
   ],
   "paths": {
-    "/api/device/getGwList": {
+    "/api/wallet/balance/{orgId}": {
       "get": {
-        "operationId": "GetGatewayList",
+        "operationId": "GetWalletBalance",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetGatewayListResponse"
+              "$ref": "#/definitions/apiGetWalletBalanceResponse"
             }
           }
         },
         "parameters": [
           {
             "name": "orgId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "GatewayService"
-        ]
-      }
-    },
-    "/api/device/getGwProfile": {
-      "get": {
-        "operationId": "GetGatewayProfile",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiGetGatewayProfileResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "orgId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "gwId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "GatewayService"
-        ]
-      }
-    },
-    "/api/device/setGwMode": {
-      "post": {
-        "operationId": "SetGatewayMode",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiSetGatewayModeResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
+            "in": "path",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/apiSetGatewayModeRequest"
-            }
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
-          "GatewayService"
+          "WalletService"
+        ]
+      }
+    },
+    "/api/wallet/vmxc/tx_history": {
+      "get": {
+        "operationId": "GetVmxcTxHistory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetVmxcTxHistoryResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "WalletService"
+        ]
+      }
+    },
+    "/api/wallet/{orgId}/usage_history": {
+      "get": {
+        "operationId": "GetWalletUsageHist",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetWalletUsageHistResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "WalletService"
         ]
       }
     }
   },
   "definitions": {
-    "apiGatewayMode": {
-      "type": "string",
-      "enum": [
-        "gw_inactive",
-        "gw_free_gateways_limited",
-        "gw_whole_network"
-      ],
-      "default": "gw_inactive"
-    },
-    "apiGatewayProfile": {
+    "apiGetVmxcTxHistoryResponse": {
       "type": "object",
       "properties": {
-        "id": {
+        "count": {
           "type": "string",
           "format": "int64"
         },
-        "fkGatewayLa": {
-          "type": "string",
-          "format": "int64"
-        },
-        "mode": {
-          "type": "string"
-        }
-      }
-    },
-    "apiGetGatewayListResponse": {
-      "type": "object",
-      "properties": {
-        "gwList": {
-          "type": "string"
+        "txHistory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiVmxcTxHistory"
+          }
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
         }
       }
     },
-    "apiGetGatewayProfileResponse": {
+    "apiGetWalletBalanceResponse": {
       "type": "object",
       "properties": {
-        "gwProfile": {
+        "balance": {
+          "type": "number",
+          "format": "double"
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
+        }
+      }
+    },
+    "apiGetWalletUsageHist": {
+      "type": "object",
+      "properties": {
+        "StartTime": {
+          "type": "string"
+        },
+        "Duration": {
+          "type": "string"
+        },
+        "CountUplinkPktsDv": {
+          "type": "string",
+          "format": "int64"
+        },
+        "CountDownlinkPktsDv": {
+          "type": "string",
+          "format": "int64"
+        },
+        "CountUplinkPktsGw": {
+          "type": "string",
+          "format": "int64"
+        },
+        "CountDownlinkPktsGw": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Cost": {
+          "type": "number",
+          "format": "double"
+        },
+        "Income": {
+          "type": "number",
+          "format": "double"
+        },
+        "TotalPayment": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "apiGetWalletUsageHistResponse": {
+      "type": "object",
+      "properties": {
+        "walletUsageHis": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/apiGatewayProfile"
+            "$ref": "#/definitions/apiGetWalletUsageHist"
           }
         },
         "userProfile": {
@@ -238,34 +249,6 @@
         }
       }
     },
-    "apiSetGatewayModeRequest": {
-      "type": "object",
-      "properties": {
-        "orgId": {
-          "type": "string",
-          "format": "int64"
-        },
-        "gwId": {
-          "type": "string",
-          "format": "int64"
-        },
-        "gwMode": {
-          "$ref": "#/definitions/apiGatewayMode"
-        }
-      }
-    },
-    "apiSetGatewayModeResponse": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "boolean",
-          "format": "boolean"
-        },
-        "userProfile": {
-          "$ref": "#/definitions/apiProfileResponse"
-        }
-      }
-    },
     "apiUser": {
       "type": "object",
       "properties": {
@@ -299,6 +282,27 @@
         "note": {
           "type": "string",
           "description": "Optional note to store with the user."
+        }
+      }
+    },
+    "apiVmxcTxHistory": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "txType": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "createdAt": {
+          "type": "string"
         }
       }
     }

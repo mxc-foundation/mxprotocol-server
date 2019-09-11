@@ -47,10 +47,10 @@ func (*extAccountInterface) InsertExtAccount(walletId int64, newAccount string, 
 	}
 
 	ea := extAccount{
-		FkWallet: walletId,
+		FkWallet:      walletId,
 		FkExtCurrency: extCurrId,
-		AccountAdr: strings.ToLower(newAccount),
-		InsertTime: time.Now().UTC(),
+		AccountAdr:    strings.ToLower(newAccount),
+		InsertTime:    time.Now().UTC(),
 	}
 
 	alreadyExist, errAlreadyExist := alreadyExistActiveAcnt(ea.AccountAdr, ea.FkExtCurrency)

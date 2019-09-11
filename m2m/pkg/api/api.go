@@ -11,7 +11,7 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/tmc/grpc-websocket-proxy/wsproxy"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/device"
@@ -50,14 +50,14 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	server := grpc.NewServer()
 
 	// register all servers here
-	api.RegisterWithdrawServiceServer(server, withdraw.NewWithdrawServerAPI())
-	api.RegisterMoneyServiceServer(server, ext_account.NewMoneyServerAPI())
-	api.RegisterTopUpServiceServer(server, topup.NewTopUpServerAPI())
-	api.RegisterWalletServiceServer(server, wallet.NewWalletServerAPI())
-	api.RegisterSuperNodeServiceServer(server, supernode.NewSupernodeServerAPI())
-	api.RegisterInternalServiceServer(server, auth.NewInternalServerAPI())
-	api.RegisterDeviceServiceServer(server, device.NewDeviceServerAPI())
-	api.RegisterGatewayServiceServer(server, gateway.NewGatewayServerAPI())
+	m2m.RegisterWithdrawServiceServer(server, withdraw.NewWithdrawServerAPI())
+	m2m.RegisterMoneyServiceServer(server, ext_account.NewMoneyServerAPI())
+	m2m.RegisterTopUpServiceServer(server, topup.NewTopUpServerAPI())
+	m2m.RegisterWalletServiceServer(server, wallet.NewWalletServerAPI())
+	m2m.RegisterSuperNodeServiceServer(server, supernode.NewSupernodeServerAPI())
+	m2m.RegisterInternalServiceServer(server, auth.NewInternalServerAPI())
+	m2m.RegisterDeviceServiceServer(server, device.NewDeviceServerAPI())
+	m2m.RegisterGatewayServiceServer(server, gateway.NewGatewayServerAPI())
 
 	var clientHttpHandler http.Handler
 	var err error
@@ -184,22 +184,22 @@ func getJSONGateway(ctx context.Context) (http.Handler, error) {
 	))
 
 	// register all services
-	if err := api.RegisterWithdrawServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+	if err := m2m.RegisterWithdrawServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register withdraw handler error")
 	}
-	if err := api.RegisterMoneyServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+	if err := m2m.RegisterMoneyServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register ext_account handler error")
 	}
-	if err := api.RegisterTopUpServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+	if err := m2m.RegisterTopUpServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register top_up handler error")
 	}
-	if err := api.RegisterWalletServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+	if err := m2m.RegisterWalletServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register top_up handler error")
 	}
-	if err := api.RegisterSuperNodeServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+	if err := m2m.RegisterSuperNodeServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register top_up handler error")
 	}
-	if err := api.RegisterInternalServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+	if err := m2m.RegisterInternalServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register auth get jwt handler error")
 	}
 

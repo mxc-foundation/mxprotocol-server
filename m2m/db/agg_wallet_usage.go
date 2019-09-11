@@ -9,4 +9,5 @@ type aggWalletUsageDBInterface interface {
 	CreateAggWltUsgTable() error
 	InsertAggWltUsg(awu types.AggWltUsg) (insertIndex int64, err error)
 }
+
 var AggWalletUsage = aggWalletUsageDBInterface(&pg.PgAggWalletUsage)

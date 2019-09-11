@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
@@ -61,7 +61,7 @@ func NewWithdrawServerAPI() *WithdrawServerAPI {
 	return &WithdrawServerAPI{serviceName: "withdraw"}
 }
 
-func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *api.ModifyWithdrawFeeRequest) (*api.ModifyWithdrawFeeResponse, error) {
+func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *m2m.ModifyWithdrawFeeRequest) (*m2m.ModifyWithdrawFeeResponse, error) {
 	if in.OrgId != 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "Only superadmin is authorized to modify withdraw fee.")
 	}
@@ -77,30 +77,30 @@ func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *api.Modif
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
-		return &api.ModifyWithdrawFeeResponse{UserProfile: &userProfile},
+		return &m2m.ModifyWithdrawFeeResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
 
 		log.WithFields(log.Fields{
-			"moneyAbbr":   api.Money_name[int32(in.MoneyAbbr)],
+			"moneyAbbr":   m2m.Money_name[int32(in.MoneyAbbr)],
 			"withdrawFee": in.WithdrawFee,
 		}).Debug("grpc_api/ModifyWithdrawFee")
 
-		if _, err := db.WithdrawFee.InsertWithdrawFee(api.Money_name[int32(in.MoneyAbbr)], in.WithdrawFee); err != nil {
+		if _, err := db.WithdrawFee.InsertWithdrawFee(m2m.Money_name[int32(in.MoneyAbbr)], in.WithdrawFee); err != nil {
 			log.WithError(err).Error("grpc_api/ModifyWithdrawFee")
-			return &api.ModifyWithdrawFeeResponse{Status: false, UserProfile: &userProfile}, nil
+			return &m2m.ModifyWithdrawFeeResponse{Status: false, UserProfile: &userProfile}, nil
 		}
 
-		ctxWithdraw.withdrawFee[api.Money_name[int32(in.MoneyAbbr)]] = in.WithdrawFee
-		return &api.ModifyWithdrawFeeResponse{Status: true, UserProfile: &userProfile}, nil
+		ctxWithdraw.withdrawFee[m2m.Money_name[int32(in.MoneyAbbr)]] = in.WithdrawFee
+		return &m2m.ModifyWithdrawFeeResponse{Status: true, UserProfile: &userProfile}, nil
 
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")
 }
 
-func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWithdrawFeeRequest) (*api.GetWithdrawFeeResponse, error) {
+func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *m2m.GetWithdrawFeeRequest) (*m2m.GetWithdrawFeeResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
@@ -112,28 +112,28 @@ func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWith
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
-		return &api.GetWithdrawFeeResponse{UserProfile: &userProfile},
+		return &m2m.GetWithdrawFeeResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
 
 		log.WithFields(log.Fields{
-			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
+			"moneyAbbr": m2m.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetWithdrawFee")
 
-		withdrawFee, err := db.WithdrawFee.GetActiveWithdrawFee(api.Money_name[int32(req.MoneyAbbr)])
+		withdrawFee, err := db.WithdrawFee.GetActiveWithdrawFee(m2m.Money_name[int32(req.MoneyAbbr)])
 		if err != nil {
-			return &api.GetWithdrawFeeResponse{UserProfile: &userProfile}, nil
+			return &m2m.GetWithdrawFeeResponse{UserProfile: &userProfile}, nil
 		}
 
-		return &api.GetWithdrawFeeResponse{WithdrawFee: withdrawFee, UserProfile: &userProfile}, nil
+		return &m2m.GetWithdrawFeeResponse{WithdrawFee: withdrawFee, UserProfile: &userProfile}, nil
 
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")
 }
 
-func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.GetWithdrawHistoryRequest) (*api.GetWithdrawHistoryResponse, error) {
+func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *m2m.GetWithdrawHistoryRequest) (*m2m.GetWithdrawHistoryResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
@@ -145,7 +145,7 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
-		return &api.GetWithdrawHistoryResponse{UserProfile: &userProfile},
+		return &m2m.GetWithdrawHistoryResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
@@ -159,22 +159,22 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 		walletId, err := wallet.GetWalletId(req.OrgId)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetWithdrawHistory")
-			return &api.GetWithdrawHistoryResponse{UserProfile: &userProfile}, nil
+			return &m2m.GetWithdrawHistoryResponse{UserProfile: &userProfile}, nil
 		}
 
-		response := api.GetWithdrawHistoryResponse{UserProfile: &userProfile}
+		response := m2m.GetWithdrawHistoryResponse{UserProfile: &userProfile}
 		ptr, err := db.Withdraw.GetWithdrawHist(walletId, req.Offset*req.Limit, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetWithdrawHistory")
-			return &api.GetWithdrawHistoryResponse{UserProfile: &userProfile}, nil
+			return &m2m.GetWithdrawHistoryResponse{UserProfile: &userProfile}, nil
 		}
 
 		for _, v := range ptr {
-			if v.ExtCurrency != api.Money_name[int32(req.MoneyAbbr)] {
+			if v.ExtCurrency != m2m.Money_name[int32(req.MoneyAbbr)] {
 				continue
 			}
 
-			history := api.WithdrawHistory{}
+			history := m2m.WithdrawHistory{}
 			history.From = v.AcntSender
 			history.To = v.AcntRcvr
 			history.MoneyType = v.ExtCurrency
@@ -195,7 +195,7 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 	return nil, status.Errorf(codes.Unknown, "")
 }
 
-func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawReqRequest) (*api.WithdrawReqResponse, error) {
+func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *m2m.WithdrawReqRequest) (*m2m.WithdrawReqResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
@@ -207,58 +207,58 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
 
 	case auth.OrganizationIdRearranged:
-		return &api.WithdrawReqResponse{UserProfile: &userProfile},
+		return &m2m.WithdrawReqResponse{UserProfile: &userProfile},
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
 		log.WithFields(log.Fields{
 			"orgId":     req.OrgId,
-			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
+			"moneyAbbr": m2m.Money_name[int32(req.MoneyAbbr)],
 			"amount":    req.Amount,
 		}).Debug("grpc_api/WithdrawReq")
 
 		withdrawfee, err := db.WithdrawFee.GetActiveWithdrawFee(req.MoneyAbbr.String())
 		if err != nil {
-			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get withdrawfee from DB: %s", err)
+			return &m2m.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get withdrawfee from DB: %s", err)
 		}
 
 		walletID, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
 		if err != nil {
-			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get walletID from DB: %s", err)
+			return &m2m.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get walletID from DB: %s", err)
 		}
 
 		balance, err := db.Wallet.GetWalletBalance(walletID)
 		if err != nil {
-			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get wallet balance from DB: %s", err)
+			return &m2m.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get wallet balance from DB: %s", err)
 		}
 
 		//check if the ext_account balance is enough in wallet
 		if withdrawfee+req.Amount > balance {
-			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.Unavailable, "Not enough balance in user wallet")
+			return &m2m.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.Unavailable, "Not enough balance in user wallet")
 		}
 
 		receiverAdd, err := db.ExtAccount.GetUserExtAccountAdr(walletID, req.MoneyAbbr.String())
 		if err != nil {
-			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get user address from DB: %s", err)
+			return &m2m.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get user address from DB: %s", err)
 		}
 
 		// also updated the balance and history
 		withdrawID, err := db.Withdraw.InitWithdrawReq(walletID, req.Amount, req.MoneyAbbr.String())
 		if err != nil {
-			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get wallet withdrawID from DB: %s", err)
+			return &m2m.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get wallet withdrawID from DB: %s", err)
 		}
 
 		// make a new goroutine for checking the payment service
 		go func() {
 			paymentRoutine(ctx, &config.Cstruct, receiverAdd, walletID, withdrawID, req)
 		}()
-		return &api.WithdrawReqResponse{Status: true, UserProfile: &userProfile}, nil
+		return &m2m.WithdrawReqResponse{Status: true, UserProfile: &userProfile}, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")
 }
 
-func paymentRoutine(ctx context.Context, conf *config.MxpConfig, receiverAdd string, walletID, withdrawID int64, req *api.WithdrawReqRequest) {
+func paymentRoutine(ctx context.Context, conf *config.MxpConfig, receiverAdd string, walletID, withdrawID int64, req *m2m.WithdrawReqRequest) {
 	amount := fmt.Sprintf("%f", req.Amount)
 	paymentReply, err := paymentReq(ctx, &config.Cstruct, amount, receiverAdd, withdrawID)
 	if err != nil {

@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package api;
+import "api/m2m/device.proto";
+import "api/m2m/profile.proto";
+
+service InnerDeviceService {
+    rpc AddDevice (AddDeviceRequest) returns (AddDeviceResponse);
+    rpc DeleteDevice (DeleteDeviceRequest) returns (DeleteDeviceResponse);
+}
+
+message AddDeviceRequest {
+    int64 org_id = 1;
+    repeated DeviceProfile dev_profile = 2;
+    string mac_address = 3;
+}
+
+message AddDeviceResponse {
+    int64 dev_id = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message DeleteDeviceRequest {
+    int64 org_id = 1;
+    string mac_address = 2;
+}
+
+message DeleteDeviceResponse {
+    bool status = 1;
+    ProfileResponse user_profile = 2;
+}

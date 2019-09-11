@@ -20,4 +20,3 @@ type gatewayDBInterface interface {
 }
 
 var Gateway = gatewayDBInterface(&pg.PgGateway)
-

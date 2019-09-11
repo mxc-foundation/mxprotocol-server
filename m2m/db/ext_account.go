@@ -18,4 +18,5 @@ type extAccountDBInterface interface {
 	GetExtAcntHist(walletId int64, offset int64, limit int64) ([]types.ExtAccountHistRet, error)
 	GetExtAcntHistRecCnt(walletId int64) (recCnt int64, err error)
 }
+
 var ExtAccount = extAccountDBInterface(&pg.PgExtAccount)

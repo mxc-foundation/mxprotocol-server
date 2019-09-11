@@ -9,5 +9,5 @@ type aggGatewayUsageDBInterface interface {
 	CreateAggGwUsgTable() error
 	InsertAggGwUsg(agu types.AggGwUsg) (insertIndex int64, err error)
 }
-var AggGatewayUsage = aggGatewayUsageDBInterface(&pg.PgAggGatewayUsage)
 
+var AggGatewayUsage = aggGatewayUsageDBInterface(&pg.PgAggGatewayUsage)
