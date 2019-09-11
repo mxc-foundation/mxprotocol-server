@@ -15,7 +15,53 @@
     "application/json"
   ],
   "paths": {
-    "/api/device/getGwList": {
+    "/api/gateway/getGwHist": {
+      "get": {
+        "operationId": "GetGatewayHistory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetGatewayHistoryResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "gwId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "GatewayService"
+        ]
+      }
+    },
+    "/api/gateway/getGwList": {
       "get": {
         "operationId": "GetGatewayList",
         "responses": {
@@ -33,6 +79,27 @@
             "required": false,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "walletId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -40,7 +107,7 @@
         ]
       }
     },
-    "/api/device/getGwProfile": {
+    "/api/gateway/getGwProfile": {
       "get": {
         "operationId": "GetGatewayProfile",
         "responses": {
@@ -65,6 +132,20 @@
             "required": false,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -72,7 +153,7 @@
         ]
       }
     },
-    "/api/device/setGwMode": {
+    "/api/gateway/setGwMode": {
       "post": {
         "operationId": "SetGatewayMode",
         "responses": {
@@ -103,11 +184,12 @@
     "apiGatewayMode": {
       "type": "string",
       "enum": [
-        "gw_inactive",
-        "gw_free_gateways_limited",
-        "gw_whole_network"
+        "GW_INACTIVE",
+        "GW_FREE_GATEWAYS_LIMITED",
+        "GW_WHOLE_NETWORK",
+        "GW_DELETED"
       ],
-      "default": "gw_inactive"
+      "default": "GW_INACTIVE"
     },
     "apiGatewayProfile": {
       "type": "object",
@@ -116,20 +198,57 @@
           "type": "string",
           "format": "int64"
         },
-        "fkGatewayLa": {
+        "mac": {
+          "type": "string"
+        },
+        "fkGwNs": {
+          "type": "string",
+          "format": "int64"
+        },
+        "fkWallet": {
           "type": "string",
           "format": "int64"
         },
         "mode": {
           "type": "string"
+        },
+        "createAt": {
+          "type": "string"
+        },
+        "lastSeenAt": {
+          "type": "string"
+        },
+        "orgId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "apiGetGatewayHistoryResponse": {
+      "type": "object",
+      "properties": {
+        "gwHistory": {
+          "type": "string"
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
         }
       }
     },
     "apiGetGatewayListResponse": {
       "type": "object",
       "properties": {
-        "gwList": {
-          "type": "string"
+        "gwProfile": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiGatewayProfile"
+          }
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
@@ -140,10 +259,7 @@
       "type": "object",
       "properties": {
         "gwProfile": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/apiGatewayProfile"
-          }
+          "$ref": "#/definitions/apiGatewayProfile"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"

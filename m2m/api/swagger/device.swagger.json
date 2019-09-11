@@ -40,6 +40,20 @@
             "required": false,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -61,6 +75,27 @@
         "parameters": [
           {
             "name": "orgId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "walletId",
             "in": "query",
             "required": false,
             "type": "string",
@@ -93,6 +128,20 @@
           },
           {
             "name": "devId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
             "in": "query",
             "required": false,
             "type": "string",
@@ -132,6 +181,16 @@
     }
   },
   "definitions": {
+    "apiDeviceMode": {
+      "type": "string",
+      "enum": [
+        "DV_INACTIVE",
+        "DV_FREE_GATEWAYS_LIMITED",
+        "DV_WHOLE_NETWORK",
+        "DV_DELETED"
+      ],
+      "default": "DV_INACTIVE"
+    },
     "apiDeviceProfile": {
       "type": "object",
       "properties": {
@@ -139,11 +198,27 @@
           "type": "string",
           "format": "int64"
         },
-        "fkDeviceLa": {
+        "devEui": {
+          "type": "string"
+        },
+        "fkWallet": {
           "type": "string",
           "format": "int64"
         },
         "mode": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "lastSeenAt": {
+          "type": "string"
+        },
+        "applicationId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
           "type": "string"
         }
       }
@@ -177,10 +252,7 @@
       "type": "object",
       "properties": {
         "devProfile": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/apiDeviceProfile"
-          }
+          "$ref": "#/definitions/apiDeviceProfile"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
@@ -259,7 +331,7 @@
           "format": "int64"
         },
         "devMode": {
-          "type": "string"
+          "$ref": "#/definitions/apiDeviceMode"
         }
       }
     },

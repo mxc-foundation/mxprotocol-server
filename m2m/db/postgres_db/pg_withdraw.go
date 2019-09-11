@@ -380,5 +380,5 @@ func (pgDbp *PGHandler) GetWithdrawHistRecCnt(walletId int64) (recCnt int64, err
 			w.id = $1		
 	`, walletId).Scan(&recCnt)
 
-	return recCnt, err
+	return recCnt, errors.Wrap(err, "db/GetWithdrawHistRecCnt")
 }
