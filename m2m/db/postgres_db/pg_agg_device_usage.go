@@ -16,7 +16,7 @@ func (*aggDeviceUsageInterface) CreateAggDvUsgTable() error {
 		CREATE TABLE IF NOT EXISTS agg_device_usage (
 			id SERIAL PRIMARY KEY,
 			fk_device INT REFERENCES device (id) NOT NULL,
-			fk_agg_wallet_usage INT , -- REFERENCES agg_wallet_usage (id)   @@ to be added
+			fk_agg_wallet_usage INT  REFERENCES agg_wallet_usage (id),
 			dl_cnt INT    DEFAULT 0 ,
 			ul_cnt     INT DEFAULT 0,
 			dl_cnt_free    INT DEFAULT 0,
@@ -25,7 +25,7 @@ func (*aggDeviceUsageInterface) CreateAggDvUsgTable() error {
 			ul_size_sum  FLOAT DEFAULT 0,
 			start_at TIMESTAMP NOT NULL,
 			duration_minutes   INT ,
-			cost  NUMERIC(28,18) DEFAULT 0
+			spend  NUMERIC(28,18) DEFAULT 0
 		);		
 	`)
 	return errors.Wrap(err, "db/pg_agg_device_usage/CreateAggDvUsgTable")
@@ -44,7 +44,7 @@ func (*aggDeviceUsageInterface) InsertAggDvUsg(adu types.AggDvUsg) (insertIndex 
 			ul_size_sum ,
 			start_at ,
 			duration_minutes ,
-			cost  
+			spend  
 			) 
 		VALUES 
 			($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
@@ -60,7 +60,7 @@ func (*aggDeviceUsageInterface) InsertAggDvUsg(adu types.AggDvUsg) (insertIndex 
 		adu.UlSizeSum,
 		adu.StartAt,
 		adu.DurationMinutes,
-		adu.Cost,
+		adu.Spend,
 	).Scan(&insertIndex)
 	return insertIndex, errors.Wrap(err, "db/pg_agg_device_usage/InsertAggDvUsg")
 }

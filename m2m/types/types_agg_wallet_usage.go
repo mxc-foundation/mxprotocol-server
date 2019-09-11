@@ -2,10 +2,9 @@ package types
 
 import "time"
 
-type AggDvUsg struct {
+type AggWltUsg struct {
 	Id              int64     `db:"id"`
-	FkDevice        int64     `db:"fk_device"` // fk in App server
-	FkAggWalletUsg  int64     `db:"fk_agg_wallet_usg"`
+	FkWallet        int64     `db:"fk_wallet"`
 	DlCnt           int64     `db:"dl_cnt"`
 	UlCnt           int64     `db:"ul_cnt"`
 	DlCntFree       int64     `db:"dl_cnt_free"`
@@ -15,4 +14,7 @@ type AggDvUsg struct {
 	StartAt         time.Time `db:"start_at"`
 	DurationMinutes float64   `db:"duration_minutes"`
 	Spend           float64   `db:"spend"`
+	Income          float64   `db:"income"`
+	BalanceIncrease float64   `db:"balance_increase"`
+	UpdatedBalance  float64   `db:"updated_balance"`
 }
