@@ -4,7 +4,7 @@ import (
 	"time"
 
 	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
-	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
 type gatewayDBInterface interface {

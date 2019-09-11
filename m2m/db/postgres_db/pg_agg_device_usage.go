@@ -3,7 +3,7 @@ package postgres_db
 import (
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
-	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
 type aggDeviceUsageInterface struct{}
