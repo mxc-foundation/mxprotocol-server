@@ -271,5 +271,5 @@ func (pgDbp *PGHandler) GetTopupHistRecCnt(walletId int64) (recCnt int64, err er
 		
 	`, walletId).Scan(&recCnt)
 
-	return recCnt, err
+	return recCnt, errors.Wrap(err, "db/GetTopupHistRecCnt")
 }
