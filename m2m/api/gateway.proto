@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package api;
+
+import "google/api/annotations.proto";
+import "profile.proto";
+
+service GatewayService {
+    rpc GetGatewayList(GetGatewayListRequest) returns (GetGatewayListResponse){
+        option(google.api.http) = {
+			get: "/api/gateway/getGwList"
+		};
+    }
+
+    rpc GetGatewayProfile(GetGatewayProfileRequest) returns (GetGatewayProfileResponse){
+        option(google.api.http) = {
+			get: "/api/gateway/getGwProfile"
+		};
+    }
+
+    rpc GetGatewayHistory(GetGatewayHistoryRequest) returns (GetGatewayHistoryResponse) {
+        option (google.api.http) = {
+			get: "/api/gateway/getGwHist"
+		};
+    }
+
+    rpc SetGatewayMode(SetGatewayModeRequest) returns (SetGatewayModeResponse) {
+            option (google.api.http) = {
+    			post: "/api/gateway/setGwMode"
+    			body: "*"
+    		};
+        }
+}
+
+enum GatewayMode {
+    GW_INACTIVE = 0;
+    GW_FREE_GATEWAYS_LIMITED = 1;
+    GW_WHOLE_NETWORK = 2;
+    GW_DELETED = 3;
+}
+
+message GetGatewayListRequest {
+    int64 org_id = 1;
+    int64 offset = 2;
+    int64 limit = 3;
+    int64 wallet_id = 4;
+}
+
+message GetGatewayListResponse {
+    repeated GatewayProfile gw_profile = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message GetGatewayProfileRequest {
+    int64 org_id = 1;
+    int64 gw_id = 2;
+    int64 offset = 3;
+    int64 limit = 4;
+}
+
+message GatewayProfile {
+    int64 id = 1;
+    string mac = 2;
+    int64 fk_gw_ns = 3;
+    int64 fk_wallet = 4;
+    string mode = 5;
+    string create_at = 6;
+    string last_seen_at = 7;
+    int64 org_id = 8;
+    string description = 9;
+    string name = 10;
+}
+
+message GetGatewayProfileResponse {
+    GatewayProfile gw_profile = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message GetGatewayHistoryRequest {
+    int64 org_id = 1;
+    int64 gw_id = 2;
+    int64 offset = 3;
+    int64 limit = 4;
+}
+
+message GetGatewayHistoryResponse {
+    string gw_history = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message SetGatewayModeRequest {
+    int64 org_id = 1;
+    int64 gw_id = 2;
+    GatewayMode gw_mode = 3;
+}
+
+message SetGatewayModeResponse {
+    bool status = 1;
+    ProfileResponse user_profile = 3;
+}

@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/ext_account/active_account/{money_abbr}": {
+    "/api/ext_account/active_account/{moneyAbbr}": {
       "get": {
         "operationId": "GetActiveMoneyAccount",
         "responses": {
@@ -28,7 +28,7 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",
@@ -49,7 +49,7 @@
         ]
       }
     },
-    "/api/ext_account/change_history/{money_abbr}": {
+    "/api/ext_account/change_history/{moneyAbbr}": {
       "get": {
         "operationId": "GetChangeMoneyAccountHistory",
         "responses": {
@@ -62,7 +62,7 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",
@@ -97,7 +97,7 @@
         ]
       }
     },
-    "/api/ext_account/modify_account/{money_abbr}": {
+    "/api/ext_account/modify_account/{moneyAbbr}": {
       "put": {
         "operationId": "ModifyMoneyAccount",
         "responses": {
@@ -110,7 +110,7 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",

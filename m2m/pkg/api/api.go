@@ -14,7 +14,9 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/device"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/ext_account"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/gateway"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/supernode"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/topup"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
@@ -54,6 +56,8 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	api.RegisterWalletServiceServer(server, wallet.NewWalletServerAPI())
 	api.RegisterSuperNodeServiceServer(server, supernode.NewSupernodeServerAPI())
 	api.RegisterInternalServiceServer(server, auth.NewInternalServerAPI())
+	api.RegisterDeviceServiceServer(server, device.NewDeviceServerAPI())
+	api.RegisterGatewayServiceServer(server, gateway.NewGatewayServerAPI())
 
 	var clientHttpHandler http.Handler
 	var err error
