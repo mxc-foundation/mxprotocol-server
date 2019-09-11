@@ -70,7 +70,7 @@ func (s *DeviceServerAPI) GetDeviceProfile(ctx context.Context, req *api.GetDevi
 			"offset": req.Offset,
 			"limit":  req.Limit,
 		})
-		devProfile, err := db.DbGetDeviceProfile(req.DevId)
+		devProfile, err := db.Device.GetDeviceProfile(req.DevId)
 		if err != nil {
 			fmt.Println(devProfile.Name)
 			log.WithError(err).Error("grpc_api/GetWalletBalance")

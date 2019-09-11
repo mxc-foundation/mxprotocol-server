@@ -39,39 +39,63 @@ func dbInit() {
 	dbErrorInit()
 
 	if err := Wallet.CreateWalletTable(); err != nil {
-		log.WithError(err).Fatal("db/dbCreateWalletTable")
+		log.WithError(err).Fatal("db/CreateWalletTable")
 	}
 
 	if err := InternalTx.CreateInternalTxTable(); err != nil {
-		log.WithError(err).Fatal("db/dbCreateInternalTxTable")
+		log.WithError(err).Fatal("db/CreateInternalTxTable")
 	}
 
 	if err := ExtCurrency.CreateExtCurrencyTable(); err != nil {
-		log.WithError(err).Fatal("db/dbCreateExtCurrencyTable")
+		log.WithError(err).Fatal("db/CreateExtCurrencyTable")
 	}
 
 	if err := ExtAccount.CreateExtAccountTable(); err != nil {
-		log.WithError(err).Fatal("db/dbCreateExtAccountTable")
+		log.WithError(err).Fatal("db/CreateExtAccountTable")
 	}
 
 	if err := WithdrawFee.CreateWithdrawFeeTable(); err != nil {
-		log.WithError(err).Fatal("db/dbCreateWithdrawFeeTable")
+		log.WithError(err).Fatal("db/CreateWithdrawFeeTable")
 	}
 
 	if err := Withdraw.CreateWithdrawTable(); err != nil {
-		log.WithError(err).Fatal("db/dbCreateWithdrawTable")
+		log.WithError(err).Fatal("db/CreateWithdrawTable")
 	}
 
 	if err := Withdraw.CreateWithdrawFunctions(); err != nil {
-		log.WithError(err).Fatal("db/dbCreateWithdrawRelations")
+		log.WithError(err).Fatal("db/CreateWithdrawFunctions")
 	}
 
 	if err := Topup.CreateTopupTable(); err != nil {
-		log.WithError(err).Fatal("db/dbCreateTopupTable")
+		log.WithError(err).Fatal("db/CreateTopupTable")
 	}
 
 	if err := Topup.CreateTopupFunctions(); err != nil {
-		log.WithError(err).Fatal("db/dbCreateTopupRelations")
+		log.WithError(err).Fatal("db/CreateTopupFunctions")
+	}
+
+	if err := Device.CreateDeviceTable(); err != nil {
+		log.WithError(err).Fatal("db/CreateDeviceTable")
+	}
+
+	if err := Gateway.CreateGatewayTable();err != nil {
+		log.WithError(err).Fatal("db/CreateGatewayTable")
+	}
+
+	if err := AggWalletUsage.CreateAggWltUsgTable(); err != nil {
+		log.WithError(err).Fatal("db/CreateAggWltUsgTable")
+	}
+
+	if err := AggDeviceUsage.CreateAggDvUsgTable(); err != nil {
+		log.WithError(err).Fatal("db/CreateAggDvUsgTable")
+	}
+
+	if err := AggGatewayUsage.CreateAggGwUsgTable(); err != nil {
+		log.WithError(err).Fatal("db/CreateAggGwUsgTable")
+	}
+
+	if err := DlPacket.CreateDlPktTable(); err != nil {
+		log.WithError(err).Fatal("db/CreateDlPktTable")
 	}
 
 }
