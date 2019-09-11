@@ -2,20 +2,12 @@ package db
 
 import (
 	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
 type internalTxDBInterface interface {
 	CreateInternalTxTable() error
-	InsertInternalTx(it pg.InternalTx) (insertIndex int64, err error)
+	InsertInternalTx(it types.InternalTx) (insertIndex int64, err error)
 }
 
-var internalTx internalTxDBInterface
-
-func dbCreateInternalTxTable() error {
-	internalTx = &pg.PgInternalTx
-	return internalTx.CreateInternalTxTable()
-}
-
-func DbInsertInternalTx(it pg.InternalTx) (insertIndex int64, err error) {
-	return internalTx.InsertInternalTx(it)
-}
+var InternalTx = internalTxDBInterface(&pg.PgInternalTx)

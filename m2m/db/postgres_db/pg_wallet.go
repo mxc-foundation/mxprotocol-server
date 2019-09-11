@@ -3,13 +3,14 @@ package postgres_db
 import (
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
 type walletInterface struct{}
 
 var PgWallet walletInterface
 
-type Wallet struct {
+type wallet struct {
 	Id      int64   `db:"id"`
 	FkOrgLa int64   `db:"fk_org_la"`
 	TypeW   string  `db:"type"`
@@ -42,7 +43,13 @@ func (*walletInterface) CreateWalletTable() error {
 	return errors.Wrap(err, "db/CreateWalletTable")
 }
 
-func (*walletInterface) InsertWallet(w Wallet) (insertIndex int64, err error) {
+func (*walletInterface) InsertWallet(orgId int64, walletType types.WalletType) (insertIndex int64, err error) {
+	w := wallet{
+		FkOrgLa: orgId,
+		TypeW:   string(walletType),
+		Balance: 0.0,
+	}
+
 	err = PgDB.QueryRow(`
 		INSERT INTO wallet (
 			fk_org_la ,
@@ -61,29 +68,27 @@ func (*walletInterface) InsertWallet(w Wallet) (insertIndex int64, err error) {
 }
 
 func (*walletInterface) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
-	var w Wallet
-	w.Id = 0
+	id := int64(0)
 	err := PgDB.QueryRow(
 		`SELECT id
 		FROM wallet
 		WHERE
 			fk_org_la = $1;`,
-		orgIdLora).Scan(&w.Id)
+		orgIdLora).Scan(&id)
 
-	return w.Id, errors.Wrap(err, "db/GetWalletIdFromOrgId")
+	return id, errors.Wrap(err, "db/GetWalletIdFromOrgId")
 }
 
 func (*walletInterface) GetWalletBalance(walletId int64) (float64, error) {
-	var w Wallet
-	w.Id = 0
+	balance := float64(0)
 	err := PgDB.QueryRow(
 		`SELECT balance
 		FROM wallet
 		WHERE
 			id = $1;`,
-		walletId).Scan(&w.Balance)
+		walletId).Scan(&balance)
 
-	return w.Balance, errors.Wrap(err, "db/GetWalletBalance")
+	return balance, errors.Wrap(err, "db/GetWalletBalance")
 }
 
 func (*walletInterface) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {

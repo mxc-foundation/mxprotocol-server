@@ -38,44 +38,40 @@ func Setup(conf config.MxpConfig) error {
 func dbInit() {
 	dbErrorInit()
 
-	if err := dbCreateWalletTable(); err != nil {
+	if err := Wallet.CreateWalletTable(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateWalletTable")
 	}
 
-	if err := dbCreateInternalTxTable(); err != nil {
+	if err := InternalTx.CreateInternalTxTable(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateInternalTxTable")
 	}
 
-	if err := dbCreateExtCurrencyTable(); err != nil {
+	if err := ExtCurrency.CreateExtCurrencyTable(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateExtCurrencyTable")
 	}
 
-	if err := dbCreateExtAccountTable(); err != nil {
+	if err := ExtAccount.CreateExtAccountTable(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateExtAccountTable")
 	}
 
-	if err := dbCreateWithdrawFeeTable(); err != nil {
+	if err := WithdrawFee.CreateWithdrawFeeTable(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateWithdrawFeeTable")
 	}
 
-	if err := dbCreateWithdrawTable(); err != nil {
+	if err := Withdraw.CreateWithdrawTable(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateWithdrawTable")
 	}
 
-	if err := dbCreateWithdrawRelations(); err != nil {
+	if err := Withdraw.CreateWithdrawFunctions(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateWithdrawRelations")
 	}
 
-	if err := dbCreateTopupTable(); err != nil {
+	if err := Topup.CreateTopupTable(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateTopupTable")
 	}
 
-	if err := dbCreateTopupRelations(); err != nil {
+	if err := Topup.CreateTopupFunctions(); err != nil {
 		log.WithError(err).Fatal("db/dbCreateTopupRelations")
-	}
-
-	if err := initExtCurrencyTable(); err != nil {
-		log.WithError(err).Fatal("db/initExtCurrencyTable")
 	}
 
 }

@@ -1,6 +1,7 @@
 package postgres_db
 
 import (
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 	"time"
 
 	"github.com/ethereum/go-ethereum/log"
@@ -12,7 +13,7 @@ type topupInterface struct{}
 
 var PgTopup topupInterface
 
-type Topup struct {
+type topup struct {
 	Id              int64     `db:"id"`
 	FkExtAcntSender int64     `db:"fk_ext_account_sender"`
 	FkExtAcntRcvr   int64     `db:"fk_ext_account_receiver"`
@@ -20,15 +21,6 @@ type Topup struct {
 	Value           float64   `db:"value"`
 	TxAprvdTime     time.Time `db:"tx_approved_time"`
 	TxHash          string    `db:"tx_hash"`
-}
-
-type TopupHistRet struct {
-	AcntSender  string
-	AcntRcvr    string
-	ExtCurrency string
-	Value       float64
-	TxAprvdTime time.Time
-	TxHash      string
 }
 
 func (*topupInterface) CreateTopupTable() error {
@@ -46,7 +38,7 @@ func (*topupInterface) CreateTopupTable() error {
 	return errors.Wrap(err, "db/CreateTopupTable")
 }
 
-func insertTopup(tu Topup) (insertIndex int64, err error) {
+func insertTopup(tu topup) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO topup (
 			fk_ext_account_sender,
@@ -145,7 +137,7 @@ func (*topupInterface) CreateTopupFunctions() error {
 	return errors.Wrap(err, "db/CreateTopupFunctions")
 }
 
-func applyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
+func applyTopup(tu topup, it types.InternalTx) (topupId int64, err error) {
 	err = PgDB.QueryRow(`
 		SELECT topup_req_apply($1,$2,$3,$4,$5,$6,$7,$8,$9);
 		
@@ -165,7 +157,7 @@ func applyTopup(tu Topup, it InternalTx) (topupId int64, err error) {
 
 func (*topupInterface) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string, txHash string, value float64, extCurAbv string) (topupId int64, err error) {
 
-	tu := Topup{
+	tu := topup{
 		Value:       value,
 		TxAprvdTime: time.Now().UTC(),
 		TxHash:      txHash,
@@ -186,7 +178,7 @@ func (*topupInterface) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string,
 		return topupId, errors.Wrap(err, "db/AddTopUpRequest")
 	}
 
-	it := InternalTx{
+	it := types.InternalTx{
 		PaymentCat: string(TOP_UP),
 	}
 
@@ -204,7 +196,7 @@ func (*topupInterface) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string,
 
 }
 
-func (*topupInterface) GetTopupHist(walletId int64, offset int64, limit int64) ([]TopupHistRet, error) {
+func (*topupInterface) GetTopupHist(walletId int64, offset int64, limit int64) ([]types.TopupHistRet, error) {
 
 	rows, err := PgDB.Query(
 		`SELECT
@@ -235,8 +227,8 @@ func (*topupInterface) GetTopupHist(walletId int64, offset int64, limit int64) (
 
 	defer rows.Close()
 
-	res := make([]TopupHistRet, 0)
-	var topupVal TopupHistRet
+	res := make([]types.TopupHistRet, 0)
+	var topupVal types.TopupHistRet
 	var timeRead string
 
 	for rows.Next() {

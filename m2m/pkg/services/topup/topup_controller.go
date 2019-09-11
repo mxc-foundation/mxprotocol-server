@@ -54,7 +54,7 @@ func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpH
 		}
 
 		response := api.GetTopUpHistoryResponse{UserProfile: &userProfile}
-		ptr, err := db.DbGetTopupHist(walletId, req.Offset*req.Limit, req.Limit)
+		ptr, err := db.Topup.GetTopupHist(walletId, req.Offset*req.Limit, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetTopUpHistory")
 			return &api.GetTopUpHistoryResponse{UserProfile: &userProfile}, nil
@@ -71,7 +71,7 @@ func (s *TopUpServerAPI) GetTopUpHistory(ctx context.Context, req *api.GetTopUpH
 
 			response.TopupHistory = append(response.TopupHistory, &history)
 		}
-		response.Count, err = db.DbGetTopupHistRecCnt(walletId)
+		response.Count, err = db.Topup.GetTopupHistRecCnt(walletId)
 
 		return &response, nil
 	}
@@ -101,7 +101,7 @@ func (s *TopUpServerAPI) GetTopUpDestination(ctx context.Context, req *api.GetTo
 			"moneyType": api.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetTopUpDestination")
 
-		supernode_account, err := db.DbGetSuperNodeExtAccountAdr(api.Money_name[int32(req.MoneyAbbr)])
+		supernode_account, err := db.ExtAccount.GetSuperNodeExtAccountAdr(api.Money_name[int32(req.MoneyAbbr)])
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetTopUpDestination")
 			return &api.GetTopUpDestinationResponse{ActiveAccount: "", UserProfile: &userProfile}, err

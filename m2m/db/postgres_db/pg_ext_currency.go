@@ -4,13 +4,8 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
-
-type ExtCurrency struct {
-	Id   int64  `db:"id"`
-	Name string `db:"name"`
-	Abv  string `db:"abv"`
-}
 
 type extCurrencyInterface struct{}
 
@@ -28,7 +23,7 @@ func (*extCurrencyInterface) CreateExtCurrencyTable() error {
 	return errors.Wrap(err, "db/CreateExtCurrencyTable")
 }
 
-func (*extCurrencyInterface) InsertExtCurr(ec ExtCurrency) (insertIndex int64, err error) {
+func (*extCurrencyInterface) InsertExtCurr(ec types.ExtCurrency) (insertIndex int64, err error) {
 	log.WithFields(log.Fields{
 		"name": ec.Name,
 		"abbr": ec.Abv,

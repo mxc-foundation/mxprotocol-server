@@ -1,6 +1,7 @@
 package postgres_db
 
 import (
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 	"time"
 
 	"github.com/ethereum/go-ethereum/log"
@@ -19,7 +20,7 @@ const (
 	SUCCESSFUL     TxStatus = "SUCCESSFUL"
 )
 
-type Withdraw struct {
+type withdraw struct {
 	Id                       int64     `db:"id"`
 	FkExtAcntSender          int64     `db:"fk_ext_account_sender"`
 	FkExtAcntRcvr            int64     `db:"fk_ext_account_receiver"`
@@ -31,18 +32,6 @@ type Withdraw struct {
 	TxAprvdTime              time.Time `db:"tx_approved_time"`
 	FkQueryIdePaymentService int64     `db:"fk_query_id_payment_service"`
 	TxHash                   string    `db:"tx_hash"`
-}
-
-type WithdrawHistRet struct {
-	AcntSender  string
-	AcntRcvr    string
-	ExtCurrency string
-	Value       float64
-	WithdrawFee float64
-	TxSentTime  time.Time `db:"tx_sent_time"`
-	TxStatus    string    `db:"tx_status"`
-	TxAprvdTime time.Time
-	TxHash      string
 }
 
 func (*withdrawInterface) CreateWithdrawTable() error {
@@ -81,7 +70,7 @@ func (*withdrawInterface) CreateWithdrawTable() error {
 	return errors.Wrap(err, "db/CreateWithdrawTable")
 }
 
-func insertWithdraw(wdr Withdraw) (insertIndex int64, err error) {
+func insertWithdraw(wdr withdraw) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO withdraw (
 			fk_ext_account_sender,
@@ -216,7 +205,7 @@ func (*withdrawInterface) CreateWithdrawFunctions() error {
 	return errors.Wrap(err, "db/CreateWithdrawFunctions")
 }
 
-func initWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err error) {
+func initWithdrawReqApply(wdr withdraw, it types.InternalTx) (withdrawId int64, err error) {
 
 	err = PgDB.QueryRow(`
 		SELECT withdraw_req_init($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);
@@ -239,7 +228,7 @@ func initWithdrawReqApply(wdr Withdraw, it InternalTx) (withdrawId int64, err er
 
 func (*withdrawInterface) InitWithdrawReq(walletId int64, value float64, extCurrencyAbbr string) (withdrawId int64, err error) {
 
-	wdr := Withdraw{
+	wdr := withdraw{
 		Value:      value,
 		TxSentTime: time.Now().UTC(),
 		TxStatus:   string(NOT_SENT_TO_PS),
@@ -271,7 +260,7 @@ func (*withdrawInterface) InitWithdrawReq(walletId int64, value float64, extCurr
 		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
-	it := InternalTx{
+	it := types.InternalTx{
 		FkWalletSender: walletId,
 		PaymentCat:     string(WITHDRAW),
 		Value:          value + withdrawFeeAmnt,
@@ -302,7 +291,7 @@ func (*withdrawInterface) UpdateWithdrawPaymentQueryId(withdrawId int64, reqIdPa
 	return errors.Wrap(err, "db/UpdateWithdrawPaymentQueryId")
 }
 
-func (*withdrawInterface) GetWithdrawHist(walletId int64, offset int64, limit int64) ([]WithdrawHistRet, error) {
+func (*withdrawInterface) GetWithdrawHist(walletId int64, offset int64, limit int64) ([]types.WithdrawHistRet, error) {
 
 	rows, err := PgDB.Query(
 		`SELECT
@@ -338,8 +327,8 @@ func (*withdrawInterface) GetWithdrawHist(walletId int64, offset int64, limit in
 
 	defer rows.Close()
 
-	res := make([]WithdrawHistRet, 0)
-	var withVal WithdrawHistRet
+	res := make([]types.WithdrawHistRet, 0)
+	var withVal types.WithdrawHistRet
 	var aprvdTime, sentTime string
 
 	for rows.Next() {

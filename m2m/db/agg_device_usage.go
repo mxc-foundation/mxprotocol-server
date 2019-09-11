@@ -10,13 +10,4 @@ type aggDeviceUsageDBInterface interface {
 	InsertAggDvUsg(adu types.AggDvUsg) (insertIndex int64, err error)
 }
 
-var aggDeviceUsage aggDeviceUsageDBInterface
-
-func DbCreateAggDvUsgTable() error {
-	aggDeviceUsage = &pg.PgAggDeviceUsage
-	return aggDeviceUsage.CreateAggDvUsgTable()
-}
-
-func DbInsertAggDvUsg(adu types.AggDvUsg) (insertIndex int64, err error) {
-	return aggDeviceUsage.InsertAggDvUsg(adu)
-}
+var AggDeviceUsage = aggDeviceUsageDBInterface(&pg.PgAggDeviceUsage)

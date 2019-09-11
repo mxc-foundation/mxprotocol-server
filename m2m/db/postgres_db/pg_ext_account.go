@@ -1,6 +1,8 @@
 package postgres_db
 
 import (
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"strings"
 	"time"
 
 	"github.com/ethereum/go-ethereum/log"
@@ -8,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-type ExtAccount struct {
+type extAccount struct {
 	Id                 int64     `db:"id"`
 	FkWallet           int64     `db:"fk_wallet"`
 	FkExtCurrency      int64     `db:"fk_ext_currency"`
@@ -16,13 +18,6 @@ type ExtAccount struct {
 	InsertTime         time.Time `db:"insert_time"`
 	Status             string    `db:"status"`
 	LatestCheckedBlock int64     `db:"latest_checked_block"`
-}
-
-type ExtAccountHistRet struct {
-	AccountAdr     string
-	InsertTime     time.Time
-	Status         string
-	ExtCurrencyAbv string
 }
 
 type extAccountInterface struct{}
@@ -45,7 +40,18 @@ func (*extAccountInterface) CreateExtAccountTable() error {
 	return errors.Wrap(err, "db/CreateExtAccountTable")
 }
 
-func (*extAccountInterface) InsertExtAccount(ea ExtAccount) (insertIndex int64, err error) {
+func (*extAccountInterface) InsertExtAccount(walletId int64, newAccount string, currencyAbbr string) (insertIndex int64, err error) {
+	extCurrId, err := PgExtCurrency.GetExtCurrencyIdByAbbr(currencyAbbr)
+	if err != nil {
+		return insertIndex, errors.Wrap(err, "db/InsertExtAccount")
+	}
+
+	ea := extAccount{
+		FkWallet: walletId,
+		FkExtCurrency: extCurrId,
+		AccountAdr: strings.ToLower(newAccount),
+		InsertTime: time.Now().UTC(),
+	}
 
 	alreadyExist, errAlreadyExist := alreadyExistActiveAcnt(ea.AccountAdr, ea.FkExtCurrency)
 	if errAlreadyExist != nil {
@@ -109,7 +115,7 @@ func alreadyExistActiveAcnt(acntAdr string, extCurrId int64) (bool, error) {
 	return res, errors.Wrap(err, "db/alreadyExistActiveAcnt")
 }
 
-func changeStatus2ArcOldRowExtAcnt(ea ExtAccount) (err error) {
+func changeStatus2ArcOldRowExtAcnt(ea extAccount) (err error) {
 	_, err = PgDB.Exec(`
 	UPDATE 
 		ext_account 
@@ -290,7 +296,7 @@ func (*extAccountInterface) UpdateLatestCheckedBlock(extAcntId int64, updatedBlo
 	return errors.Wrap(err, "db/UpdateLatestCheckedBlock")
 }
 
-func (*extAccountInterface) GetExtAcntHist(walletId int64, offset int64, limit int64) ([]ExtAccountHistRet, error) {
+func (*extAccountInterface) GetExtAcntHist(walletId int64, offset int64, limit int64) ([]types.ExtAccountHistRet, error) {
 
 	rows, err := PgDB.Query(
 		`select
@@ -313,8 +319,8 @@ func (*extAccountInterface) GetExtAcntHist(walletId int64, offset int64, limit i
 
 	defer rows.Close()
 
-	res := make([]ExtAccountHistRet, 0)
-	var extAcntVal ExtAccountHistRet
+	res := make([]types.ExtAccountHistRet, 0)
+	var extAcntVal types.ExtAccountHistRet
 	var insertTime string
 
 	for rows.Next() {

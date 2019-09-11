@@ -1,9 +1,8 @@
 package postgres_db
 
 import (
-	"time"
-
 	"github.com/pkg/errors"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
 type internalTxInterface struct{}
@@ -25,16 +24,6 @@ const (
 	TOP_UP                PaymentCategory = "TOP_UP"
 	WITHDRAW              PaymentCategory = "WITHDRAW"
 )
-
-type InternalTx struct {
-	Id             int64     `db:"id"`
-	FkWalletSender int64     `db:"fk_wallet_sender"`
-	FkWalletRcvr   int64     `db:"fk_wallet_receiver"`
-	PaymentCat     string    `db:"payment_cat"`
-	TxInternalRef  int64     `db:"tx_internal_ref"` // reference to the id of corresponding table to PaymentCat
-	Value          float64   `db:"value"`
-	TimeTx         time.Time `db:"timestamp"`
-}
 
 func (*internalTxInterface) CreateInternalTxTable() error {
 	_, err := PgDB.Exec(`
@@ -77,7 +66,7 @@ func (*internalTxInterface) CreateInternalTxTable() error {
 	return errors.Wrap(err, "db/CreateInternalTxTable")
 }
 
-func (*internalTxInterface) InsertInternalTx(it InternalTx) (insertIndex int64, err error) {
+func (*internalTxInterface) InsertInternalTx(it types.InternalTx) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 	INSERT INTO internal_tx (
 		fk_wallet_sender,

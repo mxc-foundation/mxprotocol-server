@@ -9,14 +9,4 @@ type dlPacketDBInterface interface {
 	CreateDlPktTable() error
 	InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err error)
 }
-
-var dlPacket dlPacketDBInterface
-
-func DbCreateDlPktTable() error {
-	dlPacket = &pg.PgDlPacket
-	return dlPacket.CreateDlPktTable()
-}
-
-func DbInsertDlPkt(dlp types.DlPkt) (insertIndex int64, err error) {
-	return dlPacket.InsertDlPkt(dlp)
-}
+var DlPacket = dlPacketDBInterface(&pg.PgDlPacket)

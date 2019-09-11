@@ -9,13 +9,5 @@ type aggGatewayUsageDBInterface interface {
 	CreateAggGwUsgTable() error
 	InsertAggGwUsg(agu types.AggGwUsg) (insertIndex int64, err error)
 }
-var aggGatewayUsage aggGatewayUsageDBInterface
+var AggGatewayUsage = aggGatewayUsageDBInterface(&pg.PgAggGatewayUsage)
 
-func DbCreateAggGwUsgTable() error {
-	aggGatewayUsage = &pg.PgAggGatewayUsage
-	return aggGatewayUsage.CreateAggGwUsgTable()
-}
-
-func DbInsertAggGwUsg(agu types.AggGwUsg) (insertIndex int64, err error) {
-	return aggGatewayUsage.InsertAggGwUsg(agu)
-}

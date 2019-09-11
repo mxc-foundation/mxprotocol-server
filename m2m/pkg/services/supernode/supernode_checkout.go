@@ -20,13 +20,13 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 		ethScan = connectEthScan()
 	}
 
-	supernodeID, err := db.DbGetSuperNodeExtAccountId(config.Cstruct.SuperNode.ExtCurrAbv)
+	supernodeID, err := db.ExtAccount.GetSuperNodeExtAccountId(config.Cstruct.SuperNode.ExtCurrAbv)
 	if err != nil {
 		log.WithError(err).Warning("storage: Cannot get supernodeID from DB")
 		return err
 	}
 
-	currentBlockNo, err := db.DbGetLatestCheckedBlock(supernodeID)
+	currentBlockNo, err := db.ExtAccount.GetLatestCheckedBlock(supernodeID)
 	if err != nil {
 		log.WithError(err).Warning("storage: Cannot get currentBlockNo from DB")
 		return err
@@ -48,7 +48,7 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 			fbalance.SetString(tx.Value.Int().String())
 			ethValue, _ := new(big.Float).Quo(fbalance, big.NewFloat(math.Pow10(18))).Float64()
 
-			from, err := db.DbGetExtAccountIdByAdr(tx.From, config.Cstruct.SuperNode.ExtCurrAbv) //config.Cstruct.SuperNode.ExtCurrAbv is added by Aslan => please check!
+			from, err := db.ExtAccount.GetExtAccountIdByAdr(tx.From, config.Cstruct.SuperNode.ExtCurrAbv) //config.Cstruct.SuperNode.ExtCurrAbv is added by Aslan => please check!
 			if err != nil {
 				log.WithError(err).Warning("Cannot get external account from DB")
 				return err
@@ -58,7 +58,7 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 				continue
 			}
 
-			to, err := db.DbGetExtAccountIdByAdr(tx.To, config.Cstruct.SuperNode.ExtCurrAbv) //config.Cstruct.SuperNode.ExtCurrAbv is added by Aslan => please check!
+			to, err := db.ExtAccount.GetExtAccountIdByAdr(tx.To, config.Cstruct.SuperNode.ExtCurrAbv) //config.Cstruct.SuperNode.ExtCurrAbv is added by Aslan => please check!
 			if err != nil {
 				log.WithError(err).Warning("Cannot get super node account from DB")
 				return err
@@ -68,7 +68,7 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 				continue
 			}
 
-			_, err = db.DbAddTopUpRequest(tx.From, tx.To, tx.Hash, ethValue, currAbv)
+			_, err = db.Topup.AddTopUpRequest(tx.From, tx.To, tx.Hash, ethValue, currAbv)
 			if err != nil {
 				log.WithError(err).Warning("Storage: Cannot update TopUpRequest to DB")
 				return err
@@ -79,7 +79,7 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 
 	// Update the last block to db
 	if newBlockNo > currentBlockNo {
-		err = db.DbUpdateLatestCheckedBlock(supernodeID, int64(newBlockNo))
+		err = db.ExtAccount.UpdateLatestCheckedBlock(supernodeID, int64(newBlockNo))
 		if err != nil {
 			log.WithError(err).Warning("Storage: Cannot update lastBlockNo to DB")
 			return err

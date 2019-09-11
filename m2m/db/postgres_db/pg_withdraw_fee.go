@@ -11,7 +11,7 @@ type withdrawFeeInterface struct{}
 
 var PgWithdrawFee withdrawFeeInterface
 
-type WithdrawFee struct {
+type withdrawFee struct {
 	Id         int64     `db:"id"`
 	FkExtCurr  int64     `db:"fk_ext_currency"`
 	Fee        float64   `db:"fee"`
@@ -35,7 +35,18 @@ func (*withdrawFeeInterface) CreateWithdrawFeeTable() error {
 	return errors.Wrap(err, "db/CreateWithdrawFeeTable")
 }
 
-func (*withdrawFeeInterface) InsertWithdrawFee(wf WithdrawFee) (insertIndex int64, err error) {
+func (*withdrawFeeInterface) InsertWithdrawFee(extCurrencyAbbr string, wdFee float64) (insertIndex int64, err error) {
+	id, err := PgExtCurrency.GetExtCurrencyIdByAbbr(extCurrencyAbbr)
+	if err != nil {
+		return insertIndex, errors.Wrap(err, "db/InsertWithdrawFee")
+	}
+
+	wf := withdrawFee{
+		FkExtCurr:  id,
+		Fee:        wdFee,
+		InsertTime: time.Now().UTC(),
+		Status:     "ACTIVE",
+	}
 	err = PgDB.QueryRow(`
 		INSERT INTO withdraw_fee (
 			fk_ext_currency,
@@ -67,7 +78,7 @@ func (*withdrawFeeInterface) InsertWithdrawFee(wf WithdrawFee) (insertIndex int6
 	return insertIndex, errors.Wrap(err, "db/InsertWithdrawFee")
 }
 
-func changeStatus2ArcOldRowWithdrawFee(wf WithdrawFee) (err error) {
+func changeStatus2ArcOldRowWithdrawFee(wf withdrawFee) (err error) {
 	_, err = PgDB.Exec(`
 	UPDATE 
 		withdraw_fee 
