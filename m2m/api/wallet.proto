@@ -17,6 +17,12 @@ service WalletService {
 			get: "/api/wallet/vmxc/tx_history"
 		};
     }
+
+    rpc GetWalletUsageHist(GetWalletUsageHistRequest) returns (GetWalletUsageHistResponse) {
+        option(google.api.http) = {
+    		get: "/api/wallet/{org_id}/usage_history"
+    	};
+    }
 }
 
 message GetWalletBalanceRequest {
@@ -46,4 +52,25 @@ message GetVmxcTxHistoryResponse {
     int64 count = 1;
     repeated VmxcTxHistory tx_history = 2;
     ProfileResponse user_profile = 3;
+}
+
+message GetWalletUsageHistRequest {
+    int64 org_id = 1;
+}
+
+message GetWalletUsageHist {
+    string StartTime = 1;
+    string Duration = 2;
+    int64 CountUplinkPktsDv = 3;
+    int64 CountDownlinkPktsDv = 4;
+    int64 CountUplinkPktsGw = 5;
+    int64 CountDownlinkPktsGw = 6;
+    double Cost = 7;
+    double Income = 8;
+    double TotalPayment = 9;
+}
+
+message GetWalletUsageHistResponse {
+    repeated GetWalletUsageHist wallet_usage_his = 1;
+    ProfileResponse user_profile = 2;
 }

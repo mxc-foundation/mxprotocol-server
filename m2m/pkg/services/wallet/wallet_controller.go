@@ -174,3 +174,25 @@ func (s *WalletServerAPI) GetVmxcTxHistory(ctx context.Context, req *api.GetVmxc
 
 	return nil, status.Errorf(codes.Unknown, "")
 }
+
+func (s *WalletServerAPI) GetWalletUsageHist(ctx context.Context, req *api.GetWalletUsageHistRequest) (*api.GetWalletUsageHistResponse, error) {
+	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
+
+	switch res.Type {
+	case auth.AuthFailed:
+		fallthrough
+	case auth.JsonParseError:
+		fallthrough
+	case auth.OrganizationIdMisMatch:
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
+
+	case auth.OrganizationIdRearranged:
+		return &api.GetWalletUsageHistResponse{UserProfile: &userProfile},
+			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
+
+	case auth.OK:
+
+	}
+
+	return nil, status.Errorf(codes.Unknown, "")
+}
