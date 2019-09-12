@@ -145,7 +145,12 @@ func (*deviceInterface) GetDeviceProfile(dvId int64) (dv types.Device, err error
 	return dv, errors.Wrap(err, "db/pg_device/GetDeviceProfile")
 }
 
-func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error) {
+func (*deviceInterface) GetDeviceListOfWallet(orgId int64, offset int64, limit int64) (dvList []types.Device, err error) {
+	walletId, err := PgWallet.GetWalletIdFromOrgId(orgId)
+	if err != nil {
+		return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
+	}
+
 	rows, err := PgDB.Query(
 		`SELECT
 			*

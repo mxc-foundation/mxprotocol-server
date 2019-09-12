@@ -15,7 +15,7 @@ type deviceDBInterface interface {
 	GetDeviceIdByDevEui(devEui string) (devId int64, err error)
 	UpdateDeviceLastSeen(dvId int64, newTime time.Time) (err error)
 	GetDeviceProfile(dvId int64) (dv types.Device, err error)
-	GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error)
+	GetDeviceListOfWallet(orgId int64, offset int64, limit int64) (dvList []types.Device, err error)
 	GetDeviceRecCnt(walletId int64) (recCnt int64, err error)
 }
 

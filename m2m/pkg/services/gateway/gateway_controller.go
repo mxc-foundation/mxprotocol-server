@@ -39,13 +39,12 @@ func (s *GatewayServerAPI) GetGatewayList(ctx context.Context, req *api.GetGatew
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 	case auth.OK:
 		log.WithFields(log.Fields{
-			"orgId":     req.OrgId,
-			"offset":    req.Offset,
-			"limit":     req.Limit,
-			"wallet_id": req.WalletId,
+			"orgId":  req.OrgId,
+			"offset": req.Offset,
+			"limit":  req.Limit,
 		}).Debug("grpc_api/GetGatewayList")
 
-		gwList, err := db.Gateway.GetGatewayListOfWallet(req.WalletId, req.Offset, req.Limit)
+		gwList, err := db.Gateway.GetGatewayListOfWallet(req.OrgId, req.Offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetGatewayList")
 			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err

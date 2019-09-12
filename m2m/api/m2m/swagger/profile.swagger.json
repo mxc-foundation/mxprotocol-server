@@ -42,7 +42,7 @@
         ]
       }
     },
-    "/api/internal/organizations": {
+    "/api/internal/{orgId}/organizations": {
       "get": {
         "operationId": "GetUserOrganizationList",
         "responses": {
@@ -56,8 +56,8 @@
         "parameters": [
           {
             "name": "orgId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           }

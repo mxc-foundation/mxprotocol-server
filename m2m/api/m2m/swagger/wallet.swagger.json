@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/wallet/balance/{orgId}": {
+    "/api/wallet/{orgId}/balance": {
       "get": {
         "operationId": "GetWalletBalance",
         "responses": {
@@ -40,7 +40,7 @@
         ]
       }
     },
-    "/api/wallet/vmxc/tx_history": {
+    "/api/wallet/{orgId}/tx-history": {
       "get": {
         "operationId": "GetVmxcTxHistory",
         "responses": {
@@ -54,8 +54,8 @@
         "parameters": [
           {
             "name": "orgId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           },
@@ -79,7 +79,7 @@
         ]
       }
     },
-    "/api/wallet/{orgId}/usage_history": {
+    "/api/wallet/{orgId}/usage-history": {
       "get": {
         "operationId": "GetWalletUsageHist",
         "responses": {

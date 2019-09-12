@@ -153,7 +153,12 @@ func (*gatewayInterface) GetGatewayProfile(gwId int64) (gw types.Gateway, err er
 	return gw, errors.Wrap(err, "db/pg_gateway/GetGatewayProfile")
 }
 
-func (*gatewayInterface) GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {
+func (*gatewayInterface) GetGatewayListOfWallet(orgId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {
+	walletId, err := PgWallet.GetWalletIdFromOrgId(orgId)
+	if err != nil {
+		return gwList, errors.Wrap(err, "db/pg_gateway/GetGatewayListOfWallet")
+	}
+
 	rows, err := PgDB.Query(
 		`SELECT
 			*

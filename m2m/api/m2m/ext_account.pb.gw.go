@@ -48,6 +48,17 @@ func request_MoneyService_ModifyMoneyAccount_0(ctx context.Context, marshaler ru
 		_   = err
 	)
 
+	val, ok = pathParams["org_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org_id")
+	}
+
+	protoReq.OrgId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
+
 	val, ok = pathParams["money_abbr"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "money_abbr")
@@ -86,6 +97,17 @@ func local_request_MoneyService_ModifyMoneyAccount_0(ctx context.Context, marsha
 		_   = err
 	)
 
+	val, ok = pathParams["org_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org_id")
+	}
+
+	protoReq.OrgId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
+
 	val, ok = pathParams["money_abbr"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "money_abbr")
@@ -105,7 +127,7 @@ func local_request_MoneyService_ModifyMoneyAccount_0(ctx context.Context, marsha
 }
 
 var (
-	filter_MoneyService_GetChangeMoneyAccountHistory_0 = &utilities.DoubleArray{Encoding: map[string]int{"money_abbr": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_MoneyService_GetChangeMoneyAccountHistory_0 = &utilities.DoubleArray{Encoding: map[string]int{"org_id": 0, "money_abbr": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
 )
 
 func request_MoneyService_GetChangeMoneyAccountHistory_0(ctx context.Context, marshaler runtime.Marshaler, client MoneyServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -119,6 +141,17 @@ func request_MoneyService_GetChangeMoneyAccountHistory_0(ctx context.Context, ma
 		err error
 		_   = err
 	)
+
+	val, ok = pathParams["org_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org_id")
+	}
+
+	protoReq.OrgId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
 
 	val, ok = pathParams["money_abbr"]
 	if !ok {
@@ -157,6 +190,17 @@ func local_request_MoneyService_GetChangeMoneyAccountHistory_0(ctx context.Conte
 		_   = err
 	)
 
+	val, ok = pathParams["org_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org_id")
+	}
+
+	protoReq.OrgId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
+
 	val, ok = pathParams["money_abbr"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "money_abbr")
@@ -179,10 +223,6 @@ func local_request_MoneyService_GetChangeMoneyAccountHistory_0(ctx context.Conte
 
 }
 
-var (
-	filter_MoneyService_GetActiveMoneyAccount_0 = &utilities.DoubleArray{Encoding: map[string]int{"money_abbr": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
-)
-
 func request_MoneyService_GetActiveMoneyAccount_0(ctx context.Context, marshaler runtime.Marshaler, client MoneyServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetActiveMoneyAccountRequest
 	var metadata runtime.ServerMetadata
@@ -194,6 +234,17 @@ func request_MoneyService_GetActiveMoneyAccount_0(ctx context.Context, marshaler
 		err error
 		_   = err
 	)
+
+	val, ok = pathParams["org_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org_id")
+	}
+
+	protoReq.OrgId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
 
 	val, ok = pathParams["money_abbr"]
 	if !ok {
@@ -207,13 +258,6 @@ func request_MoneyService_GetActiveMoneyAccount_0(ctx context.Context, marshaler
 	}
 
 	protoReq.MoneyAbbr = Money(e)
-
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_MoneyService_GetActiveMoneyAccount_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
 
 	msg, err := client.GetActiveMoneyAccount(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -232,6 +276,17 @@ func local_request_MoneyService_GetActiveMoneyAccount_0(ctx context.Context, mar
 		_   = err
 	)
 
+	val, ok = pathParams["org_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org_id")
+	}
+
+	protoReq.OrgId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
+
 	val, ok = pathParams["money_abbr"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "money_abbr")
@@ -244,10 +299,6 @@ func local_request_MoneyService_GetActiveMoneyAccount_0(ctx context.Context, mar
 	}
 
 	protoReq.MoneyAbbr = Money(e)
-
-	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_MoneyService_GetActiveMoneyAccount_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
 
 	msg, err := server.GetActiveMoneyAccount(ctx, &protoReq)
 	return msg, metadata, err
@@ -424,11 +475,11 @@ func RegisterMoneyServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_MoneyService_ModifyMoneyAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "ext_account", "modify_account", "money_abbr"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MoneyService_ModifyMoneyAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "ext-account", "org_id", "modify-account", "money_abbr"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MoneyService_GetChangeMoneyAccountHistory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "ext_account", "change_history", "money_abbr"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MoneyService_GetChangeMoneyAccountHistory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "ext-account", "org_id", "change-history", "money_abbr"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_MoneyService_GetActiveMoneyAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "ext_account", "active_account", "money_abbr"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_MoneyService_GetActiveMoneyAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "ext-account", "org_id", "active-account", "money_abbr"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

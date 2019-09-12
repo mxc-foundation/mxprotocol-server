@@ -8,19 +8,19 @@ import "profile.proto";
 service WalletService {
     rpc GetWalletBalance(GetWalletBalanceRequest) returns (GetWalletBalanceResponse) {
         option(google.api.http) = {
-			get: "/api/wallet/balance/{org_id}"
+			get: "/api/wallet/{org_id}/balance"
 		};
     }
 
     rpc GetVmxcTxHistory(GetVmxcTxHistoryRequest) returns (GetVmxcTxHistoryResponse){
         option(google.api.http) = {
-			get: "/api/wallet/vmxc/tx_history"
+			get: "/api/wallet/{org_id}/tx-history"
 		};
     }
 
     rpc GetWalletUsageHist(GetWalletUsageHistRequest) returns (GetWalletUsageHistResponse) {
         option(google.api.http) = {
-    		get: "/api/wallet/{org_id}/usage_history"
+    		get: "/api/wallet/{org_id}/usage-history"
     	};
     }
 }
