@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -100,28 +100,28 @@ type ProfileResponse struct {
 	Organizations []OrganizationLink `json:"organizations,omitempty"`
 }
 
-func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, reqOrgId int64) (m2m.ProfileResponse, VerifyResult) {
+func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, reqOrgId int64) (api.ProfileResponse, VerifyResult) {
 	// parse jwt from context
 	tokenStr, err := getTokenFromContext(ctx)
 	if err != nil {
 		log.WithError(err).Error("auth/VerifyRequestViaAuthServer")
-		return m2m.ProfileResponse{}, VerifyResult{err, JsonParseError}
+		return api.ProfileResponse{}, VerifyResult{err, JsonParseError}
 	}
 
 	// request user profile with jwt
 	userProfile, err := requestUserProfileWithJWT(tokenStr)
 	if err != nil {
 		log.WithError(err).Error("auth/VerifyRequestViaAuthServer")
-		return m2m.ProfileResponse{}, VerifyResult{err, AuthFailed}
+		return api.ProfileResponse{}, VerifyResult{err, AuthFailed}
 	}
 
 	return isOrgListRearranged(userProfile, reqOrgId)
 }
 
-func isOrgListRearranged(userProfile ProfileResponse, orgId int64) (m2m.ProfileResponse, VerifyResult) {
-	profile := m2m.ProfileResponse{}
-	profile.User = &m2m.User{}
-	profile.Settings = &m2m.ProfileSettings{}
+func isOrgListRearranged(userProfile ProfileResponse, orgId int64) (api.ProfileResponse, VerifyResult) {
+	profile := api.ProfileResponse{}
+	profile.User = &api.User{}
+	profile.Settings = &api.ProfileSettings{}
 
 	profile.User.Id = userProfile.User.Id
 	profile.User.Username = userProfile.User.Username
@@ -136,7 +136,7 @@ func isOrgListRearranged(userProfile ProfileResponse, orgId int64) (m2m.ProfileR
 	orgDeleted := true
 	for _, v := range userProfile.Organizations {
 		id, _ := strconv.ParseInt(v.OrganizationId, 10, 64)
-		org := m2m.OrganizationLink{}
+		org := api.OrganizationLink{}
 		org.OrganizationId = id
 		org.IsAdmin = v.IsAdmin
 		org.OrganizationName = v.OrganizationName
@@ -289,23 +289,23 @@ func requestJWTWithUsernamePass(username string, password string) (string, error
 	return output["jwt"], nil
 }
 
-func (s *InternalServerAPI) Login(ctx context.Context, req *m2m.LoginRequest) (*m2m.LoginResponse, error) {
+func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*api.LoginResponse, error) {
 	jwt, err := requestJWTWithUsernamePass(req.Username, req.Password)
 	if err != nil {
-		return &m2m.LoginResponse{}, err
+		return &api.LoginResponse{}, err
 	}
 
 	tokenStr, err := getTokenFromContext(ctx)
 	if err != nil {
 		if jwt != tokenStr {
-			return &m2m.LoginResponse{}, err
+			return &api.LoginResponse{}, err
 		}
 	}
 
-	return &m2m.LoginResponse{Jwt: jwt}, nil
+	return &api.LoginResponse{Jwt: jwt}, nil
 }
 
-func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *m2m.GetUserOrganizationListRequest) (*m2m.GetUserOrganizationListResponse, error) {
+func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *api.GetUserOrganizationListRequest) (*api.GetUserOrganizationListResponse, error) {
 	userProfile, res := VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
@@ -320,13 +320,13 @@ func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *m2
 	case OrganizationIdRearranged:
 		fallthrough
 	case OK:
-		orgList := m2m.GetUserOrganizationListResponse{}
+		orgList := api.GetUserOrganizationListResponse{}
 
 		// users who are not super admin users
 		orgList.Organizations = userProfile.Organizations
 
 		if userProfile.User.IsAdmin == true {
-			org := m2m.OrganizationLink{
+			org := api.OrganizationLink{
 				OrganizationId:   0,
 				OrganizationName: "Super_admin",
 				IsAdmin:          true,

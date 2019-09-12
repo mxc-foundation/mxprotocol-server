@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 package api;
-import "api/m2m/device.proto";
-import "api/m2m/profile.proto";
+import "device.proto";
+import "profile.proto";
 
 service InnerDeviceService {
     rpc AddDevice (AddDeviceRequest) returns (AddDeviceResponse);
