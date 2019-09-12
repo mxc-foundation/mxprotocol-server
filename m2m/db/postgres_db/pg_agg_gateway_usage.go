@@ -3,11 +3,15 @@ package postgres_db
 import (
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
-	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-func (pgDbp *PGHandler) CreateAggGwUsgTable() error {
-	_, err := pgDbp.DB.Exec(`
+type aggGatewayUsageInterface struct{}
+
+var PgAggGatewayUsage aggGatewayUsageInterface
+
+func (*aggGatewayUsageInterface) CreateAggGwUsgTable() error {
+	_, err := PgDB.Exec(`
 	
 		CREATE TABLE IF NOT EXISTS agg_gateway_usage (
 			id SERIAL PRIMARY KEY,
@@ -27,8 +31,8 @@ func (pgDbp *PGHandler) CreateAggGwUsgTable() error {
 	return errors.Wrap(err, "db/pg_agg_gateway_usage/CreateAggGwUsgTable")
 }
 
-func (pgDbp *PGHandler) InsertAggGwUsg(agu types.AggGwUsg) (insertIndex int64, err error) {
-	err = pgDbp.DB.QueryRow(`
+func (*aggGatewayUsageInterface) InsertAggGwUsg(agu types.AggGwUsg) (insertIndex int64, err error) {
+	err = PgDB.QueryRow(`
 		INSERT INTO agg_gateway_usage (
 			fk_gateway ,
 			fk_agg_wallet_usage ,

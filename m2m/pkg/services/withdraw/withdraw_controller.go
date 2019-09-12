@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
@@ -29,7 +29,7 @@ func Setup(conf config.MxpConfig) error {
 	log.Info("Setup withdraw service")
 
 	ctxWithdraw.withdrawFee = make(map[string]float64)
-	for _, v := range db.CurrencyList {
+	for _, v := range wallet.CurrencyList {
 		ctxWithdraw.withdrawFee[v.Abv] = 20
 	}
 
@@ -38,10 +38,10 @@ func Setup(conf config.MxpConfig) error {
 		log.Warning("service/withdraw")
 	}
 
-	for _, v := range db.CurrencyList {
-		withdrawFee, err := db.DbGetActiveWithdrawFee(v.Abv)
+	for _, v := range wallet.CurrencyList {
+		withdrawFee, err := db.WithdrawFee.GetActiveWithdrawFee(v.Abv)
 		if err != nil {
-			if _, err := db.DbInsertWithdrawFee(v.Abv, ctxWithdraw.withdrawFee[v.Abv]); err != nil {
+			if _, err := db.WithdrawFee.InsertWithdrawFee(v.Abv, ctxWithdraw.withdrawFee[v.Abv]); err != nil {
 				log.WithError(err).Error("service/withdraw")
 				return err
 			}
@@ -87,7 +87,7 @@ func (s *WithdrawServerAPI) ModifyWithdrawFee(ctx context.Context, in *api.Modif
 			"withdrawFee": in.WithdrawFee,
 		}).Debug("grpc_api/ModifyWithdrawFee")
 
-		if _, err := db.DbInsertWithdrawFee(api.Money_name[int32(in.MoneyAbbr)], in.WithdrawFee); err != nil {
+		if _, err := db.WithdrawFee.InsertWithdrawFee(api.Money_name[int32(in.MoneyAbbr)], in.WithdrawFee); err != nil {
 			log.WithError(err).Error("grpc_api/ModifyWithdrawFee")
 			return &api.ModifyWithdrawFeeResponse{Status: false, UserProfile: &userProfile}, nil
 		}
@@ -121,7 +121,7 @@ func (s *WithdrawServerAPI) GetWithdrawFee(ctx context.Context, req *api.GetWith
 			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
 		}).Debug("grpc_api/GetWithdrawFee")
 
-		withdrawFee, err := db.DbGetActiveWithdrawFee(api.Money_name[int32(req.MoneyAbbr)])
+		withdrawFee, err := db.WithdrawFee.GetActiveWithdrawFee(api.Money_name[int32(req.MoneyAbbr)])
 		if err != nil {
 			return &api.GetWithdrawFeeResponse{UserProfile: &userProfile}, nil
 		}
@@ -163,7 +163,7 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 		}
 
 		response := api.GetWithdrawHistoryResponse{UserProfile: &userProfile}
-		ptr, err := db.DbGetWithdrawHist(walletId, req.Offset*req.Limit, req.Limit)
+		ptr, err := db.Withdraw.GetWithdrawHist(walletId, req.Offset*req.Limit, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetWithdrawHistory")
 			return &api.GetWithdrawHistoryResponse{UserProfile: &userProfile}, nil
@@ -187,7 +187,7 @@ func (s *WithdrawServerAPI) GetWithdrawHistory(ctx context.Context, req *api.Get
 
 			response.WithdrawHistory = append(response.WithdrawHistory, &history)
 		}
-		response.Count, err = db.DbGetWithdrawHistRecCnt(walletId)
+		response.Count, err = db.Withdraw.GetWithdrawHistRecCnt(walletId)
 
 		return &response, nil
 	}
@@ -217,17 +217,17 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 			"amount":    req.Amount,
 		}).Debug("grpc_api/WithdrawReq")
 
-		withdrawfee, err := db.DbGetActiveWithdrawFee(req.MoneyAbbr.String())
+		withdrawfee, err := db.WithdrawFee.GetActiveWithdrawFee(req.MoneyAbbr.String())
 		if err != nil {
 			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get withdrawfee from DB: %s", err)
 		}
 
-		walletID, err := db.DbGetWalletIdFromOrgId(req.OrgId)
+		walletID, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
 		if err != nil {
 			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get walletID from DB: %s", err)
 		}
 
-		balance, err := db.DbGetWalletBalance(walletID)
+		balance, err := db.Wallet.GetWalletBalance(walletID)
 		if err != nil {
 			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get wallet balance from DB: %s", err)
 		}
@@ -237,13 +237,13 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.Unavailable, "Not enough balance in user wallet")
 		}
 
-		receiverAdd, err := db.DbGetUserExtAccountAdr(walletID, req.MoneyAbbr.String())
+		receiverAdd, err := db.ExtAccount.GetUserExtAccountAdr(walletID, req.MoneyAbbr.String())
 		if err != nil {
 			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get user address from DB: %s", err)
 		}
 
 		// also updated the balance and history
-		withdrawID, err := db.DbInitWithdrawReq(walletID, req.Amount, req.MoneyAbbr.String())
+		withdrawID, err := db.Withdraw.InitWithdrawReq(walletID, req.Amount, req.MoneyAbbr.String())
 		if err != nil {
 			return &api.WithdrawReqResponse{UserProfile: &userProfile}, status.Errorf(codes.DataLoss, "Cannot get wallet withdrawID from DB: %s", err)
 		}
@@ -273,7 +273,7 @@ func paymentRoutine(ctx context.Context, conf *config.MxpConfig, receiverAdd str
 	}
 
 	// save fk_query_id_payment_service to db
-	err = db.DbUpdateWithdrawPaymentQueryId(walletID, paymentReply.ReqQueryRef)
+	err = db.Withdraw.UpdateWithdrawPaymentQueryId(walletID, paymentReply.ReqQueryRef)
 	if err != nil {
 		log.Error(codes.DataLoss, "Cannot update queryID to DB: %s", err)
 	}
@@ -306,7 +306,7 @@ func paymentRoutine(ctx context.Context, conf *config.MxpConfig, receiverAdd str
 			}
 
 			//Update withdrawID it into db
-			err = db.DbUpdateWithdrawSuccessful(withdrawID, statusReply.TxHash, timeStamp)
+			err = db.Withdraw.UpdateWithdrawSuccessful(withdrawID, statusReply.TxHash, timeStamp)
 			if err != nil {
 				log.Error("Cannot update withdrawID to db: ", err)
 				continue

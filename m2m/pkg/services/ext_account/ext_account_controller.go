@@ -3,7 +3,7 @@ package ext_account
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
@@ -24,7 +24,7 @@ func UpdateActiveExtAccount(orgId int64, newAccount string, currencyAbbr string)
 		return err
 	}
 
-	_, err = db.DBInsertExtAccount(walletId, newAccount, currencyAbbr)
+	_, err = db.ExtAccount.InsertExtAccount(walletId, newAccount, currencyAbbr)
 	if err != nil {
 		log.WithError(err).Error("service/UpdateActiveExtAccount")
 		return err
@@ -42,9 +42,9 @@ func GetActiveExtAccount(orgId int64, currencyAbbr string) (string, error) {
 
 	var accountAddr string
 	if orgId == 0 {
-		accountAddr, err = db.DbGetSuperNodeExtAccountAdr(currencyAbbr)
+		accountAddr, err = db.ExtAccount.GetSuperNodeExtAccountAdr(currencyAbbr)
 	} else {
-		accountAddr, err = db.DbGetUserExtAccountAdr(walletId, currencyAbbr)
+		accountAddr, err = db.ExtAccount.GetUserExtAccountAdr(walletId, currencyAbbr)
 	}
 
 	if err != nil {
@@ -136,7 +136,7 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 		}
 
 		response := api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}
-		ptr, err := db.DbGetExtAcntHist(walletId, req.Offset*req.Limit, req.Limit)
+		ptr, err := db.ExtAccount.GetExtAcntHist(walletId, req.Offset*req.Limit, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetChangeMoneyAccountHistory")
 			return &api.GetMoneyAccountChangeHistoryResponse{UserProfile: &userProfile}, nil
@@ -152,7 +152,7 @@ func (s *ExtAccountServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, 
 			history.Status = v.Status
 			response.ChangeHistory = append(response.ChangeHistory, &history)
 		}
-		response.Count, err = db.DbGetExtAcntHistRecCnt(walletId)
+		response.Count, err = db.ExtAccount.GetExtAcntHistRecCnt(walletId)
 
 		return &response, nil
 	}

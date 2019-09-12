@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"strings"
@@ -15,7 +16,35 @@ import (
 
 func Setup(conf config.MxpConfig) error {
 	log.Info("setup wallet service")
+	log.Info("initialize supported extCurrency")
 
+	if err := initExtCurrencyTable(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var CurrencyList = []types.ExtCurrency{}
+
+func initExtCurrencyTable() error {
+	currency := types.ExtCurrency{}
+	for _, v := range api.Money_name {
+		if _, err := db.ExtCurrency.GetExtCurrencyIdByAbbr(v); err == nil {
+			continue
+		}
+
+		currency.Id = 0
+		currency.Name = v
+		currency.Abv = v
+		CurrencyList = append(CurrencyList, currency)
+	}
+
+	for _, element := range CurrencyList {
+		if _, err := db.ExtCurrency.InsertExtCurr(element); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -23,7 +52,7 @@ func Setup(conf config.MxpConfig) error {
 //  return option 2: 0, false       --> sql error
 //  return option 3: walletId, true --> get walletId successfully
 func userHasWallet(orgId int64) (int64, bool) {
-	walletId, err := db.DbGetWalletIdFromOrgId(orgId)
+	walletId, err := db.Wallet.GetWalletIdFromOrgId(orgId)
 	if err != nil {
 		if strings.HasSuffix(err.Error(), db.DbError.NoRowQueryRes.Error()) {
 			return 0, true
@@ -37,9 +66,9 @@ func userHasWallet(orgId int64) (int64, bool) {
 
 func createWallet(orgId int64) (walletId int64, err error) {
 	if 0 == orgId {
-		walletId, err = db.DbInsertWallet(orgId, db.SUPER_ADMIN)
+		walletId, err = db.Wallet.InsertWallet(orgId, types.SUPER_ADMIN)
 	} else {
-		walletId, err = db.DbInsertWallet(orgId, db.USER)
+		walletId, err = db.Wallet.InsertWallet(orgId, types.USER)
 	}
 	if err != nil {
 		return walletId, err
@@ -71,7 +100,7 @@ func GetBalance(orgId int64) (float64, error) {
 		return 0, err
 	}
 
-	balance, err := db.DbGetWalletBalance(walletId)
+	balance, err := db.Wallet.GetWalletBalance(walletId)
 	if err != nil {
 		return 0, err
 	}
@@ -85,7 +114,7 @@ func UpdateBalance(orgId int64, oper PaymentCategory, deviceType DeviceType, amo
 		return err
 	}
 
-	balance, err := db.DbGetWalletBalance(walletId)
+	balance, err := db.Wallet.GetWalletBalance(walletId)
 	if err != nil {
 		return err
 	}
@@ -96,7 +125,7 @@ func UpdateBalance(orgId int64, oper PaymentCategory, deviceType DeviceType, amo
 		}
 	}
 
-	err = db.DbUpdateBalanceByWalletId(walletId, balance)
+	err = db.Wallet.UpdateBalanceByWalletId(walletId, balance)
 	if err != nil {
 		return err
 	}

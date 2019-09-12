@@ -2,13 +2,12 @@ package db
 
 import (
 	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
-	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-func DbCreateDlPktTable() error {
-	return pg.PgDB.CreateDlPktTable()
+type dlPacketDBInterface interface {
+	CreateDlPktTable() error
+	InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err error)
 }
 
-func DbInsertDlPkt(dlp types.DlPkt) (insertIndex int64, err error) {
-	return pg.PgDB.InsertDlPkt(dlp)
-}
+var DlPacket = dlPacketDBInterface(&pg.PgDlPacket)

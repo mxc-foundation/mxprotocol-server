@@ -3,11 +3,15 @@ package postgres_db
 import (
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
-	types "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-func (pgDbp *PGHandler) CreateDlPktTable() error {
-	_, err := pgDbp.DB.Exec(`
+type dlPacketInterface struct{}
+
+var PgDlPacket dlPacketInterface
+
+func (*dlPacketInterface) CreateDlPktTable() error {
+	_, err := PgDB.Exec(`
 		DO $$
 		BEGIN
 			IF NOT EXISTS 
@@ -36,8 +40,8 @@ func (pgDbp *PGHandler) CreateDlPktTable() error {
 	return errors.Wrap(err, "db/pg_dl_pkt/CreateDlPktTable")
 }
 
-func (pgDbp *PGHandler) InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err error) {
-	err = pgDbp.DB.QueryRow(`
+func (*dlPacketInterface) InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err error) {
+	err = PgDB.QueryRow(`
 		INSERT INTO dl_pkt (
 			fk_device,
 			fk_gateway,

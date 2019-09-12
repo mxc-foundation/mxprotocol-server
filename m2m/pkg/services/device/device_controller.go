@@ -3,7 +3,7 @@ package device
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
@@ -26,6 +26,7 @@ func NewDeviceServerAPI() *DeviceServerAPI {
 
 func (s *DeviceServerAPI) GetDeviceList(ctx context.Context, req *api.GetDeviceListRequest) (*api.GetDeviceListResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
+
 	switch res.Type {
 	case auth.AuthFailed:
 		fallthrough
@@ -38,13 +39,13 @@ func (s *DeviceServerAPI) GetDeviceList(ctx context.Context, req *api.GetDeviceL
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 	case auth.OK:
 		log.WithFields(log.Fields{
-			"orgId":  req.OrgId,
-			"offset": req.Offset,
-			"limit":  req.Limit,
+			"orgId":     req.OrgId,
+			"offset":    req.Offset,
+			"limit":     req.Limit,
 			"wallet_id": req.WalletId,
 		}).Debug("grpc_api/GetDeviceList")
 
-		dvList, err := db.DbGetDeviceListOfWallet(req.WalletId, req.Offset, req.Limit)
+		dvList, err := db.Device.GetDeviceListOfWallet(req.WalletId, req.Offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetDeviceList")
 			return &api.GetDeviceListResponse{UserProfile: &userProfile}, err
@@ -92,21 +93,21 @@ func (s *DeviceServerAPI) GetDeviceProfile(ctx context.Context, req *api.GetDevi
 			"limit":  req.Limit,
 		}).Debug("grpc_api/GetDeviceProfile")
 
-		devProfile, err := db.DbGetDeviceProfile(req.DevId)
+		devProfile, err := db.Device.GetDeviceProfile(req.DevId)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetDeviceProfile")
 			return &api.GetDeviceProfileResponse{UserProfile: &userProfile}, err
 		}
 
 		resp := api.DeviceProfile{
-			Id:devProfile.Id,
-			DevEui:devProfile.DevEui,
-			FkWallet:devProfile.FkWallet,
-			Mode:string(devProfile.Mode),
-			CreatedAt:devProfile.CreatedAt.String(),
-			LastSeenAt:devProfile.LastSeenAt.String(),
-			ApplicationId:devProfile.ApplicationId,
-			Name:devProfile.Name,
+			Id:            devProfile.Id,
+			DevEui:        devProfile.DevEui,
+			FkWallet:      devProfile.FkWallet,
+			Mode:          string(devProfile.Mode),
+			CreatedAt:     devProfile.CreatedAt.String(),
+			LastSeenAt:    devProfile.LastSeenAt.String(),
+			ApplicationId: devProfile.ApplicationId,
+			Name:          devProfile.Name,
 		}
 
 		return &api.GetDeviceProfileResponse{UserProfile: &userProfile, DevProfile: &resp}, nil
@@ -151,28 +152,28 @@ func (s *DeviceServerAPI) SetDeviceMode(ctx context.Context, req *api.SetDeviceM
 	case auth.OK:
 		log.WithFields(log.Fields{
 			"orgId":  req.OrgId,
-			"devID": req.DevId,
-			"devMod":  req.DevMode,
+			"devID":  req.DevId,
+			"devMod": req.DevMode,
 		}).Debug("grpc_api/SetDeviceMode")
 
 		switch req.DevMode.String() {
 		case "DV_INACTIVE":
-			if err := db.DbSetDeviceMode(req.DevId, types.DV_INACTIVE); err != nil {
-			log.WithError(err).Error("grpc_api/SetDeviceMode")
-			return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
-		}
+			if err := db.Device.SetDeviceMode(req.DevId, types.DV_INACTIVE); err != nil {
+				log.WithError(err).Error("grpc_api/SetDeviceMode")
+				return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
+			}
 		case "DV_FREE_GATEWAYS_LIMITED":
-			if err := db.DbSetDeviceMode(req.DevId, types.DV_FREE_GATEWAYS_LIMITED); err != nil {
+			if err := db.Device.SetDeviceMode(req.DevId, types.DV_FREE_GATEWAYS_LIMITED); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
 		case "DV_WHOLE_NETWORK":
-			if err := db.DbSetDeviceMode(req.DevId, types.DV_WHOLE_NETWORK); err != nil {
+			if err := db.Device.SetDeviceMode(req.DevId, types.DV_WHOLE_NETWORK); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
 		case "DV_DELETED":
-			if err := db.DbSetDeviceMode(req.DevId, types.DV_DELETED); err != nil {
+			if err := db.Device.SetDeviceMode(req.DevId, types.DV_DELETED); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
