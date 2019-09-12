@@ -10,13 +10,13 @@ import "ext_account.proto";
 service TopUpService {
     rpc GetTopUpHistory(GetTopUpHistoryRequest) returns (GetTopUpHistoryResponse){
         option(google.api.http) = {
-			get: "/api/top_up/history"
+			get: "/api/top-up/{org_id}/history"
 		};
     }
 
     rpc GetTopUpDestination(GetTopUpDestinationRequest) returns (GetTopUpDestinationResponse){
         option(google.api.http) = {
-			get: "/api/top_up/{money_abbr}/supernode_account"
+			get: "/api/top-up/{org_id}/supernode-account/{money_abbr}"
 		};
     }
 }

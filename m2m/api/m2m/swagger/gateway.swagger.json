@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/gateway/getGwHist": {
+    "/api/gateway/{orgId}/gateway-history": {
       "get": {
         "operationId": "GetGatewayHistory",
         "responses": {
@@ -29,8 +29,8 @@
         "parameters": [
           {
             "name": "orgId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           },
@@ -61,7 +61,7 @@
         ]
       }
     },
-    "/api/gateway/getGwList": {
+    "/api/gateway/{orgId}/gateway-list": {
       "get": {
         "operationId": "GetGatewayList",
         "responses": {
@@ -75,8 +75,8 @@
         "parameters": [
           {
             "name": "orgId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           },
@@ -93,13 +93,6 @@
             "required": false,
             "type": "string",
             "format": "int64"
-          },
-          {
-            "name": "walletId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
           }
         ],
         "tags": [
@@ -107,7 +100,40 @@
         ]
       }
     },
-    "/api/gateway/getGwProfile": {
+    "/api/gateway/{orgId}/gateway-mode": {
+      "post": {
+        "operationId": "SetGatewayMode",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiSetGatewayModeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiSetGatewayModeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "GatewayService"
+        ]
+      }
+    },
+    "/api/gateway/{orgId}/gateway-profile": {
       "get": {
         "operationId": "GetGatewayProfile",
         "responses": {
@@ -121,8 +147,8 @@
         "parameters": [
           {
             "name": "orgId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           },
@@ -146,32 +172,6 @@
             "required": false,
             "type": "string",
             "format": "int64"
-          }
-        ],
-        "tags": [
-          "GatewayService"
-        ]
-      }
-    },
-    "/api/gateway/setGwMode": {
-      "post": {
-        "operationId": "SetGatewayMode",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiSetGatewayModeResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/apiSetGatewayModeRequest"
-            }
           }
         ],
         "tags": [

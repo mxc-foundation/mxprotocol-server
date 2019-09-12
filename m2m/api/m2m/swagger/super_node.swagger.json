@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/supernode/active_account/{moneyAbbr}": {
+    "/api/supernode/{orgId}/active-account/{moneyAbbr}": {
       "get": {
         "operationId": "GetSuperNodeActiveMoneyAccount",
         "responses": {
@@ -27,6 +27,13 @@
           }
         },
         "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
           {
             "name": "moneyAbbr",
             "in": "path",
@@ -42,7 +49,7 @@
         ]
       }
     },
-    "/api/supernode/{moneyAbbr}/add-account": {
+    "/api/supernode/{orgId}/add-account/{moneyAbbr}": {
       "post": {
         "operationId": "AddSuperNodeMoneyAccount",
         "responses": {
@@ -54,6 +61,13 @@
           }
         },
         "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
           {
             "name": "moneyAbbr",
             "in": "path",
@@ -87,6 +101,10 @@
         },
         "accountAddr": {
           "type": "string"
+        },
+        "orgId": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },

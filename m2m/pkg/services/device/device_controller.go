@@ -39,13 +39,12 @@ func (s *DeviceServerAPI) GetDeviceList(ctx context.Context, req *api.GetDeviceL
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 	case auth.OK:
 		log.WithFields(log.Fields{
-			"orgId":     req.OrgId,
-			"offset":    req.Offset,
-			"limit":     req.Limit,
-			"wallet_id": req.WalletId,
+			"orgId":  req.OrgId,
+			"offset": req.Offset,
+			"limit":  req.Limit,
 		}).Debug("grpc_api/GetDeviceList")
 
-		dvList, err := db.Device.GetDeviceListOfWallet(req.WalletId, req.Offset, req.Limit)
+		dvList, err := db.Device.GetDeviceListOfWallet(req.OrgId, req.Offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetDeviceList")
 			return &api.GetDeviceListResponse{UserProfile: &userProfile}, err
@@ -87,10 +86,8 @@ func (s *DeviceServerAPI) GetDeviceProfile(ctx context.Context, req *api.GetDevi
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 	case auth.OK:
 		log.WithFields(log.Fields{
-			"orgId":  req.OrgId,
-			"devId":  req.DevId,
-			"offset": req.Offset,
-			"limit":  req.Limit,
+			"orgId": req.OrgId,
+			"devId": req.DevId,
 		}).Debug("grpc_api/GetDeviceProfile")
 
 		devProfile, err := db.Device.GetDeviceProfile(req.DevId)

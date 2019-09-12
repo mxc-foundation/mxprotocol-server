@@ -8,20 +8,20 @@ import "profile.proto";
 service MoneyService {
     rpc ModifyMoneyAccount(ModifyMoneyAccountRequest) returns (ModifyMoneyAccountResponse){
         option(google.api.http) = {
-			put: "/api/ext_account/modify_account/{money_abbr}"
+			put: "/api/ext-account/{org_id}/modify-account/{money_abbr}"
 			body: "*"
 		};
     }
 
     rpc GetChangeMoneyAccountHistory(GetMoneyAccountChangeHistoryRequest) returns (GetMoneyAccountChangeHistoryResponse){
         option(google.api.http) = {
-			get: "/api/ext_account/change_history/{money_abbr}"
+			get: "/api/ext-account/{org_id}/change-history/{money_abbr}"
 		};
     }
 
     rpc GetActiveMoneyAccount(GetActiveMoneyAccountRequest) returns (GetActiveMoneyAccountResponse) {
         option (google.api.http) = {
-			get: "/api/ext_account/active_account/{money_abbr}"
+			get: "/api/ext-account/{org_id}/active-account/{money_abbr}"
 		};
     }
 }

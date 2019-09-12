@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/device/getDvHist": {
+    "/api/device/{orgId}/device-history": {
       "get": {
         "operationId": "GetDeviceHistory",
         "responses": {
@@ -29,8 +29,8 @@
         "parameters": [
           {
             "name": "orgId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           },
@@ -61,7 +61,7 @@
         ]
       }
     },
-    "/api/device/getDvList": {
+    "/api/device/{orgId}/device-list": {
       "get": {
         "operationId": "GetDeviceList",
         "responses": {
@@ -75,8 +75,8 @@
         "parameters": [
           {
             "name": "orgId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           },
@@ -93,13 +93,6 @@
             "required": false,
             "type": "string",
             "format": "int64"
-          },
-          {
-            "name": "walletId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
           }
         ],
         "tags": [
@@ -107,7 +100,40 @@
         ]
       }
     },
-    "/api/device/getDvProfile": {
+    "/api/device/{orgId}/device-mode": {
+      "post": {
+        "operationId": "SetDeviceMode",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiSetDeviceModeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiSetDeviceModeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/api/device/{orgId}/device-profile": {
       "get": {
         "operationId": "GetDeviceProfile",
         "responses": {
@@ -121,8 +147,8 @@
         "parameters": [
           {
             "name": "orgId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           },
@@ -132,46 +158,6 @@
             "required": false,
             "type": "string",
             "format": "int64"
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "DeviceService"
-        ]
-      }
-    },
-    "/api/device/setDevMode": {
-      "post": {
-        "operationId": "SetDeviceMode",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiSetDeviceModeResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/apiSetDeviceModeRequest"
-            }
           }
         ],
         "tags": [
