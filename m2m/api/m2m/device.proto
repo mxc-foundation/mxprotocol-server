@@ -14,22 +14,22 @@ service DeviceService {
 
     rpc GetDeviceProfile(GetDeviceProfileRequest) returns (GetDeviceProfileResponse){
         option(google.api.http) = {
-			get: "/api/device/{org_id}/device-profile"
+			get: "/api/device/{org_id}/device-profile/{dev_id}"
 		};
     }
 
     rpc GetDeviceHistory(GetDeviceHistoryRequest) returns (GetDeviceHistoryResponse) {
         option (google.api.http) = {
-			get: "/api/device/{org_id}/device-history"
+			get: "/api/device/{org_id}/device-history/{dev_id}"
 		};
     }
 
     rpc SetDeviceMode(SetDeviceModeRequest) returns (SetDeviceModeResponse) {
-            option (google.api.http) = {
-    			post: "/api/device/{org_id}/device-mode"
-    			body: "*"
-    		};
-        }
+        option (google.api.http) = {
+            post: "/api/device/{org_id}/device-mode/{dev_id}"
+            body: "*"
+        };
+    }
 }
 
 enum DeviceMode {
