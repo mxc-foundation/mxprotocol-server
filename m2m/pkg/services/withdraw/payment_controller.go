@@ -11,6 +11,12 @@ import (
 
 var PaymentServiceAvailable bool
 
+const (
+	TOBE_SENT_FROM_PAYMENT_SERVER    = "TOBE_SENT"
+	TOBE_CHECKED_FROM_PAYMENT_SERVER = "TOBE_CHECKED" // tx is sent, still not sure if it was successful
+	SUCCESSFUL                       = "SUCCESSFUL"
+)
+
 func paymentServiceAvailable(conf config.MxpConfig) bool {
 	log.Info("/withdraw: try to connect to payment service: ",
 		conf.PaymentServer.PaymentServiceAddress+conf.PaymentServer.PaymentServicePort)
@@ -26,7 +32,7 @@ func paymentServiceAvailable(conf config.MxpConfig) bool {
 	return true
 }
 
-func paymentReq(ctx context.Context, conf *config.MxpConfig, amount, receiverAdd string, reqId int64) (*ps.TxReqReplyType, error) {
+func PaymentReq(ctx context.Context, conf *config.MxpConfig, amount, receiverAdd string, reqId int64) (*ps.TxReqReplyType, error) {
 	address := conf.PaymentServer.PaymentServiceAddress + conf.PaymentServer.PaymentServicePort
 
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
@@ -65,3 +71,4 @@ func CheckTxStatus(conf *config.MxpConfig, qreID int64) (*ps.CheckTxStatusReplyT
 
 	return reply, nil
 }
+
