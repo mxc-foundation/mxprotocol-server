@@ -98,7 +98,7 @@ func local_request_GatewayService_GetGatewayList_0(ctx context.Context, marshale
 }
 
 var (
-	filter_GatewayService_GetGatewayProfile_0 = &utilities.DoubleArray{Encoding: map[string]int{"org_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_GatewayService_GetGatewayProfile_0 = &utilities.DoubleArray{Encoding: map[string]int{"org_id": 0, "gw_id": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
 )
 
 func request_GatewayService_GetGatewayProfile_0(ctx context.Context, marshaler runtime.Marshaler, client GatewayServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -121,6 +121,17 @@ func request_GatewayService_GetGatewayProfile_0(ctx context.Context, marshaler r
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
+
+	val, ok = pathParams["gw_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "gw_id")
+	}
+
+	protoReq.GwId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "gw_id", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -157,6 +168,17 @@ func local_request_GatewayService_GetGatewayProfile_0(ctx context.Context, marsh
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
 	}
 
+	val, ok = pathParams["gw_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "gw_id")
+	}
+
+	protoReq.GwId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "gw_id", err)
+	}
+
 	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_GatewayService_GetGatewayProfile_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
@@ -167,7 +189,7 @@ func local_request_GatewayService_GetGatewayProfile_0(ctx context.Context, marsh
 }
 
 var (
-	filter_GatewayService_GetGatewayHistory_0 = &utilities.DoubleArray{Encoding: map[string]int{"org_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_GatewayService_GetGatewayHistory_0 = &utilities.DoubleArray{Encoding: map[string]int{"org_id": 0, "gw_id": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
 )
 
 func request_GatewayService_GetGatewayHistory_0(ctx context.Context, marshaler runtime.Marshaler, client GatewayServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -190,6 +212,17 @@ func request_GatewayService_GetGatewayHistory_0(ctx context.Context, marshaler r
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
+
+	val, ok = pathParams["gw_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "gw_id")
+	}
+
+	protoReq.GwId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "gw_id", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -224,6 +257,17 @@ func local_request_GatewayService_GetGatewayHistory_0(ctx context.Context, marsh
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
+
+	val, ok = pathParams["gw_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "gw_id")
+	}
+
+	protoReq.GwId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "gw_id", err)
 	}
 
 	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_GatewayService_GetGatewayHistory_0); err != nil {
@@ -265,6 +309,17 @@ func request_GatewayService_SetGatewayMode_0(ctx context.Context, marshaler runt
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
 	}
 
+	val, ok = pathParams["gw_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "gw_id")
+	}
+
+	protoReq.GwId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "gw_id", err)
+	}
+
 	msg, err := client.SetGatewayMode(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -298,6 +353,17 @@ func local_request_GatewayService_SetGatewayMode_0(ctx context.Context, marshale
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
+
+	val, ok = pathParams["gw_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "gw_id")
+	}
+
+	protoReq.GwId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "gw_id", err)
 	}
 
 	msg, err := server.SetGatewayMode(ctx, &protoReq)
@@ -517,11 +583,11 @@ func RegisterGatewayServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 var (
 	pattern_GatewayService_GetGatewayList_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "gateway", "org_id", "gateway-list"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_GatewayService_GetGatewayProfile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "gateway", "org_id", "gateway-profile"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_GatewayService_GetGatewayProfile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "gateway", "org_id", "gateway-profile", "gw_id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_GatewayService_GetGatewayHistory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "gateway", "org_id", "gateway-history"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_GatewayService_GetGatewayHistory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "gateway", "org_id", "gateway-history", "gw_id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_GatewayService_SetGatewayMode_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "gateway", "org_id", "gateway-mode"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_GatewayService_SetGatewayMode_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "gateway", "org_id", "gateway-mode", "gw_id"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

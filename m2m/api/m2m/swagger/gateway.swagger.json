@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/gateway/{orgId}/gateway-history": {
+    "/api/gateway/{orgId}/gateway-history/{gwId}": {
       "get": {
         "operationId": "GetGatewayHistory",
         "responses": {
@@ -36,8 +36,8 @@
           },
           {
             "name": "gwId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           },
@@ -100,7 +100,7 @@
         ]
       }
     },
-    "/api/gateway/{orgId}/gateway-mode": {
+    "/api/gateway/{orgId}/gateway-mode/{gwId}": {
       "post": {
         "operationId": "SetGatewayMode",
         "responses": {
@@ -120,6 +120,13 @@
             "format": "int64"
           },
           {
+            "name": "gwId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
@@ -133,7 +140,7 @@
         ]
       }
     },
-    "/api/gateway/{orgId}/gateway-profile": {
+    "/api/gateway/{orgId}/gateway-profile/{gwId}": {
       "get": {
         "operationId": "GetGatewayProfile",
         "responses": {
@@ -154,8 +161,8 @@
           },
           {
             "name": "gwId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           },
