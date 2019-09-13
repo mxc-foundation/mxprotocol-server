@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package api;
+import "gateway.proto";
+import "profile.proto";
+
+service InnerGatewayService {
+    rpc AddGateway (AddGatewayRequest) returns (AddGatewayResponse);
+    rpc DeleteGateway (DeleteGatewayRequest) returns (DeleteGatewayResponse);
+}
+
+message AddGatewayRequest {
+    int64 org_id = 1;
+    repeated GatewayProfile gw_profile = 2;
+    string mac_address = 3;
+}
+
+message AddGatewayResponse {
+    int64 gw_id = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message DeleteGatewayRequest {
+    int64 org_id = 1;
+    string mac_address = 2;
+}
+
+message DeleteGatewayResponse {
+    bool status = 1;
+    ProfileResponse user_profile = 2;
+}
