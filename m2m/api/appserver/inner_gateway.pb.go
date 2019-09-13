@@ -24,7 +24,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type AddGatewayRequest struct {
+type AddGatewayInM2MServerRequest struct {
 	OrgId                int64             `protobuf:"varint,1,opt,name=org_id,json=orgId,proto3" json:"org_id,omitempty"`
 	GwProfile            []*GatewayProfile `protobuf:"bytes,2,rep,name=gw_profile,json=gwProfile,proto3" json:"gw_profile,omitempty"`
 	MacAddress           string            `protobuf:"bytes,3,opt,name=mac_address,json=macAddress,proto3" json:"mac_address,omitempty"`
@@ -33,53 +33,53 @@ type AddGatewayRequest struct {
 	XXX_sizecache        int32             `json:"-"`
 }
 
-func (m *AddGatewayRequest) Reset()         { *m = AddGatewayRequest{} }
-func (m *AddGatewayRequest) String() string { return proto.CompactTextString(m) }
-func (*AddGatewayRequest) ProtoMessage()    {}
-func (*AddGatewayRequest) Descriptor() ([]byte, []int) {
+func (m *AddGatewayInM2MServerRequest) Reset()         { *m = AddGatewayInM2MServerRequest{} }
+func (m *AddGatewayInM2MServerRequest) String() string { return proto.CompactTextString(m) }
+func (*AddGatewayInM2MServerRequest) ProtoMessage()    {}
+func (*AddGatewayInM2MServerRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_19e05f446ec45efc, []int{0}
 }
 
-func (m *AddGatewayRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_AddGatewayRequest.Unmarshal(m, b)
+func (m *AddGatewayInM2MServerRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddGatewayInM2MServerRequest.Unmarshal(m, b)
 }
-func (m *AddGatewayRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_AddGatewayRequest.Marshal(b, m, deterministic)
+func (m *AddGatewayInM2MServerRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddGatewayInM2MServerRequest.Marshal(b, m, deterministic)
 }
-func (m *AddGatewayRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_AddGatewayRequest.Merge(m, src)
+func (m *AddGatewayInM2MServerRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddGatewayInM2MServerRequest.Merge(m, src)
 }
-func (m *AddGatewayRequest) XXX_Size() int {
-	return xxx_messageInfo_AddGatewayRequest.Size(m)
+func (m *AddGatewayInM2MServerRequest) XXX_Size() int {
+	return xxx_messageInfo_AddGatewayInM2MServerRequest.Size(m)
 }
-func (m *AddGatewayRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_AddGatewayRequest.DiscardUnknown(m)
+func (m *AddGatewayInM2MServerRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddGatewayInM2MServerRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_AddGatewayRequest proto.InternalMessageInfo
+var xxx_messageInfo_AddGatewayInM2MServerRequest proto.InternalMessageInfo
 
-func (m *AddGatewayRequest) GetOrgId() int64 {
+func (m *AddGatewayInM2MServerRequest) GetOrgId() int64 {
 	if m != nil {
 		return m.OrgId
 	}
 	return 0
 }
 
-func (m *AddGatewayRequest) GetGwProfile() []*GatewayProfile {
+func (m *AddGatewayInM2MServerRequest) GetGwProfile() []*GatewayProfile {
 	if m != nil {
 		return m.GwProfile
 	}
 	return nil
 }
 
-func (m *AddGatewayRequest) GetMacAddress() string {
+func (m *AddGatewayInM2MServerRequest) GetMacAddress() string {
 	if m != nil {
 		return m.MacAddress
 	}
 	return ""
 }
 
-type AddGatewayResponse struct {
+type AddGatewayInM2MServerResponse struct {
 	GwId                 int64            `protobuf:"varint,1,opt,name=gw_id,json=gwId,proto3" json:"gw_id,omitempty"`
 	UserProfile          *ProfileResponse `protobuf:"bytes,2,opt,name=user_profile,json=userProfile,proto3" json:"user_profile,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
@@ -87,46 +87,46 @@ type AddGatewayResponse struct {
 	XXX_sizecache        int32            `json:"-"`
 }
 
-func (m *AddGatewayResponse) Reset()         { *m = AddGatewayResponse{} }
-func (m *AddGatewayResponse) String() string { return proto.CompactTextString(m) }
-func (*AddGatewayResponse) ProtoMessage()    {}
-func (*AddGatewayResponse) Descriptor() ([]byte, []int) {
+func (m *AddGatewayInM2MServerResponse) Reset()         { *m = AddGatewayInM2MServerResponse{} }
+func (m *AddGatewayInM2MServerResponse) String() string { return proto.CompactTextString(m) }
+func (*AddGatewayInM2MServerResponse) ProtoMessage()    {}
+func (*AddGatewayInM2MServerResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_19e05f446ec45efc, []int{1}
 }
 
-func (m *AddGatewayResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_AddGatewayResponse.Unmarshal(m, b)
+func (m *AddGatewayInM2MServerResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddGatewayInM2MServerResponse.Unmarshal(m, b)
 }
-func (m *AddGatewayResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_AddGatewayResponse.Marshal(b, m, deterministic)
+func (m *AddGatewayInM2MServerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddGatewayInM2MServerResponse.Marshal(b, m, deterministic)
 }
-func (m *AddGatewayResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_AddGatewayResponse.Merge(m, src)
+func (m *AddGatewayInM2MServerResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddGatewayInM2MServerResponse.Merge(m, src)
 }
-func (m *AddGatewayResponse) XXX_Size() int {
-	return xxx_messageInfo_AddGatewayResponse.Size(m)
+func (m *AddGatewayInM2MServerResponse) XXX_Size() int {
+	return xxx_messageInfo_AddGatewayInM2MServerResponse.Size(m)
 }
-func (m *AddGatewayResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_AddGatewayResponse.DiscardUnknown(m)
+func (m *AddGatewayInM2MServerResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddGatewayInM2MServerResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_AddGatewayResponse proto.InternalMessageInfo
+var xxx_messageInfo_AddGatewayInM2MServerResponse proto.InternalMessageInfo
 
-func (m *AddGatewayResponse) GetGwId() int64 {
+func (m *AddGatewayInM2MServerResponse) GetGwId() int64 {
 	if m != nil {
 		return m.GwId
 	}
 	return 0
 }
 
-func (m *AddGatewayResponse) GetUserProfile() *ProfileResponse {
+func (m *AddGatewayInM2MServerResponse) GetUserProfile() *ProfileResponse {
 	if m != nil {
 		return m.UserProfile
 	}
 	return nil
 }
 
-type DeleteGatewayRequest struct {
+type DeleteGatewayInM2MServerRequest struct {
 	OrgId                int64    `protobuf:"varint,1,opt,name=org_id,json=orgId,proto3" json:"org_id,omitempty"`
 	MacAddress           string   `protobuf:"bytes,2,opt,name=mac_address,json=macAddress,proto3" json:"mac_address,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -134,46 +134,46 @@ type DeleteGatewayRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteGatewayRequest) Reset()         { *m = DeleteGatewayRequest{} }
-func (m *DeleteGatewayRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteGatewayRequest) ProtoMessage()    {}
-func (*DeleteGatewayRequest) Descriptor() ([]byte, []int) {
+func (m *DeleteGatewayInM2MServerRequest) Reset()         { *m = DeleteGatewayInM2MServerRequest{} }
+func (m *DeleteGatewayInM2MServerRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteGatewayInM2MServerRequest) ProtoMessage()    {}
+func (*DeleteGatewayInM2MServerRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_19e05f446ec45efc, []int{2}
 }
 
-func (m *DeleteGatewayRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_DeleteGatewayRequest.Unmarshal(m, b)
+func (m *DeleteGatewayInM2MServerRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteGatewayInM2MServerRequest.Unmarshal(m, b)
 }
-func (m *DeleteGatewayRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_DeleteGatewayRequest.Marshal(b, m, deterministic)
+func (m *DeleteGatewayInM2MServerRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteGatewayInM2MServerRequest.Marshal(b, m, deterministic)
 }
-func (m *DeleteGatewayRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DeleteGatewayRequest.Merge(m, src)
+func (m *DeleteGatewayInM2MServerRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteGatewayInM2MServerRequest.Merge(m, src)
 }
-func (m *DeleteGatewayRequest) XXX_Size() int {
-	return xxx_messageInfo_DeleteGatewayRequest.Size(m)
+func (m *DeleteGatewayInM2MServerRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteGatewayInM2MServerRequest.Size(m)
 }
-func (m *DeleteGatewayRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_DeleteGatewayRequest.DiscardUnknown(m)
+func (m *DeleteGatewayInM2MServerRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteGatewayInM2MServerRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_DeleteGatewayRequest proto.InternalMessageInfo
+var xxx_messageInfo_DeleteGatewayInM2MServerRequest proto.InternalMessageInfo
 
-func (m *DeleteGatewayRequest) GetOrgId() int64 {
+func (m *DeleteGatewayInM2MServerRequest) GetOrgId() int64 {
 	if m != nil {
 		return m.OrgId
 	}
 	return 0
 }
 
-func (m *DeleteGatewayRequest) GetMacAddress() string {
+func (m *DeleteGatewayInM2MServerRequest) GetMacAddress() string {
 	if m != nil {
 		return m.MacAddress
 	}
 	return ""
 }
 
-type DeleteGatewayResponse struct {
+type DeleteGatewayInM2MServerResponse struct {
 	Status               bool             `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
 	UserProfile          *ProfileResponse `protobuf:"bytes,2,opt,name=user_profile,json=userProfile,proto3" json:"user_profile,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
@@ -181,39 +181,39 @@ type DeleteGatewayResponse struct {
 	XXX_sizecache        int32            `json:"-"`
 }
 
-func (m *DeleteGatewayResponse) Reset()         { *m = DeleteGatewayResponse{} }
-func (m *DeleteGatewayResponse) String() string { return proto.CompactTextString(m) }
-func (*DeleteGatewayResponse) ProtoMessage()    {}
-func (*DeleteGatewayResponse) Descriptor() ([]byte, []int) {
+func (m *DeleteGatewayInM2MServerResponse) Reset()         { *m = DeleteGatewayInM2MServerResponse{} }
+func (m *DeleteGatewayInM2MServerResponse) String() string { return proto.CompactTextString(m) }
+func (*DeleteGatewayInM2MServerResponse) ProtoMessage()    {}
+func (*DeleteGatewayInM2MServerResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_19e05f446ec45efc, []int{3}
 }
 
-func (m *DeleteGatewayResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_DeleteGatewayResponse.Unmarshal(m, b)
+func (m *DeleteGatewayInM2MServerResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteGatewayInM2MServerResponse.Unmarshal(m, b)
 }
-func (m *DeleteGatewayResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_DeleteGatewayResponse.Marshal(b, m, deterministic)
+func (m *DeleteGatewayInM2MServerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteGatewayInM2MServerResponse.Marshal(b, m, deterministic)
 }
-func (m *DeleteGatewayResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DeleteGatewayResponse.Merge(m, src)
+func (m *DeleteGatewayInM2MServerResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteGatewayInM2MServerResponse.Merge(m, src)
 }
-func (m *DeleteGatewayResponse) XXX_Size() int {
-	return xxx_messageInfo_DeleteGatewayResponse.Size(m)
+func (m *DeleteGatewayInM2MServerResponse) XXX_Size() int {
+	return xxx_messageInfo_DeleteGatewayInM2MServerResponse.Size(m)
 }
-func (m *DeleteGatewayResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_DeleteGatewayResponse.DiscardUnknown(m)
+func (m *DeleteGatewayInM2MServerResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteGatewayInM2MServerResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_DeleteGatewayResponse proto.InternalMessageInfo
+var xxx_messageInfo_DeleteGatewayInM2MServerResponse proto.InternalMessageInfo
 
-func (m *DeleteGatewayResponse) GetStatus() bool {
+func (m *DeleteGatewayInM2MServerResponse) GetStatus() bool {
 	if m != nil {
 		return m.Status
 	}
 	return false
 }
 
-func (m *DeleteGatewayResponse) GetUserProfile() *ProfileResponse {
+func (m *DeleteGatewayInM2MServerResponse) GetUserProfile() *ProfileResponse {
 	if m != nil {
 		return m.UserProfile
 	}
@@ -221,36 +221,37 @@ func (m *DeleteGatewayResponse) GetUserProfile() *ProfileResponse {
 }
 
 func init() {
-	proto.RegisterType((*AddGatewayRequest)(nil), "api.AddGatewayRequest")
-	proto.RegisterType((*AddGatewayResponse)(nil), "api.AddGatewayResponse")
-	proto.RegisterType((*DeleteGatewayRequest)(nil), "api.DeleteGatewayRequest")
-	proto.RegisterType((*DeleteGatewayResponse)(nil), "api.DeleteGatewayResponse")
+	proto.RegisterType((*AddGatewayInM2MServerRequest)(nil), "api.AddGatewayInM2MServerRequest")
+	proto.RegisterType((*AddGatewayInM2MServerResponse)(nil), "api.AddGatewayInM2MServerResponse")
+	proto.RegisterType((*DeleteGatewayInM2MServerRequest)(nil), "api.DeleteGatewayInM2MServerRequest")
+	proto.RegisterType((*DeleteGatewayInM2MServerResponse)(nil), "api.DeleteGatewayInM2MServerResponse")
 }
 
 func init() { proto.RegisterFile("inner_gateway.proto", fileDescriptor_19e05f446ec45efc) }
 
 var fileDescriptor_19e05f446ec45efc = []byte{
-	// 315 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x92, 0x3f, 0x4f, 0xf3, 0x30,
-	0x10, 0xc6, 0x95, 0xe6, 0x6d, 0xf5, 0xf6, 0x42, 0x07, 0x9c, 0xb6, 0x94, 0x2c, 0x54, 0x9d, 0x32,
-	0x75, 0x08, 0x03, 0x13, 0x43, 0x25, 0x04, 0xea, 0x82, 0x90, 0xf9, 0x00, 0x91, 0x1b, 0x1f, 0xc6,
-	0x52, 0x1b, 0x07, 0xdb, 0x21, 0x62, 0xe2, 0x8b, 0xf0, 0x61, 0x51, 0x13, 0xa3, 0xfe, 0x49, 0x07,
-	0xc4, 0x16, 0x3f, 0x77, 0xf7, 0xdc, 0xef, 0xee, 0x02, 0xa1, 0xcc, 0x73, 0xd4, 0xa9, 0x60, 0x16,
-	0x2b, 0xf6, 0x31, 0x2f, 0xb4, 0xb2, 0x8a, 0xf8, 0xac, 0x90, 0xd1, 0xe0, 0x40, 0x8b, 0x06, 0x85,
-	0x56, 0x2f, 0x72, 0x8d, 0xcd, 0x73, 0xf6, 0x09, 0xe7, 0x0b, 0xce, 0x1f, 0x9a, 0x14, 0x8a, 0x6f,
-	0x25, 0x1a, 0x4b, 0x46, 0xd0, 0x53, 0x5a, 0xa4, 0x92, 0x4f, 0xbc, 0xa9, 0x17, 0xfb, 0xb4, 0xab,
-	0xb4, 0x58, 0x72, 0x92, 0x00, 0x88, 0x2a, 0x75, 0xf5, 0x93, 0xce, 0xd4, 0x8f, 0x83, 0x24, 0x9c,
-	0xb3, 0x42, 0xce, 0x5d, 0xfd, 0x53, 0x13, 0xa2, 0x7d, 0x51, 0xb9, 0x4f, 0x72, 0x05, 0xc1, 0x86,
-	0x65, 0x29, 0xe3, 0x5c, 0xa3, 0x31, 0x13, 0x7f, 0xea, 0xc5, 0x7d, 0x0a, 0x1b, 0x96, 0x2d, 0x1a,
-	0x65, 0xb6, 0x02, 0xb2, 0x0f, 0x60, 0x0a, 0x95, 0x1b, 0x24, 0x21, 0x74, 0x45, 0xb5, 0x03, 0xf8,
-	0x27, 0xaa, 0x25, 0x27, 0x37, 0x70, 0x56, 0x1a, 0xd4, 0x7b, 0x04, 0x5e, 0x1c, 0x24, 0xc3, 0x9a,
-	0xe0, 0xa7, 0xb5, 0x33, 0xa0, 0xc1, 0x36, 0xd3, 0x89, 0xb3, 0x47, 0x18, 0xde, 0xe1, 0x1a, 0x2d,
-	0xfe, 0x6e, 0xce, 0x23, 0xe6, 0x4e, 0x8b, 0xf9, 0x15, 0x46, 0x47, 0x7e, 0x0e, 0x7b, 0x0c, 0x3d,
-	0x63, 0x99, 0x2d, 0x4d, 0x6d, 0xf8, 0x9f, 0xba, 0xd7, 0x9f, 0xc9, 0x93, 0x2f, 0x0f, 0xc2, 0xe5,
-	0xf6, 0xb2, 0xae, 0xd3, 0x33, 0xea, 0x77, 0x99, 0x21, 0xb9, 0x05, 0xd8, 0x6d, 0x8d, 0x8c, 0x6b,
-	0xa3, 0xd6, 0x1d, 0xa3, 0x8b, 0x96, 0xee, 0x38, 0xef, 0x61, 0x70, 0x30, 0x00, 0xb9, 0xac, 0x33,
-	0x4f, 0x2d, 0x29, 0x8a, 0x4e, 0x85, 0x1a, 0x9f, 0x55, 0xaf, 0xfe, 0x89, 0xae, 0xbf, 0x03, 0x00,
-	0x00, 0xff, 0xff, 0x90, 0x01, 0x02, 0xb6, 0x7e, 0x02, 0x00, 0x00,
+	// 326 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x92, 0x4f, 0x4b, 0xf3, 0x40,
+	0x10, 0xc6, 0x49, 0xf3, 0xb6, 0xbc, 0x9d, 0xd8, 0xcb, 0xc6, 0x4a, 0x08, 0x4a, 0x63, 0x50, 0xc8,
+	0xa9, 0x87, 0x78, 0xf0, 0x5c, 0x10, 0x24, 0x87, 0x82, 0xc4, 0x93, 0x17, 0xc3, 0xda, 0x1d, 0x97,
+	0x85, 0x36, 0x1b, 0x77, 0xb7, 0x06, 0xbf, 0x82, 0x1f, 0xd2, 0xcf, 0x22, 0x4d, 0x56, 0xfc, 0x9b,
+	0x16, 0xbd, 0x65, 0x26, 0x4f, 0x9e, 0x79, 0x7e, 0x93, 0x01, 0x5f, 0x94, 0x25, 0xaa, 0x82, 0x53,
+	0x83, 0x35, 0x7d, 0x9a, 0x56, 0x4a, 0x1a, 0x49, 0x5c, 0x5a, 0x89, 0x70, 0xf4, 0xa9, 0x17, 0x8e,
+	0x2a, 0x25, 0xef, 0xc5, 0x12, 0xdb, 0x32, 0x7e, 0x76, 0xe0, 0x70, 0xc6, 0xd8, 0x65, 0xab, 0xc9,
+	0xca, 0x79, 0x3a, 0xbf, 0x46, 0xf5, 0x88, 0x2a, 0xc7, 0x87, 0x35, 0x6a, 0x43, 0xc6, 0x30, 0x90,
+	0x8a, 0x17, 0x82, 0x05, 0x4e, 0xe4, 0x24, 0x6e, 0xde, 0x97, 0x8a, 0x67, 0x8c, 0xa4, 0x00, 0xbc,
+	0x2e, 0xac, 0x57, 0xd0, 0x8b, 0xdc, 0xc4, 0x4b, 0xfd, 0x29, 0xad, 0xc4, 0xd4, 0x5a, 0x5d, 0xb5,
+	0xaf, 0xf2, 0x21, 0xaf, 0xed, 0x23, 0x99, 0x80, 0xb7, 0xa2, 0x8b, 0x82, 0x32, 0xa6, 0x50, 0xeb,
+	0xc0, 0x8d, 0x9c, 0x64, 0x98, 0xc3, 0x8a, 0x2e, 0x66, 0x6d, 0x27, 0x5e, 0xc1, 0x51, 0x47, 0x16,
+	0x5d, 0xc9, 0x52, 0x23, 0xf1, 0xa1, 0xcf, 0xeb, 0xf7, 0x2c, 0xff, 0x78, 0x9d, 0x31, 0x72, 0x0e,
+	0x7b, 0x6b, 0x8d, 0xea, 0x43, 0x18, 0x27, 0xf1, 0xd2, 0xfd, 0x26, 0xcc, 0x5b, 0x0a, 0x6b, 0x90,
+	0x7b, 0x1b, 0xa5, 0x6d, 0xc6, 0x37, 0x30, 0xb9, 0xc0, 0x25, 0x1a, 0xfc, 0x35, 0xfd, 0x17, 0x92,
+	0xde, 0x37, 0x12, 0x0d, 0x51, 0xb7, 0xb5, 0x85, 0x39, 0x80, 0x81, 0x36, 0xd4, 0xac, 0x75, 0xe3,
+	0xfd, 0x3f, 0xb7, 0xd5, 0x9f, 0x79, 0xd2, 0x17, 0x07, 0xfc, 0x6c, 0x73, 0x06, 0x76, 0xe8, 0x66,
+	0x9e, 0x58, 0x20, 0xb9, 0x85, 0xf1, 0x8f, 0x6b, 0x25, 0xc7, 0x8d, 0xe7, 0xb6, 0xdf, 0x1f, 0xc6,
+	0xdb, 0x24, 0x16, 0x84, 0x43, 0xd0, 0x05, 0x4b, 0x4e, 0x9a, 0xef, 0x77, 0xac, 0x39, 0x3c, 0xdd,
+	0xa1, 0x6a, 0x07, 0xdd, 0x0d, 0x9a, 0x9b, 0x3d, 0x7b, 0x0d, 0x00, 0x00, 0xff, 0xff, 0x4e, 0xdc,
+	0x2e, 0x64, 0xed, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -265,8 +266,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type InnerGatewayServiceClient interface {
-	AddGateway(ctx context.Context, in *AddGatewayRequest, opts ...grpc.CallOption) (*AddGatewayResponse, error)
-	DeleteGateway(ctx context.Context, in *DeleteGatewayRequest, opts ...grpc.CallOption) (*DeleteGatewayResponse, error)
+	AddGatewayInM2MServer(ctx context.Context, in *AddGatewayInM2MServerRequest, opts ...grpc.CallOption) (*AddGatewayInM2MServerResponse, error)
+	DeleteGatewayInM2MServer(ctx context.Context, in *DeleteGatewayInM2MServerRequest, opts ...grpc.CallOption) (*DeleteGatewayInM2MServerResponse, error)
 }
 
 type innerGatewayServiceClient struct {
@@ -277,18 +278,18 @@ func NewInnerGatewayServiceClient(cc *grpc.ClientConn) InnerGatewayServiceClient
 	return &innerGatewayServiceClient{cc}
 }
 
-func (c *innerGatewayServiceClient) AddGateway(ctx context.Context, in *AddGatewayRequest, opts ...grpc.CallOption) (*AddGatewayResponse, error) {
-	out := new(AddGatewayResponse)
-	err := c.cc.Invoke(ctx, "/api.InnerGatewayService/AddGateway", in, out, opts...)
+func (c *innerGatewayServiceClient) AddGatewayInM2MServer(ctx context.Context, in *AddGatewayInM2MServerRequest, opts ...grpc.CallOption) (*AddGatewayInM2MServerResponse, error) {
+	out := new(AddGatewayInM2MServerResponse)
+	err := c.cc.Invoke(ctx, "/api.InnerGatewayService/AddGatewayInM2MServer", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *innerGatewayServiceClient) DeleteGateway(ctx context.Context, in *DeleteGatewayRequest, opts ...grpc.CallOption) (*DeleteGatewayResponse, error) {
-	out := new(DeleteGatewayResponse)
-	err := c.cc.Invoke(ctx, "/api.InnerGatewayService/DeleteGateway", in, out, opts...)
+func (c *innerGatewayServiceClient) DeleteGatewayInM2MServer(ctx context.Context, in *DeleteGatewayInM2MServerRequest, opts ...grpc.CallOption) (*DeleteGatewayInM2MServerResponse, error) {
+	out := new(DeleteGatewayInM2MServerResponse)
+	err := c.cc.Invoke(ctx, "/api.InnerGatewayService/DeleteGatewayInM2MServer", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -297,57 +298,57 @@ func (c *innerGatewayServiceClient) DeleteGateway(ctx context.Context, in *Delet
 
 // InnerGatewayServiceServer is the server API for InnerGatewayService service.
 type InnerGatewayServiceServer interface {
-	AddGateway(context.Context, *AddGatewayRequest) (*AddGatewayResponse, error)
-	DeleteGateway(context.Context, *DeleteGatewayRequest) (*DeleteGatewayResponse, error)
+	AddGatewayInM2MServer(context.Context, *AddGatewayInM2MServerRequest) (*AddGatewayInM2MServerResponse, error)
+	DeleteGatewayInM2MServer(context.Context, *DeleteGatewayInM2MServerRequest) (*DeleteGatewayInM2MServerResponse, error)
 }
 
 // UnimplementedInnerGatewayServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedInnerGatewayServiceServer struct {
 }
 
-func (*UnimplementedInnerGatewayServiceServer) AddGateway(ctx context.Context, req *AddGatewayRequest) (*AddGatewayResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddGateway not implemented")
+func (*UnimplementedInnerGatewayServiceServer) AddGatewayInM2MServer(ctx context.Context, req *AddGatewayInM2MServerRequest) (*AddGatewayInM2MServerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddGatewayInM2MServer not implemented")
 }
-func (*UnimplementedInnerGatewayServiceServer) DeleteGateway(ctx context.Context, req *DeleteGatewayRequest) (*DeleteGatewayResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteGateway not implemented")
+func (*UnimplementedInnerGatewayServiceServer) DeleteGatewayInM2MServer(ctx context.Context, req *DeleteGatewayInM2MServerRequest) (*DeleteGatewayInM2MServerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteGatewayInM2MServer not implemented")
 }
 
 func RegisterInnerGatewayServiceServer(s *grpc.Server, srv InnerGatewayServiceServer) {
 	s.RegisterService(&_InnerGatewayService_serviceDesc, srv)
 }
 
-func _InnerGatewayService_AddGateway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddGatewayRequest)
+func _InnerGatewayService_AddGatewayInM2MServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddGatewayInM2MServerRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(InnerGatewayServiceServer).AddGateway(ctx, in)
+		return srv.(InnerGatewayServiceServer).AddGatewayInM2MServer(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.InnerGatewayService/AddGateway",
+		FullMethod: "/api.InnerGatewayService/AddGatewayInM2MServer",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(InnerGatewayServiceServer).AddGateway(ctx, req.(*AddGatewayRequest))
+		return srv.(InnerGatewayServiceServer).AddGatewayInM2MServer(ctx, req.(*AddGatewayInM2MServerRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _InnerGatewayService_DeleteGateway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteGatewayRequest)
+func _InnerGatewayService_DeleteGatewayInM2MServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteGatewayInM2MServerRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(InnerGatewayServiceServer).DeleteGateway(ctx, in)
+		return srv.(InnerGatewayServiceServer).DeleteGatewayInM2MServer(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.InnerGatewayService/DeleteGateway",
+		FullMethod: "/api.InnerGatewayService/DeleteGatewayInM2MServer",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(InnerGatewayServiceServer).DeleteGateway(ctx, req.(*DeleteGatewayRequest))
+		return srv.(InnerGatewayServiceServer).DeleteGatewayInM2MServer(ctx, req.(*DeleteGatewayInM2MServerRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -357,12 +358,12 @@ var _InnerGatewayService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*InnerGatewayServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "AddGateway",
-			Handler:    _InnerGatewayService_AddGateway_Handler,
+			MethodName: "AddGatewayInM2MServer",
+			Handler:    _InnerGatewayService_AddGatewayInM2MServer_Handler,
 		},
 		{
-			MethodName: "DeleteGateway",
-			Handler:    _InnerGatewayService_DeleteGateway_Handler,
+			MethodName: "DeleteGatewayInM2MServer",
+			Handler:    _InnerGatewayService_DeleteGatewayInM2MServer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
