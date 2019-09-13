@@ -14,19 +14,19 @@ service GatewayService {
 
     rpc GetGatewayProfile(GetGatewayProfileRequest) returns (GetGatewayProfileResponse){
         option(google.api.http) = {
-			get: "/api/gateway/{org_id}/gateway-profile"
+			get: "/api/gateway/{org_id}/gateway-profile/{gw_id}"
 		};
     }
 
     rpc GetGatewayHistory(GetGatewayHistoryRequest) returns (GetGatewayHistoryResponse) {
         option (google.api.http) = {
-			get: "/api/gateway/{org_id}/gateway-history"
+			get: "/api/gateway/{org_id}/gateway-history/{gw_id}"
 		};
     }
 
     rpc SetGatewayMode(SetGatewayModeRequest) returns (SetGatewayModeResponse) {
             option (google.api.http) = {
-    			post: "/api/gateway/{org_id}/gateway-mode"
+    			post: "/api/gateway/{org_id}/gateway-mode/{gw_id}"
     			body: "*"
     		};
         }

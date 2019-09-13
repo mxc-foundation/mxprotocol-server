@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/device/{orgId}/device-history": {
+    "/api/device/{orgId}/device-history/{devId}": {
       "get": {
         "operationId": "GetDeviceHistory",
         "responses": {
@@ -36,8 +36,8 @@
           },
           {
             "name": "devId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           },
@@ -100,7 +100,7 @@
         ]
       }
     },
-    "/api/device/{orgId}/device-mode": {
+    "/api/device/{orgId}/device-mode/{devId}": {
       "post": {
         "operationId": "SetDeviceMode",
         "responses": {
@@ -120,6 +120,13 @@
             "format": "int64"
           },
           {
+            "name": "devId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
@@ -133,7 +140,7 @@
         ]
       }
     },
-    "/api/device/{orgId}/device-profile": {
+    "/api/device/{orgId}/device-profile/{devId}": {
       "get": {
         "operationId": "GetDeviceProfile",
         "responses": {
@@ -154,8 +161,8 @@
           },
           {
             "name": "devId",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           }
