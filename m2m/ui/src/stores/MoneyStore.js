@@ -13,10 +13,10 @@ class MoneyStore extends EventEmitter {
     this.swagger = new Swagger("/swagger/ext_account.swagger.json", sessionStore.getClientOpts());
   }
 
-  getActiveMoneyAccount(money_abbr, orgId, callbackFunc) {
+  getActiveMoneyAccount(moneyAbbr, orgId, callbackFunc) {
     this.swagger.then(client => {
       client.apis.MoneyService.GetActiveMoneyAccount({
-        money_abbr,
+        moneyAbbr,
         orgId,
       })
       .then(checkStatus)
@@ -31,7 +31,8 @@ class MoneyStore extends EventEmitter {
   modifyMoneyAccount(req, callbackFunc) {
     this.swagger.then(client => {
       client.apis.MoneyService.ModifyMoneyAccount({
-        "money_abbr": req.moneyAbbr,
+        "orgId": req.orgId,
+        "moneyAbbr": req.moneyAbbr,
         body: {
           currentAccount: req.currentAccount,
           orgId: req.orgId,
