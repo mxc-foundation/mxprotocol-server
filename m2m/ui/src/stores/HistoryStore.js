@@ -16,26 +16,26 @@ class HistoryStore extends EventEmitter {
     this.moneySwagger = new Swagger("/swagger/ext_account.swagger.json", sessionStore.getClientOpts());
   }
 
-  getTopUpHistory(orgId, limit, offset, callbackFunc) {
-    this.topupSwagger.then((client) => {      
-      client.apis.TopupService.List({
+  getTopUpHistory(orgId, offset, limit, callbackFunc) {
+    this.swagger.then(client => {
+      client.apis.TopUpService.GetTopUpHistory({
         orgId,
-        limit,
         offset,
+        limit
       })
       .then(checkStatus)
       //.then(updateOrganizations)
       .then(resp => {
-        callbackFunc(resp.obj);
+        callbackFunc(resp.body);
       })
       .catch(errorHandler);
     });
   }
   
-  getWithdrawHistory(money_abbr, orgId, limit, offset, callbackFunc) {
+  getWithdrawHistory(moneyAbbr, orgId, limit, offset, callbackFunc) {
     this.withdrawSwagger.then((client) => {      
       client.apis.WithdrawService.GetWithdrawHistory({
-        money_abbr,
+        moneyAbbr,
         orgId,
         limit,
         offset,
@@ -65,10 +65,10 @@ class HistoryStore extends EventEmitter {
     });
   }
 
-  getChangeMoneyAccountHistory(money_abbr, orgId, limit, offset, callbackFunc) {
+  getChangeMoneyAccountHistory(moneyAbbr, orgId, limit, offset, callbackFunc) {
     this.moneySwagger.then((client) => {      
       client.apis.MoneyService.GetChangeMoneyAccountHistory({
-        money_abbr,
+        moneyAbbr,
         orgId,
         limit,
         offset,

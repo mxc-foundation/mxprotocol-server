@@ -156,16 +156,16 @@ class SessionStore extends EventEmitter {
 
   initProfile(data) {
 
-    const { jwt, org_id, org_name, username, loraHostUrl } = data;
+    const { jwt, orgId, orgName, username, loraHostUrl } = data;
     
-    if(jwt === "" || org_id === "" || org_id === undefined){
+    if(jwt === "" || orgId === "" || orgId === undefined){
       window.location.replace(loraHostUrl);
     }
     
     this.setToken(jwt);
     this.setUsername(username);
-    this.setOrganizationID(org_id);
-    this.setOrganizationName(org_name);
+    this.setOrganizationID(orgId);
+    this.setOrganizationName(orgName);
   }
 
   login(login, callBackFunc) {
