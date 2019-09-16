@@ -17,15 +17,9 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/tmc/grpc-websocket-proxy/wsproxy"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/device"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/ext_account"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/gateway"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/supernode"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/topup"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/withdraw"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/static"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
@@ -51,14 +45,14 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	server := grpc.NewServer()
 
 	// register all servers here
-	api.RegisterWithdrawServiceServer(server, withdraw.NewWithdrawServerAPI())
-	api.RegisterMoneyServiceServer(server, ext_account.NewMoneyServerAPI())
-	api.RegisterTopUpServiceServer(server, topup.NewTopUpServerAPI())
-	api.RegisterWalletServiceServer(server, wallet.NewWalletServerAPI())
-	api.RegisterSuperNodeServiceServer(server, supernode.NewSupernodeServerAPI())
+	api.RegisterWithdrawServiceServer(server, m2m.NewWithdrawServerAPI())
+	api.RegisterMoneyServiceServer(server, m2m.NewMoneyServerAPI())
+	api.RegisterTopUpServiceServer(server, m2m.NewTopUpServerAPI())
+	api.RegisterWalletServiceServer(server, m2m.NewWalletServerAPI())
+	api.RegisterSuperNodeServiceServer(server, m2m.NewSupernodeServerAPI())
 	api.RegisterInternalServiceServer(server, auth.NewInternalServerAPI())
-	api.RegisterDeviceServiceServer(server, device.NewDeviceServerAPI())
-	api.RegisterGatewayServiceServer(server, gateway.NewGatewayServerAPI())
+	api.RegisterDeviceServiceServer(server, m2m.NewDeviceServerAPI())
+	api.RegisterGatewayServiceServer(server, m2m.NewGatewayServerAPI())
 
 	var clientHttpHandler http.Handler
 	var err error

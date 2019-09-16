@@ -5,27 +5,27 @@ import "gateway.proto";
 import "profile.proto";
 
 service InnerGatewayService {
-    rpc AddGateway (AddGatewayRequest) returns (AddGatewayResponse);
-    rpc DeleteGateway (DeleteGatewayRequest) returns (DeleteGatewayResponse);
+    rpc AddGatewayInM2MServer (AddGatewayInM2MServerRequest) returns (AddGatewayInM2MServerResponse);
+    rpc DeleteGatewayInM2MServer (DeleteGatewayInM2MServerRequest) returns (DeleteGatewayInM2MServerResponse);
 }
 
-message AddGatewayRequest {
+message AddGatewayInM2MServerRequest {
     int64 org_id = 1;
     repeated GatewayProfile gw_profile = 2;
     string mac_address = 3;
 }
 
-message AddGatewayResponse {
+message AddGatewayInM2MServerResponse {
     int64 gw_id = 1;
     ProfileResponse user_profile = 2;
 }
 
-message DeleteGatewayRequest {
+message DeleteGatewayInM2MServerRequest {
     int64 org_id = 1;
     string mac_address = 2;
 }
 
-message DeleteGatewayResponse {
+message DeleteGatewayInM2MServerResponse {
     bool status = 1;
     ProfileResponse user_profile = 2;
 }
