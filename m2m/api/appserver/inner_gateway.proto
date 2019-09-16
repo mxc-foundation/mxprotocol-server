@@ -4,7 +4,7 @@ package api;
 import "gateway.proto";
 import "profile.proto";
 
-service InnerGatewayService {
+service M2MGatewayService {
     rpc AddGatewayInM2MServer (AddGatewayInM2MServerRequest) returns (AddGatewayInM2MServerResponse);
     rpc DeleteGatewayInM2MServer (DeleteGatewayInM2MServerRequest) returns (DeleteGatewayInM2MServerResponse);
 }
