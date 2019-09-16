@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package api;
-import "device.proto";
+//import "device.proto";
 import "profile.proto";
 
 service M2MDeviceService {
@@ -9,10 +9,17 @@ service M2MDeviceService {
     rpc DeleteDeviceInM2MServer (DeleteDeviceInM2MServerRequest) returns (DeleteDeviceInM2MServerResponse);
 }
 
+message AppServerDeviceProfile {
+    string dev_eui = 1;
+    string created_at = 2;
+    string last_seen_at = 3;
+    int64 application_id = 4;
+    string name = 5;
+}
+
 message AddDeviceInM2MServerRequest {
     int64 org_id = 1;
-    repeated DeviceProfile dev_profile = 2;
-    string mac_address = 3;
+    repeated AppServerDeviceProfile dev_profile = 2;
 }
 
 message AddDeviceInM2MServerResponse {
@@ -22,7 +29,7 @@ message AddDeviceInM2MServerResponse {
 
 message DeleteDeviceInM2MServerRequest {
     int64 org_id = 1;
-    string mac_address = 2;
+    string dev_eui = 2;
 }
 
 message DeleteDeviceInM2MServerResponse {

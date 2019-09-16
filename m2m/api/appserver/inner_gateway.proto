@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package api;
-import "gateway.proto";
+//import "gateway.proto";
 import "profile.proto";
 
 service M2MGatewayService {
@@ -9,10 +9,18 @@ service M2MGatewayService {
     rpc DeleteGatewayInM2MServer (DeleteGatewayInM2MServerRequest) returns (DeleteGatewayInM2MServerResponse);
 }
 
+message AppServerGatewayProfile {
+    string mac = 1;
+    string create_at = 2;
+    string last_seen_at = 3;
+    int64 org_id = 4;
+    string description = 5;
+    string name = 6;
+}
+
 message AddGatewayInM2MServerRequest {
     int64 org_id = 1;
-    repeated GatewayProfile gw_profile = 2;
-    string mac_address = 3;
+    repeated AppServerGatewayProfile gw_profile = 2;
 }
 
 message AddGatewayInM2MServerResponse {
