@@ -3,10 +3,10 @@ services:
   mxprotocol-server:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-devel
     volumes:
       - ./configuration:/etc/mxprotocol-server
-      # - ./:/mxprotocol-server
+      - ./:/mxprotocol-server
     links:
       - postgresql
       - redis

@@ -30,7 +30,7 @@ ui/build:
 api:
 	@echo "Generating API code from .proto files"
 	@go mod vendor
-	@go generate api/m2m/api.go 
+	@go generate api/m2m_server/api.go
 	@go generate api/appserver/api.go
 	@rm -rf vendor/
 
@@ -41,8 +41,8 @@ pkg/static pkg/migrations: static/swagger/api.swagger.json
 
 static/swagger/api.swagger.json:
 	@echo "Generating combined Swagger JSON"
-	@GOOS="" GOARCH="" go run api/m2m/swagger/main.go api/m2m/swagger > static/swagger/api.swagger.json
-	@cp api/m2m/swagger/*.json static/swagger
+	@GOOS="" GOARCH="" go run api/m2m_server/swagger/main.go api/m2m_server/swagger > static/swagger/api.swagger.json
+	@cp api/m2m_server/swagger/*.json static/swagger
 
 ui-requirements:
 	@echo "Installing UI requirements"

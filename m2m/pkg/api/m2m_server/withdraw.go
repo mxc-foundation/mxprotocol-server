@@ -1,11 +1,11 @@
-package m2m
+package m2m_server
 
 import (
 	"fmt"
 	"strings"
 	"context"
 	log "github.com/sirupsen/logrus"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_server"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"

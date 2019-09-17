@@ -16,8 +16,8 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/tmc/grpc-websocket-proxy/wsproxy"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_server"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_server"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/static"
@@ -45,14 +45,14 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	server := grpc.NewServer()
 
 	// register all servers here
-	api.RegisterWithdrawServiceServer(server, m2m.NewWithdrawServerAPI())
-	api.RegisterMoneyServiceServer(server, m2m.NewMoneyServerAPI())
-	api.RegisterTopUpServiceServer(server, m2m.NewTopUpServerAPI())
-	api.RegisterWalletServiceServer(server, m2m.NewWalletServerAPI())
-	api.RegisterSuperNodeServiceServer(server, m2m.NewSupernodeServerAPI())
+	api.RegisterWithdrawServiceServer(server, m2m_server.NewWithdrawServerAPI())
+	api.RegisterMoneyServiceServer(server, m2m_server.NewMoneyServerAPI())
+	api.RegisterTopUpServiceServer(server, m2m_server.NewTopUpServerAPI())
+	api.RegisterWalletServiceServer(server, m2m_server.NewWalletServerAPI())
+	api.RegisterSuperNodeServiceServer(server, m2m_server.NewSupernodeServerAPI())
 	api.RegisterInternalServiceServer(server, auth.NewInternalServerAPI())
-	api.RegisterDeviceServiceServer(server, m2m.NewDeviceServerAPI())
-	api.RegisterGatewayServiceServer(server, m2m.NewGatewayServerAPI())
+	api.RegisterDeviceServiceServer(server, m2m_server.NewDeviceServerAPI())
+	api.RegisterGatewayServiceServer(server, m2m_server.NewGatewayServerAPI())
 
 	var clientHttpHandler http.Handler
 	var err error
