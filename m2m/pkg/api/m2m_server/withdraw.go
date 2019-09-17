@@ -1,4 +1,4 @@
-package m2m_server
+package api
 
 import (
 	"fmt"

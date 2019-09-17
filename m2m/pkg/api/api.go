@@ -16,8 +16,10 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/tmc/grpc-websocket-proxy/wsproxy"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_server"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_server"
+	appserver_grpc "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
+	m2m_grpc "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_server"
+	appserver_api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/appserver"
+	m2m_api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_server"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/static"
@@ -45,14 +47,17 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	server := grpc.NewServer()
 
 	// register all servers here
-	api.RegisterWithdrawServiceServer(server, m2m_server.NewWithdrawServerAPI())
-	api.RegisterMoneyServiceServer(server, m2m_server.NewMoneyServerAPI())
-	api.RegisterTopUpServiceServer(server, m2m_server.NewTopUpServerAPI())
-	api.RegisterWalletServiceServer(server, m2m_server.NewWalletServerAPI())
-	api.RegisterSuperNodeServiceServer(server, m2m_server.NewSupernodeServerAPI())
-	api.RegisterInternalServiceServer(server, auth.NewInternalServerAPI())
-	api.RegisterDeviceServiceServer(server, m2m_server.NewDeviceServerAPI())
-	api.RegisterGatewayServiceServer(server, m2m_server.NewGatewayServerAPI())
+	m2m_grpc.RegisterWithdrawServiceServer(server, m2m_api.NewWithdrawServerAPI())
+	m2m_grpc.RegisterMoneyServiceServer(server, m2m_api.NewMoneyServerAPI())
+	m2m_grpc.RegisterTopUpServiceServer(server, m2m_api.NewTopUpServerAPI())
+	m2m_grpc.RegisterWalletServiceServer(server, m2m_api.NewWalletServerAPI())
+	m2m_grpc.RegisterSuperNodeServiceServer(server, m2m_api.NewSupernodeServerAPI())
+	m2m_grpc.RegisterInternalServiceServer(server, auth.NewInternalServerAPI())
+	m2m_grpc.RegisterDeviceServiceServer(server, m2m_api.NewDeviceServerAPI())
+	m2m_grpc.RegisterGatewayServiceServer(server, m2m_api.NewGatewayServerAPI())
+	m2m_grpc.RegisterDeviceServiceServer(server, m2m_api.NewDeviceServerAPI())
+	m2m_grpc.RegisterGatewayServiceServer(server, m2m_api.NewGatewayServerAPI())
+	appserver_grpc.RegisterM2MServerServiceServer(server, appserver_api.NewM2MServerAPI())
 
 	var clientHttpHandler http.Handler
 	var err error
