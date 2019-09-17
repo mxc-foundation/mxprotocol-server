@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package api;
+
+service M2MServerService {
+    rpc AddDeviceInM2MServer (AddDeviceInM2MServerRequest) returns (AddDeviceInM2MServerResponse);
+    rpc DeleteDeviceInM2MServer (DeleteDeviceInM2MServerRequest) returns (DeleteDeviceInM2MServerResponse);
+
+    rpc AddGatewayInM2MServer (AddGatewayInM2MServerRequest) returns (AddGatewayInM2MServerResponse);
+    rpc DeleteGatewayInM2MServer (DeleteGatewayInM2MServerRequest) returns (DeleteGatewayInM2MServerResponse);
+}
+
+message AppServerDeviceProfile {
+    string dev_eui = 1;
+    string created_at = 2;
+    string last_seen_at = 3;
+    int64 application_id = 4;
+    string name = 5;
+}
+
+message AddDeviceInM2MServerRequest {
+    int64 org_id = 1;
+    AppServerDeviceProfile dev_profile = 2;
+}
+
+message AddDeviceInM2MServerResponse {
+    int64 dev_id = 1;
+}
+
+message DeleteDeviceInM2MServerRequest {
+    int64 org_id = 1;
+    string dev_eui = 2;
+}
+
+message DeleteDeviceInM2MServerResponse {
+    bool status = 1;
+}
+
+message AppServerGatewayProfile {
+    string mac = 1;
+    string create_at = 2;
+    string last_seen_at = 3;
+    int64 org_id = 4;
+    string description = 5;
+    string name = 6;
+}
+
+message AddGatewayInM2MServerRequest {
+    int64 org_id = 1;
+    AppServerGatewayProfile gw_profile = 2;
+}
+
+message AddGatewayInM2MServerResponse {
+    int64 gw_id = 1;
+}
+
+message DeleteGatewayInM2MServerRequest {
+    int64 org_id = 1;
+    string mac_address = 2;
+}
+
+message DeleteGatewayInM2MServerResponse {
+    bool status = 1;
+}
