@@ -40,6 +40,7 @@ func run(cmd *cobra.Command, args []string) error {
 		setupDevice,
 		setupGateway,
 		setupAPI,
+		startM2MAPIServer,
 	}
 
 	for _, t := range tasks {

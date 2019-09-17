@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/appserver"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -17,6 +18,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/tmc/grpc-websocket-proxy/wsproxy"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m"
+	m2mapi "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
@@ -53,6 +55,7 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	api.RegisterInternalServiceServer(server, auth.NewInternalServerAPI())
 	api.RegisterDeviceServiceServer(server, m2m.NewDeviceServerAPI())
 	api.RegisterGatewayServiceServer(server, m2m.NewGatewayServerAPI())
+	m2mapi.RegisterM2MServerServiceServer(server, appserver.NewM2MServerAPI())
 
 	var clientHttpHandler http.Handler
 	var err error
