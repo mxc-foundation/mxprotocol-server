@@ -28,8 +28,7 @@ message AddDeviceInM2MServerResponse {
 }
 
 message DeleteDeviceInM2MServerRequest {
-    int64 org_id = 1;
-    string dev_eui = 2;
+    string dev_eui = 1;
 }
 
 message DeleteDeviceInM2MServerResponse {
@@ -55,7 +54,6 @@ message AddGatewayInM2MServerResponse {
 }
 
 message DeleteGatewayInM2MServerRequest {
-    int64 org_id = 1;
     string mac_address = 2;
 }
 
