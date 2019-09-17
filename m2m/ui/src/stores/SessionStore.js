@@ -13,8 +13,7 @@ class SessionStore extends EventEmitter {
     this.settings = {};
     this.branding = {};
 
-    this.swagger = Swagger("/swagger/internal.swagger.json", this.getClientOpts());
-    this.profileSwagger = new Swagger("/swagger/profile.swagger.json", this.getClientOpts());
+    this.swagger = Swagger("/swagger/profile.swagger.json", this.getClientOpts());
 
     this.swagger.then(client => {
       this.client = client;
@@ -107,7 +106,7 @@ class SessionStore extends EventEmitter {
   }
 
   getUserOrganizationList(orgId, callbackFunc) {
-    this.profileSwagger.then(client => {
+    this.swagger.then(client => {
       client.apis.InternalService.GetUserOrganizationList({
         orgId
       })

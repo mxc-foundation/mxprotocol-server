@@ -19,7 +19,7 @@ function verifyUser (resp) {
   const login = {};
   login.username = resp.username;
   login.password = resp.password;
-
+  
   return new Promise((resolve, reject) => {
     SessionStore.login(login, (resp) => {
       if(resp){
