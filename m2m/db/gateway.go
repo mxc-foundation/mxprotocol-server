@@ -17,10 +17,6 @@ type gatewayDBInterface interface {
 	GetGatewayProfile(gwId int64) (gw types.Gateway, err error)
 	GetGatewayListOfWallet(orgId int64, offset int64, limit int64) (gwList []types.Gateway, err error)
 	GetGatewayRecCnt(walletId int64) (recCnt int64, err error)
-
-	//New Interface, add to pg_gw.go
-	AddGateway(gwProf types.Gateway)(gwId int64, err error)
-	DeleteGateway(mac string)(status bool, err error)
 }
 
 var Gateway = gatewayDBInterface(&pg.PgGateway)
