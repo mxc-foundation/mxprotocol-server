@@ -128,4 +128,3 @@ func UpdateBalance(orgId int64, oper PaymentCategory, deviceType DeviceType, amo
 
 	return nil
 }
-

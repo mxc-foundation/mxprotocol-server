@@ -31,19 +31,19 @@ func (*M2MServerAPI) AddDeviceInM2MServer(ctx context.Context, req *api.AddDevic
 
 	dev := types.Device{}
 	dev.DevEui = req.DevProfile.DevEui
-/*	if createAt, err := time.Parse(timeLayout, req.DevProfile.CreatedAt); err != nil {
-		log.WithError(err).Error("time format error")
-		return &api.AddDeviceInM2MServerResponse{}, err
-	} else {
-		dev.CreatedAt = createAt
-	}*/
+	/*	if createAt, err := time.Parse(timeLayout, req.DevProfile.CreatedAt); err != nil {
+			log.WithError(err).Error("time format error")
+			return &api.AddDeviceInM2MServerResponse{}, err
+		} else {
+			dev.CreatedAt = createAt
+		}*/
 
-/*	if lastSeenAt, err := time.Parse(timeLayout, req.DevProfile.LastSeenAt); err != nil {
-		log.WithError(err).Error("time format error")
-		return &api.AddDeviceInM2MServerResponse{}, err
-	} else {
-		dev.LastSeenAt = lastSeenAt
-	}*/
+	/*	if lastSeenAt, err := time.Parse(timeLayout, req.DevProfile.LastSeenAt); err != nil {
+			log.WithError(err).Error("time format error")
+			return &api.AddDeviceInM2MServerResponse{}, err
+		} else {
+			dev.LastSeenAt = lastSeenAt
+		}*/
 	dev.CreatedAt = time.Now()
 	dev.ApplicationId = req.DevProfile.ApplicationId
 	dev.Name = req.DevProfile.Name
@@ -91,19 +91,19 @@ func (*M2MServerAPI) AddGatewayInM2MServer(ctx context.Context, req *api.AddGate
 	gw := types.Gateway{}
 	gw.Mac = req.GwProfile.Mac
 
-/*	if createAt, err := time.Parse(timeLayout, req.GwProfile.CreateAt); err != nil {
-		log.WithError(err).Error("time format error")
-		return &api.AddGatewayInM2MServerResponse{}, err
-	} else {
-		gw.CreatedAt = createAt
-	}*/
+	/*	if createAt, err := time.Parse(timeLayout, req.GwProfile.CreateAt); err != nil {
+			log.WithError(err).Error("time format error")
+			return &api.AddGatewayInM2MServerResponse{}, err
+		} else {
+			gw.CreatedAt = createAt
+		}*/
 
-/*	if lastSeenAt, err := time.Parse(timeLayout, req.GwProfile.LastSeenAt); err != nil {
-		log.WithError(err).Error("time format error")
-		return &api.AddGatewayInM2MServerResponse{}, err
-	} else {
-		gw.LastSeenAt = lastSeenAt
-	}*/
+	/*	if lastSeenAt, err := time.Parse(timeLayout, req.GwProfile.LastSeenAt); err != nil {
+			log.WithError(err).Error("time format error")
+			return &api.AddGatewayInM2MServerResponse{}, err
+		} else {
+			gw.LastSeenAt = lastSeenAt
+		}*/
 
 	gw.CreatedAt = time.Now()
 	gw.OrgId = req.OrgId

@@ -8,4 +8,3 @@ func Setup() error {
 	log.Info("Setup gateway service")
 	return nil
 }
-

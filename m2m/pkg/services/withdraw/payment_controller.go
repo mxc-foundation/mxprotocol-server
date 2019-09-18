@@ -71,4 +71,3 @@ func CheckTxStatus(conf *config.MxpConfig, qreID int64) (*ps.CheckTxStatusReplyT
 
 	return reply, nil
 }
-
