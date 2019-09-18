@@ -2,14 +2,15 @@ package appserver
 
 import (
 	"context"
+	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 	"time"
-	log "github.com/sirupsen/logrus"
 )
 
 type M2MServerAPI struct{}
+
 var timeLayout = "2006-01-02T15:04:05.000000Z"
 
 // M2MServerAPI returns a new M2MServerAPI.
@@ -17,7 +18,7 @@ func NewM2MServerAPI() *M2MServerAPI {
 	return &M2MServerAPI{}
 }
 
-func (*M2MServerAPI)AddDeviceInM2MServer(ctx context.Context, req *api.AddDeviceInM2MServerRequest)(*api.AddDeviceInM2MServerResponse, error) {
+func (*M2MServerAPI) AddDeviceInM2MServer(ctx context.Context, req *api.AddDeviceInM2MServerRequest) (*api.AddDeviceInM2MServerResponse, error) {
 	log.WithFields(log.Fields{
 		"orgId": req.OrgId,
 	}).Debug("grpc_api/AddDeviceInM2MServer")
@@ -47,10 +48,10 @@ func (*M2MServerAPI)AddDeviceInM2MServer(ctx context.Context, req *api.AddDevice
 		return &api.AddDeviceInM2MServerResponse{}, err
 	}
 
-	return &api.AddDeviceInM2MServerResponse{DevId:devId}, nil
+	return &api.AddDeviceInM2MServerResponse{DevId: devId}, nil
 }
 
-func (*M2MServerAPI)DeleteDeviceInM2MServer(ctx context.Context, req *api.DeleteDeviceInM2MServerRequest)(*api.DeleteDeviceInM2MServerResponse, error) {
+func (*M2MServerAPI) DeleteDeviceInM2MServer(ctx context.Context, req *api.DeleteDeviceInM2MServerRequest) (*api.DeleteDeviceInM2MServerResponse, error) {
 	devId, err := db.Device.GetDeviceIdByDevEui(req.DevEui)
 	if err != nil {
 		log.WithError(err).Error("Get devId from DB error")
@@ -62,10 +63,10 @@ func (*M2MServerAPI)DeleteDeviceInM2MServer(ctx context.Context, req *api.Delete
 		return &api.DeleteDeviceInM2MServerResponse{}, err
 	}
 
-	return &api.DeleteDeviceInM2MServerResponse{Status:true}, nil
+	return &api.DeleteDeviceInM2MServerResponse{Status: true}, nil
 }
 
-func (*M2MServerAPI) AddGatewayInM2MServer (ctx context.Context, req *api.AddGatewayInM2MServerRequest)(*api.AddGatewayInM2MServerResponse, error) {
+func (*M2MServerAPI) AddGatewayInM2MServer(ctx context.Context, req *api.AddGatewayInM2MServerRequest) (*api.AddGatewayInM2MServerResponse, error) {
 	log.WithFields(log.Fields{
 		"orgId": req.OrgId,
 	}).Debug("grpc_api/AddGatewayInM2MServer")
@@ -97,10 +98,10 @@ func (*M2MServerAPI) AddGatewayInM2MServer (ctx context.Context, req *api.AddGat
 		return &api.AddGatewayInM2MServerResponse{}, err
 	}
 
-	return &api.AddGatewayInM2MServerResponse{GwId:gwId}, nil
+	return &api.AddGatewayInM2MServerResponse{GwId: gwId}, nil
 }
 
-func (*M2MServerAPI) DeleteGatewayInM2MServer (ctx context.Context, req *api.DeleteGatewayInM2MServerRequest)(*api.DeleteGatewayInM2MServerResponse, error) {
+func (*M2MServerAPI) DeleteGatewayInM2MServer(ctx context.Context, req *api.DeleteGatewayInM2MServerRequest) (*api.DeleteGatewayInM2MServerResponse, error) {
 	gwId, err := db.Gateway.GetGatewayIdByMac(req.MacAddress)
 	if err != nil {
 		log.WithError(err).Error("Get gwId from DB error")
@@ -112,5 +113,5 @@ func (*M2MServerAPI) DeleteGatewayInM2MServer (ctx context.Context, req *api.Del
 		return &api.DeleteGatewayInM2MServerResponse{}, err
 	}
 
-	return &api.DeleteGatewayInM2MServerResponse{Status:true}, nil
+	return &api.DeleteGatewayInM2MServerResponse{Status: true}, nil
 }

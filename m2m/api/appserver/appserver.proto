@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package api;
+package appserver;
 
 service M2MServerService {
     rpc AddDeviceInM2MServer (AddDeviceInM2MServerRequest) returns (AddDeviceInM2MServerResponse);
