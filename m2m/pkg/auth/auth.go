@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_server"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"io/ioutil"
 	"net/http"
 	"regexp"
