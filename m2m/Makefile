@@ -3,7 +3,7 @@ PKGS := $(shell go list ./... | grep -v /vendor |grep -v m2m/api | grep -v m2m/m
             | grep -v m2m/static | grep -v m2m/ui| grep -v grpc_api-paymemt_service )
 VERSION := $(shell git describe --always |sed -e "s/^v//")
 
-build: ui/build api pkg/static pkg/migrations
+build: ui/build pkg/static pkg/migrations
 	mkdir -p build
 	go build $(GO_EXTRA_BUILD_ARGS) -ldflags "-s -w -X main.version=$(VERSION)" -o build/m2m command/main.go
 
