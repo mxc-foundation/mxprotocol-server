@@ -53,4 +53,3 @@ func GetActiveExtAccount(orgId int64, currencyAbbr string) (string, error) {
 
 	return accountAddr, nil
 }
-

@@ -40,4 +40,3 @@ func Setup(conf config.MxpConfig) error {
 	log.Info("setup supernode service")
 	return nil
 }
-

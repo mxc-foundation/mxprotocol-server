@@ -8,4 +8,3 @@ func Setup() error {
 	log.Info("Setup top_up service")
 	return nil
 }
-

@@ -200,6 +200,11 @@ func getJSONGateway(ctx context.Context) (http.Handler, error) {
 	if err := m2m_grpc.RegisterInternalServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register auth get jwt handler error")
 	}
-
+	if err := m2m_grpc.RegisterDeviceServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+		return nil, errors.Wrap(err, "register device service handler error")
+	}
+	if err := m2m_grpc.RegisterGatewayServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+		return nil, errors.Wrap(err, "register gateway service handler error")
+	}
 	return mux, nil
 }

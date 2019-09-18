@@ -1,9 +1,8 @@
 package ui
 
 import (
-	"fmt"
-	"strings"
 	"context"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -13,6 +12,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/withdraw"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"strings"
 	"time"
 )
 
@@ -220,7 +220,6 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 
 	return nil, status.Errorf(codes.Unknown, "")
 }
-
 
 func paymentRoutine(ctx context.Context, conf *config.MxpConfig, receiverAdd string, walletID, withdrawID int64, req *api.WithdrawReqRequest) {
 	amount := fmt.Sprintf("%f", req.Amount)
