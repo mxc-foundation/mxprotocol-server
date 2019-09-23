@@ -27,18 +27,11 @@ function loadWithdrawFee(ETHER, organizationID) {
   return new Promise((resolve, reject) => {
     WithdrawStore.getWithdrawFee(ETHER, organizationID,
       resp => {
-        /* Object.keys(resp).forEach(attr => {
-          const value = resp[attr];
-
-          if (typeof value === 'number') {
-            resp[attr] = formatNumber(value);
-          }
-        }); */
         resp.moneyAbbr = ETHER;
         resolve(resp);
       })
   });
-}
+}  
 
 function loadCurrentAccount(ETHER, organizationID) {
   return new Promise((resolve, reject) => {
@@ -87,6 +80,7 @@ class Withdraw extends Component {
       const organizationID = this.props.match.params.organizationID;
       this.setState({loading: true})
       var result = await loadWithdrawFee(ETHER, organizationID);
+      console.log('result', result);
       var wallet = await loadWalletBalance(organizationID);
       var account = await loadCurrentAccount(ETHER, organizationID);
       
