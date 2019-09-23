@@ -1,9 +1,9 @@
-.PHONY: build clean api pkg/static statics/swagger/api.swagger.json dev-requirements pkg/migrations
-PKGS := $(shell go list ./... | grep -v /vendor |grep -v m2m-wallet/api | grep -v m2m-wallet/migrations \
-            | grep -v m2m-wallet/static | grep -v m2m-wallet/ui| grep -v grpc_api-paymemt_service )
+.PHONY: build clean api pkg/static statics/swagger/api.swagger.json dev-requirements pkg/migrations scripts
+PKGS := $(shell go list ./... | grep -v /vendor |grep -v m2m/api | grep -v m2m/migrations \
+            | grep -v m2m/static | grep -v m2m/ui| grep -v grpc_api-paymemt_service )
 VERSION := $(shell git describe --always |sed -e "s/^v//")
 
-build: ui/build pkg/static pkg/migrations
+build: scripts ui/build pkg/static pkg/migrations
 	mkdir -p build
 	go build $(GO_EXTRA_BUILD_ARGS) -ldflags "-s -w -X main.version=$(VERSION)" -o build/m2m command/main.go
 
@@ -30,7 +30,8 @@ ui/build:
 api:
 	@echo "Generating API code from .proto files"
 	@go mod vendor
-	@go generate api/api.go
+	@go generate api/m2m_ui/api.go
+	@go generate api/appserver/api.go
 	@rm -rf vendor/
 
 pkg/static pkg/migrations: static/swagger/api.swagger.json
@@ -40,9 +41,12 @@ pkg/static pkg/migrations: static/swagger/api.swagger.json
 
 static/swagger/api.swagger.json:
 	@echo "Generating combined Swagger JSON"
-	@GOOS="" GOARCH="" go run api/swagger/main.go api/swagger > static/swagger/api.swagger.json
-	@cp api/swagger/*.json static/swagger
+	@GOOS="" GOARCH="" go run api/m2m_ui/swagger/main.go api/m2m_ui/swagger > static/swagger/api.swagger.json
+	@cp api/m2m_ui/swagger/*.json static/swagger
 
 ui-requirements:
 	@echo "Installing UI requirements"
 	@cd ui && npm install
+
+scripts:
+    @sh $(shell pwd)/scripts/sync_cors_allow_origin
