@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {Router} from "react-router-dom";
 import { Route, Switch, Redirect } from 'react-router-dom';
 import classNames from "classnames";
+import { BackToLora } from "./util/M2mUtil";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, withStyles } from "@material-ui/core/styles";
@@ -26,7 +27,7 @@ import Topup from "./views/topup/Topup"
 import Withdraw from "./views/withdraw/Withdraw"
 import HistoryLayout from "./views/history/HistoryLayout"
 import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
-import { redirectToLora } from "./util/M2mUtil";
+
 
 const drawerWidth = 270;
 
@@ -159,7 +160,7 @@ class App extends Component {
                     <Route path="/history/:organizationID" component={HistoryLayout} />
                     <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
 
-                    <Route render={window.location.replace(redirectToLora())} />
+                    <Route render={BackToLora} />
                   </Switch>
                 </Grid>
               </div>
