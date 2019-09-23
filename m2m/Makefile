@@ -49,4 +49,4 @@ ui-requirements:
 	@cd ui && npm install
 
 scripts:
-    @sh $(shell pwd)/scripts/sync_cors_allow_origin
+	@sh $(shell pwd)/scripts/sync_cors_allow_origin

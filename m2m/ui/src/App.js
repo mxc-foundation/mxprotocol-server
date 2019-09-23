@@ -159,7 +159,7 @@ class App extends Component {
                     <Route path="/history/:organizationID" component={HistoryLayout} />
                     <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
 
-                    <Route render={redirectToLora} />
+                    <Route render={window.location.replace(redirectToLora())} />
                   </Switch>
                 </Grid>
               </div>

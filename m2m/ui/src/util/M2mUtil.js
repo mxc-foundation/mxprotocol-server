@@ -1,8 +1,3 @@
-
-//import SessionStore from '../stores/SessionStore';
-
-//export const LoraUrl = SessionStore.getLoraHostUrl();
-//orgId is 0 which means current user is super_admin
 export const SUPER_ADMIN = '0';
 
 export function redirectToLora() {
