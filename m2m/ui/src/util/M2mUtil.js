@@ -1,14 +1,10 @@
 export const SUPER_ADMIN = '0';
 
-export function redirectToLora() {
-    return getHost();
-}
-
 export function BackToLora() {
-    window.location.replace(getHost());
+    window.location.replace(getLoraHost());
 }
 
-function getHost(){
+export function getLoraHost(){
     let host = process.env.REACT_APP_LORA_APP_SERVER;
     const origin = window.location.origin;
     
