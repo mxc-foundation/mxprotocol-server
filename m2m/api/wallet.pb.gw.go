@@ -56,12 +56,30 @@ func request_WalletService_GetWalletBalance_0(ctx context.Context, marshaler run
 }
 
 var (
-	filter_WalletService_GetVmxcTxHistory_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_WalletService_GetVmxcTxHistory_0 = &utilities.DoubleArray{Encoding: map[string]int{"org_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
 func request_WalletService_GetVmxcTxHistory_0(ctx context.Context, marshaler runtime.Marshaler, client WalletServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetVmxcTxHistoryRequest
 	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["org_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org_id")
+	}
+
+	protoReq.OrgId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -157,9 +175,9 @@ func RegisterWalletServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 }
 
 var (
-	pattern_WalletService_GetWalletBalance_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "wallet", "balance", "org_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_WalletService_GetWalletBalance_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "wallet", "org_id", "balance"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_WalletService_GetVmxcTxHistory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "wallet", "vmxc", "tx_history"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_WalletService_GetVmxcTxHistory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "wallet", "org_id", "tx-history"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

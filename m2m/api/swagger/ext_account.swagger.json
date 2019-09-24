@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/ext_account/active_account/{money_abbr}": {
+    "/api/ext-account/{orgId}/active-account/{moneyAbbr}": {
       "get": {
         "operationId": "GetActiveMoneyAccount",
         "responses": {
@@ -28,20 +28,20 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",
             "enum": [
               "Ether"
             ]
-          },
-          {
-            "name": "orgId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
           }
         ],
         "tags": [
@@ -49,7 +49,7 @@
         ]
       }
     },
-    "/api/ext_account/change_history/{money_abbr}": {
+    "/api/ext-account/{orgId}/change-history/{moneyAbbr}": {
       "get": {
         "operationId": "GetChangeMoneyAccountHistory",
         "responses": {
@@ -62,20 +62,20 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",
             "enum": [
               "Ether"
             ]
-          },
-          {
-            "name": "orgId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
           },
           {
             "name": "offset",
@@ -97,7 +97,7 @@
         ]
       }
     },
-    "/api/ext_account/modify_account/{money_abbr}": {
+    "/api/ext-account/{orgId}/modify-account/{moneyAbbr}": {
       "put": {
         "operationId": "ModifyMoneyAccount",
         "responses": {
@@ -110,7 +110,14 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",

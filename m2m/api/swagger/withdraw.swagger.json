@@ -15,34 +15,35 @@
     "application/json"
   ],
   "paths": {
-    "/api/withdraw/{money_abbr}": {
-      "post": {
-        "operationId": "WithdrawReq",
+    "/api/withdraw/{orgId}/get-withdraw-fee/{moneyAbbr}": {
+      "get": {
+        "summary": "Get data for current withdraw fee",
+        "operationId": "GetWithdrawFee",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiWithdrawReqResponse"
+              "$ref": "#/definitions/apiGetWithdrawFeeResponse"
             }
           }
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "moneyAbbr",
+            "description": "type of crypto currency",
             "in": "path",
             "required": true,
             "type": "string",
             "enum": [
               "Ether"
             ]
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/apiWithdrawReqRequest"
-            }
           }
         ],
         "tags": [
@@ -50,7 +51,7 @@
         ]
       }
     },
-    "/api/withdraw/{money_abbr}/history": {
+    "/api/withdraw/{orgId}/history/{moneyAbbr}": {
       "get": {
         "operationId": "GetWithdrawHistory",
         "responses": {
@@ -63,20 +64,20 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",
             "enum": [
               "Ether"
             ]
-          },
-          {
-            "name": "orgId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
           },
           {
             "name": "offset",
@@ -98,41 +99,7 @@
         ]
       }
     },
-    "/api/withdraw/{money_abbr}/withdrawfee": {
-      "get": {
-        "summary": "Get data for current withdraw fee",
-        "operationId": "GetWithdrawFee",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiGetWithdrawFeeResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "money_abbr",
-            "description": "type of crypto currency",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "enum": [
-              "Ether"
-            ]
-          },
-          {
-            "name": "orgId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "WithdrawService"
-        ]
-      },
+    "/api/withdraw/{orgId}/modify-withdraw-fee/{moneyAbbr}": {
       "put": {
         "operationId": "ModifyWithdrawFee",
         "responses": {
@@ -145,7 +112,14 @@
         },
         "parameters": [
           {
-            "name": "money_abbr",
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "moneyAbbr",
             "in": "path",
             "required": true,
             "type": "string",
@@ -159,6 +133,48 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/apiModifyWithdrawFeeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "WithdrawService"
+        ]
+      }
+    },
+    "/api/withdraw/{orgId}/withdraw/{moneyAbbr}": {
+      "post": {
+        "operationId": "WithdrawReq",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiWithdrawReqResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "moneyAbbr",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Ether"
+            ]
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiWithdrawReqRequest"
             }
           }
         ],

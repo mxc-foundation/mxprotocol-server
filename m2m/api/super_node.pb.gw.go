@@ -40,6 +40,17 @@ func request_SuperNodeService_GetSuperNodeActiveMoneyAccount_0(ctx context.Conte
 		_   = err
 	)
 
+	val, ok = pathParams["org_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org_id")
+	}
+
+	protoReq.OrgId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
+
 	val, ok = pathParams["money_abbr"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "money_abbr")
@@ -77,6 +88,17 @@ func request_SuperNodeService_AddSuperNodeMoneyAccount_0(ctx context.Context, ma
 		err error
 		_   = err
 	)
+
+	val, ok = pathParams["org_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org_id")
+	}
+
+	protoReq.OrgId, err = runtime.Int64(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org_id", err)
+	}
 
 	val, ok = pathParams["money_abbr"]
 	if !ok {
@@ -178,9 +200,9 @@ func RegisterSuperNodeServiceHandlerClient(ctx context.Context, mux *runtime.Ser
 }
 
 var (
-	pattern_SuperNodeService_GetSuperNodeActiveMoneyAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "supernode", "active_account", "money_abbr"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_SuperNodeService_GetSuperNodeActiveMoneyAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "supernode", "org_id", "active-account", "money_abbr"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_SuperNodeService_AddSuperNodeMoneyAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "supernode", "money_abbr", "add-account"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_SuperNodeService_AddSuperNodeMoneyAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "supernode", "org_id", "add-account", "money_abbr"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

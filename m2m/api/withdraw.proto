@@ -11,26 +11,26 @@ service WithdrawService {
     // Get data for current withdraw fee
     rpc GetWithdrawFee (GetWithdrawFeeRequest) returns (GetWithdrawFeeResponse) {
         option (google.api.http) = {
-			get: "/api/withdraw/{money_abbr}/withdrawfee"
+			get: "/api/withdraw/{org_id}/get-withdraw-fee/{money_abbr}"
 		};
     }
 
     rpc WithdrawReq (WithdrawReqRequest) returns (WithdrawReqResponse) {
         option (google.api.http) = {
-			post: "/api/withdraw/{money_abbr}"
+			post: "/api/withdraw/{org_id}/withdraw/{money_abbr}"
 			body: "*"
 		};
     }
 
     rpc GetWithdrawHistory (GetWithdrawHistoryRequest) returns (GetWithdrawHistoryResponse) {
         option (google.api.http) = {
-			get: "/api/withdraw/{money_abbr}/history"
+			get: "/api/withdraw/{org_id}/history/{money_abbr}"
 		};
     }
 
     rpc ModifyWithdrawFee (ModifyWithdrawFeeRequest) returns (ModifyWithdrawFeeResponse) {
         option(google.api.http) = {
-			put: "/api/withdraw/{money_abbr}/withdrawfee"
+			put: "/api/withdraw/{org_id}/modify-withdraw-fee/{money_abbr}"
 			body: "*"
 		};
     }
