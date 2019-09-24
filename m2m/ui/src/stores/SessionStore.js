@@ -169,7 +169,7 @@ class SessionStore extends EventEmitter {
   }
 
   login(login, callBackFunc) {
-    this.swagger.then(client => {
+    this.profileSwagger.then(client => {
       client.apis.InternalService.Login({body: login})
         .then(checkStatus)
         .then(resp => {

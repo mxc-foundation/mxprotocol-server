@@ -32,7 +32,7 @@ class WithdrawForm extends FormComponent {
       return(<Spinner on={this.state.loading}/>);
     }
     
-    const w_limit = this.props.txinfo.balance - this.props.txinfo.withdrawFee;
+    const wLimit = this.props.txinfo.balance - this.props.txinfo.withdrawFee;
     const { txinfo } = this.props;
     
     return(
@@ -57,7 +57,7 @@ class WithdrawForm extends FormComponent {
           type="number"
           inputProps={{
             min: 0,
-            max: w_limit
+            max: wLimit
           }}
         />
         
