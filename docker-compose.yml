@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./configuration:/etc/mxprotocol-server
-    #  - ./:/mxprotocol-server
+      - ./:/mxprotocol-server
     links:
       - postgresql
       - redis

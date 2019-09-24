@@ -67,12 +67,12 @@ class SessionStore extends EventEmitter {
   }
 
   getOrganizationName() {
-    const orgName = localStorage.getItem("organizationName");
-    if (orgName === "") {
+    const orgId = localStorage.getItem("organizationName");
+    if (orgId === "") {
       return null;
     }
 
-    return orgName;
+    return orgId;
   }
 
   setOrganizationName(name) {
@@ -156,15 +156,15 @@ class SessionStore extends EventEmitter {
 
   initProfile(data) {
 
-    const { jwt, org_id, org_name, username, loraHostUrl } = data;
+    const { jwt, orgId, org_name, username, loraHostUrl } = data;
     
-    if(jwt === "" || org_id === "" || org_id === undefined){
+    if(jwt === "" || orgId === "" || orgId === undefined){
       window.location.replace(loraHostUrl);
     }
     
     this.setToken(jwt);
     this.setUsername(username);
-    this.setOrganizationID(org_id);
+    this.setOrganizationID(orgId);
     this.setOrganizationName(org_name);
   }
 

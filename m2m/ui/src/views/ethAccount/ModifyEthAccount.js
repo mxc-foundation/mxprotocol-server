@@ -63,16 +63,16 @@ class ModifyEthAccount extends Component {
     }
     
     loadData() {
-      const org_id = this.props.match.params.organizationID;
+      const orgId = this.props.match.params.organizationID;
 
-      if (org_id === SUPER_ADMIN) {
+      if (orgId === SUPER_ADMIN) {
         SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, resp => {
           this.setState({
             activeAccount: resp.supernodeActiveAccount,
           });
         });
       }else{
-        MoneyStore.getActiveMoneyAccount(ETHER, org_id, resp => {
+        MoneyStore.getActiveMoneyAccount(ETHER, orgId, resp => {
           this.setState({
             activeAccount: resp.activeAccount,
           });
@@ -89,7 +89,7 @@ class ModifyEthAccount extends Component {
     }
 
     onSubmit = async (resp) => {
-      const org_id = this.props.match.params.organizationID;
+      const orgId = this.props.match.params.organizationID;
       
       try {
         if(resp.username !== SessionStore.getUsername() ){
@@ -98,13 +98,13 @@ class ModifyEthAccount extends Component {
         }
         const isOK = await verifyUser(resp);
         
-        if(org_id == 0 && isOK) {
-          const res = await createAccount(resp, org_id);
+        if(orgId == 0 && isOK) {
+          const res = await createAccount(resp, orgId);
           if(res.status){
             window.location.reload();
           }
         }else{
-          const res = await modifyAccount(resp, org_id);
+          const res = await modifyAccount(resp, orgId);
           if(res.status){
             window.location.reload();
           }

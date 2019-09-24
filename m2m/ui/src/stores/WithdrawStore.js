@@ -13,10 +13,10 @@ class WithdrawStore extends EventEmitter {
     this.swagger = new Swagger("/swagger/withdraw.swagger.json", sessionStore.getClientOpts());
   }
 
-  getWithdrawFee(money_abbr, orgId, callbackFunc) {
+  getWithdrawFee(moneyAbbr, orgId, callbackFunc) {
     this.swagger.then(client => {
       client.apis.WithdrawService.GetWithdrawFee({
-        money_abbr,
+        moneyAbbr,
         orgId
       })
       .then(checkStatus)
@@ -31,7 +31,7 @@ class WithdrawStore extends EventEmitter {
   WithdrawReq(apiWithdrawReqRequest, callbackFunc) {
     this.swagger.then(client => {
       client.apis.WithdrawService.WithdrawReq({
-        "money_abbr": apiWithdrawReqRequest.moneyAbbr,
+        "moneyAbbr": apiWithdrawReqRequest.moneyAbbr,
         body: {
           amount: apiWithdrawReqRequest.amount,
           moneyAbbr: apiWithdrawReqRequest.moneyAbbr,

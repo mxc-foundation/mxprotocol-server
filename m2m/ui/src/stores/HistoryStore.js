@@ -32,10 +32,10 @@ class HistoryStore extends EventEmitter {
     });
   }
   
-  getWithdrawHistory(money_abbr, orgId, limit, offset, callbackFunc) {
+  getWithdrawHistory(moneyAbbr, orgId, limit, offset, callbackFunc) {
     this.withdrawSwagger.then((client) => {      
       client.apis.WithdrawService.GetWithdrawHistory({
-        money_abbr,
+        moneyAbbr,
         orgId,
         limit,
         offset,
@@ -65,10 +65,10 @@ class HistoryStore extends EventEmitter {
     });
   }
 
-  getChangeMoneyAccountHistory(money_abbr, orgId, limit, offset, callbackFunc) {
+  getChangeMoneyAccountHistory(moneyAbbr, orgId, limit, offset, callbackFunc) {
     this.moneySwagger.then((client) => {      
       client.apis.MoneyService.GetChangeMoneyAccountHistory({
-        money_abbr,
+        moneyAbbr,
         orgId,
         limit,
         offset,

@@ -13,10 +13,10 @@ class TopupStore extends EventEmitter {
     this.swagger = new Swagger("/swagger/topup.swagger.json", sessionStore.getClientOpts());
   }
 
-  getTopUpDestination(money_abbr, orgId, callbackFunc) {
+  getTopUpDestination(moneyAbbr, orgId, callbackFunc) {
     this.swagger.then(client => {
       client.apis.TopUpService.GetTopUpDestination({
-        money_abbr,
+        moneyAbbr,
         orgId
       })
       .then(checkStatus)
@@ -46,7 +46,7 @@ class TopupStore extends EventEmitter {
   WithdrawReq(apiWithdrawReqRequest, callbackFunc) {
     this.swagger.then(client => {
       client.apis.WithdrawService.WithdrawReq({
-        "money_abbr": apiWithdrawReqRequest.moneyAbbr,
+        "moneyAbbr": apiWithdrawReqRequest.moneyAbbr,
         body: {
           apiWithdrawReqRequest,
         },

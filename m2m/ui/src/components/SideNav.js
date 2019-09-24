@@ -26,9 +26,9 @@ import styles from "./SideNavStyle";
 const LinkToLora = ({children, ...otherProps}) => 
 <a href={SessionStore.getLoraHostUrl()} {...otherProps}>{children}</a>;
 
-function updateOrganizationList(org_id) {
+function updateOrganizationList(orgId) {
   return new Promise((resolve, reject) => {
-    ProfileStore.getUserOrganizationList(org_id,
+    ProfileStore.getUserOrganizationList(orgId,
       resp => {
         resolve(resp);
       })
