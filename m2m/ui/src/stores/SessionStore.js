@@ -13,7 +13,7 @@ class SessionStore extends EventEmitter {
     this.settings = {};
     this.branding = {};
 
-    this.swagger = Swagger("/swagger/internal.swagger.json", this.getClientOpts());
+    this.swagger = Swagger("/swagger/profile.swagger.json", this.getClientOpts());
     this.profileSwagger = new Swagger("/swagger/profile.swagger.json", this.getClientOpts());
 
     this.swagger.then(client => {
