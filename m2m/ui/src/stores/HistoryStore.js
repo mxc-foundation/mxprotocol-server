@@ -18,7 +18,7 @@ class HistoryStore extends EventEmitter {
 
   getTopUpHistory(orgId, limit, offset, callbackFunc) {
     this.topupSwagger.then((client) => {      
-      client.apis.TopupService.List({
+      client.apis.TopupService.GetTopUpHistory({
         orgId,
         limit,
         offset,

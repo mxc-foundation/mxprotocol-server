@@ -31,6 +31,7 @@ class WithdrawStore extends EventEmitter {
   WithdrawReq(apiWithdrawReqRequest, callbackFunc) {
     this.swagger.then(client => {
       client.apis.WithdrawService.WithdrawReq({
+        "orgId": apiWithdrawReqRequest.orgId,
         "moneyAbbr": apiWithdrawReqRequest.moneyAbbr,
         body: {
           amount: apiWithdrawReqRequest.amount,

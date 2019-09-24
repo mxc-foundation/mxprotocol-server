@@ -31,6 +31,7 @@ class MoneyStore extends EventEmitter {
   modifyMoneyAccount(req, callbackFunc) {
     this.swagger.then(client => {
       client.apis.MoneyService.ModifyMoneyAccount({
+        "orgId": req.orgId,
         "moneyAbbr": req.moneyAbbr,
         body: {
           currentAccount: req.currentAccount,

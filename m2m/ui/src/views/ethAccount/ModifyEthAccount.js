@@ -42,10 +42,10 @@ function modifyAccount (req, orgId) {
   });
 }
 
-function createAccount (req) {
+function createAccount (req, orgId) {
   req.moneyAbbr = ETHER;
   return new Promise((resolve, reject) => {
-    SupernodeStore.addSuperNodeMoneyAccount(req, resp => {
+    SupernodeStore.addSuperNodeMoneyAccount(req, orgId, resp => {
       resolve(resp);
     })
   });
@@ -66,7 +66,7 @@ class ModifyEthAccount extends Component {
       const orgId = this.props.match.params.organizationID;
 
       if (orgId === SUPER_ADMIN) {
-        SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, resp => {
+        SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, orgId, resp => {
           this.setState({
             activeAccount: resp.supernodeActiveAccount,
           });
