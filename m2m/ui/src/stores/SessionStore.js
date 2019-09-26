@@ -78,10 +78,6 @@ class SessionStore extends EventEmitter {
     localStorage.setItem("organizationName", name);
   }
 
-  getLoraHostUrl() {
-    return process.env.REACT_APP_LORA_APP_SERVER;
-  }
-
   setOrganizationList(organizations) {
     let organizationList = null;
     

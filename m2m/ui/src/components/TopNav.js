@@ -10,6 +10,8 @@ import SessionStore from "../stores/SessionStore";
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import AccountCircle from "mdi-material-ui/AccountCircle";
+import { IconButton } from "@material-ui/core";
+import HelpCircle from "mdi-material-ui/HelpCircle";
 
 import WithdrawStore from "../stores/WithdrawStore";
 import WalletStore from "../stores/WalletStore";
@@ -134,8 +136,21 @@ class TopNav extends Component {
           </IconButton> */}
 
           <div className={this.props.classes.flex}>
-            <Typography type="body2" style={{ color: '#FFFFFF', fontFamily: 'Montserrat', fontWeight: 'bold', fontSize: '22px' }} >M2M Wallet</Typography>
+            <img src="/logo/logo_wallet.png" className={this.props.classes.logo} alt="LoRa Server" />
           </div>
+
+          {/* <div className={this.props.classes.flex}>
+            <Typography type="body2" style={{ color: '#FFFFFF', fontFamily: 'Montserrat', fontWeight: 'bold', fontSize: '22px' }} >M2M Wallet</Typography>
+          </div> */}
+
+          <List>
+            <ListItem>
+              <ListItemIcon >
+                <Wallet color="primary" className={this.props.classes.iconStyle} />
+              </ListItemIcon>
+              <ListItemText primary={ balanceEl } classes={{ primary: this.props.classes.noPadding }}/>
+            </ListItem>
+          </List>
 
           <Chip
             avatar={
@@ -151,15 +166,11 @@ class TopNav extends Component {
             }}
           />
 
-          <List>
-            <ListItem>
-              <ListItemIcon >
-                <Wallet color="primary" className={this.props.classes.iconStyle} />
-              </ListItemIcon>
-              <ListItemText primary={ balanceEl } classes={{ primary: this.props.classes.noPadding }}/>
-            </ListItem>
-          </List>
-
+          <a href="https://www.mxc.org/support" target="mxc-support">
+            <IconButton className={this.props.classes.iconButton}>
+              <HelpCircle />
+            </IconButton>
+          </a>
         </Toolbar>
       </AppBar>
     );

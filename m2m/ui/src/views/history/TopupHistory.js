@@ -10,6 +10,18 @@ import TitleBarTitle from "../../components/TitleBarTitle";
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
+import { withRouter } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = {
+  maxW140: {
+    maxWidth: 140,
+    //backgroundColor: "#0C0270",
+    whiteSpace: 'nowrap', 
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
+};
 
 class TopupHistory extends Component {
   constructor(props) {
@@ -30,12 +42,12 @@ class TopupHistory extends Component {
   getRow(obj, index) {
     return(
       <TableRow key={index}>
-        <TableCell>{obj.from}</TableCell>
-        <TableCell>{obj.to}</TableCell>
+        <TableCell className={this.props.classes.maxW140} >{obj.from}</TableCell>
+        <TableCell className={this.props.classes.maxW140}>{obj.to}</TableCell>
         <TableCell>{obj.moneyType}</TableCell>
         <TableCell>{obj.amount}</TableCell>
-        <TableCell>{obj.txHash}</TableCell>
-        <TableCell>{obj.createdAt}</TableCell>
+        <TableCell className={this.props.classes.maxW140}>{obj.txHash}</TableCell>
+        <TableCell>{obj.createdAt.substring(0, 19)}</TableCell>
       </TableRow>
     );
   }
@@ -76,4 +88,4 @@ class TopupHistory extends Component {
   }
 }
 
-export default TopupHistory;
+export default withStyles(styles)(withRouter(TopupHistory));

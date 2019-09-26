@@ -4,15 +4,7 @@ import Table from '@material-ui/core/Table';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
-import { withStyles } from '@material-ui/core/styles';
-
 import Paper from "./Paper";
-
-
-const styles = {
-
-};
-
 
 class DataTable extends Component {
   constructor() {
@@ -74,7 +66,7 @@ class DataTable extends Component {
 
     return(
       <Paper>
-        <Table className={this.props.classes.table}>
+        <Table>
           <TableHead>
             {this.props.header}
           </TableHead>
@@ -95,4 +87,4 @@ class DataTable extends Component {
   }
 }
 
-export default withStyles(styles)(DataTable);
+export default DataTable;
