@@ -53,7 +53,6 @@ class TopupStore extends EventEmitter {
       .then(checkStatus)
       //.then(updateOrganizations)
       .then(resp => {
-        console.log(resp.body);
         callbackFunc(resp.body);
       })
       .catch(errorHandler);
