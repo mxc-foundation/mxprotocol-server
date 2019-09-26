@@ -50,9 +50,20 @@ func (s *TopUpServerAPI) GetTransactionsHistory(ctx context.Context, req *api.Ge
 		}
 
 		response := api.GetTransactionsHistoryResponse{UserProfile: &userProfile}
+		start := req.Offset * req.Limit
+		end := req.Offset*req.Limit + req.Limit
+
 		topupCount, err := db.Topup.GetTopupHistRecCnt(walletId)
 		withdrawCount, err := db.Withdraw.GetWithdrawHistRecCnt(walletId)
 		response.Count = topupCount + withdrawCount
+
+		if start > response.Count {
+			return &response, nil
+		}
+
+		if end > response.Count {
+			end = response.Count
+		}
 
 		topupArray, err := db.Topup.GetTopupHist(walletId, 0, req.Limit*(req.Offset+1))
 		if err != nil {
@@ -122,7 +133,7 @@ func (s *TopUpServerAPI) GetTransactionsHistory(ctx context.Context, req *api.Ge
 			}
 		}
 
-		response.TransactionHistory = sumArray[(req.Offset * req.Limit):(req.Offset*req.Limit + req.Limit)]
+		response.TransactionHistory = sumArray[start:end]
 
 		return &response, nil
 	}
