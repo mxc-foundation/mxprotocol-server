@@ -15,4 +15,5 @@ CONFIGURATION=$M2M_PATH/../configuration/mxprotocol-server.toml
 if [ -f $CONFIGURATION ]; then
   echo "### sed -i.bak 's,^cors_allow_origin=.*$,cors_allow_origin='"$APPSERVER"',' $CONFIGURATION"
   sed -i.bak 's,^cors_allow_origin=.*$,cors_allow_origin='"$APPSERVER"',' $CONFIGURATION
+  cp $CONFIGURATION /etc/mxprotocol-server || true
 fi

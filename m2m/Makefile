@@ -47,3 +47,6 @@ static/swagger/api.swagger.json:
 ui-requirements:
 	@echo "Installing UI requirements"
 	@cd ui && npm install
+
+scripts:
+	@sh $(shell pwd)/scripts/sync_cors_allow_origin
