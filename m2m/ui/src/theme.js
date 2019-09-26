@@ -57,8 +57,17 @@ const theme = createMuiTheme({
         body1: {
           color: white,
         },
+        body2: {
+          color: white,
+        },
         colorTextSecondary: {
           color: white,
+        },
+        headline: {
+          color: white
+        },
+        caption: {
+          color: white
         },
       },
       MuiInput: {
@@ -108,13 +117,14 @@ const theme = createMuiTheme({
       }, */
       MuiTable: {
         root: {
-          background: 'transparent',
+          //background: 'transparent',
+          minWidth: 840,
         }
       },
       MuiDivider: {
         root: {
           backgroundColor: '#00000040',
-          margin: '5px 10px',
+          margin: '5px 10px 5px 0px',
         },
         light: {
           backgroundColor: '#FFFFFF50',
@@ -129,9 +139,17 @@ const theme = createMuiTheme({
         body: {
           background: 'none',
           color: white,
+          //maxWidth: 140,
+          whiteSpace: 'nowrap', 
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
         },
         root: {
-          padding: '4px 5px'
+          padding: '4px 5px',
+          //maxWidth: 140,
+          whiteSpace: 'nowrap', 
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
         }
       },
       MuiPaper: {
