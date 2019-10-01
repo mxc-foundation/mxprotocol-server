@@ -40,6 +40,31 @@
         ]
       }
     },
+    "/api/wallet/{orgId}/downlink_price": {
+      "get": {
+        "operationId": "GetDlPrice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetDownLinkPriceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "WalletService"
+        ]
+      }
+    },
     "/api/wallet/{orgId}/tx-history": {
       "get": {
         "operationId": "GetVmxcTxHistory",
@@ -106,6 +131,18 @@
     }
   },
   "definitions": {
+    "apiGetDownLinkPriceResponse": {
+      "type": "object",
+      "properties": {
+        "downLinkPrice": {
+          "type": "number",
+          "format": "double"
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
+        }
+      }
+    },
     "apiGetVmxcTxHistoryResponse": {
       "type": "object",
       "properties": {
