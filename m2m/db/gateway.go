@@ -17,6 +17,9 @@ type gatewayDBInterface interface {
 	GetGatewayProfile(gwId int64) (gw types.Gateway, err error)
 	GetGatewayListOfWallet(orgId int64, offset int64, limit int64) (gwList []types.Gateway, err error)
 	GetGatewayRecCnt(walletId int64) (recCnt int64, err error)
+	GetFreeGwList() (gwId []int64, gwMac[]string, err error)
+	GetWalletIdOfGateway(gwId int64) (gwWalletId int64, err error)
+	GetGwModeByMac (gwMac string) (gwMode types.GatewayMode, err error)
 }
 
 var Gateway = gatewayDBInterface(&pg.PgGateway)

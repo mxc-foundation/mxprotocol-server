@@ -206,3 +206,17 @@ func (*gatewayInterface) GetGatewayRecCnt(walletId int64) (recCnt int64, err err
 
 	return recCnt, errors.Wrap(err, "db/pg_gateway/GetGatewayRecCnt")
 }
+
+//Todo:
+func (*gatewayInterface) GetFreeGwList() (gwId []int64, gwMac []string, err error) {
+	return nil, nil, nil
+}
+
+//ToDo:
+func (*gatewayInterface) GetWalletIdOfGateway(gwId int64) (gwWalletId int64, err error) {
+	return _, nil
+}
+
+func (*gatewayInterface) GetGwModeByMac (gwMac string) (gwMode types.GatewayMode, err error){
+	return _, nil
+}

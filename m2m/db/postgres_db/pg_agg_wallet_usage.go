@@ -71,3 +71,7 @@ func (*aggWalletUsageInterface) InsertAggWltUsg(awu types.AggWltUsg) (insertInde
 	).Scan(&insertIndex)
 	return insertIndex, errors.Wrap(err, "db/pg_agg_wallet_usage/InsertAggWltUsg")
 }
+
+func (*aggWalletUsageInterface)GetWalletUsageHist(rogId int64) ([]types.AggWltUsg, error){
+	return _, nil
+}
