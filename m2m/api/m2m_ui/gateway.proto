@@ -47,7 +47,8 @@ message GetGatewayListRequest {
 
 message GetGatewayListResponse {
     repeated GatewayProfile gw_profile = 1;
-    ProfileResponse user_profile = 2;
+    int64 count = 2;
+    ProfileResponse user_profile = 3;
 }
 
 message GetGatewayProfileRequest {

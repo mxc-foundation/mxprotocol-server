@@ -257,6 +257,10 @@
             "$ref": "#/definitions/apiGatewayProfile"
           }
         },
+        "count": {
+          "type": "string",
+          "format": "int64"
+        },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
         }

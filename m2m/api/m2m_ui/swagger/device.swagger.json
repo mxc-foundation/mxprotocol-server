@@ -247,6 +247,10 @@
         "devProfile": {
           "$ref": "#/definitions/apiDeviceProfile"
         },
+        "count": {
+          "type": "string",
+          "format": "int64"
+        },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
         }
