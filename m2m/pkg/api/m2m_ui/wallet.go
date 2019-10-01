@@ -4,6 +4,7 @@ import (
 	"context"
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
@@ -98,7 +99,30 @@ func (s *WalletServerAPI) GetWalletUsageHist(ctx context.Context, req *api.GetWa
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
+		wuList, err := db.AggWalletUsage.GetWalletUsageHist(req.OrgId)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetWalletBalance")
+			return &api.GetWalletUsageHistResponse{UserProfile: &userProfile}, nil
+		}
 
+		resp := &api.GetWalletUsageHistResponse{}
+		for _, v := range wuList {
+			wuHist := &api.GetWalletUsageHist{}
+			//wuHist.StartTime = v.StartAt
+			//wuHist.Duration = v.DurationMinutes
+			wuHist.CountUplinkPktsDv = v.UlCnt
+			//wuHist.CountDownlinkPktsDv = v.DlCnt
+			//
+			//wuHist.CountUplinkPktsGw = v..CountUplinkPktsGw
+			//wuHist.CountDownlinkPktsGw = v.CountDownlinkPktsGw
+			//wuHist.Cost = v.Cost
+			//wuHist.Income = v.Income
+			//wuHist.TotalPayment = v.Cost - v.Income
+
+			resp.WalletUsageHis = append(resp.WalletUsageHis, wuHist)
+		}
+
+		return resp, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")
