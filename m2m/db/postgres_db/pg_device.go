@@ -201,18 +201,18 @@ func (*deviceInterface) GetDeviceRecCnt(walletId int64) (recCnt int64, err error
 
 //ToDo:
 func (*deviceInterface) GetWalletIdOfDevice(dvId int64) (dvWalletId int64, err error) {
-	return _, nil
+	return 1, nil
 }
 
 //ToDo: queries
 func (*deviceInterface) GetDeviceModeByEui(devEui string) (dvMode types.DeviceMode, err error) {
-	return _, nil
+	return types.DV_INACTIVE, nil
 }
 
 func (*deviceInterface) GetDevWalletIdByEui(devEui string) (walletId int64, err error) {
-	return _, nil
+	return 1, nil
 }
 
 func (*deviceInterface) GetDevWalletIdAndModeByEui(devEui string) (dvWalletId int64, dvMode types.DeviceMode, err error) {
-	return _, _, nil
+	return 1, types.DV_INACTIVE, nil
 }

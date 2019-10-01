@@ -73,5 +73,5 @@ func (*aggWalletUsageInterface) InsertAggWltUsg(awu types.AggWltUsg) (insertInde
 }
 
 func (*aggWalletUsageInterface)GetWalletUsageHist(rogId int64) ([]types.AggWltUsg, error){
-	return _, nil
+	return []types.AggWltUsg{{}}, nil
 }

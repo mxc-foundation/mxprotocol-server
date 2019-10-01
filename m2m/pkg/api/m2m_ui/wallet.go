@@ -104,7 +104,7 @@ func (s *WalletServerAPI) GetWalletUsageHist(ctx context.Context, req *api.GetWa
 	return nil, status.Errorf(codes.Unknown, "")
 }
 
-func (s* WalletServerAPI) GetDownLinkPrice (ctx context.Context, req *api.GetDownLinkPriceRequest) (*api.GetDownLinkPriceResponse, error)  {
+func (s* WalletServerAPI) GetDlPrice (ctx context.Context, req *api.GetDownLinkPriceRequest) (*api.GetDownLinkPriceResponse, error)  {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {

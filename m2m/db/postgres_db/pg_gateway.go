@@ -214,9 +214,9 @@ func (*gatewayInterface) GetFreeGwList() (gwId []int64, gwMac []string, err erro
 
 //ToDo:
 func (*gatewayInterface) GetWalletIdOfGateway(gwId int64) (gwWalletId int64, err error) {
-	return _, nil
+	return 1, nil
 }
 
 func (*gatewayInterface) GetGwModeByMac (gwMac string) (gwMode types.GatewayMode, err error){
-	return _, nil
+	return types.GW_INACTIVE, nil
 }
