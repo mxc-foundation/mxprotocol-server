@@ -42,12 +42,13 @@ type MxpConfig struct {
 	}
 
 	SuperNode struct {
-		ContractAddress     string `mapstructure:"contract_address"`
-		SuperNodeAddress    string `mapstructure:"supernode_address"`
-		APIKey              string `mapstructure:"api_key"`
-		CheckAccountSeconds int    `mapstructure:"check_account_seconds"`
-		ExtCurrAbv          string `mapstructure:"external_currency_abv"`
-		TestNet             bool   `mapstructure:"ether_test_net"`
+		ContractAddress     string  `mapstructure:"contract_address"`
+		SuperNodeAddress    string  `mapstructure:"supernode_address"`
+		APIKey              string  `mapstructure:"api_key"`
+		CheckAccountSeconds int     `mapstructure:"check_account_seconds"`
+		ExtCurrAbv          string  `mapstructure:"external_currency_abv"`
+		TestNet             bool    `mapstructure:"ether_test_net"`
+		DlPrice             float64 `mapstructure:"down_link_price"`
 	}
 
 	Withdraw struct {
