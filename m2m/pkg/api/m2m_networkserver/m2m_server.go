@@ -25,6 +25,8 @@ var timeLayout = "2006-01-02T15:04:05.000000Z"
 var dlPrice float64
 
 func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.DvUsageModeRequest) (resp *networkserver.DvUsageModeResponse, err error) {
+
+	// @@ changes should be reveresed
 	log.WithFields(log.Fields{
 		"dvId": req.DvEui,
 	}).Debug("grpc_api/DvUsageMode")
