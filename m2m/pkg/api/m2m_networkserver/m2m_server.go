@@ -1,14 +1,17 @@
 package m2m_networkserver
 
 import (
-"context"
-log "github.com/sirupsen/logrus"
-"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/networkserver"
-"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
-"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
-"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
-"time"
+	"context"
+	"fmt"
+	"time"
+
+	log "github.com/sirupsen/logrus"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/networkserver"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
+
 type M2MNetworkServerAPI struct{}
 
 // M2MNetworkServerServerAPI returns a new M2MServerAPI.
@@ -25,6 +28,24 @@ func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.
 	log.WithFields(log.Fields{
 		"dvId": req.DvEui,
 	}).Debug("grpc_api/DvUsageMode")
+
+	var gw []*networkserver.GwMac
+	gw1 := networkserver.GwMac{GwMac: "gw1"}
+	gw = append(gw, &gw1)
+	gw2 := networkserver.GwMac{GwMac: "40d63cfffe020f84"}
+	gw = append(gw, &gw2)
+	dvmd := networkserver.DeviceMode_DV_FREE_GATEWAYS_LIMITED
+
+	if req.DvEui == "70b3d5fffe1cb16a" {
+		gw2 = networkserver.GwMac{GwMac: "40d63cfffe030f5c"}
+		dvmd = networkserver.DeviceMode_DV_WHOLE_NETWORK
+	}
+
+	return &networkserver.DvUsageModeResponse{
+		DvMode:        dvmd,
+		FreeGwMac:     gw,
+		EnoughBalance: true,
+	}, nil
 
 	/*dvWalletId, err := db.Device.GetDevWalletIdByEui(req.DvEui)
 	if err != nil {
@@ -131,6 +152,9 @@ func (*M2MNetworkServerAPI) GwUsageMode(ctx context.Context, req *networkserver.
 }*/
 
 func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.DlPktSentRequest) (*networkserver.DlPktSentResponse, error) {
+
+	fmt.Println("-- dl packet sent req: ", req)
+
 	var dlPkt = types.DlPkt{}
 	dlPkt.Id = req.DlPkt.DlIdNs
 	dlPkt.Category = types.DlCategory(req.DlPkt.Category)
