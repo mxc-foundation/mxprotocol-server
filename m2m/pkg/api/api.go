@@ -5,6 +5,8 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/networkserver"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_networkserver"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -56,6 +58,7 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	m2m_grpc.RegisterDeviceServiceServer(server, m2m_api.NewDeviceServerAPI())
 	m2m_grpc.RegisterGatewayServiceServer(server, m2m_api.NewGatewayServerAPI())
 	appserver_grpc.RegisterM2MServerServiceServer(server, appserver_api.NewM2MServerAPI())
+	networkserver.RegisterM2MServerServiceServer(server, m2m_networkserver.NewM2MNetworkServerAPI())
 
 	var clientHttpHandler http.Handler
 	var err error
