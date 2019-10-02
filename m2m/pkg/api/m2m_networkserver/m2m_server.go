@@ -26,12 +26,6 @@ func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.
 		"dvId": req.DvEui,
 	}).Debug("grpc_api/DvUsageMode")
 
-	/*dvWalletId, err := db.Device.GetDevWalletIdByEui(req.DvEui)
-	if err != nil {
-		log.WithError(err).Error("db/cannot get dvWalletId")
-		return &networkserver.DvUsageModeResponse{}, err
-	}*/
-
 	dvWalletId, dvMode, err := db.Device.GetDevWalletIdAndModeByEui(req.DvEui)
 	if err != nil {
 		log.WithError(err).Error("db/cannot get dvWalletId and dvMode")
@@ -43,13 +37,6 @@ func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.
 		log.WithError(err).Error("db/cannot get gwListOfWallet")
 		return &networkserver.DvUsageModeResponse{}, err
 	}
-
-	/*dvMode, err := db.Device.GetDeviceModeByEui(req.DvEui)
-	if err != nil {
-		log.WithError(err).Error("db/cannot get dvMode")
-		return &networkserver.DvUsageModeResponse{}, err
-	}
-	*/
 
 	switch string(dvMode) {
 	case networkserver.DeviceMode_name[int32(networkserver.DeviceMode_DV_INACTIVE)]:
@@ -131,8 +118,12 @@ func (*M2MNetworkServerAPI) GwUsageMode(ctx context.Context, req *networkserver.
 }*/
 
 func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.DlPktSentRequest) (*networkserver.DlPktSentResponse, error) {
+	log.WithFields(log.Fields{
+		"DlPktId": req.DlPkt.DlIdNs,
+	}).Debug("grpc_api/DvUsageMode")
+
 	var dlPkt = types.DlPkt{}
-	//dlPkt.Id = req.DlPkt.DlIdNs
+	dlPkt.Id = req.DlPkt.DlIdNs
 	dlPkt.Category = types.DlCategory(req.DlPkt.Category)
 	dlPkt.Nonce = req.DlPkt.Nonce
 

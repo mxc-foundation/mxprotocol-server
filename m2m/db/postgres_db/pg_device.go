@@ -20,10 +20,10 @@ func (*deviceInterface) CreateDeviceTable() error {
 				(SELECT 1 FROM pg_type WHERE typname = 'device_mode') 
 			THEN
 				CREATE TYPE device_mode AS ENUM (
-					'INACTIVE',
-					 'FREE_GATEWAYS_LIMITED',
-					 'WHOLE_NETWORK',
-					 'DELETED'
+					'DV_INACTIVE',
+					 'DV_FREE_GATEWAYS_LIMITED',
+					 'DV_WHOLE_NETWORK',
+					 'DV_DELETED'
 		);
 		END IF;
 			CREATE TABLE IF NOT EXISTS device (
