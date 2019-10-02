@@ -29,7 +29,7 @@ func (*dlPacketInterface) CreateDlPktTable() error {
 			fk_device INT REFERENCES device (id) NOT NULL,
 			fk_gateway INT REFERENCES gateway (id) NOT NULL,
 			nonce INT,
-			sent_at     TIMESTAMP,
+			created_at     TIMESTAMP,
 			size FLOAT ,
 			category  dl_category
 		);
@@ -46,7 +46,7 @@ func (*dlPacketInterface) InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err
 			fk_device,
 			fk_gateway,
 			nonce ,
-			sent_at,
+			created_at,
 			size ,
 			category
 			)
@@ -57,7 +57,7 @@ func (*dlPacketInterface) InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err
 		dlPkt.FkDevice,
 		dlPkt.FkGateway,
 		dlPkt.Nonce,
-		dlPkt.SentAt,
+		dlPkt.CreatedAt,
 		dlPkt.Size,
 		dlPkt.Category,
 	).Scan(&insertIndex)
