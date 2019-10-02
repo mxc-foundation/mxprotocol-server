@@ -67,13 +67,6 @@ func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.
 		return &networkserver.DvUsageModeResponse{}, err
 	}
 
-	/*dvMode, err := db.Device.GetDeviceModeByEui(req.DvEui)
-	if err != nil {
-		log.WithError(err).Error("db/cannot get dvMode")
-		return &networkserver.DvUsageModeResponse{}, err
-	}
-	*/
-
 	switch string(dvMode) {
 	case networkserver.DeviceMode_name[int32(networkserver.DeviceMode_DV_INACTIVE)]:
 		return &networkserver.DvUsageModeResponse{DvMode: networkserver.DeviceMode_DV_INACTIVE}, nil
@@ -154,8 +147,14 @@ func (*M2MNetworkServerAPI) GwUsageMode(ctx context.Context, req *networkserver.
 }*/
 
 func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.DlPktSentRequest) (*networkserver.DlPktSentResponse, error) {
+<<<<<<< HEAD
 
 	fmt.Println("-- dl packet sent req: ", req)
+=======
+	log.WithFields(log.Fields{
+		"DlPktId": req.DlPkt.DlIdNs,
+	}).Debug("grpc_api/DvUsageMode")
+>>>>>>> develop
 
 	var dlPkt = types.DlPkt{}
 	dlPkt.Id = req.DlPkt.DlIdNs
