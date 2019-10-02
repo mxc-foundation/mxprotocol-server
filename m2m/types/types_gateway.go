@@ -18,8 +18,8 @@ type Gateway struct {
 type GatewayMode string
 
 const (
-	GW_INACTIVE              GatewayMode = "INACTIVE"
-	GW_FREE_GATEWAYS_LIMITED GatewayMode = "FREE_GATEWAYS_LIMITED"
-	GW_WHOLE_NETWORK         GatewayMode = "WHOLE_NETWORK"
-	GW_DELETED               GatewayMode = "DELETED"
+	GW_INACTIVE              GatewayMode = "GW_INACTIVE"
+	GW_FREE_GATEWAYS_LIMITED GatewayMode = "GW_FREE_GATEWAYS_LIMITED"
+	GW_WHOLE_NETWORK         GatewayMode = "GW_WHOLE_NETWORK"
+	GW_DELETED               GatewayMode = "GW_DELETED"
 )

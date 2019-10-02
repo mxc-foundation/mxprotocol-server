@@ -8,6 +8,7 @@ import (
 type aggWalletUsageDBInterface interface {
 	CreateAggWltUsgTable() error
 	InsertAggWltUsg(awu types.AggWltUsg) (insertIndex int64, err error)
+	GetWalletUsageHist(rogId int64) ([]types.AggWltUsg, error)
 }
 
 var AggWalletUsage = aggWalletUsageDBInterface(&pg.PgAggWalletUsage)
