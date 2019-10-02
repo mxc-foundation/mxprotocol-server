@@ -6,7 +6,7 @@ import TableRow from "@material-ui/core/TableRow";
 //import Wallet from "mdi-material-ui/OpenInNew";
 //import Typography from '@material-ui/core/Typography';
 import TableCellExtLink from "../../components/TableCellExtLink";
-import { DV_MODE_OPTION } from "../../util/data"
+import { DV_MODE_OPTION } from "../../util/Data"
 
 import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";

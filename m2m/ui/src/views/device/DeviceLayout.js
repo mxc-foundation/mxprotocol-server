@@ -13,7 +13,7 @@ import Modal from "../../components/Modal";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import styles from "./DeviceStyle"
-import { DV_INACTIVE, DV_FREE_GATEWAYS_LIMITED, DV_WHOLE_NETWORK } from "../../util/data"
+import { DV_INACTIVE, DV_FREE_GATEWAYS_LIMITED, DV_WHOLE_NETWORK } from "../../util/Data"
 import { CONFIRMATION, CONFIRMATION_TEXT, INVALID_ACCOUNT, INVALID_AMOUNT } from "../../util/Messages"
 
 class DeviceLayout extends Component {
@@ -21,29 +21,20 @@ class DeviceLayout extends Component {
     super(props);
     this.state = {
       loading: false,
-      modal: null,
       mod: null
     };
   }
 
-  loadData() {
-  }
-
   componentDidMount() {
-    this.loadData();
   }
 
   componentDidUpdate(oldProps) {
     if (this.props === oldProps) {
       return;
     }
-    this.loadData();
+    //this.loadData();
   }
   
-  showModal(modal) {
-    this.setState({ modal });
-  }
-
   onSubmit = (e, apiWithdrawReqRequest) => {
     e.preventDefault();
   }
@@ -54,10 +45,6 @@ class DeviceLayout extends Component {
     })
   }
 
-  onConfirm = (data) => {
-    
-  }
-  
   onSelectChange = (device) => {
     const { dvId, dvMode } = device;
     
@@ -80,14 +67,12 @@ class DeviceLayout extends Component {
 
   render() {
     return (
-        <Grid container spacing={24} className={this.props.classes.backgroundColor}>
-            {this.state.modal && 
-            <Modal title={CONFIRMATION} description={CONFIRMATION_TEXT} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
+      <Grid container spacing={24} className={this.props.classes.backgroundColor}>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title="Devices" />
-              </TitleBar>
+              </TitleBar>    
               <Divider light={true}/>
               <div className={this.props.classes.breadcrumb}>
               <TitleBar>
@@ -109,7 +94,7 @@ class DeviceLayout extends Component {
           />
           </Grid>
         </Grid>
-        </Grid>
+      </Grid>
     );
   }
 }

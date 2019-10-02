@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
 //import SessionStore from "../stores/SessionStore";
-import { DV_MODE_OPTION, DV_FREE_GATEWAYS_LIMITED } from "../util/data"
+import { DV_MODE_OPTION, DV_FREE_GATEWAYS_LIMITED } from "../util/Data"
 
 const customStyles = {
     control: (base, state) => ({
@@ -79,7 +79,7 @@ export default class SelectPlain extends Component {
     
     render() {
         let dValue = this.props.defaultValue;
-        /* let options = this.props.options;
+        let options = this.props.options;
         
         if(!this.props.options){
             //If there is no gateway, no private mode for devices.
@@ -89,8 +89,7 @@ export default class SelectPlain extends Component {
                 });
             }
         }
-console.log(options); */
-const options = DV_MODE_OPTION;
+
         return (
             <Select 
                 cacheOptions 
