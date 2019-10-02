@@ -198,3 +198,21 @@ func (*deviceInterface) GetDeviceRecCnt(walletId int64) (recCnt int64, err error
 
 	return recCnt, errors.Wrap(err, "db/pg_device/GetDeviceRecCnt")
 }
+
+//ToDo:
+func (*deviceInterface) GetWalletIdOfDevice(dvId int64) (dvWalletId int64, err error) {
+	return 1, nil
+}
+
+//ToDo: queries
+func (*deviceInterface) GetDeviceModeByEui(devEui string) (dvMode types.DeviceMode, err error) {
+	return types.DV_INACTIVE, nil
+}
+
+func (*deviceInterface) GetDevWalletIdByEui(devEui string) (walletId int64, err error) {
+	return 1, nil
+}
+
+func (*deviceInterface) GetDevWalletIdAndModeByEui(devEui string) (dvWalletId int64, dvMode types.DeviceMode, err error) {
+	return 1, types.DV_INACTIVE, nil
+}

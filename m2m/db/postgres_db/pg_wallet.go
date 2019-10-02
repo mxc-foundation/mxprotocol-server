@@ -162,3 +162,8 @@ func (*walletInterface) UpdateBalanceByWalletId(walletId int64, newBalance float
 
 	return errors.Wrap(err, "db/UpdateBalanceByWalletId")
 }
+
+//ToDo
+func (*walletInterface) TmpBalanceUpdatePktTx(dvId, gwId int64, amount float64) error {
+	return nil
+}

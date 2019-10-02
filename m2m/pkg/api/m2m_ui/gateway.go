@@ -39,13 +39,28 @@ func (s *GatewayServerAPI) GetGatewayList(ctx context.Context, req *api.GetGatew
 			"limit":  req.Limit,
 		}).Debug("grpc_api/GetGatewayList")
 
+		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetGatewayList")
+			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err
+		}
+
+		totalGw, err := db.Gateway.GetGatewayRecCnt(walletId)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetGatewayList")
+			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err
+		}
+
 		gwList, err := db.Gateway.GetGatewayListOfWallet(req.OrgId, req.Offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetGatewayList")
 			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err
 		}
 
-		resp := api.GetGatewayListResponse{UserProfile: &userProfile}
+		resp := api.GetGatewayListResponse{
+			Count:     totalGw,
+			UserProfile: &userProfile,
+		}
 		for _, v := range gwList {
 			gwProfile := api.GatewayProfile{}
 			gwProfile.Id = v.Id
@@ -155,22 +170,22 @@ func (s *GatewayServerAPI) SetGatewayMode(ctx context.Context, req *api.SetGatew
 		}).Debug("grpc_api/SetDeviceMode")
 
 		switch req.GwMode.String() {
-		case "GW_INACTIVE":
+		case api.GatewayMode_name[int32(api.GatewayMode_GW_INACTIVE)]:
 			if err := db.Gateway.SetGatewayMode(req.GwId, types.GW_INACTIVE); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetGatewayModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
-		case "GW_FREE_GATEWAYS_LIMITED":
+		case api.GatewayMode_name[int32(api.GatewayMode_GW_FREE_GATEWAYS_LIMITED)]:
 			if err := db.Gateway.SetGatewayMode(req.GwId, types.GW_FREE_GATEWAYS_LIMITED); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetGatewayModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
-		case "GW_WHOLE_NETWORK":
+		case api.GatewayMode_name[int32(api.GatewayMode_GW_WHOLE_NETWORK)]:
 			if err := db.Gateway.SetGatewayMode(req.GwId, types.GW_WHOLE_NETWORK); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetGatewayModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
-		case "GW_DELETED":
+		case api.GatewayMode_name[int32(api.GatewayMode_GW_DELETED)]:
 			if err := db.Gateway.SetGatewayMode(req.GwId, types.GW_DELETED); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetGatewayModeResponse{Status: false, UserProfile: &userProfile}, err

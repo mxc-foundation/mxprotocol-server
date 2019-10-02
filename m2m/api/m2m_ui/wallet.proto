@@ -23,7 +23,15 @@ service WalletService {
     		get: "/api/wallet/{org_id}/usage-history"
     	};
     }
+
+    rpc GetDlPrice (GetDownLinkPriceRequest) returns (GetDownLinkPriceResponse) {
+        option(google.api.http) = {
+    		get: "/api/wallet/{org_id}/downlink_price"
+    	};
+    }
 }
+
+
 
 message GetWalletBalanceRequest {
     int64 org_id = 1;
@@ -72,5 +80,14 @@ message GetWalletUsageHist {
 
 message GetWalletUsageHistResponse {
     repeated GetWalletUsageHist wallet_usage_his = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message GetDownLinkPriceRequest {
+    int64 org_id = 1;
+}
+
+message GetDownLinkPriceResponse {
+    double down_link_price = 1;
     ProfileResponse user_profile = 2;
 }
