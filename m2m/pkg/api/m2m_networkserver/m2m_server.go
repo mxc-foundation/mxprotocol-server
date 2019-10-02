@@ -132,7 +132,7 @@ func (*M2MNetworkServerAPI) GwUsageMode(ctx context.Context, req *networkserver.
 
 func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.DlPktSentRequest) (*networkserver.DlPktSentResponse, error) {
 	var dlPkt = types.DlPkt{}
-	//dlPkt.Id = req.DlPkt.DlIdNs
+	dlPkt.Id = req.DlPkt.DlIdNs
 	dlPkt.Category = types.DlCategory(req.DlPkt.Category)
 	dlPkt.Nonce = req.DlPkt.Nonce
 
