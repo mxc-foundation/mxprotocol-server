@@ -46,7 +46,7 @@ message GwUsageModeResponse {
 }
 
 message DlPkt {
-    int64 dl_id_ns = 1;
+    string dl_id_ns = 1;
     string gw_mac = 2;
     string dev_eui = 3;
     int64 token_dl_frm1 = 4;

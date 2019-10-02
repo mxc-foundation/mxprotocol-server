@@ -12,7 +12,7 @@ const (
 )
 
 type DlPkt struct {
-	Id        int64 `db:"id"`
+	Id        string `db:"id"`
 	FkDevice  int64 `db:"dev_eui"` // fk in App server
 	FkGateway int64 `db:"fk_gateway"`
 	Nonce     int64 `db:"nonce"`
