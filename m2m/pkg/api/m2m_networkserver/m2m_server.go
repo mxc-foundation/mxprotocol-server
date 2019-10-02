@@ -147,14 +147,11 @@ func (*M2MNetworkServerAPI) GwUsageMode(ctx context.Context, req *networkserver.
 }*/
 
 func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.DlPktSentRequest) (*networkserver.DlPktSentResponse, error) {
-<<<<<<< HEAD
 
 	fmt.Println("-- dl packet sent req: ", req)
-=======
 	log.WithFields(log.Fields{
 		"DlPktId": req.DlPkt.DlIdNs,
 	}).Debug("grpc_api/DvUsageMode")
->>>>>>> develop
 
 	var dlPkt = types.DlPkt{}
 	dlPkt.Id = req.DlPkt.DlIdNs
