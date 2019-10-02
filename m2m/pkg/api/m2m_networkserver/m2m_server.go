@@ -118,6 +118,10 @@ func (*M2MNetworkServerAPI) GwUsageMode(ctx context.Context, req *networkserver.
 }*/
 
 func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.DlPktSentRequest) (*networkserver.DlPktSentResponse, error) {
+	log.WithFields(log.Fields{
+		"DlPktId": req.DlPkt.DlIdNs,
+	}).Debug("grpc_api/DvUsageMode")
+
 	var dlPkt = types.DlPkt{}
 	dlPkt.Id = req.DlPkt.DlIdNs
 	dlPkt.Category = types.DlCategory(req.DlPkt.Category)
