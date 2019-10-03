@@ -22,6 +22,8 @@ import PagePreviousOutline from "mdi-material-ui/PagePreviousOutline";
 import { getLoraHost } from "../util/M2mUtil";
 import styles from "./SideNavStyle";
 
+import { SUPER_ADMIN } from "../util/M2mUtil";
+
 
 
 const LinkToLora = ({children, ...otherProps}) => 
@@ -53,9 +55,15 @@ class SideNav extends Component {
     window.location.replace(`http://mxc.org/`);
   } 
 
+  isAdmin = false;
+
   loadData = async () => {
     try {
       const organizationID = SessionStore.getOrganizationID();
+      if (organizationID === SUPER_ADMIN) {
+        this.isAdmin = true;}else{
+          this.isAdmin = false;
+        }
       this.setState({
         organizationID,
       })
@@ -106,7 +114,7 @@ class SideNav extends Component {
         open={this.props.open}
         classes={{paper: this.props.classes.drawerPaper}}
       >
-        {organizationID && <List className={this.props.classes.static}>
+        {(organizationID&&!this.isAdmin) && <List className={this.props.classes.static}>
           {/* <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}> */}
           <div>
             <DropdownMenu default={ this.state.default } onChange={this.onChange} />
@@ -136,6 +144,9 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
           </ListItem>
+       
+
+
               <List className={this.props.classes.card}>
               <Divider />
                 <ListItem button component={LinkToLora} className={this.props.classes.static}>  
@@ -151,7 +162,20 @@ class SideNav extends Component {
                   </ListItemIcon>
                 </ListItem>
               </List>
-        </List>}
+
+        </List>
+     
+        }
+        {(this.isAdmin)&&<List>
+        <ListItem selected={active('/control-panel')} button component={Link} to={`/control-panel/${organizationID}`}>
+            <ListItemIcon>
+              <CreditCard />
+            </ListItemIcon>
+            <ListItemText classes={selected('/control-panel')} primary="Control Panel" />
+          </ListItem>
+        </List>
+          
+        }
       </Drawer>
     );
   }
