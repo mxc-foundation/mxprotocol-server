@@ -66,7 +66,8 @@ func (s *DeviceServerAPI) GetDeviceList(ctx context.Context, req *api.GetDeviceL
 			dvProfile.Id = v.Id
 			dvProfile.DevEui = v.DevEui
 			dvProfile.FkWallet = v.FkWallet
-			dvProfile.Mode = string(v.Mode)
+			dvMode := api.DeviceMode(api.DeviceMode_value[string(v.Mode)])
+			dvProfile.Mode = dvMode
 			dvProfile.CreatedAt = v.CreatedAt.String()
 			dvProfile.LastSeenAt = v.LastSeenAt.String()
 			dvProfile.ApplicationId = v.ApplicationId
@@ -106,11 +107,13 @@ func (s *DeviceServerAPI) GetDeviceProfile(ctx context.Context, req *api.GetDevi
 			return &api.GetDeviceProfileResponse{UserProfile: &userProfile}, err
 		}
 
+		dvMode := api.DeviceMode(api.DeviceMode_value[string(devProfile.Mode)])
+
 		resp := api.DeviceProfile{
 			Id:            devProfile.Id,
 			DevEui:        devProfile.DevEui,
 			FkWallet:      devProfile.FkWallet,
-			Mode:          string(devProfile.Mode),
+			Mode:          dvMode,
 			CreatedAt:     devProfile.CreatedAt.String(),
 			LastSeenAt:    devProfile.LastSeenAt.String(),
 			ApplicationId: devProfile.ApplicationId,

@@ -217,7 +217,7 @@
           "format": "int64"
         },
         "mode": {
-          "type": "string"
+          "$ref": "#/definitions/apiGatewayMode"
         },
         "createAt": {
           "type": "string"
