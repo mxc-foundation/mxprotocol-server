@@ -48,6 +48,36 @@ func (*walletInterface) CreateWalletTable() error {
 	return errors.Wrap(err, "db/CreateWalletTable")
 }
 
+func (*walletInterface) CreateWalletFunctions() error {
+	_, err := PgDB.Exec(`
+
+	CREATE OR REPLACE FUNCTION tmp_balance_update_pkt_tx (dv_wallet_id INT, gw_wallet_id INT, amount NUMERIC(28,18)) RETURNS void
+		LANGUAGE plpgsql
+			AS $$
+			BEGIN
+			
+			UPDATE
+				wallet 
+			SET
+				tmp_balance =  tmp_balance - amount
+			WHERE
+				id = dv_wallet_id
+			;
+			UPDATE
+				wallet
+			SET 
+				tmp_balance = tmp_balance + amount
+			WHERE
+				id = gw_wallet_id
+			;
+			END;
+		$$;
+		`)
+
+	return errors.Wrap(err, "db/CreateWalletFunctions")
+
+}
+
 func (*walletInterface) InsertWallet(orgId int64, walletType types.WalletType) (insertIndex int64, err error) {
 	w := wallet{
 		FkOrgLa:    orgId,
@@ -183,7 +213,10 @@ func (*walletInterface) UpdateBalanceByWalletId(walletId int64, newBalance float
 	return errors.Wrap(err, "db/UpdateBalanceByWalletId")
 }
 
-//ToDo
-func (*walletInterface) TmpBalanceUpdatePktTx(dvId, gwId int64, amount float64) error {
-	return nil
+func (*walletInterface) TmpBalanceUpdatePktTx(dvWalletId, gwWalletId int64, amount float64) error {
+	_, err := PgDB.Exec(`
+	select tmp_balance_update_pkt_tx ($1, $2 , $3)
+	`, dvWalletId, gwWalletId, amount)
+
+	return errors.Wrap(err, "db/TmpBalanceUpdatePktTx")
 }
