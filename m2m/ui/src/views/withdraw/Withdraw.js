@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
 import TitleBar from "../../components/TitleBar";
@@ -72,12 +72,19 @@ class Withdraw extends Component {
     this.state = {
       loading: false,
       modal: null,
+      isAdmin:false,
     };
   }
 
   loadData = async () => {
+    const orgId = this.props.match.params.organizationID;
+    if (orgId === SUPER_ADMIN) {
+      this.setState({isAdmin: true});
+    }else{
+      this.setState({isAdmin: false});
+      }
     try {
-      const orgId = this.props.match.params.organizationID;
+     
       this.setState({loading: true})
       var result = await loadWithdrawFee(ETHER, orgId);
       var wallet = await loadWalletBalance(orgId);
@@ -152,7 +159,10 @@ class Withdraw extends Component {
 
   render() {
     return (
+     
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
+
+       {this.state.isAdmin && <Redirect push to={`/control-panel/${SUPER_ADMIN}`}/> /*in case of superadmin - rredirect to control page*/ }
         {this.state.modal && 
           <Modal title={CONFIRMATION} description={CONFIRMATION_TEXT} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
         <Grid item xs={12} className={this.props.classes.divider}>
