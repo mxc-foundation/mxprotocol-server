@@ -14,7 +14,7 @@ type AggWltUsg struct {
 	UlCntGw         int64     `db:"ul_cnt_gw"`
 	UlCntGwFree     int64     `db:"ul_cnt_gw_free"`
 	StartAt         time.Time `db:"start_at"`
-	DurationMinutes float64   `db:"duration_minutes"`
+	DurationMinutes int64     `db:"duration_minutes"`
 	Spend           float64   `db:"spend"`
 	Income          float64   `db:"income"`
 	BalanceIncrease float64   `db:"balance_increase"`

@@ -1,6 +1,8 @@
 package postgres_db
 
 import (
+	"fmt"
+
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
@@ -79,6 +81,66 @@ func (*aggWalletUsageInterface) InsertAggWltUsg(awu types.AggWltUsg) (insertInde
 	return insertIndex, errors.Wrap(err, "db/pg_agg_wallet_usage/InsertAggWltUsg")
 }
 
-func (*aggWalletUsageInterface) GetWalletUsageHist(rogId int64) ([]types.AggWltUsg, error) {
-	return []types.AggWltUsg{{}}, nil
+func (*aggWalletUsageInterface) GetWalletUsageHist(walletId int64, offset int64, limit int64) (awuList []types.AggWltUsg, err error) {
+
+	rows, err := PgDB.Query(
+		`SELECT
+			*
+		FROM
+			agg_wallet_usage 
+		WHERE
+			fk_wallet = $1 
+		ORDER BY id DESC
+		LIMIT $2 
+		OFFSET $3
+	;`, walletId, limit, offset)
+
+	if err != nil {
+		return awuList, errors.Wrap(err, "db/pg_agg_wallet_usage/GetWalletUsageHist")
+	}
+
+	defer rows.Close()
+
+	fmt.Println("rows at start: ", rows)
+
+	awu := types.AggWltUsg{}
+
+	for rows.Next() {
+		rows.Scan(
+			&awu.Id,
+			&awu.FkWallet,
+			&awu.DlCntDv,
+			&awu.DlCntDvFree,
+			&awu.UlCntDv,
+			&awu.UlCntDvFree,
+			&awu.DlCntGw,
+			&awu.DlCntGwFree,
+			&awu.UlCntGw,
+			&awu.UlCntGwFree,
+			&awu.StartAt,
+			&awu.DurationMinutes,
+			&awu.Spend,
+			&awu.Income,
+			&awu.BalanceIncrease,
+			&awu.UpdatedBalance,
+		)
+
+		awuList = append(awuList, awu)
+	}
+	return awuList, errors.Wrap(err, "db/pg_agg_wallet_usage/GetWalletUsageHist")
+
+}
+
+func (*aggWalletUsageInterface) GetWalletUsageHistCnt(walletId int64) (recCnt int64, err error) {
+	err = PgDB.QueryRow(`
+		SELECT
+			COUNT(*)
+		FROM
+			agg_wallet_usage 
+		WHERE
+			fk_wallet = $1 
+	`, walletId).Scan(&recCnt)
+
+	return recCnt, errors.Wrap(err, "db/pg_agg_wallet_usage/GetWalletUsageHistCnt")
+
 }
