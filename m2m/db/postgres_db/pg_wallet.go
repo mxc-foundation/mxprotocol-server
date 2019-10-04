@@ -11,10 +11,14 @@ type walletInterface struct{}
 var PgWallet walletInterface
 
 type wallet struct {
-	Id      int64   `db:"id"`
-	FkOrgLa int64   `db:"fk_org_la"`
-	TypeW   string  `db:"type"`
+	Id      int64  `db:"id"`
+	FkOrgLa int64  `db:"fk_org_la"`
+	TypeW   string `db:"type"`
+	// Balance is updated during the aggregations (containing internal_tx reference)
 	Balance float64 `db:"balance"`
+	// Tmp balance is updated per transactions and is uesd while the balanc is not updated.
+	// During the aggregation, TmpBalance will get updated to value of Balance
+	TmpBalance float64 `db:"tmp_balance"`
 }
 
 func (*walletInterface) CreateWalletTable() error {
@@ -34,7 +38,8 @@ func (*walletInterface) CreateWalletTable() error {
 			id SERIAL PRIMARY KEY,
 			fk_org_la INT UNIQUE NOT NULL, -- foreign_key LoRa app server DB
 			type WALLET_TYPE NOT NULL,
-			balance NUMERIC(28,18) NOT NULL CHECK (balance >= 0)
+			balance NUMERIC(28,18) NOT NULL DEFAULT 0,
+			tmp_balance NUMERIC(28,18) DEFAULT 0
 		);
 
 		END$$;
@@ -45,23 +50,26 @@ func (*walletInterface) CreateWalletTable() error {
 
 func (*walletInterface) InsertWallet(orgId int64, walletType types.WalletType) (insertIndex int64, err error) {
 	w := wallet{
-		FkOrgLa: orgId,
-		TypeW:   string(walletType),
-		Balance: 0.0,
+		FkOrgLa:    orgId,
+		TypeW:      string(walletType),
+		Balance:    0.0,
+		TmpBalance: 0.0,
 	}
 
 	err = PgDB.QueryRow(`
 		INSERT INTO wallet (
 			fk_org_la ,
 			type,
-			balance ) 
+			balance,
+			tmp_balance ) 
 		VALUES 
-			($1,$2,$3)
+			($1,$2,$3,$4)
 		RETURNING id ;
 	`,
 		w.FkOrgLa,
 		w.TypeW,
-		w.Balance).Scan(&insertIndex)
+		w.Balance,
+		w.TmpBalance).Scan(&insertIndex)
 
 	// fmt.Println(val, err)
 	return insertIndex, errors.Wrap(err, "db/InsertWallet")
@@ -89,6 +97,18 @@ func (*walletInterface) GetWalletBalance(walletId int64) (float64, error) {
 		walletId).Scan(&balance)
 
 	return balance, errors.Wrap(err, "db/GetWalletBalance")
+}
+
+func (*walletInterface) GetWalletTmpBalance(walletId int64) (float64, error) {
+	balance := float64(0)
+	err := PgDB.QueryRow(
+		`SELECT tmp_balance
+		FROM wallet
+		WHERE
+			id = $1;`,
+		walletId).Scan(&balance)
+
+	return balance, errors.Wrap(err, "db/GetWalletTmpBalance")
 }
 
 func (*walletInterface) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
