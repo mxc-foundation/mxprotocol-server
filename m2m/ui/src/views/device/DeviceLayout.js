@@ -47,7 +47,6 @@ class DeviceLayout extends Component {
 
   onSelectChange = (device) => {
     const { dvId, dvMode } = device;
-    
     DeviceStore.setDeviceMode(this.props.match.params.organizationID, dvId, dvMode, data => {
       this.props.history.push(`/device/${this.props.match.params.organizationID}`);
     });

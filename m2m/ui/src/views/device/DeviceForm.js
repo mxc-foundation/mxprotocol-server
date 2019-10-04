@@ -6,7 +6,7 @@ import TableRow from "@material-ui/core/TableRow";
 //import Wallet from "mdi-material-ui/OpenInNew";
 //import Typography from '@material-ui/core/Typography';
 import TableCellExtLink from "../../components/TableCellExtLink";
-import { DV_MODE_OPTION } from "../../util/Data"
+import { DV_MODE_OPTION, DV_INACTIVE } from "../../util/Data"
 
 import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
@@ -87,12 +87,14 @@ class DeviceForm extends Component {
         dValue = options[0];
         break;
     }  
-
+    
+    let on = (obj.mode !== DV_INACTIVE) ? true : false;
+    
     return(
       <TableRow key={ index }>
         <TableCellExtLink align={'left'} to={url}>{obj.name}</TableCellExtLink>
         <TableCell align={'left'}>{obj.lastSeenAt}</TableCell>
-        <TableCell><span className={this.props.classes.flex}><SwitchLabels on={ obj.mode } dvId={obj.devEui} onSwitchChange={ this.onSwitchChange } /></span></TableCell>
+        <TableCell><span className={this.props.classes.flex}><SwitchLabels on={ on } dvId={obj.devEui} onSwitchChange={ this.onSwitchChange } /></span></TableCell>
         <TableCell><span><NativeSelects options={options} defaultValue={dValue} mode={ obj.mode } dvId={obj.devEui} onSelectChange={ this.onSelectChange } /></span></TableCell>
       </TableRow>
     );
