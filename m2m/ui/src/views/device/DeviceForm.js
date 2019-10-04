@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { getLoraHost } from "../../util/M2mUtil"; 
 import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
@@ -72,7 +72,8 @@ class DeviceForm extends Component {
   }
 
   getRow(obj, index) {
-    const url = `/#/organizations/${this.props.match.params.organizationID}/devices/${obj.mac}`;
+    const url = `${getLoraHost()}/#/organizations/${this.props.match.params.organizationID}/applications/${obj.application_id}/devices/${obj.devEui}`;
+    
     let dValue = null;
     const options = DV_MODE_OPTION;
     
