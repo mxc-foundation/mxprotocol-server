@@ -94,9 +94,9 @@ class DeviceForm extends Component {
     return(
       <TableRow key={ index }>
         <TableCellExtLink align={'left'} to={url}>{obj.name}</TableCellExtLink>
-        <TableCell align={'left'}>{obj.lastSeenAt}</TableCell>
-        <TableCell><span className={this.props.classes.flex}><SwitchLabels on={ on } dvId={obj.devEui} onSwitchChange={ this.onSwitchChange } /></span></TableCell>
-        <TableCell><span><NativeSelects options={options} defaultValue={dValue} mode={ obj.mode } dvId={obj.devEui} onSelectChange={ this.onSelectChange } /></span></TableCell>
+        <TableCell align={'left'}>{obj.lastSeenAt.substring(0, 19)}</TableCell>
+        <TableCell><span className={this.props.classes.flex}><SwitchLabels on={ on } dvId={obj.id} onSwitchChange={ this.onSwitchChange } /></span></TableCell>
+        <TableCell><span><NativeSelects options={options} defaultValue={dValue} mode={ obj.mode } dvId={obj.id} onSelectChange={ this.onSelectChange } /></span></TableCell>
       </TableRow>
     );
   }
