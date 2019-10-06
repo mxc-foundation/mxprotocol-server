@@ -83,7 +83,7 @@ func (*dlPacketInterface) GetAggDlPktDeviceWallet(begin time.Time, durationMin i
 			current_timestamp + ($2 * interval '1 minute')
 	GROUP BY
 		dv.fk_wallet;
-	`, begin)
+	`, begin, durationMin)
 
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "db/pg_dl_packet/getAggDlPktWallet")
@@ -123,7 +123,7 @@ func (*dlPacketInterface) GetAggDlPktGatewayWallet(begin time.Time, durationMin 
 			current_timestamp + ($2 * interval '1 minute')
 	GROUP BY
 		gw.fk_wallet;
-	`, begin)
+	`, begin, durationMin)
 
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "db/pg_dl_packet/GetAggDlPktGatewayWallet")
