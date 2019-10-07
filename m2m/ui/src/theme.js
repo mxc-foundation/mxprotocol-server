@@ -117,14 +117,14 @@ const theme = createMuiTheme({
       }, */
       MuiTable: {
         root: {
-          //background: 'transparent',
-          minWidth: 840,
+          background: 'transparent',
+          //minWidth: 840,
         }
       },
       MuiDivider: {
         root: {
           backgroundColor: '#00000040',
-          margin: '5px 10px 5px 0px',
+          margin: '5px 0px 5px 0px',
         },
         light: {
           backgroundColor: '#FFFFFF50',
@@ -141,14 +141,14 @@ const theme = createMuiTheme({
           color: white,
           //maxWidth: 140,
           whiteSpace: 'nowrap', 
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
+          //overflow: 'hidden',
+          textOverflow: 'ellipsis' 
         },
         root: {
           padding: '4px 5px',
           //maxWidth: 140,
           whiteSpace: 'nowrap', 
-          overflow: 'hidden',
+          //overflow: 'hidden',
           textOverflow: 'ellipsis'
         }
       },

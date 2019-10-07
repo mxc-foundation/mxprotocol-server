@@ -14,6 +14,8 @@ import DropdownMenu from "./DropdownMenu";
 import CalendarCheckOutline from "mdi-material-ui/CalendarCheckOutline";
 import CreditCard from "mdi-material-ui/CreditCard";
 import AccessPoint from "mdi-material-ui/AccessPoint";
+import Remote from "mdi-material-ui/Remote";
+import VideoInputAntenna from "mdi-material-ui/VideoInputAntenna";
 
 import ProfileStore from "../stores/ProfileStore"
 import SessionStore from "../stores/SessionStore"
@@ -136,6 +138,19 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
           </ListItem>
+          <ListItem selected={active('/device')} button component={Link} to={`/device/${organizationID}`}>
+            <ListItemIcon>
+              <Remote />
+            </ListItemIcon>
+            <ListItemText classes={selected('/device')} primary="Device" />
+          </ListItem>
+          <ListItem selected={active('/gateway')} button component={Link} to={`/gateway/${organizationID}`}>
+            <ListItemIcon>
+              <VideoInputAntenna />
+            </ListItemIcon>
+            <ListItemText classes={selected('/gateway')} primary="Gateway" />
+          </ListItem>
+
               <List className={this.props.classes.card}>
               <Divider />
                 <ListItem button component={LinkToLora} className={this.props.classes.static}>  
