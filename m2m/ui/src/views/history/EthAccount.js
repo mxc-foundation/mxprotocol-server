@@ -51,7 +51,6 @@ class EthAccount extends Component {
             </Admin>
           }
         >
-          <TitleBarTitle title="EthAccount" />
         </TitleBar>
         <Grid item xs={12}>
           <DataTable

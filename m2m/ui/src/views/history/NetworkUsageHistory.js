@@ -6,9 +6,11 @@ import TableRow from "@material-ui/core/TableRow";
 
 import TopupStore from "../../stores/TopupStore";
 import TitleBar from "../../components/TitleBar";
-import TitleBarTitle from "../../components/TitleBarTitle";
+
+import TableCellExtLink from '../../components/TableCellExtLink';
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
+import LinkVariant from "mdi-material-ui/LinkVariant";
 import Admin from "../../components/Admin";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
@@ -21,9 +23,15 @@ const styles = {
     overflow: 'hidden',
     textOverflow: 'ellipsis'
   },
+  flex:{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+
+  }
 };
 
-class TopupHistory extends Component {
+class NetworkUsageHistory extends Component {
   constructor(props) {
     super(props);
     this.getPage = this.getPage.bind(this);
@@ -31,23 +39,25 @@ class TopupHistory extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    TopupStore.getTopUpHistory(this.props.organizationID, offset, limit, data => {
+    TopupStore.getTransactionsHistory(this.props.organizationID, offset, limit, data => {
         callbackFunc({
             totalCount: parseInt(data.count),
-            result: data.topupHistory
+            result: data.transactionHistory
           });
       }); 
   }
   
   getRow(obj, index) {
+    const url = process.env.REACT_APP_ETHERSCAN_ROPSTEN_HOST + `/tx/${obj.txHash}`;
     return(
       <TableRow key={index}>
-        <TableCell className={this.props.classes.maxW140} >{obj.from}</TableCell>
-        <TableCell className={this.props.classes.maxW140}>{obj.to}</TableCell>
-        <TableCell>{obj.moneyType}</TableCell>
-        <TableCell>{obj.amount}</TableCell>
-        <TableCell className={this.props.classes.maxW140}>{obj.txHash}</TableCell>
-        <TableCell>{obj.createdAt.substring(0, 19)}</TableCell>
+        <TableCell align={'center'} className={this.props.classes.maxW140} >{obj.from}</TableCell>
+        <TableCell align={'center'} className={this.props.classes.maxW140}>{obj.to}</TableCell>
+        <TableCellExtLink to={url} ><div className={this.props.classes.flex}><LinkVariant /></div></TableCellExtLink>
+        <TableCell align={'center'}>{obj.transactionType}</TableCell>
+        <TableCell align={'right'}>{obj.amount}</TableCell>
+        <TableCell align={'center'}>{obj.lastUpdateTime.substring(0, 19)}</TableCell>
+        <TableCell align={'center'}>{obj.status}</TableCell>
       </TableRow>
     );
   }
@@ -65,18 +75,18 @@ class TopupHistory extends Component {
             </Admin>
           }
         >
-        <TitleBarTitle title="Topup History" />
         </TitleBar>
         <Grid item xs={12}>
           <DataTable
             header={
               <TableRow>
-                <TableCell>From</TableCell>
-                <TableCell>To</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>VMXC Amount</TableCell>
-                <TableCell>TxHash</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell align={'center'}>From</TableCell>
+                <TableCell align={'center'}>To</TableCell>
+                <TableCell align={'center'}>TxHash</TableCell>
+                <TableCell align={'center'}>Type</TableCell>
+                <TableCell align={'center'}>VMXC Amount</TableCell>
+                <TableCell align={'center'}>Update Date</TableCell>
+                <TableCell align={'center'}>Status</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
@@ -88,4 +98,4 @@ class TopupHistory extends Component {
   }
 }
 
-export default withStyles(styles)(withRouter(TopupHistory));
+export default withStyles(styles)(withRouter(NetworkUsageHistory));

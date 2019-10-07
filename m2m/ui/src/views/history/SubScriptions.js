@@ -29,7 +29,6 @@ class SubScriptions extends Component {
   }
 
   getRow(obj, index) {
-    console.dir(obj);
     return(
       <TableRow key={index}>
         <TableCell>{obj.from}</TableCell>
