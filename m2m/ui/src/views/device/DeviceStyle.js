@@ -20,7 +20,7 @@ const DeviceStyles = {
     flexDirection: 'column'
   },
   navText: {
-    fontSize: '0.85rem',
+    fontSize: '0.85rem !important',
   },
   TitleBar: {
     width: '50%',
@@ -45,7 +45,19 @@ const DeviceStyles = {
       "&:hover": {
         opacity: 1,
       }
-  },    
+  },
+  subTitle2:{
+    textDecoration: "none",
+    padding: 0,
+    fontWeight: "bold",
+    fontSize: 12,
+    color: theme.palette.textSecondary.main,
+    cursor: "pointer",
+    opacity: 0.7,
+      "&:hover": {
+        opacity: 1,
+      } 
+    }       
 };
   
 export default DeviceStyles;

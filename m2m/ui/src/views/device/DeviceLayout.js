@@ -7,6 +7,7 @@ import TitleBarTitle from "../../components/TitleBarTitle";
 import Typography from '@material-ui/core/Typography';
 
 import DeviceStore from "../../stores/DeviceStore.js";
+import WalletStore from "../../stores/WalletStore.js";
 import DeviceForm from "./DeviceForm";
 import Modal from "../../components/Modal";
 //import WithdrawBalanceInfo from "./WithdrawBalanceInfo";
@@ -16,17 +17,56 @@ import styles from "./DeviceStyle"
 import { DV_INACTIVE, DV_FREE_GATEWAYS_LIMITED, DV_WHOLE_NETWORK } from "../../util/Data"
 import { CONFIRMATION, CONFIRMATION_TEXT, INVALID_ACCOUNT, INVALID_AMOUNT } from "../../util/Messages"
 
+/* function haveGateway(ETHER, organizationID) {
+  return new Promise((resolve, reject) => {
+    WithdrawStore.getWithdrawFee(ETHER, organizationID,
+      resp => {
+        resp.moneyAbbr = ETHER;
+        resolve(resp);
+      })
+  });
+}  */ 
+
+function getDlPrice(orgId) {
+  return new Promise((resolve, reject) => {
+    WalletStore.getDlPrice(orgId, resp => {
+      resolve(resp.downLinkPrice);
+    });
+  });
+}
+
 class DeviceLayout extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
       mod: null,
-      haveGateway: false
+      haveGateway: false,
+      downlinkFee: 0
     };
   }
 
+  loadData = async () => {
+    try {
+      const orgId = this.props.match.params.organizationID;
+      this.setState({loading: true})
+      //var result = await haveGateway(ETHER, orgId);
+      var downlinkFee = await getDlPrice(orgId);
+
+      this.setState({
+        downlinkFee
+      });
+
+      this.setState({loading: false})
+    } catch (error) {
+      this.setState({loading: false})
+      console.error(error);
+      this.setState({ error });
+    }
+  }
+
   componentDidMount() {
+    this.loadData();
   }
 
   componentDidUpdate(oldProps) {
@@ -80,21 +120,24 @@ class DeviceLayout extends Component {
                 <TitleBarTitle title="Devices" />
               </TitleBar>    
               <Divider light={true}/>
-              <div className={this.props.classes.breadcrumb}>
+              <div className={this.props.classes.between}>
               <TitleBar>
                 <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                <TitleBarTitle title="/" className={this.props.classes.navText}/>
+                <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
                 <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/>
               </TitleBar>
+              <div className={this.props.classes.subTitle2}>
+                Downlink fee {this.state.downlinkFee}MXC
+              </div>
               </div>
           </div>
-
         </Grid>
         <Grid item xs={12} className={this.props.classes.divider}>
         <Grid item xs={6}>
           <DeviceForm
             submitLabel="Devices"
             onSubmit={this.onSubmit}
+            downlinkFee={this.state.downlinkFee}
             haveGateway={this.state.haveGateway}
             onSelectChange={this.onSelectChange}
             onSwitchChange={this.onSwitchChange}
