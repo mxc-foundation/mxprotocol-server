@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import DeviceStore from "../../stores/DeviceStore.js";
 import WalletStore from "../../stores/WalletStore.js";
+import GatewayStore from "../../stores/GatewayStore.js";
 import DeviceForm from "./DeviceForm";
 import Modal from "../../components/Modal";
 //import WithdrawBalanceInfo from "./WithdrawBalanceInfo";
@@ -17,15 +18,13 @@ import styles from "./DeviceStyle"
 import { DV_INACTIVE, DV_FREE_GATEWAYS_LIMITED, DV_WHOLE_NETWORK } from "../../util/Data"
 import { CONFIRMATION, CONFIRMATION_TEXT, INVALID_ACCOUNT, INVALID_AMOUNT } from "../../util/Messages"
 
-/* function haveGateway(ETHER, organizationID) {
+function doIHaveGateway(orgId) {
   return new Promise((resolve, reject) => {
-    WithdrawStore.getWithdrawFee(ETHER, organizationID,
-      resp => {
-        resp.moneyAbbr = ETHER;
-        resolve(resp);
-      })
+    GatewayStore.getGatewayList(orgId, 0, 1, data => {
+      resolve(parseInt(data.count));
+    });
   });
-}  */ 
+}  
 
 function getDlPrice(orgId) {
   return new Promise((resolve, reject) => {
@@ -50,11 +49,13 @@ class DeviceLayout extends Component {
     try {
       const orgId = this.props.match.params.organizationID;
       this.setState({loading: true})
-      //var result = await haveGateway(ETHER, orgId);
-      var downlinkFee = await getDlPrice(orgId);
+      let res = await doIHaveGateway(orgId);
+      let downlinkFee = await getDlPrice(orgId);
+      let haveGateway = (res > 0) ? true : false;
 
       this.setState({
-        downlinkFee
+        downlinkFee,
+        haveGateway
       });
 
       this.setState({loading: false})

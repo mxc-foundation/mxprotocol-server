@@ -81,7 +81,7 @@ export default class SelectPlain extends Component {
     render() {
         let dValue = this.props.defaultValue;
         let options = this.props.options;
-        
+
         if(!this.props.haveGateway){
             options = options.filter(function(value, index, arr){
             return value.value !== DV_FREE_GATEWAYS_LIMITED;//private

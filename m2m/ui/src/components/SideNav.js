@@ -15,6 +15,7 @@ import CalendarCheckOutline from "mdi-material-ui/CalendarCheckOutline";
 import CreditCard from "mdi-material-ui/CreditCard";
 import AccessPoint from "mdi-material-ui/AccessPoint";
 import Remote from "mdi-material-ui/Remote";
+import VideoInputAntenna from "mdi-material-ui/VideoInputAntenna";
 
 import ProfileStore from "../stores/ProfileStore"
 import SessionStore from "../stores/SessionStore"
@@ -142,6 +143,12 @@ class SideNav extends Component {
               <Remote />
             </ListItemIcon>
             <ListItemText classes={selected('/device')} primary="Device" />
+          </ListItem>
+          <ListItem selected={active('/gateway')} button component={Link} to={`/gateway/${organizationID}`}>
+            <ListItemIcon>
+              <VideoInputAntenna />
+            </ListItemIcon>
+            <ListItemText classes={selected('/gateway')} primary="Gateway" />
           </ListItem>
 
               <List className={this.props.classes.card}>
