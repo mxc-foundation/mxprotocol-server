@@ -37,9 +37,6 @@ class DeviceForm extends Component {
     super(props);
     this.getPage = this.getPage.bind(this);
     this.getRow = this.getRow.bind(this);
-    this.state = {
-      haveGateway: false
-    };
   }
   
   
@@ -62,13 +59,13 @@ class DeviceForm extends Component {
     this.props.onSelectChange(device);
   }
 
-  onSwitchChange = (dvId, available) => {
+  onSwitchChange = (dvId, available, e) => {
     const device = {
       dvId, 
       available
     }
   
-    this.props.onSwitchChange(device);
+    this.props.onSwitchChange(device, e);
   }
 
   getRow(obj, index) {
@@ -96,7 +93,7 @@ class DeviceForm extends Component {
         <TableCellExtLink align={'left'} to={url}>{obj.name}</TableCellExtLink>
         <TableCell align={'left'}>{obj.lastSeenAt.substring(0, 19)}</TableCell>
         <TableCell><span className={this.props.classes.flex}><SwitchLabels on={ on } dvId={obj.id} onSwitchChange={ this.onSwitchChange } /></span></TableCell>
-        <TableCell><span><NativeSelects options={options} defaultValue={dValue} mode={ obj.mode } dvId={obj.id} onSelectChange={ this.onSelectChange } /></span></TableCell>
+        <TableCell><span><NativeSelects options={options} defaultValue={dValue} haveGateway={this.props.haveGateway} mode={ obj.mode } dvId={obj.id} onSelectChange={ this.onSelectChange } /></span></TableCell>
       </TableRow>
     );
   }

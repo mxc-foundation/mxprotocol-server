@@ -21,7 +21,8 @@ class DeviceLayout extends Component {
     super(props);
     this.state = {
       loading: false,
-      mod: null
+      mod: null,
+      haveGateway: false
     };
   }
 
@@ -32,7 +33,7 @@ class DeviceLayout extends Component {
     if (this.props === oldProps) {
       return;
     }
-    //this.loadData();
+    //this.props.history.push(`/device/${this.props.match.params.organizationID}`);
   }
   
   onSubmit = (e, apiWithdrawReqRequest) => {
@@ -47,20 +48,26 @@ class DeviceLayout extends Component {
 
   onSelectChange = (device) => {
     const { dvId, dvMode } = device;
+    //console.log('device', device);
     DeviceStore.setDeviceMode(this.props.match.params.organizationID, dvId, dvMode, data => {
       this.props.history.push(`/device/${this.props.match.params.organizationID}`);
     });
   }
 
-  onSwitchChange = (device) => {
-    const { dvId, on } = device;
-    
+  onSwitchChange = (device, e) => {
+    e.preventDefault();
+    const { dvId, available } = device;
+    //console.log('onSwitchChange', device);
     let mod = DV_FREE_GATEWAYS_LIMITED;
-    if(!on){
+    if(!this.state.haveGateway){
+      mod = DV_WHOLE_NETWORK;
+    }
+    if(!available){
      mod = DV_INACTIVE;   
     }
+    //console.log('onSwitchChange', mod);
     DeviceStore.setDeviceMode(this.props.match.params.organizationID, dvId, mod, data => {
-      this.props.history.push(`/device/${this.props.match.params.organizationID}`);
+      this.props.history.go(0);
     });
   }
 
@@ -88,6 +95,7 @@ class DeviceLayout extends Component {
           <DeviceForm
             submitLabel="Devices"
             onSubmit={this.onSubmit}
+            haveGateway={this.state.haveGateway}
             onSelectChange={this.onSelectChange}
             onSwitchChange={this.onSwitchChange}
           />

@@ -8,10 +8,14 @@ export default function SwitchLabels(props) {
     checked: props.on
   });
 
+  React.useEffect(() => {
+    setState({checked: props.on})
+  }, [props.on])
+
   const handleChange = name => event => {
     setState({ ...state, [name]: event.target.checked });
     
-    props.onSwitchChange(props.dvId, event.target.checked);
+    props.onSwitchChange(props.dvId, event.target.checked, event);
   };
 
   return (
