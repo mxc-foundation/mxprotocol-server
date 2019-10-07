@@ -79,7 +79,7 @@ class GatewayForm extends Component {
     
     return(
       <TableRow key={index}>
-        <TableCellExtLink align={'left'} to={url}>{obj.name}</TableCellExtLink>
+        <TableCellExtLink align={'left'} for={'lora'} to={url}>{obj.name}</TableCellExtLink>
         <TableCell align={'left'}>{obj.lastSeenAt.substring(0, 19)}</TableCell>
         <TableCell align={'right'}>{this.props.downlinkFee}</TableCell>
         <TableCell align={'left'}><NativeSelects options={options} defaultValue={dValue} default={ obj.mod } gwId={obj.id} onSelectChange={ this.onSelectChange } /></TableCell>

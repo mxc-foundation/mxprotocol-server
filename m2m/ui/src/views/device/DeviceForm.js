@@ -69,7 +69,8 @@ class DeviceForm extends Component {
   }
 
   getRow(obj, index) {
-    const url = `${getLoraHost()}/#/organizations/${this.props.match.params.organizationID}/applications/${obj.application_id}/devices/${obj.devEui}`;
+    //const url = `${getLoraHost()}/#/organizations/${this.props.match.params.organizationID}/applications/${obj.application_id}/devices/${obj.devEui}`;
+    const url = `${getLoraHost()}`;
     
     let dValue = null;
     const options = DV_MODE_OPTION;
@@ -90,7 +91,7 @@ class DeviceForm extends Component {
     
     return(
       <TableRow key={ index }>
-        <TableCellExtLink align={'left'} to={url}>{obj.name}</TableCellExtLink>
+        <TableCellExtLink align={'left'} for={'lora'} to={url}>{obj.name}</TableCellExtLink>
         <TableCell align={'left'}>{obj.lastSeenAt.substring(0, 19)}</TableCell>
         <TableCell><span className={this.props.classes.flex}><SwitchLabels on={ on } dvId={obj.id} onSwitchChange={ this.onSwitchChange } /></span></TableCell>
         <TableCell><span><NativeSelects options={options} defaultValue={dValue} haveGateway={this.props.haveGateway} mode={ obj.mode } dvId={obj.id} onSelectChange={ this.onSelectChange } /></span></TableCell>

@@ -25,9 +25,12 @@ const styles = {
 
 class TableCellExtLink extends Component {
   onClick = () => {
-    const url = this.props.to; 
-    //window.location.replace(url);
-    window.location.replace(url)
+    const url = this.props.to;
+    if(this.props.for === 'lora'){
+      window.location.replace(url)
+    }else{
+      window.open(url, '_blank');
+    } 
   }
   
   render() {
