@@ -14,7 +14,7 @@ import Spinner from "../../components/ScaleLoader"
 //import Transactions from "./Transactions";
 import EthAccount from "./EthAccount";
 import Transactions from "./Transactions";
-import NetworkUsageHistory from "./NetworkUsageHistory";
+import NetworkActivityHistory from "./NetworkActivityHistory";
 
 import styles from "./HistoryStyle";
 
@@ -56,7 +56,7 @@ class HistoryLayout extends Component {
     let tab = 0;
     if (window.location.href.endsWith("/eth_account")) {
       tab = 1;
-    } else if (window.location.href.endsWith("/network-usage")) {
+    } else if (window.location.href.endsWith("/network-activity")) {
       tab = 2;
     }  
     
@@ -99,7 +99,7 @@ class HistoryLayout extends Component {
           >
             <Tab label="Transactions" component={Link} to={`/history/${organizationID}/`} />
             <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth_account`} />
-            <Tab label="Network Usage" component={Link} to={`/history/${organizationID}/network-usage`} />
+            <Tab label="Network Activity" component={Link} to={`/history/${organizationID}/network-activity`} />
             
           </Tabs>
         </Grid>
@@ -108,7 +108,7 @@ class HistoryLayout extends Component {
           <Switch>
             <Route exact path={`${this.props.match.path}/`} render={props => <Transactions organizationID={organizationID} {...props} />} />
             <Route exact path={`${this.props.match.path}/eth_account`} render={props => <EthAccount {...props} />} />
-            <Route exact path={`${this.props.match.path}/network-usage`} render={props => <NetworkUsageHistory organizationID={organizationID} {...props} />} />
+            <Route exact path={`${this.props.match.path}/network-activity`} render={props => <NetworkActivityHistory organizationID={organizationID} {...props} />} />
 
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}
           </Switch>

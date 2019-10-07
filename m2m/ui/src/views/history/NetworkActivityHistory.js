@@ -31,7 +31,7 @@ const styles = {
   }
 };
 
-class NetworkUsageHistory extends Component {
+class NetworkActivityHistory extends Component {
   constructor(props) {
     super(props);
     this.getPage = this.getPage.bind(this);
@@ -51,13 +51,13 @@ class NetworkUsageHistory extends Component {
     const url = process.env.REACT_APP_ETHERSCAN_ROPSTEN_HOST + `/tx/${obj.txHash}`;
     return(
       <TableRow key={index}>
-        <TableCell align={'center'} className={this.props.classes.maxW140} >{obj.from}</TableCell>
-        <TableCell align={'center'} className={this.props.classes.maxW140}>{obj.to}</TableCell>
-        <TableCellExtLink to={url} ><div className={this.props.classes.flex}><LinkVariant /></div></TableCellExtLink>
-        <TableCell align={'center'}>{obj.transactionType}</TableCell>
-        <TableCell align={'right'}>{obj.amount}</TableCell>
-        <TableCell align={'center'}>{obj.lastUpdateTime.substring(0, 19)}</TableCell>
-        <TableCell align={'center'}>{obj.status}</TableCell>
+        <TableCell align={'center'} className={this.props.classes.maxW140} >{obj.StartTime}</TableCell>
+        <TableCell align={'right'} className={this.props.classes.maxW140}>{obj.CountUplinkPktsDv}</TableCell>
+        <TableCell align={'right'} className={this.props.classes.maxW140}>{obj.CountDownlinkPktsDv}</TableCell>
+        <TableCell align={'right'}>{obj.CountUplinkPktsGw}</TableCell>
+        <TableCell align={'right'}>{obj.Income}</TableCell>
+        <TableCell align={'right'}>{obj.Cost}</TableCell>
+        <TableCell align={'right'}>1000</TableCell>
       </TableRow>
     );
   }
@@ -80,13 +80,13 @@ class NetworkUsageHistory extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell align={'center'}>From</TableCell>
-                <TableCell align={'center'}>To</TableCell>
-                <TableCell align={'center'}>TxHash</TableCell>
-                <TableCell align={'center'}>Type</TableCell>
-                <TableCell align={'center'}>VMXC Amount</TableCell>
-                <TableCell align={'center'}>Update Date</TableCell>
-                <TableCell align={'center'}>Status</TableCell>
+                <TableCell align={'center'}>Time</TableCell>
+                <TableCell align={'right'}>Pkts Sent</TableCell>
+                <TableCell align={'right'}>Free Pkts</TableCell>
+                <TableCell align={'right'}>Received</TableCell>
+                <TableCell align={'right'}>Income</TableCell>
+                <TableCell align={'right'}>Cost</TableCell>
+                <TableCell align={'right'}>Balance</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
@@ -98,4 +98,4 @@ class NetworkUsageHistory extends Component {
   }
 }
 
-export default withStyles(styles)(withRouter(NetworkUsageHistory));
+export default withStyles(styles)(withRouter(NetworkActivityHistory));
