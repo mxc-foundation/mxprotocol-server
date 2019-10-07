@@ -3,10 +3,10 @@ services:
   mxprotocol-server:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-devel
     volumes:
       - ./configuration:/etc/mxprotocol-server
-    #  - ./:/mxprotocol-server
+      - ./:/mxprotocol-server
     links:
       - postgresql
       - redis
@@ -17,10 +17,10 @@ services:
     tty: true
     ports:
       - 4000:4000
-    #security_opt:
-    #  - seccomp:unconfined
-    #cap_add:
-    #  - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    cap_add:
+      - SYS_PTRACE
   postgresql:
     image: postgres:9.6-alpine
     volumes:

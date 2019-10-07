@@ -13,8 +13,7 @@ class SessionStore extends EventEmitter {
     this.settings = {};
     this.branding = {};
 
-    this.swagger = Swagger("/swagger/internal.swagger.json", this.getClientOpts());
-    this.profileSwagger = new Swagger("/swagger/profile.swagger.json", this.getClientOpts());
+    this.swagger = Swagger("/swagger/profile.swagger.json", this.getClientOpts());
 
     this.swagger.then(client => {
       this.client = client;
@@ -79,10 +78,6 @@ class SessionStore extends EventEmitter {
     localStorage.setItem("organizationName", name);
   }
 
-  getLoraHostUrl() {
-    return process.env.REACT_APP_LORA_APP_SERVER;
-  }
-
   setOrganizationList(organizations) {
     let organizationList = null;
     
@@ -107,7 +102,7 @@ class SessionStore extends EventEmitter {
   }
 
   getUserOrganizationList(orgId, callbackFunc) {
-    this.profileSwagger.then(client => {
+    this.swagger.then(client => {
       client.apis.InternalService.GetUserOrganizationList({
         orgId
       })
@@ -156,16 +151,16 @@ class SessionStore extends EventEmitter {
 
   initProfile(data) {
 
-    const { jwt, org_id, org_name, username, loraHostUrl } = data;
+    const { jwt, orgId, orgName, username, loraHostUrl } = data;
     
-    if(jwt === "" || org_id === "" || org_id === undefined){
+    if(jwt === "" || orgId === "" || orgId === undefined){
       window.location.replace(loraHostUrl);
     }
     
     this.setToken(jwt);
     this.setUsername(username);
-    this.setOrganizationID(org_id);
-    this.setOrganizationName(org_name);
+    this.setOrganizationID(orgId);
+    this.setOrganizationName(orgName);
   }
 
   login(login, callBackFunc) {

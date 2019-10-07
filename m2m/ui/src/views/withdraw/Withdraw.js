@@ -27,28 +27,21 @@ function loadWithdrawFee(ETHER, organizationID) {
   return new Promise((resolve, reject) => {
     WithdrawStore.getWithdrawFee(ETHER, organizationID,
       resp => {
-        /* Object.keys(resp).forEach(attr => {
-          const value = resp[attr];
-
-          if (typeof value === 'number') {
-            resp[attr] = formatNumber(value);
-          }
-        }); */
         resp.moneyAbbr = ETHER;
         resolve(resp);
       })
   });
-}
+}  
 
-function loadCurrentAccount(ETHER, organizationID) {
+function loadCurrentAccount(ETHER, orgId) {
   return new Promise((resolve, reject) => {
-    if (organizationID === SUPER_ADMIN) {
-      SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, resp => {
+    if (orgId === SUPER_ADMIN) {
+      SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, orgId, resp => {
         resolve(resp.supernodeActiveAccount);
         
       });
     }else{
-      MoneyStore.getActiveMoneyAccount(ETHER, organizationID, resp => {
+      MoneyStore.getActiveMoneyAccount(ETHER, orgId, resp => {
         resolve(resp.activeAccount);
         
       });
@@ -57,9 +50,9 @@ function loadCurrentAccount(ETHER, organizationID) {
 }
 
       
-function loadWalletBalance(organizationID) {
+function loadWalletBalance(orgId) {
   return new Promise((resolve, reject) => {
-    WalletStore.getWalletBalance(organizationID,
+    WalletStore.getWalletBalance(orgId,
       resp => {
         /* Object.keys(resp).forEach(attr => {
           const value = resp[attr];
@@ -84,11 +77,11 @@ class Withdraw extends Component {
 
   loadData = async () => {
     try {
-      const organizationID = this.props.match.params.organizationID;
+      const orgId = this.props.match.params.organizationID;
       this.setState({loading: true})
-      var result = await loadWithdrawFee(ETHER, organizationID);
-      var wallet = await loadWalletBalance(organizationID);
-      var account = await loadCurrentAccount(ETHER, organizationID);
+      var result = await loadWithdrawFee(ETHER, orgId);
+      var wallet = await loadWalletBalance(orgId);
+      var account = await loadCurrentAccount(ETHER, orgId);
       
       /* this.setState({
         activeAccount: resp.supernodeActiveAccount,

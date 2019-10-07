@@ -13,10 +13,11 @@ class SupernodeStore extends EventEmitter {
     this.swagger = new Swagger("/swagger/super_node.swagger.json", sessionStore.getClientOpts());
   }
 
-  getSuperNodeActiveMoneyAccount(money_abbr, callbackFunc) {
+  getSuperNodeActiveMoneyAccount(moneyAbbr, orgId, callbackFunc) {
     this.swagger.then(client => {
       client.apis.SuperNodeService.GetSuperNodeActiveMoneyAccount({
-        money_abbr
+        orgId,
+        moneyAbbr
       })
       .then(checkStatus)
       .then(resp => {
@@ -26,10 +27,11 @@ class SupernodeStore extends EventEmitter {
     });
   }
 
-  addSuperNodeMoneyAccount(req, callbackFunc) {
+  addSuperNodeMoneyAccount(req, orgId, callbackFunc) {
     this.swagger.then(client => {
       client.apis.SuperNodeService.AddSuperNodeMoneyAccount({
-        "money_abbr": req.moneyAbbr,
+        "orgId": orgId,
+        "moneyAbbr": req.moneyAbbr,
         body: {
             moneyAbbr: req.moneyAbbr,
             accountAddr: req.createAccount

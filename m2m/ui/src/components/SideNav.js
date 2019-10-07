@@ -19,16 +19,17 @@ import ProfileStore from "../stores/ProfileStore"
 import SessionStore from "../stores/SessionStore"
 import PageNextOutline from "mdi-material-ui/PageNextOutline";
 import PagePreviousOutline from "mdi-material-ui/PagePreviousOutline";
+import { getLoraHost } from "../util/M2mUtil";
 import styles from "./SideNavStyle";
 
 
 
 const LinkToLora = ({children, ...otherProps}) => 
-<a href={SessionStore.getLoraHostUrl()} {...otherProps}>{children}</a>;
+<a href={getLoraHost()} {...otherProps}>{children}</a>;
 
-function updateOrganizationList(org_id) {
+function updateOrganizationList(orgId) {
   return new Promise((resolve, reject) => {
-    ProfileStore.getUserOrganizationList(org_id,
+    ProfileStore.getUserOrganizationList(orgId,
       resp => {
         resolve(resp);
       })

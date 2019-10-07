@@ -3,17 +3,22 @@ package postgres_db
 import (
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-type Wallet struct {
+type walletInterface struct{}
+
+var PgWallet walletInterface
+
+type wallet struct {
 	Id      int64   `db:"id"`
 	FkOrgLa int64   `db:"fk_org_la"`
 	TypeW   string  `db:"type"`
 	Balance float64 `db:"balance"`
 }
 
-func (pgDbp *PGHandler) CreateWalletTable() error {
-	_, err := pgDbp.DB.Exec(`
+func (*walletInterface) CreateWalletTable() error {
+	_, err := PgDB.Exec(`
 		DO $$
 		BEGIN
 			IF NOT EXISTS 
@@ -38,8 +43,14 @@ func (pgDbp *PGHandler) CreateWalletTable() error {
 	return errors.Wrap(err, "db/CreateWalletTable")
 }
 
-func (pgDbp *PGHandler) InsertWallet(w Wallet) (insertIndex int64, err error) {
-	err = pgDbp.DB.QueryRow(`
+func (*walletInterface) InsertWallet(orgId int64, walletType types.WalletType) (insertIndex int64, err error) {
+	w := wallet{
+		FkOrgLa: orgId,
+		TypeW:   string(walletType),
+		Balance: 0.0,
+	}
+
+	err = PgDB.QueryRow(`
 		INSERT INTO wallet (
 			fk_org_la ,
 			type,
@@ -56,35 +67,33 @@ func (pgDbp *PGHandler) InsertWallet(w Wallet) (insertIndex int64, err error) {
 	return insertIndex, errors.Wrap(err, "db/InsertWallet")
 }
 
-func (pgDbp *PGHandler) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
-	var w Wallet
-	w.Id = 0
-	err := pgDbp.DB.QueryRow(
+func (*walletInterface) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
+	id := int64(0)
+	err := PgDB.QueryRow(
 		`SELECT id
 		FROM wallet
 		WHERE
 			fk_org_la = $1;`,
-		orgIdLora).Scan(&w.Id)
+		orgIdLora).Scan(&id)
 
-	return w.Id, errors.Wrap(err, "db/GetWalletIdFromOrgId")
+	return id, errors.Wrap(err, "db/GetWalletIdFromOrgId")
 }
 
-func (pgDbp *PGHandler) GetWalletBalance(walletId int64) (float64, error) {
-	var w Wallet
-	w.Id = 0
-	err := pgDbp.DB.QueryRow(
+func (*walletInterface) GetWalletBalance(walletId int64) (float64, error) {
+	balance := float64(0)
+	err := PgDB.QueryRow(
 		`SELECT balance
 		FROM wallet
 		WHERE
 			id = $1;`,
-		walletId).Scan(&w.Balance)
+		walletId).Scan(&balance)
 
-	return w.Balance, errors.Wrap(err, "db/GetWalletBalance")
+	return balance, errors.Wrap(err, "db/GetWalletBalance")
 }
 
-func (pgDbp *PGHandler) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
+func (*walletInterface) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
 
-	err = pgDbp.DB.QueryRow(
+	err = PgDB.QueryRow(
 		`select 
 			w.id as wallet_id 
 			from
@@ -103,9 +112,9 @@ func (pgDbp *PGHandler) GetWalletIdofActiveAcnt(acntAdr string, externalCur stri
 	return walletId, errors.Wrap(err, "db/GetWalletIdofActiveAcnt")
 }
 
-func (pgDbp *PGHandler) getWalletIdofActiveAcntSuperAdmin(acntAdr string, externalCur string) (walletId int64, err error) {
+func getWalletIdofActiveAcntSuperAdmin(acntAdr string, externalCur string) (walletId int64, err error) {
 
-	err = pgDbp.DB.QueryRow(
+	err = PgDB.QueryRow(
 		`select 
 			w.id as wallet_id 
 			from
@@ -124,9 +133,9 @@ func (pgDbp *PGHandler) getWalletIdofActiveAcntSuperAdmin(acntAdr string, extern
 	return walletId, errors.Wrap(err, "db/getWalletIdofActiveAcntSuperAdmin")
 }
 
-func (pgDbp *PGHandler) GetWalletIdSuperNode() (walletId int64, err error) {
+func (*walletInterface) GetWalletIdSuperNode() (walletId int64, err error) {
 
-	err = pgDbp.DB.QueryRow(
+	err = PgDB.QueryRow(
 		`SELECT
 			id
 		FROM
@@ -140,8 +149,8 @@ func (pgDbp *PGHandler) GetWalletIdSuperNode() (walletId int64, err error) {
 	return walletId, errors.Wrap(err, "db/GetWalletIdSuperNode")
 }
 
-func (pgDbp *PGHandler) UpdateBalanceByWalletId(walletId int64, newBalance float64) error {
-	_, err := pgDbp.DB.Exec(`
+func (*walletInterface) UpdateBalanceByWalletId(walletId int64, newBalance float64) error {
+	_, err := PgDB.Exec(`
 	UPDATE
 		wallet 
 	SET

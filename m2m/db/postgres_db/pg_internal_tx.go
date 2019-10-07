@@ -1,10 +1,13 @@
 package postgres_db
 
 import (
-	"time"
-
 	"github.com/pkg/errors"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
+
+type internalTxInterface struct{}
+
+var PgInternalTx internalTxInterface
 
 type FieldStatus string // db:field_status
 const (
@@ -22,18 +25,8 @@ const (
 	WITHDRAW              PaymentCategory = "WITHDRAW"
 )
 
-type InternalTx struct {
-	Id             int64     `db:"id"`
-	FkWalletSender int64     `db:"fk_wallet_sender"`
-	FkWalletRcvr   int64     `db:"fk_wallet_receiver"`
-	PaymentCat     string    `db:"payment_cat"`
-	TxInternalRef  int64     `db:"tx_internal_ref"` // reference to the id of corresponding table to PaymentCat
-	Value          float64   `db:"value"`
-	TimeTx         time.Time `db:"timestamp"`
-}
-
-func (pgDbp *PGHandler) CreateInternalTxTable() error {
-	_, err := pgDbp.DB.Exec(`
+func (*internalTxInterface) CreateInternalTxTable() error {
+	_, err := PgDB.Exec(`
 	DO $$
 	BEGIN
 		IF 
@@ -73,8 +66,8 @@ func (pgDbp *PGHandler) CreateInternalTxTable() error {
 	return errors.Wrap(err, "db/CreateInternalTxTable")
 }
 
-func (pgDbp *PGHandler) InsertInternalTx(it InternalTx) (insertIndex int64, err error) {
-	err = pgDbp.DB.QueryRow(`
+func (*internalTxInterface) InsertInternalTx(it types.InternalTx) (insertIndex int64, err error) {
+	err = PgDB.QueryRow(`
 	INSERT INTO internal_tx (
 		fk_wallet_sender,
 		fk_wallet_receiver,
