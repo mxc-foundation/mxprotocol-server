@@ -13,3 +13,4 @@ type ServicesTestSuite struct {
 	suite.Suite
 	DbInterfaceTestSuite
 }
+

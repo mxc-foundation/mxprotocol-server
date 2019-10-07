@@ -55,6 +55,8 @@ type MxpConfig struct {
 		ResendToPS  int `mapstructure:"resend_ps_time"`
 		RecheckStat int `mapstructure:"recheck_status_time"`
 	}
+
+	Version string
 }
 
 // C holds the global configuration.
