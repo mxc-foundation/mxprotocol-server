@@ -27,7 +27,7 @@ class TableCellExtLink extends Component {
   onClick = () => {
     const url = this.props.to; 
     //window.location.replace(url);
-    window.open(url, '_blank');
+    window.location.replace(url)
   }
   
   render() {
