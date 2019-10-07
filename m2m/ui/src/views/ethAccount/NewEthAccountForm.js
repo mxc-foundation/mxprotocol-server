@@ -54,7 +54,7 @@ class NewEthAccountForm extends FormComponent {
           onChange={this.onChange}
           inputProps={{
             pattern: "^0x[a-fA-F0-9]{40}$",
-          }} 
+          }}
 
           autoComplete='off'
           required

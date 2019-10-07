@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "wallet.proto",
+    "title": "device.proto",
     "version": "version not set"
   },
   "schemes": [
@@ -15,14 +15,14 @@
     "application/json"
   ],
   "paths": {
-    "/api/wallet/{orgId}/balance": {
+    "/api/device/{orgId}/device-history/{devId}": {
       "get": {
-        "operationId": "GetWalletBalance",
+        "operationId": "GetDeviceHistory",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetWalletBalanceResponse"
+              "$ref": "#/definitions/apiGetDeviceHistoryResponse"
             }
           }
         },
@@ -33,21 +33,42 @@
             "required": true,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "devId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
-          "WalletService"
+          "DeviceService"
         ]
       }
     },
-    "/api/wallet/{orgId}/tx-history": {
+    "/api/device/{orgId}/device-list": {
       "get": {
-        "operationId": "GetVmxcTxHistory",
+        "operationId": "GetDeviceList",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetVmxcTxHistoryResponse"
+              "$ref": "#/definitions/apiGetDeviceListResponse"
             }
           }
         },
@@ -75,23 +96,144 @@
           }
         ],
         "tags": [
-          "WalletService"
+          "DeviceService"
+        ]
+      }
+    },
+    "/api/device/{orgId}/device-mode/{devId}": {
+      "post": {
+        "operationId": "SetDeviceMode",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiSetDeviceModeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "devId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiSetDeviceModeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/api/device/{orgId}/device-profile/{devId}": {
+      "get": {
+        "operationId": "GetDeviceProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetDeviceProfileResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "devId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DeviceService"
         ]
       }
     }
   },
   "definitions": {
-    "apiGetVmxcTxHistoryResponse": {
+    "apiDeviceMode": {
+      "type": "string",
+      "enum": [
+        "DV_INACTIVE",
+        "DV_FREE_GATEWAYS_LIMITED",
+        "DV_WHOLE_NETWORK",
+        "DV_DELETED"
+      ],
+      "default": "DV_INACTIVE"
+    },
+    "apiDeviceProfile": {
       "type": "object",
       "properties": {
-        "count": {
+        "id": {
           "type": "string",
           "format": "int64"
         },
-        "txHistory": {
+        "devEui": {
+          "type": "string"
+        },
+        "fkWallet": {
+          "type": "string",
+          "format": "int64"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "lastSeenAt": {
+          "type": "string"
+        },
+        "applicationId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "apiGetDeviceHistoryResponse": {
+      "type": "object",
+      "properties": {
+        "devHistory": {
+          "type": "string"
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
+        }
+      }
+    },
+    "apiGetDeviceListResponse": {
+      "type": "object",
+      "properties": {
+        "devProfile": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/apiVmxcTxHistory"
+            "$ref": "#/definitions/apiDeviceProfile"
           }
         },
         "userProfile": {
@@ -99,12 +241,11 @@
         }
       }
     },
-    "apiGetWalletBalanceResponse": {
+    "apiGetDeviceProfileResponse": {
       "type": "object",
       "properties": {
-        "balance": {
-          "type": "number",
-          "format": "double"
+        "devProfile": {
+          "$ref": "#/definitions/apiDeviceProfile"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
@@ -171,6 +312,34 @@
         }
       }
     },
+    "apiSetDeviceModeRequest": {
+      "type": "object",
+      "properties": {
+        "orgId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "devId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "devMode": {
+          "$ref": "#/definitions/apiDeviceMode"
+        }
+      }
+    },
+    "apiSetDeviceModeResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
+        }
+      }
+    },
     "apiUser": {
       "type": "object",
       "properties": {
@@ -204,27 +373,6 @@
         "note": {
           "type": "string",
           "description": "Optional note to store with the user."
-        }
-      }
-    },
-    "apiVmxcTxHistory": {
-      "type": "object",
-      "properties": {
-        "from": {
-          "type": "string"
-        },
-        "to": {
-          "type": "string"
-        },
-        "txType": {
-          "type": "string"
-        },
-        "amount": {
-          "type": "number",
-          "format": "double"
-        },
-        "createdAt": {
-          "type": "string"
         }
       }
     }

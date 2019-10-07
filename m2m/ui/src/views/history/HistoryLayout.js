@@ -8,7 +8,6 @@ import Tab from '@material-ui/core/Tab';
 
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
-import Divider from '@material-ui/core/Divider';
 import Spinner from "../../components/ScaleLoader"
 //import SessionStore from "../../stores/SessionStore";
 

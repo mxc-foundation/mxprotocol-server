@@ -42,24 +42,6 @@ class TopupStore extends EventEmitter {
       .catch(errorHandler);
     });
   }
-
-  WithdrawReq(apiWithdrawReqRequest, callbackFunc) {
-    this.swagger.then(client => {
-      client.apis.WithdrawService.WithdrawReq({
-        "moneyAbbr": apiWithdrawReqRequest.moneyAbbr,
-        body: {
-          apiWithdrawReqRequest,
-        },
-      })
-      .then(checkStatus)
-      //.then(updateOrganizations)
-      .then(resp => {
-        this.notify("completed");
-        callbackFunc(resp.obj);
-      })
-      .catch(errorHandler);
-    });
-  }
   
   notify(action) {
     dispatcher.dispatch({

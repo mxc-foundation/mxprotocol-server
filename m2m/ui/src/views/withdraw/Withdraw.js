@@ -27,18 +27,11 @@ function loadWithdrawFee(ETHER, orgId) {
   return new Promise((resolve, reject) => {
     WithdrawStore.getWithdrawFee(ETHER, orgId,
       resp => {
-        /* Object.keys(resp).forEach(attr => {
-          const value = resp[attr];
-
-          if (typeof value === 'number') {
-            resp[attr] = formatNumber(value);
-          }
-        }); */
         resp.moneyAbbr = ETHER;
         resolve(resp);
       })
   });
-}
+}  
 
 function loadCurrentAccount(ETHER, orgId) {
   return new Promise((resolve, reject) => {

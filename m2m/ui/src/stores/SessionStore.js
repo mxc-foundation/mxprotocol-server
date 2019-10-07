@@ -79,10 +79,6 @@ class SessionStore extends EventEmitter {
     localStorage.setItem("organizationName", name);
   }
 
-  getLoraHostUrl() {
-    return process.env.REACT_APP_LORA_APP_SERVER;
-  }
-
   setOrganizationList(organizations) {
     let organizationList = null;
     
@@ -107,7 +103,7 @@ class SessionStore extends EventEmitter {
   }
 
   getUserOrganizationList(orgId, callbackFunc) {
-    this.profileSwagger.then(client => {
+    this.swagger.then(client => {
       client.apis.InternalService.GetUserOrganizationList({
         orgId
       })
