@@ -4,39 +4,60 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
-//import HistoryStore from "../../stores/HistoryStore";
-import HistoryStore from "../../stores/HistoryStore";
+import TopupStore from "../../stores/TopupStore";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
+import TableCellExtLink from '../../components/TableCellExtLink';
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
+import LinkVariant from "mdi-material-ui/LinkVariant";
 import Admin from "../../components/Admin";
+import { withRouter } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = {
+  maxW140: {
+    maxWidth: 140,
+    //backgroundColor: "#0C0270",
+    whiteSpace: 'nowrap', 
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
+  flex:{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+
+  }
+};
 
 class Transactions extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.getPage = this.getPage.bind(this);
     this.getRow = this.getRow.bind(this);
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.getVmxcTxHistory('12', limit, offset, (data) => {
-      callbackFunc({
-        totalCount: offset + 2 * limit,
-        result: data.txHistory
-      });
-    });
+    TopupStore.getTransactionsHistory(this.props.organizationID, offset, limit, data => {
+        callbackFunc({
+            totalCount: parseInt(data.count),
+            result: data.transactionHistory
+          });
+      }); 
   }
-
+  
   getRow(obj, index) {
-    console.dir(obj);
+    const url = process.env.REACT_APP_ETHERSCAN_ROPSTEN_HOST + `/tx/${obj.txHash}`;
     return(
       <TableRow key={index}>
-        <TableCell>{obj.from}</TableCell>
-        <TableCell>{obj.to}</TableCell>
-        <TableCell>{obj.txType}</TableCell>
-        <TableCell>{obj.amount}</TableCell>
-        <TableCell>{obj.createdAt}</TableCell>
+        <TableCell align={'center'} className={this.props.classes.maxW140} >{obj.from}</TableCell>
+        <TableCell align={'center'} className={this.props.classes.maxW140}>{obj.to}</TableCell>
+        <TableCellExtLink to={url} ><div className={this.props.classes.flex}><LinkVariant /></div></TableCellExtLink>
+        <TableCell align={'center'}>{obj.transactionType}</TableCell>
+        <TableCell align={'right'}>{obj.amount}</TableCell>
+        <TableCell align={'center'}>{obj.lastUpdateTime.substring(0, 19)}</TableCell>
+        <TableCell align={'center'}>{obj.status}</TableCell>
       </TableRow>
     );
   }
@@ -54,17 +75,18 @@ class Transactions extends Component {
             </Admin>
           }
         >
-          <TitleBarTitle title="Transactions" />
         </TitleBar>
         <Grid item xs={12}>
           <DataTable
             header={
               <TableRow>
-                <TableCell>From</TableCell>
-                <TableCell>To</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell align={'center'}>From</TableCell>
+                <TableCell align={'center'}>To</TableCell>
+                <TableCell align={'center'}>TxHash</TableCell>
+                <TableCell align={'center'}>Type</TableCell>
+                <TableCell align={'center'}>VMXC Amount</TableCell>
+                <TableCell align={'center'}>Update Date</TableCell>
+                <TableCell align={'center'}>Status</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
@@ -76,4 +98,4 @@ class Transactions extends Component {
   }
 }
 
-export default Transactions;
+export default withStyles(styles)(withRouter(Transactions));
