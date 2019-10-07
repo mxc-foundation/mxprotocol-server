@@ -57,6 +57,7 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	m2m_grpc.RegisterInternalServiceServer(server, auth.NewInternalServerAPI())
 	m2m_grpc.RegisterDeviceServiceServer(server, m2m_api.NewDeviceServerAPI())
 	m2m_grpc.RegisterGatewayServiceServer(server, m2m_api.NewGatewayServerAPI())
+	m2m_grpc.RegisterServerInfoServiceServer(server, m2m_api.NewServerInfoAPI())
 	appserver_grpc.RegisterM2MServerServiceServer(server, appserver_api.NewM2MServerAPI())
 	networkserver.RegisterM2MServerServiceServer(server, m2m_networkserver.NewM2MNetworkServerAPI())
 
@@ -209,5 +210,9 @@ func getJSONGateway(ctx context.Context) (http.Handler, error) {
 	if err := m2m_grpc.RegisterGatewayServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register gateway service handler error")
 	}
+	if err := m2m_grpc.RegisterServerInfoServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+		return nil, errors.Wrap(err, "register server info handler error")
+	}
+
 	return mux, nil
 }
