@@ -3,8 +3,10 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
+import moment from 'moment';
+import mtz from 'moment-timezone';
 
-import TopupStore from "../../stores/TopupStore";
+import WalletStore from "../../stores/WalletStore";
 import TitleBar from "../../components/TitleBar";
 
 import TableCellExtLink from '../../components/TableCellExtLink';
@@ -39,25 +41,26 @@ class NetworkActivityHistory extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    TopupStore.getTransactionsHistory(this.props.organizationID, offset, limit, data => {
+    WalletStore.getWalletUsageHist(this.props.organizationID, offset, limit, data => {
         callbackFunc({
             totalCount: parseInt(data.count),
-            result: data.transactionHistory
+            result: data.walletUsageHis
           });
       }); 
   }
   
   getRow(obj, index) {
     const url = process.env.REACT_APP_ETHERSCAN_ROPSTEN_HOST + `/tx/${obj.txHash}`;
+    
     return(
       <TableRow key={index}>
-        <TableCell align={'center'} className={this.props.classes.maxW140} >{obj.StartTime}</TableCell>
-        <TableCell align={'right'} className={this.props.classes.maxW140}>{obj.CountUplinkPktsDv}</TableCell>
-        <TableCell align={'right'} className={this.props.classes.maxW140}>{obj.CountDownlinkPktsDv}</TableCell>
-        <TableCell align={'right'}>{obj.CountUplinkPktsGw}</TableCell>
+        <TableCell align={'center'} className={this.props.classes.maxW140} >{obj.StartAt.substring(0,19)}</TableCell>
+        <TableCell align={'right'} className={this.props.classes.maxW140}>{obj.DlCntDv}</TableCell>
+        <TableCell align={'right'} className={this.props.classes.maxW140}>{obj.DlCntDvFree}</TableCell>
+        <TableCell align={'right'}>{parseInt(obj.DlCntGw - obj.DlCntGwFree)}</TableCell>
         <TableCell align={'right'}>{obj.Income}</TableCell>
-        <TableCell align={'right'}>{obj.Cost}</TableCell>
-        <TableCell align={'right'}>1000</TableCell>
+        <TableCell align={'right'}>{obj.Spend}</TableCell>
+        <TableCell align={'right'}>{obj.UpdatedBalance}</TableCell>
       </TableRow>
     );
   }

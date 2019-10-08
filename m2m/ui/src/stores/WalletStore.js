@@ -41,6 +41,22 @@ class WalletStore extends EventEmitter {
     });
   }
 
+  getWalletUsageHist(orgId, offset, limit, callbackFunc) {
+    this.swagger.then(client => {
+      client.apis.WalletService.GetWalletUsageHist({
+        orgId,
+        offset,
+        limit
+      })
+      .then(checkStatus)
+      //.then(updateOrganizations)
+      .then(resp => {
+        callbackFunc(resp.body);
+      })
+      .catch(errorHandler);
+    });
+  }
+
   notify(action) {
     dispatcher.dispatch({
       type: "CREATE_NOTIFICATION",
