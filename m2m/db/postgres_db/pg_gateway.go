@@ -20,10 +20,10 @@ func (*gatewayInterface) CreateGatewayTable() error {
 				(SELECT 1 FROM pg_type WHERE typname = 'gateway_mode') 
 			THEN
 				CREATE TYPE gateway_mode AS ENUM (
-					'INACTIVE',
-					 'FREE_GATEWAYS_LIMITED',
-					 'WHOLE_NETWORK',
-					 'DELETED'
+					'GW_INACTIVE',
+					 'GW_FREE_GATEWAYS_LIMITED',
+					 'GW_WHOLE_NETWORK',
+					 'GW_DELETED'
 		);
 		END IF;
 			CREATE TABLE IF NOT EXISTS gateway (
@@ -205,4 +205,18 @@ func (*gatewayInterface) GetGatewayRecCnt(walletId int64) (recCnt int64, err err
 	`, walletId).Scan(&recCnt)
 
 	return recCnt, errors.Wrap(err, "db/pg_gateway/GetGatewayRecCnt")
+}
+
+//Todo:
+func (*gatewayInterface) GetFreeGwList() (gwId []int64, gwMac []string, err error) {
+	return nil, nil, nil
+}
+
+//ToDo:
+func (*gatewayInterface) GetWalletIdOfGateway(gwId int64) (gwWalletId int64, err error) {
+	return 1, nil
+}
+
+func (*gatewayInterface) GetGwModeByMac(gwMac string) (gwMode types.GatewayMode, err error) {
+	return types.GW_INACTIVE, nil
 }

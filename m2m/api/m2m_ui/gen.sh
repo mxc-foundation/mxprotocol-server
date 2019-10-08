@@ -11,7 +11,8 @@ protoc -I. -I${GRPC_GW_PATH} --go_out=plugins=grpc:. \
     wallet.proto \
     withdraw.proto \
     device.proto \
-    gateway.proto
+    gateway.proto \
+    server.proto
 
 # generate the JSON interface code
 protoc -I. -I${GRPC_GW_PATH} --grpc-gateway_out=logtostderr=true:. \
@@ -22,7 +23,8 @@ protoc -I. -I${GRPC_GW_PATH} --grpc-gateway_out=logtostderr=true:. \
     wallet.proto \
     withdraw.proto \
     device.proto \
-    gateway.proto
+    gateway.proto \
+    server.proto
 
 # generate the swagger definitions
 protoc -I. -I${GRPC_GW_PATH} --swagger_out=json_names_for_fields=true:./swagger \
@@ -33,4 +35,5 @@ protoc -I. -I${GRPC_GW_PATH} --swagger_out=json_names_for_fields=true:./swagger 
     wallet.proto \
     withdraw.proto \
     device.proto \
-    gateway.proto
+    gateway.proto \
+    server.proto

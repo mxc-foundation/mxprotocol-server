@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package networkserver;
+
+service M2MServerService {
+    rpc DvUsageMode (DvUsageModeRequest) returns (DvUsageModeResponse);
+    rpc GwUsageMode (GwUsageModeRequest) returns (GwUsageModeResponse);
+    rpc DlPktSent (DlPktSentRequest) returns (DlPktSentResponse);
+    rpc UlPktSent (UlPktSentRequest) returns (UlPktSentResponse);
+}
+
+enum DeviceMode {
+    DV_INACTIVE = 0;
+    DV_FREE_GATEWAYS_LIMITED = 1;
+    DV_WHOLE_NETWORK = 2;
+    DV_DELETED = 3;
+}
+
+enum Category {
+    JOIN_ANS = 0;
+    MAC_COMMAND = 1;
+    PAYLOAD = 2;
+    UNKNOWN_PKT = 3;
+}
+
+message DvUsageModeRequest {
+    string dv_eui = 1;
+}
+
+message GwMac {
+    string gw_mac = 1;
+}
+
+message DvUsageModeResponse {
+    DeviceMode dv_mode = 1;
+    repeated GwMac free_gw_mac = 2;
+    bool enough_balance = 3;
+}
+
+message GwUsageModeRequest {
+    string gw_mac = 1;
+}
+
+message GwUsageModeResponse {
+    string gw_mode = 1;
+}
+
+message DlPkt {
+    string dl_id_ns = 1;
+    string gw_mac = 2;
+    string dev_eui = 3;
+    int64 token_dl_frm1 = 4;
+    int64 token_dl_frm2 = 5;
+    string create_at = 6;
+    int64 nonce = 7;
+    double size = 8;
+    Category category = 9;
+}
+
+message DlPktSentRequest {
+    DlPkt dl_pkt = 1;
+}
+
+message DlPktSentResponse {
+}
+
+message UlPkt {
+    int64 ul_id_ns = 1;
+    repeated GwMac gw_mac = 2;
+    string dev_eui = 3;
+    string token = 4;
+    string created_at = 5;
+    int64 nonce = 6;
+    double size = 7;
+    Category category = 9;
+}
+
+message UlPktSentRequest {
+    UlPkt ul_pkt = 1;
+}
+
+message UlPktSentResponse {
+}

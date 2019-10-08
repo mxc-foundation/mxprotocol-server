@@ -98,6 +98,7 @@ api_key={{ .SuperNode.APIKey }}
 check_account_seconds={{ .SuperNode.CheckAccountSeconds }}
 external_currency_abv={{ .SuperNode.ExtCurrAbv }}
 ether_test_net={{ .SuperNode.TestNet }}
+down_link_price={{ .SuperNode.DlPrice}}
 
 [paymentserver]
 payment_service_address={{ .PaymentServer.PaymentServiceAddress }}

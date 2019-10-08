@@ -67,7 +67,8 @@ func (s *GatewayServerAPI) GetGatewayList(ctx context.Context, req *api.GetGatew
 			gwProfile.Mac = v.Mac
 			gwProfile.FkGwNs = v.FkGatewayNs
 			gwProfile.FkWallet = v.FkWallet
-			gwProfile.Mode = string(v.Mode)
+			gwMode := api.GatewayMode(api.GatewayMode_value[string(v.Mode)])
+			gwProfile.Mode = gwMode
 			gwProfile.CreateAt = v.CreatedAt.String()
 			gwProfile.LastSeenAt = v.LastSeenAt.String()
 			gwProfile.OrgId = v.OrgId
@@ -110,12 +111,14 @@ func (s *GatewayServerAPI) GetGatewayProfile(ctx context.Context, req *api.GetGa
 			return &api.GetGatewayProfileResponse{UserProfile: &userProfile}, err
 		}
 
+		gwMode := api.GatewayMode(api.GatewayMode_value[string(gwProfile.Mode)])
+
 		resp := api.GatewayProfile{
 			Id:          gwProfile.Id,
 			Mac:         gwProfile.Mac,
 			FkGwNs:      gwProfile.FkGatewayNs,
 			FkWallet:    gwProfile.FkWallet,
-			Mode:        string(gwProfile.Mode),
+			Mode:        gwMode,
 			CreateAt:    gwProfile.CreatedAt.String(),
 			LastSeenAt:  gwProfile.LastSeenAt.String(),
 			OrgId:       gwProfile.OrgId,

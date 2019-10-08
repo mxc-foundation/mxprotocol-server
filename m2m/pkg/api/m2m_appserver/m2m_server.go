@@ -61,7 +61,7 @@ func (*M2MServerAPI) AddDeviceInM2MServer(ctx context.Context, req *api.AddDevic
 
 func (*M2MServerAPI) DeleteDeviceInM2MServer(ctx context.Context, req *api.DeleteDeviceInM2MServerRequest) (*api.DeleteDeviceInM2MServerResponse, error) {
 	log.WithFields(log.Fields{
-		"orgId": req.DevEui,
+		"dvEui": req.DevEui,
 	}).Debug("grpc_api/DeleteDeviceInM2MServer")
 
 	devId, err := db.Device.GetDeviceIdByDevEui(req.DevEui)
@@ -123,7 +123,7 @@ func (*M2MServerAPI) AddGatewayInM2MServer(ctx context.Context, req *api.AddGate
 
 func (*M2MServerAPI) DeleteGatewayInM2MServer(ctx context.Context, req *api.DeleteGatewayInM2MServerRequest) (*api.DeleteGatewayInM2MServerResponse, error) {
 	log.WithFields(log.Fields{
-		"orgId": req.MacAddress,
+		"gwMac": req.MacAddress,
 	}).Debug("grpc_api/DeleteGatewayInM2MServer")
 
 	gwId, err := db.Gateway.GetGatewayIdByMac(req.MacAddress)
