@@ -63,7 +63,7 @@ message GatewayProfile {
     string mac = 2;
     int64 fk_gw_ns = 3;
     int64 fk_wallet = 4;
-    string mode = 5;
+    GatewayMode mode = 5;
     string create_at = 6;
     string last_seen_at = 7;
     int64 org_id = 8;

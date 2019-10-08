@@ -2,6 +2,7 @@ package ui
 
 import (
 	"context"
+
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -51,14 +52,14 @@ func (s *GatewayServerAPI) GetGatewayList(ctx context.Context, req *api.GetGatew
 			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err
 		}
 
-		gwList, err := db.Gateway.GetGatewayListOfWallet(req.OrgId, req.Offset, req.Limit)
+		gwList, err := db.Gateway.GetGatewayListOfWallet(walletId, req.Offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetGatewayList")
 			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err
 		}
 
 		resp := api.GetGatewayListResponse{
-			Count:     totalGw,
+			Count:       totalGw,
 			UserProfile: &userProfile,
 		}
 		for _, v := range gwList {
@@ -67,7 +68,8 @@ func (s *GatewayServerAPI) GetGatewayList(ctx context.Context, req *api.GetGatew
 			gwProfile.Mac = v.Mac
 			gwProfile.FkGwNs = v.FkGatewayNs
 			gwProfile.FkWallet = v.FkWallet
-			gwProfile.Mode = string(v.Mode)
+			gwMode := api.GatewayMode(api.GatewayMode_value[string(v.Mode)])
+			gwProfile.Mode = gwMode
 			gwProfile.CreateAt = v.CreatedAt.String()
 			gwProfile.LastSeenAt = v.LastSeenAt.String()
 			gwProfile.OrgId = v.OrgId
@@ -110,12 +112,14 @@ func (s *GatewayServerAPI) GetGatewayProfile(ctx context.Context, req *api.GetGa
 			return &api.GetGatewayProfileResponse{UserProfile: &userProfile}, err
 		}
 
+		gwMode := api.GatewayMode(api.GatewayMode_value[string(gwProfile.Mode)])
+
 		resp := api.GatewayProfile{
 			Id:          gwProfile.Id,
 			Mac:         gwProfile.Mac,
 			FkGwNs:      gwProfile.FkGatewayNs,
 			FkWallet:    gwProfile.FkWallet,
-			Mode:        string(gwProfile.Mode),
+			Mode:        gwMode,
 			CreateAt:    gwProfile.CreatedAt.String(),
 			LastSeenAt:  gwProfile.LastSeenAt.String(),
 			OrgId:       gwProfile.OrgId,

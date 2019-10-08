@@ -27,6 +27,20 @@ class WalletStore extends EventEmitter {
     });
   }
 
+  getDlPrice(orgId, callbackFunc) {
+    this.swagger.then(client => {
+      client.apis.WalletService.GetDlPrice({
+        orgId,
+      })
+      .then(checkStatus)
+      //.then(updateOrganizations)
+      .then(resp => {
+        callbackFunc(resp.obj);
+      })
+      .catch(errorHandler);
+    });
+  }
+
   notify(action) {
     dispatcher.dispatch({
       type: "CREATE_NOTIFICATION",

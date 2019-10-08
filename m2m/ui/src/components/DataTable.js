@@ -36,7 +36,7 @@ class DataTable extends Component {
   }
 
   onChangePage(event, page) {
-    this.props.getPage(this.state.rowsPerPage, (page), (result) => {
+    this.props.getPage(this.state.rowsPerPage, (page * this.state.rowsPerPage), (result) => {
       this.setState({
         page: page,
         count: parseInt(result.totalCount, 10),
