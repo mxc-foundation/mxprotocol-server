@@ -26,29 +26,10 @@ var dlPrice float64
 
 func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.DvUsageModeRequest) (resp *networkserver.DvUsageModeResponse, err error) {
 
-	// @@ changes should be reveresed
+	// Code snippet to test Network Server
 	log.WithFields(log.Fields{
 		"dvId": req.DvEui,
 	}).Debug("grpc_api/DvUsageMode")
-
-	var gw []*networkserver.GwMac
-	gw1 := networkserver.GwMac{GwMac: "gw1"}
-	gw = append(gw, &gw1)
-	gw2 := networkserver.GwMac{GwMac: "40d63cfffe020f84"}
-	gw = append(gw, &gw2)
-	dvmd := networkserver.DeviceMode_DV_FREE_GATEWAYS_LIMITED
-
-	if req.DvEui == "70b3d5fffe1cb16a" {
-		gw2 = networkserver.GwMac{GwMac: "40d63cfffe030f5c"}
-		dvmd = networkserver.DeviceMode_DV_WHOLE_NETWORK
-	}
-
-	return &networkserver.DvUsageModeResponse{
-		DvMode:        dvmd,
-		FreeGwMac:     gw,
-		EnoughBalance: true,
-	}, nil
-
 	/*dvWalletId, err := db.Device.GetDevWalletIdByEui(req.DvEui)
 	if err != nil {
 		log.WithError(err).Error("db/cannot get dvWalletId")
@@ -146,15 +127,16 @@ func (*M2MNetworkServerAPI) GwUsageMode(ctx context.Context, req *networkserver.
 	return &networkserver.FreeGatewayResponse{GwId:rep.GwId}, nil
 }*/
 
+// MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_networkserver/m2m_server.go
 func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.DlPktSentRequest) (*networkserver.DlPktSentResponse, error) {
 
 	fmt.Println("-- dl packet sent req: ", req)
 	log.WithFields(log.Fields{
 		"DlPktId": req.DlPkt.DlIdNs,
-	}).Debug("grpc_api/DvUsageMode")
+	}).Debug("grpc_api/DlPktSent")
 
 	var dlPkt = types.DlPkt{}
-	dlPkt.Id = req.DlPkt.DlIdNs
+	dlPkt.DlIdNs = req.DlPkt.DlIdNs
 	dlPkt.Category = types.DlCategory(req.DlPkt.Category)
 	dlPkt.Nonce = req.DlPkt.Nonce
 
@@ -162,7 +144,7 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 		log.WithError(err).Error("time format error")
 		return &networkserver.DlPktSentResponse{}, err
 	} else {
-		dlPkt.SentAt = createAt
+		dlPkt.CreatedAt = createAt
 	}
 
 	dlPkt.Size = req.DlPkt.Size
