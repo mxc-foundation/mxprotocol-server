@@ -52,7 +52,7 @@ func (s *GatewayServerAPI) GetGatewayList(ctx context.Context, req *api.GetGatew
 			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err
 		}
 
-		gwList, err := db.Gateway.GetGatewayListOfWallet(walletId, req.Offset, req.Limit) // to be checked: changed by Aslan from req.OrgId to walletId.  Query is updated
+		gwList, err := db.Gateway.GetGatewayListOfWallet(walletId, req.Offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetGatewayList")
 			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err
