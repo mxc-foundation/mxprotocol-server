@@ -99,36 +99,52 @@ func (s *WalletServerAPI) GetWalletUsageHist(ctx context.Context, req *api.GetWa
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
-		wuList, err := db.AggWalletUsage.GetWalletUsageHist(req.OrgId)
+		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
 		if err != nil {
-			log.WithError(err).Error("grpc_api/GetWalletBalance")
+			log.WithError(err).Error("grpc_api/GetWalletUsageHist")
+			return &api.GetWalletUsageHistResponse{UserProfile: &userProfile}, nil
+		}
+
+		wuList, err := db.AggWalletUsage.GetWalletUsageHist(walletId, req.Offset, req.Limit)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetWalletUsageHist")
+			return &api.GetWalletUsageHistResponse{UserProfile: &userProfile}, nil
+		}
+
+		count, err := db.AggWalletUsage.GetWalletUsageHistCnt(walletId)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetWalletUsageHist")
 			return &api.GetWalletUsageHistResponse{UserProfile: &userProfile}, nil
 		}
 
 		resp := &api.GetWalletUsageHistResponse{}
+		resp.Count = count
+
 		for _, v := range wuList {
 			wuHist := &api.GetWalletUsageHist{}
-			//wuHist.StartTime = v.StartAt
-			//wuHist.Duration = v.DurationMinutes
-			wuHist.CountUplinkPktsDv = v.UlCnt
-			//wuHist.CountDownlinkPktsDv = v.DlCnt
-			//
-			//wuHist.CountUplinkPktsGw = v..CountUplinkPktsGw
-			//wuHist.CountDownlinkPktsGw = v.CountDownlinkPktsGw
-			//wuHist.Cost = v.Cost
-			//wuHist.Income = v.Income
-			//wuHist.TotalPayment = v.Cost - v.Income
+			wuHist.StartAt = v.StartAt.String()
+			wuHist.DurationMinutes = v.DurationMinutes
+			wuHist.DlCntDv = v.DlCntDv
+			wuHist.DlCntDvFree = v.DlCntDvFree
+			wuHist.DlCntGw = v.DlCntGw
+			wuHist.DlCntGwFree = v.DlCntGwFree
+			wuHist.UlCntDv = v.UlCntDv
+			wuHist.UlCntDvFree = v.UlCntDvFree
+			wuHist.UlCntGw = v.UlCntGw
+			wuHist.UlCntGwFree = v.UlCntGwFree
+			wuHist.Income = v.Income
+			wuHist.Spend = v.Spend
+			wuHist.UpdatedBalance = v.UpdatedBalance
 
 			resp.WalletUsageHis = append(resp.WalletUsageHis, wuHist)
 		}
-
 		return resp, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")
 }
 
-func (s* WalletServerAPI) GetDlPrice (ctx context.Context, req *api.GetDownLinkPriceRequest) (*api.GetDownLinkPriceResponse, error)  {
+func (s *WalletServerAPI) GetDlPrice(ctx context.Context, req *api.GetDownLinkPriceRequest) (*api.GetDownLinkPriceResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
