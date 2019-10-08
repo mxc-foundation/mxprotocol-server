@@ -2,6 +2,7 @@ package ui
 
 import (
 	"context"
+
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -51,14 +52,14 @@ func (s *DeviceServerAPI) GetDeviceList(ctx context.Context, req *api.GetDeviceL
 			return &api.GetDeviceListResponse{UserProfile: &userProfile}, err
 		}
 
-		dvList, err := db.Device.GetDeviceListOfWallet(req.OrgId, req.Offset, req.Limit)
+		dvList, err := db.Device.GetDeviceListOfWallet(walletId, req.Offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetDeviceList")
 			return &api.GetDeviceListResponse{UserProfile: &userProfile}, err
 		}
 
 		resp := api.GetDeviceListResponse{
-			Count:    totalDev,
+			Count:       totalDev,
 			UserProfile: &userProfile,
 		}
 		for _, v := range dvList {

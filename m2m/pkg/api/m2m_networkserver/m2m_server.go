@@ -1,14 +1,17 @@
 package m2m_networkserver
 
 import (
-"context"
-log "github.com/sirupsen/logrus"
-"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/networkserver"
-"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
-"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
-"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
-"time"
+	"context"
+	"fmt"
+	"time"
+
+	log "github.com/sirupsen/logrus"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/networkserver"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
+
 type M2MNetworkServerAPI struct{}
 
 // M2MNetworkServerServerAPI returns a new M2MServerAPI.
@@ -22,9 +25,16 @@ var timeLayout = "2006-01-02T15:04:05.000000Z"
 var dlPrice float64
 
 func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.DvUsageModeRequest) (resp *networkserver.DvUsageModeResponse, err error) {
+
+	// Code snippet to test Network Server
 	log.WithFields(log.Fields{
 		"dvId": req.DvEui,
 	}).Debug("grpc_api/DvUsageMode")
+	/*dvWalletId, err := db.Device.GetDevWalletIdByEui(req.DvEui)
+	if err != nil {
+		log.WithError(err).Error("db/cannot get dvWalletId")
+		return &networkserver.DvUsageModeResponse{}, err
+	}*/
 
 	dvWalletId, dvMode, err := db.Device.GetDevWalletIdAndModeByEui(req.DvEui)
 	if err != nil {
@@ -117,13 +127,16 @@ func (*M2MNetworkServerAPI) GwUsageMode(ctx context.Context, req *networkserver.
 	return &networkserver.FreeGatewayResponse{GwId:rep.GwId}, nil
 }*/
 
+// MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_networkserver/m2m_server.go
 func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.DlPktSentRequest) (*networkserver.DlPktSentResponse, error) {
+
+	fmt.Println("-- dl packet sent req: ", req)
 	log.WithFields(log.Fields{
 		"DlPktId": req.DlPkt.DlIdNs,
-	}).Debug("grpc_api/DvUsageMode")
+	}).Debug("grpc_api/DlPktSent")
 
 	var dlPkt = types.DlPkt{}
-	dlPkt.Id = req.DlPkt.DlIdNs
+	dlPkt.DlIdNs = req.DlPkt.DlIdNs
 	dlPkt.Category = types.DlCategory(req.DlPkt.Category)
 	dlPkt.Nonce = req.DlPkt.Nonce
 
@@ -131,7 +144,7 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 		log.WithError(err).Error("time format error")
 		return &networkserver.DlPktSentResponse{}, err
 	} else {
-		dlPkt.SentAt = createAt
+		dlPkt.CreatedAt = createAt
 	}
 
 	dlPkt.Size = req.DlPkt.Size
