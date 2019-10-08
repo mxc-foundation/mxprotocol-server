@@ -10,8 +10,9 @@ import (
 type dlPacketDBInterface interface {
 	CreateDlPktTable() error
 	InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err error)
-	GetAggDlPktDeviceWallet(begin time.Time, durationMin int64) (walletId []int64, count []int64, err error)
-	GetAggDlPktGatewayWallet(begin time.Time, durationMin int64) (walletId []int64, count []int64, err error)
+	GetAggDlPktDeviceWallet(startAt time.Time, durationMin int64) (walletId []int64, count []int64, err error)
+	GetAggDlPktGatewayWallet(startAt time.Time, durationMin int64) (walletId []int64, count []int64, err error)
+	GetAggDlPktFreeWallet(startAt time.Time, durationMin int64) (walletId []int64, count []int64, err error)
 }
 
 var DlPacket = dlPacketDBInterface(&pg.PgDlPacket)
