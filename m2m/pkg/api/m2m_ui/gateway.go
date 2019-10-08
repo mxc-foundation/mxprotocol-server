@@ -2,6 +2,7 @@ package ui
 
 import (
 	"context"
+
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -51,14 +52,14 @@ func (s *GatewayServerAPI) GetGatewayList(ctx context.Context, req *api.GetGatew
 			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err
 		}
 
-		gwList, err := db.Gateway.GetGatewayListOfWallet(req.OrgId, req.Offset, req.Limit)
+		gwList, err := db.Gateway.GetGatewayListOfWallet(walletId, req.Offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetGatewayList")
 			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err
 		}
 
 		resp := api.GetGatewayListResponse{
-			Count:     totalGw,
+			Count:       totalGw,
 			UserProfile: &userProfile,
 		}
 		for _, v := range gwList {

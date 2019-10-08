@@ -101,6 +101,8 @@ func initConfig() {
 	if err := viper.Unmarshal(&config.Cstruct); err != nil {
 		log.WithError(err).Fatal("unmarshal config error")
 	}
+
+	config.Cstruct.Version = version
 }
 
 func viperBindEnvs(iface interface{}, parts ...string) {

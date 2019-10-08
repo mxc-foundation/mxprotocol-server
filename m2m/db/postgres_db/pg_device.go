@@ -145,8 +145,7 @@ func (*deviceInterface) GetDeviceProfile(dvId int64) (dv types.Device, err error
 	return dv, errors.Wrap(err, "db/pg_device/GetDeviceProfile")
 }
 
-func (*deviceInterface) GetDeviceListOfWallet(orgId int64, offset int64, limit int64) (dvList []types.Device, err error) {
-	walletId, err := PgWallet.GetWalletIdFromOrgId(orgId)
+func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error) {
 	if err != nil {
 		return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
 	}
@@ -165,7 +164,6 @@ func (*deviceInterface) GetDeviceListOfWallet(orgId int64, offset int64, limit i
 
 	defer rows.Close()
 
-	// res := make([]WithdrawHistRet, 0)
 	var dv types.Device
 
 	for rows.Next() {
@@ -199,20 +197,49 @@ func (*deviceInterface) GetDeviceRecCnt(walletId int64) (recCnt int64, err error
 	return recCnt, errors.Wrap(err, "db/pg_device/GetDeviceRecCnt")
 }
 
-//ToDo:
-func (*deviceInterface) GetWalletIdOfDevice(dvId int64) (dvWalletId int64, err error) {
-	return 1, nil
-}
+// DeleteDevice
 
-//ToDo: queries
-func (*deviceInterface) GetDeviceModeByEui(devEui string) (dvMode types.DeviceMode, err error) {
-	return types.DV_INACTIVE, nil
+func (*deviceInterface) GetWalletIdOfDevice(dvId int64) (dvWalletId int64, err error) {
+
+	err = PgDB.QueryRow(
+		`SELECT
+			fk_wallet
+		FROM
+			device 
+		WHERE	
+			id = $1 
+			ORDER BY id DESC 
+			LIMIT 1  
+		;`, dvId).Scan(&dvWalletId)
+	return dvWalletId, errors.Wrap(err, "db/pg_device/GetWalletIdOfDevice")
 }
 
 func (*deviceInterface) GetDevWalletIdByEui(devEui string) (walletId int64, err error) {
-	return 1, nil
+
+	dvId, err := PgDevice.GetDeviceIdByDevEui(devEui)
+	if err != nil {
+		return 0, errors.Wrap(err, "db/pg_device/GetDevWalletIdByEui")
+	}
+
+	walletId, err = PgDevice.GetWalletIdOfDevice(dvId)
+	if err != nil {
+		return 0, errors.Wrap(err, "db/pg_device/GetDevWalletIdByEui")
+	}
+	return walletId, err
 }
 
 func (*deviceInterface) GetDevWalletIdAndModeByEui(devEui string) (dvWalletId int64, dvMode types.DeviceMode, err error) {
-	return 1, types.DV_INACTIVE, nil
+
+	err = PgDB.QueryRow(
+		`SELECT
+			fk_wallet, mode
+		FROM
+			device 
+		WHERE	
+			dev_eui = $1 
+			ORDER BY id DESC 
+			LIMIT 1  
+		;`, devEui).Scan(&dvWalletId, &dvMode)
+	return dvWalletId, dvMode, errors.Wrap(err, "db/pg_device/GetDevWalletIdAndModeByEui")
+
 }
