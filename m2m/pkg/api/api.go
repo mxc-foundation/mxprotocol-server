@@ -196,10 +196,10 @@ func getJSONGateway(ctx context.Context) (http.Handler, error) {
 		return nil, errors.Wrap(err, "register top_up handler error")
 	}
 	if err := m2m_grpc.RegisterWalletServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
-		return nil, errors.Wrap(err, "register top_up handler error")
+		return nil, errors.Wrap(err, "register wallet handler error")
 	}
 	if err := m2m_grpc.RegisterSuperNodeServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
-		return nil, errors.Wrap(err, "register top_up handler error")
+		return nil, errors.Wrap(err, "register superNode handler error")
 	}
 	if err := m2m_grpc.RegisterInternalServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register auth get jwt handler error")
