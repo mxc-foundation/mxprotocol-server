@@ -1,8 +1,6 @@
 package postgres_db
 
 import (
-	"fmt"
-
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
@@ -17,6 +15,7 @@ func (*aggWalletUsageInterface) CreateAggWltUsgTable() error {
 	
 		CREATE TABLE IF NOT EXISTS agg_wallet_usage (
 			id SERIAL PRIMARY KEY,
+			fk_agg_period INT REFERENCES agg_period (id) NOT NULL,
 			fk_wallet INT REFERENCES wallet (id) NOT NULL,
 			dl_cnt_dv INT    DEFAULT 0 ,
 			dl_cnt_dv_free INT    DEFAULT 0 ,
@@ -26,8 +25,6 @@ func (*aggWalletUsageInterface) CreateAggWltUsgTable() error {
 			dl_cnt_gw_free INT  DEFAULT 0,
 			ul_cnt_gw INT  DEFAULT 0,
 			ul_cnt_gw_free INT  DEFAULT 0,
-			start_at TIMESTAMP NOT NULL,
-			duration_minutes   INT ,
 			spend  NUMERIC(28,18) DEFAULT 0,
 			income  NUMERIC(28,18) DEFAULT 0,
 			balance_increase  NUMERIC(28,18) DEFAULT 0,
@@ -43,6 +40,7 @@ func (*aggWalletUsageInterface) InsertAggWltUsg(awu types.AggWltUsg) (insertInde
 	err = PgDB.QueryRow(`
 		INSERT INTO agg_wallet_usage (
 			fk_wallet,
+			fk_agg_period,
 			dl_cnt_dv,
 			dl_cnt_dv_free,
 			ul_cnt_dv,
@@ -51,18 +49,17 @@ func (*aggWalletUsageInterface) InsertAggWltUsg(awu types.AggWltUsg) (insertInde
 			dl_cnt_gw_free,
 			ul_cnt_gw,
 			ul_cnt_gw_free,
-			start_at,
-			duration_minutes,
 			spend,
 			income,
 			balance_increase,
 			updated_balance
 			) 
 		VALUES 
-			($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+			($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
 		RETURNING id ;
 	`,
 		awu.FkWallet,
+		awu.FkAggPeriod,
 		awu.DlCntDv,
 		awu.DlCntDvFree,
 		awu.UlCntDv,
@@ -71,8 +68,6 @@ func (*aggWalletUsageInterface) InsertAggWltUsg(awu types.AggWltUsg) (insertInde
 		awu.DlCntGwFree,
 		awu.UlCntGw,
 		awu.UlCntGwFree,
-		awu.StartAt,
-		awu.DurationMinutes,
 		awu.Spend,
 		awu.Income,
 		awu.BalanceIncrease,
@@ -85,11 +80,31 @@ func (*aggWalletUsageInterface) GetWalletUsageHist(walletId int64, offset int64,
 
 	rows, err := PgDB.Query(
 		`SELECT
-			*
+			awu.id,
+			awu.fk_agg_period,
+			awu.fk_wallet,
+			awu.dl_cnt_dv,
+			awu.dl_cnt_dv_free , 
+			awu.ul_cnt_dv,  
+			awu.ul_cnt_dv_free,
+			awu.dl_cnt_gw,
+			awu.dl_cnt_gw_free,
+			awu.ul_cnt_gw, 
+			awu.ul_cnt_gw_free,
+			awu.spend,  
+			awu.income, 
+			awu.balance_increase,
+			awu.updated_balance,  
+			ap.start_at,
+			ap.duration_minutes
+
 		FROM
-			agg_wallet_usage 
+			agg_wallet_usage awu,
+			agg_period ap
 		WHERE
-			fk_wallet = $1 
+			awu.fk_agg_period = ap.id
+			AND
+			awu. fk_wallet = $1 
 		ORDER BY id DESC
 		LIMIT $2 
 		OFFSET $3
@@ -101,13 +116,12 @@ func (*aggWalletUsageInterface) GetWalletUsageHist(walletId int64, offset int64,
 
 	defer rows.Close()
 
-	fmt.Println("rows at start: ", rows)
-
 	awu := types.AggWltUsg{}
 
 	for rows.Next() {
 		rows.Scan(
 			&awu.Id,
+			&awu.FkAggPeriod,
 			&awu.FkWallet,
 			&awu.DlCntDv,
 			&awu.DlCntDvFree,
@@ -117,12 +131,12 @@ func (*aggWalletUsageInterface) GetWalletUsageHist(walletId int64, offset int64,
 			&awu.DlCntGwFree,
 			&awu.UlCntGw,
 			&awu.UlCntGwFree,
-			&awu.StartAt,
-			&awu.DurationMinutes,
 			&awu.Spend,
 			&awu.Income,
 			&awu.BalanceIncrease,
 			&awu.UpdatedBalance,
+			&awu.StartAt,
+			&awu.DurationMinutes,
 		)
 
 		awuList = append(awuList, awu)
