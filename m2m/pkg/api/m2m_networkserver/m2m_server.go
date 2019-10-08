@@ -25,16 +25,9 @@ var timeLayout = "2006-01-02T15:04:05.000000Z"
 var dlPrice float64
 
 func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.DvUsageModeRequest) (resp *networkserver.DvUsageModeResponse, err error) {
-
-	// Code snippet to test Network Server
 	log.WithFields(log.Fields{
 		"dvId": req.DvEui,
 	}).Debug("grpc_api/DvUsageMode")
-	/*dvWalletId, err := db.Device.GetDevWalletIdByEui(req.DvEui)
-	if err != nil {
-		log.WithError(err).Error("db/cannot get dvWalletId")
-		return &networkserver.DvUsageModeResponse{}, err
-	}*/
 
 	dvWalletId, dvMode, err := db.Device.GetDevWalletIdAndModeByEui(req.DvEui)
 	if err != nil {
@@ -42,7 +35,7 @@ func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.
 		return &networkserver.DvUsageModeResponse{}, err
 	}
 
-	gwList, err := db.Gateway.GetGatewayListOfWallet(dvWalletId, 0, 100)
+	_, gwMac, err := db.Gateway.GetFreeGwList(dvWalletId)
 	if err != nil {
 		log.WithError(err).Error("db/cannot get gwListOfWallet")
 		return &networkserver.DvUsageModeResponse{}, err
@@ -53,11 +46,12 @@ func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.
 		return &networkserver.DvUsageModeResponse{DvMode: networkserver.DeviceMode_DV_INACTIVE}, nil
 
 	case networkserver.DeviceMode_name[int32(networkserver.DeviceMode_DV_FREE_GATEWAYS_LIMITED)]:
-		for _, v := range gwList {
+		for _, v := range gwMac {
 			fgws := networkserver.GwMac{}
-			fgws.GwMac = v.Mac
+			fgws.GwMac = v
 			resp.FreeGwMac = append(resp.FreeGwMac, &fgws)
 		}
+
 		resp.DvMode = networkserver.DeviceMode_DV_FREE_GATEWAYS_LIMITED
 
 		return resp, nil
@@ -74,9 +68,9 @@ func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.
 			return &networkserver.DvUsageModeResponse{}, err
 		}
 
-		for _, v := range gwList {
+		for _, v := range gwMac {
 			fgws := networkserver.GwMac{}
-			fgws.GwMac = v.Mac
+			fgws.GwMac = v
 			resp.FreeGwMac = append(resp.FreeGwMac, &fgws)
 		}
 
@@ -109,25 +103,6 @@ func (*M2MNetworkServerAPI) GwUsageMode(ctx context.Context, req *networkserver.
 	return &networkserver.GwUsageModeResponse{GwMode: string(gwMode)}, nil
 }
 
-/*func (*M2MNetworkServerAPI) FreeGateway (ctx context.Context, req* networkserver.FreeGatewayRequest) (rep *networkserver.FreeGatewayResponse, err error) {
-	log.WithFields(log.Fields{
-	}).Debug("grpc_api/FreeGateway")
-
-	freeGws, err := db.Gateway.GetFreeGwList()
-	if err != nil {
-		return &networkserver.FreeGatewayResponse{}, err
-	}
-
-	for _, id := range freeGws {
-		freeGwId := networkserver.FreeGwId{}
-		freeGwId.GwId = id
-		rep.GwId = append(rep.GwId, &freeGwId)
-	}
-
-	return &networkserver.FreeGatewayResponse{GwId:rep.GwId}, nil
-}*/
-
-// MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_networkserver/m2m_server.go
 func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.DlPktSentRequest) (*networkserver.DlPktSentResponse, error) {
 
 	fmt.Println("-- dl packet sent req: ", req)
