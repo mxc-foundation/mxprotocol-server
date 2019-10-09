@@ -96,6 +96,10 @@ func (*deviceInterface) SetDeviceMode(dvId int64, dvMode types.DeviceMode) (err 
 
 }
 
+func (*deviceInterface) DeleteDevice(dvId int64) (err error) {
+	return PgDevice.SetDeviceMode(dvId, types.DV_DELETED)
+}
+
 func (*deviceInterface) GetDeviceIdByDevEui(devEui string) (devId int64, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
@@ -146,9 +150,6 @@ func (*deviceInterface) GetDeviceProfile(dvId int64) (dv types.Device, err error
 }
 
 func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error) {
-	if err != nil {
-		return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
-	}
 
 	rows, err := PgDB.Query(
 		`SELECT
@@ -163,6 +164,9 @@ func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limi
 	;`, walletId, limit, offset)
 
 	defer rows.Close()
+	if err != nil {
+		return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
+	}
 
 	var dv types.Device
 
