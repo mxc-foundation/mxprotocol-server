@@ -2,6 +2,7 @@ package ui
 
 import (
 	"context"
+
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -39,19 +40,35 @@ func (s *DeviceServerAPI) GetDeviceList(ctx context.Context, req *api.GetDeviceL
 			"limit":  req.Limit,
 		}).Debug("grpc_api/GetDeviceList")
 
-		dvList, err := db.Device.GetDeviceListOfWallet(req.OrgId, req.Offset, req.Limit)
+		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetDeviceList")
 			return &api.GetDeviceListResponse{UserProfile: &userProfile}, err
 		}
 
-		resp := api.GetDeviceListResponse{UserProfile: &userProfile}
+		totalDev, err := db.Device.GetDeviceRecCnt(walletId)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetDeviceList")
+			return &api.GetDeviceListResponse{UserProfile: &userProfile}, err
+		}
+
+		dvList, err := db.Device.GetDeviceListOfWallet(walletId, req.Offset, req.Limit)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetDeviceList")
+			return &api.GetDeviceListResponse{UserProfile: &userProfile}, err
+		}
+
+		resp := api.GetDeviceListResponse{
+			Count:       totalDev,
+			UserProfile: &userProfile,
+		}
 		for _, v := range dvList {
 			dvProfile := api.DeviceProfile{}
 			dvProfile.Id = v.Id
 			dvProfile.DevEui = v.DevEui
 			dvProfile.FkWallet = v.FkWallet
-			dvProfile.Mode = string(v.Mode)
+			dvMode := api.DeviceMode(api.DeviceMode_value[string(v.Mode)])
+			dvProfile.Mode = dvMode
 			dvProfile.CreatedAt = v.CreatedAt.String()
 			dvProfile.LastSeenAt = v.LastSeenAt.String()
 			dvProfile.ApplicationId = v.ApplicationId
@@ -91,11 +108,13 @@ func (s *DeviceServerAPI) GetDeviceProfile(ctx context.Context, req *api.GetDevi
 			return &api.GetDeviceProfileResponse{UserProfile: &userProfile}, err
 		}
 
+		dvMode := api.DeviceMode(api.DeviceMode_value[string(devProfile.Mode)])
+
 		resp := api.DeviceProfile{
 			Id:            devProfile.Id,
 			DevEui:        devProfile.DevEui,
 			FkWallet:      devProfile.FkWallet,
-			Mode:          string(devProfile.Mode),
+			Mode:          dvMode,
 			CreatedAt:     devProfile.CreatedAt.String(),
 			LastSeenAt:    devProfile.LastSeenAt.String(),
 			ApplicationId: devProfile.ApplicationId,
@@ -149,22 +168,22 @@ func (s *DeviceServerAPI) SetDeviceMode(ctx context.Context, req *api.SetDeviceM
 		}).Debug("grpc_api/SetDeviceMode")
 
 		switch req.DevMode.String() {
-		case "DV_INACTIVE":
+		case api.DeviceMode_name[int32(api.DeviceMode_DV_INACTIVE)]:
 			if err := db.Device.SetDeviceMode(req.DevId, types.DV_INACTIVE); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
-		case "DV_FREE_GATEWAYS_LIMITED":
+		case api.DeviceMode_name[int32(api.DeviceMode_DV_FREE_GATEWAYS_LIMITED)]:
 			if err := db.Device.SetDeviceMode(req.DevId, types.DV_FREE_GATEWAYS_LIMITED); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
-		case "DV_WHOLE_NETWORK":
+		case api.DeviceMode_name[int32(api.DeviceMode_DV_WHOLE_NETWORK)]:
 			if err := db.Device.SetDeviceMode(req.DevId, types.DV_WHOLE_NETWORK); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err
 			}
-		case "DV_DELETED":
+		case api.DeviceMode_name[int32(api.DeviceMode_DV_DELETED)]:
 			if err := db.Device.SetDeviceMode(req.DevId, types.DV_DELETED); err != nil {
 				log.WithError(err).Error("grpc_api/SetDeviceMode")
 				return &api.SetDeviceModeResponse{Status: false, UserProfile: &userProfile}, err

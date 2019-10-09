@@ -14,7 +14,10 @@ import DropdownMenu from "./DropdownMenu";
 import CalendarCheckOutline from "mdi-material-ui/CalendarCheckOutline";
 import CreditCard from "mdi-material-ui/CreditCard";
 import AccessPoint from "mdi-material-ui/AccessPoint";
+import Remote from "mdi-material-ui/Remote";
+import VideoInputAntenna from "mdi-material-ui/VideoInputAntenna";
 
+import ServerInfoStore from "../stores/ServerInfoStore"
 import ProfileStore from "../stores/ProfileStore"
 import SessionStore from "../stores/SessionStore"
 import PageNextOutline from "mdi-material-ui/PageNextOutline";
@@ -38,6 +41,14 @@ function updateOrganizationList(orgId) {
   });
 }
 
+function loadServerVersion() {
+  return new Promise((resolve, reject) => {
+    ServerInfoStore.getVersion(data=>{
+      resolve(data);
+    });
+  });
+}  
+
 class SideNav extends Component {
   constructor() {
     super();
@@ -47,6 +58,7 @@ class SideNav extends Component {
       //organization: {},
       organizationID: '',
       cacheCounter: 0,
+      version: '1.0.0'
     };
     this.onChange = this.onChange.bind(this);
   }
@@ -64,9 +76,14 @@ class SideNav extends Component {
         this.isAdmin = true;}else{
           this.isAdmin = false;
         }
+      var data = await loadServerVersion();
+      const serverInfo = JSON.parse(data);
+      
       this.setState({
         organizationID,
+        version: serverInfo.version.substring(0,5)
       })
+
       this.setState({loading: true})
       
     } catch (error) {
@@ -144,8 +161,18 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
           </ListItem>
-       
-
+          <ListItem selected={active('/device')} button component={Link} to={`/device/${organizationID}`}>
+            <ListItemIcon>
+              <Remote />
+            </ListItemIcon>
+            <ListItemText classes={selected('/device')} primary="Device" />
+          </ListItem>
+          <ListItem selected={active('/gateway')} button component={Link} to={`/gateway/${organizationID}`}>
+            <ListItemIcon>
+              <VideoInputAntenna />
+            </ListItemIcon>
+            <ListItemText classes={selected('/gateway')} primary="Gateway" />
+          </ListItem>
 
               <List className={this.props.classes.card}>
               <Divider />
@@ -160,6 +187,9 @@ class SideNav extends Component {
                   <ListItemIcon>
                     <img src="/logo/mxc_logo.png" className="iconStyle" alt="LoRa Server" onClick={this.handleMXC} />
                   </ListItemIcon>
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={`Version ${this.state.version}`} />
                 </ListItem>
               </List>
 

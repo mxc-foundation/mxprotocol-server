@@ -1,7 +1,7 @@
 .PHONY: build clean api pkg/static statics/swagger/api.swagger.json dev-requirements pkg/migrations scripts
 PKGS := $(shell go list ./... | grep -v /vendor |grep -v m2m/api | grep -v m2m/migrations \
             | grep -v m2m/static | grep -v m2m/ui| grep -v grpc_api-paymemt_service )
-VERSION := $(shell git describe --always |sed -e "s/^v//")
+VERSION := $(shell git describe --tags |sed -e "s/^v//")
 
 build: scripts ui/build pkg/static pkg/migrations
 	mkdir -p build

@@ -199,7 +199,7 @@
           "format": "int64"
         },
         "mode": {
-          "type": "string"
+          "$ref": "#/definitions/apiDeviceMode"
         },
         "createdAt": {
           "type": "string"
@@ -235,6 +235,10 @@
           "items": {
             "$ref": "#/definitions/apiDeviceProfile"
           }
+        },
+        "count": {
+          "type": "string",
+          "format": "int64"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"

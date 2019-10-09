@@ -20,10 +20,10 @@ func (*gatewayInterface) CreateGatewayTable() error {
 				(SELECT 1 FROM pg_type WHERE typname = 'gateway_mode') 
 			THEN
 				CREATE TYPE gateway_mode AS ENUM (
-					'INACTIVE',
-					 'FREE_GATEWAYS_LIMITED',
-					 'WHOLE_NETWORK',
-					 'DELETED'
+					'GW_INACTIVE',
+					 'GW_FREE_GATEWAYS_LIMITED',
+					 'GW_WHOLE_NETWORK',
+					 'GW_DELETED'
 		);
 		END IF;
 			CREATE TABLE IF NOT EXISTS gateway (
@@ -153,11 +153,7 @@ func (*gatewayInterface) GetGatewayProfile(gwId int64) (gw types.Gateway, err er
 	return gw, errors.Wrap(err, "db/pg_gateway/GetGatewayProfile")
 }
 
-func (*gatewayInterface) GetGatewayListOfWallet(orgId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {
-	walletId, err := PgWallet.GetWalletIdFromOrgId(orgId)
-	if err != nil {
-		return gwList, errors.Wrap(err, "db/pg_gateway/GetGatewayListOfWallet")
-	}
+func (*gatewayInterface) GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {
 
 	rows, err := PgDB.Query(
 		`SELECT
@@ -205,4 +201,47 @@ func (*gatewayInterface) GetGatewayRecCnt(walletId int64) (recCnt int64, err err
 	`, walletId).Scan(&recCnt)
 
 	return recCnt, errors.Wrap(err, "db/pg_gateway/GetGatewayRecCnt")
+}
+
+func (*gatewayInterface) GetFreeGwList(walletId int64) (gwId []int64, gwMac []string, err error) {
+
+	rows, err := PgDB.Query(
+		`SELECT
+			id as gwId, mac
+		FROM
+			gateway 
+		WHERE
+			fk_wallet = $1 
+	;`, walletId)
+
+	defer rows.Close()
+
+	var id int64
+	var mac string
+
+	for rows.Next() {
+		rows.Scan(
+			&id,
+			&mac,
+		)
+
+		gwId = append(gwId, id)
+		gwMac = append(gwMac, mac)
+	}
+	return gwId, gwMac, errors.Wrap(err, "db/pg_gateway/GetFreeGwList")
+
+}
+
+func (*gatewayInterface) GetWalletIdOfGateway(gwId int64) (gwWalletId int64, err error) {
+	err = PgDB.QueryRow(
+		`SELECT
+			fk_wallet
+		FROM
+			gateway 
+		WHERE	
+			id = $1 
+			ORDER BY id DESC 
+			LIMIT 1  
+		;`, gwId).Scan(&gwWalletId)
+	return gwWalletId, errors.Wrap(err, "db/pg_gateway/GetWalletIdOfGateway")
 }

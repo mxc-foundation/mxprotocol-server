@@ -225,7 +225,7 @@ func paymentRoutine(ctx context.Context, conf *config.MxpConfig, receiverAdd str
 	amount := fmt.Sprintf("%f", req.Amount)
 	paymentReply, err := withdraw.PaymentReq(ctx, &config.Cstruct, amount, receiverAdd, withdrawID)
 	if err != nil {
-		log.Error("send payment request failed: %s", err)
+		log.Error("send payment request failed: ", err)
 		for {
 			time.Sleep(time.Duration(config.Cstruct.Withdraw.ResendToPS) * time.Minute)
 			paymentReply, err = withdraw.PaymentReq(ctx, &config.Cstruct, amount, receiverAdd, withdrawID)

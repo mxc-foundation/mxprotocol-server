@@ -16,8 +16,8 @@ type Device struct {
 type DeviceMode string
 
 const (
-	DV_INACTIVE              DeviceMode = "INACTIVE"
-	DV_FREE_GATEWAYS_LIMITED DeviceMode = "FREE_GATEWAYS_LIMITED"
-	DV_WHOLE_NETWORK         DeviceMode = "WHOLE_NETWORK"
-	DV_DELETED               DeviceMode = "DELETED"
+	DV_INACTIVE              DeviceMode = "DV_INACTIVE"
+	DV_FREE_GATEWAYS_LIMITED DeviceMode = "DV_FREE_GATEWAYS_LIMITED"
+	DV_WHOLE_NETWORK         DeviceMode = "DV_WHOLE_NETWORK"
+	DV_DELETED               DeviceMode = "DV_DELETED"
 )

@@ -4,7 +4,9 @@ import (
 	"context"
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -97,7 +99,72 @@ func (s *WalletServerAPI) GetWalletUsageHist(ctx context.Context, req *api.GetWa
 			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
 
 	case auth.OK:
+		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetWalletUsageHist")
+			return &api.GetWalletUsageHistResponse{UserProfile: &userProfile}, nil
+		}
 
+		wuList, err := db.AggWalletUsage.GetWalletUsageHist(walletId, req.Offset, req.Limit)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetWalletUsageHist")
+			return &api.GetWalletUsageHistResponse{UserProfile: &userProfile}, nil
+		}
+
+		count, err := db.AggWalletUsage.GetWalletUsageHistCnt(walletId)
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetWalletUsageHist")
+			return &api.GetWalletUsageHistResponse{UserProfile: &userProfile}, nil
+		}
+
+		resp := &api.GetWalletUsageHistResponse{}
+		resp.Count = count
+
+		for _, v := range wuList {
+			wuHist := &api.GetWalletUsageHist{}
+			wuHist.StartAt = v.StartAt.String()
+			wuHist.DurationMinutes = v.DurationMinutes
+			wuHist.DlCntDv = v.DlCntDv
+			wuHist.DlCntDvFree = v.DlCntDvFree
+			wuHist.DlCntGw = v.DlCntGw
+			wuHist.DlCntGwFree = v.DlCntGwFree
+			wuHist.UlCntDv = v.UlCntDv
+			wuHist.UlCntDvFree = v.UlCntDvFree
+			wuHist.UlCntGw = v.UlCntGw
+			wuHist.UlCntGwFree = v.UlCntGwFree
+			wuHist.Income = v.Income
+			wuHist.Spend = v.Spend
+			wuHist.UpdatedBalance = v.UpdatedBalance
+
+			resp.WalletUsageHis = append(resp.WalletUsageHis, wuHist)
+		}
+		return resp, nil
+	}
+
+	return nil, status.Errorf(codes.Unknown, "")
+}
+
+func (s *WalletServerAPI) GetDlPrice(ctx context.Context, req *api.GetDownLinkPriceRequest) (*api.GetDownLinkPriceResponse, error) {
+	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
+
+	switch res.Type {
+	case auth.AuthFailed:
+		fallthrough
+	case auth.JsonParseError:
+		fallthrough
+	case auth.OrganizationIdMisMatch:
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
+
+	case auth.OrganizationIdRearranged:
+		return &api.GetDownLinkPriceResponse{UserProfile: &userProfile},
+			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
+
+	case auth.OK:
+		dlPrice := config.Cstruct.SuperNode.DlPrice
+		return &api.GetDownLinkPriceResponse{
+			DownLinkPrice: dlPrice,
+			UserProfile:   &userProfile,
+		}, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")

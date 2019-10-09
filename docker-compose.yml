@@ -17,6 +17,7 @@ services:
     tty: true
     ports:
       - 4000:4000
+      - 3000:3000
     security_opt:
       - seccomp:unconfined
     cap_add:
