@@ -169,6 +169,10 @@ func (*gatewayInterface) GetGatewayListOfWallet(walletId int64, offset int64, li
 
 	defer rows.Close()
 
+	if err != nil {
+		return gwList, errors.Wrap(err, "db/pg_gateway/GetGatewayListOfWallet")
+	}
+
 	var gw types.Gateway
 
 	for rows.Next() {
@@ -215,6 +219,10 @@ func (*gatewayInterface) GetFreeGwList(walletId int64) (gwId []int64, gwMac []st
 	;`, walletId)
 
 	defer rows.Close()
+
+	if err != nil {
+		return gwId, gwMac, errors.Wrap(err, "db/pg_gateway/GetFreeGwList")
+	}
 
 	var id int64
 	var mac string
