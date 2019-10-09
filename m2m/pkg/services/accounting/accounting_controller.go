@@ -29,6 +29,7 @@ func testAccounting() error {
 	addPricesWltAgg(awuList, dlPrice) // error does not matter
 
 	addNonPriceFields(awuList, aggStartAt, aggDurationMinutes, aggPeriodId)
+	putIndDb(awuList)
 
 	fmt.Printf("awuList: %+v\n", awuList)
 
@@ -122,6 +123,21 @@ func addNonPriceFields(awuList []types.AggWltUsg, aggStartAt time.Time, aggDurat
 		awuList[k].StartAt = aggStartAt
 		awuList[k].DurationMinutes = aggDurationMins
 		awuList[k].FkWallet = int64(k)
+	}
+	return nil
+}
+
+func putIndDb(awuList []types.AggWltUsg) error {
+	for _, v := range awuList {
+
+		if v == (types.AggWltUsg{}) {
+			continue
+		}
+
+		if _, errIns := db.AggWalletUsage.InsertAggWltUsg(v); errIns != nil {
+			fmt.Println("accounting/addNonPriceFields impossible to write in DB ", errIns)
+		}
+
 	}
 	return nil
 }
