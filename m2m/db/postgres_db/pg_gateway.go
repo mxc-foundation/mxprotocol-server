@@ -102,6 +102,10 @@ func (*gatewayInterface) SetGatewayMode(gwId int64, gwMode types.GatewayMode) (e
 
 }
 
+func (*gatewayInterface) DeleteGateway(gwId int64) (err error) {
+	return PgGateway.SetGatewayMode(gwId, types.GW_DELETED)
+}
+
 func (*gatewayInterface) GetGatewayIdByMac(mac string) (gwId int64, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
