@@ -118,7 +118,7 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 
 		var dlPkt = types.DlPkt{}
 		dlPkt.DlIdNs = req.DlPkt.DlIdNs
-		dlPkt.Category = types.DlCategory(req.DlPkt.Category)
+		dlPkt.Category = types.DlCategory(networkserver.Category_name[int32(req.DlPkt.Category)])
 		dlPkt.Nonce = req.DlPkt.Nonce
 
 		if createAt, err := time.Parse(timeLayout, req.DlPkt.CreateAt); err != nil {
