@@ -4,23 +4,27 @@ import (
 	"fmt"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-func testAccounting() error {
+func testAccounting(execTime time.Time, aggDurationMinutes int64, dlPrice float64) error {
 
-	aggStartAt := time.Now().UTC().AddDate(0, 0, -1) // change
-	aggDurationMinutes := int64(48 * 60)
-	var aggPeriodId int64
-	var dlPrice float64 = 100 // change
+	// aggStartAt := time.Now().UTC().AddDate(0, 0, -2) // change
+	aggStartAt := execTime.Add(-time.Duration(aggDurationMinutes) * time.Minute)
 
-	MaxWalletId := 3 // @@ to get from DB
-	awuList := make([]types.AggWltUsg, MaxWalletId+1)
-
-	aggPeriodId, err := db.AggPeriod.InsertAggPeriod(aggStartAt, aggDurationMinutes)
+	aggPeriodId, err := db.AggPeriod.InsertAggPeriod(aggStartAt, aggDurationMinutes, execTime)
 	fmt.Println("InsertAggPeriod() ind: ", aggPeriodId, "  err:", err)
+
+	MaxWalletId, errMaxWalletId := db.Wallet.GetMaxWalletId()
+	if errMaxWalletId != nil {
+		fmt.Println("GetMaxWalletId: ", MaxWalletId, "|| err:", errMaxWalletId) //@@
+		return errMaxWalletId
+	}
+
+	awuList := make([]types.AggWltUsg, MaxWalletId+1)
 
 	if err := getWltAggFromDlPkts(aggStartAt, aggDurationMinutes, awuList); err != nil {
 		return err // @@ add path
@@ -29,7 +33,14 @@ func testAccounting() error {
 	addPricesWltAgg(awuList, dlPrice) // error does not matter
 
 	addNonPriceFields(awuList, aggStartAt, aggDurationMinutes, aggPeriodId)
-	putIndDbAggWltUsg(awuList)
+
+	walletIdSuperNode, errWltId := db.Wallet.GetWalletIdSuperNode()
+	fmt.Println("*** walletIdSuperNode: ", walletIdSuperNode) //@@
+	if errWltId != nil {
+		log.Info("Error / unable to get superNodeAccount") // error
+		return errWltId                                    // @@ wrap...
+	}
+	putInDbAggWltUsg(awuList, walletIdSuperNode)
 
 	fmt.Printf("awuList: %+v\n", awuList)
 
@@ -98,17 +109,6 @@ func addPricesWltAgg(awuList []types.AggWltUsg, dlPrice float64) error {
 		awuList[k].Income = float64(v.DlCntGw-v.DlCntGwFree) * dlPrice
 		awuList[k].BalanceIncrease = awuList[k].Income - awuList[k].Spend
 
-		// @@ better to be done when the wallet balance is going to be update
-		currBalance, err := db.Wallet.GetWalletBalance(int64(k)) // chnge to getBalance  <agg_balance> not the tmp_balance
-		if err != nil {
-			fmt.Println("GetWalletBalance(): ", currBalance, " || err:", err) //@@
-			return err                                                        // @@
-		}
-		fmt.Println("GetWalletBalance(): wltId:", k, "  curr balance: ", currBalance, " || err:", err) //@@ to remove
-		awuList[k].UpdatedBalance = currBalance + awuList[k].BalanceIncrease
-		if awuList[k].UpdatedBalance < 0 {
-			fmt.Println("Balance under flow") // @@important log
-		}
 	}
 	return nil
 }
@@ -127,28 +127,63 @@ func addNonPriceFields(awuList []types.AggWltUsg, aggStartAt time.Time, aggDurat
 	return nil
 }
 
-func putIndDbAggWltUsg(awuList []types.AggWltUsg) error {
+func putInDbAggWltUsg(awuList []types.AggWltUsg, walletIdSuperNode int64) error {
+	fmt.Println("putIndDbAggWltUsg 1")
+
 	for _, v := range awuList {
 
 		if v == (types.AggWltUsg{}) {
 			continue
 		}
 
-		if _, errIns := db.AggWalletUsage.InsertAggWltUsg(v); errIns != nil {
-			fmt.Println("accounting/addNonPriceFields impossible to write in DB ", errIns)
+		insertedAggWltUsgId, errIns := db.AggWalletUsage.InsertAggWltUsg(v)
+		if errIns != nil {
+			fmt.Println("accounting/putInDbAggWltUsg impossible to write in DB ", errIns)
+			/// return  //@@ to check return or not
 		}
 
+		fmt.Println("putIndDbAggWltUsg 2")
+		_, err := db.AggWalletUsage.ExecAggWltUsgPayments(types.InternalTx{
+			FkWalletSender: walletIdSuperNode,
+			FkWalletRcvr:   v.FkWallet,
+			PaymentCat:     string(types.DOWNLINK_AGGREGATION),
+			TxInternalRef:  insertedAggWltUsgId,
+			Value:          v.BalanceIncrease,
+			TimeTx:         time.Now().UTC(),
+		})
+		if err != nil {
+			fmt.Println("err ExecAggWltUsgPayments: ", err)
+		}
 	}
 	return nil
 }
 
 func Setup(conf config.MxpConfig) error {
 
-	// initialization from config will be done here
+	log.Info("*********  Aggregation started log")
+	log.Error("*********  Aggregation started error")
+	log.Warn("*********  Aggregation started warning")
+	// log.WithError(err).Warning("service/supernode")
+
+	var aggDurationMinutes int64 = 2 * 60 //48 * 60 // To Do: should be received from the config file
 
 	// calling accounting routine based on time trigger called here
 
-	testAccounting()
+	testAccounting(time.Now().UTC(), 60*72, 0.1) ///@@ delte/ for test
+
+	tickerAccounting := time.NewTicker(time.Duration(aggDurationMinutes) * time.Minute) // @@ change to minute
+	go func() {
+		for range tickerAccounting.C {
+			execTime := time.Now().UTC()
+			log.Info("Accounting routine started")
+			var dlPrice float64 = 0.01 // To Do: should be received from the config file
+			// super node  // func (*walletInterface) GetWalletIdSuperNode() (walletId int64, err error) {
+			testAccounting(execTime, aggDurationMinutes, dlPrice)
+
+		}
+	}()
+
+	log.Info("setup accounting service")
 
 	return nil
 }
