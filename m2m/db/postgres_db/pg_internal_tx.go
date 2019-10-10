@@ -42,10 +42,9 @@ func (*internalTxInterface) CreateInternalTxTable() error {
 			(SELECT 1 FROM pg_type WHERE typname = 'payment_category')
 		THEN
 		CREATE TYPE PAYMENT_CATEGORY AS ENUM (
-			'UPLINK',
-			'DOWNLINK',
+			'DOWNLINK_AGGREGATION',
 			'PURCHASE_SUBSCRIPTION',
-			'GATEWAY_INCOME',
+			'BUY_SUBSCRIPTION',
 			'TOP_UP',
 			'WITHDRAW'
 		);
