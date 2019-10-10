@@ -158,3 +158,68 @@ func (*aggWalletUsageInterface) GetWalletUsageHistCnt(walletId int64) (recCnt in
 	return recCnt, errors.Wrap(err, "db/pg_agg_wallet_usage/GetWalletUsageHistCnt")
 
 }
+
+func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
+	_, err := PgDB.Exec(`
+
+	CREATE OR REPLACE FUNCTION agg_wlt_usg_payment_exec (
+
+		v_agg_wlt_usg_id INT,
+		v_balance_increase NUMERIC(28,18),
+		v_time TIMESTAMP,
+		v_fk_wallet_sender INT,
+		v_fk_wallet_receiver INT,
+		v_payment_cat PAYMENT_CATEGORY
+	) RETURNS  INT
+	LANGUAGE plpgsql
+	AS $$
+
+	declare updated_wlt_balance NUMERIC(28,18);
+
+	BEGIN
+
+	INSERT INTO internal_tx (
+		fk_wallet_sender,
+		fk_wallet_receiver,
+		payment_cat,
+		tx_internal_ref,
+		value,
+		time_tx )
+	VALUES (
+		v_fk_wallet_sender,
+		v_fk_wallet_receiver,
+		v_payment_cat,
+		v_agg_wlt_usg_id,
+		v_balance_increase,
+		v_time)
+		;
+
+	UPDATE
+		wallet 
+	SET
+		balance = balance + v_balance_increase
+	WHERE
+		id = v_fk_wallet_receiver
+	RETURNING balance INTO updated_wlt_balance
+	;
+
+
+	UPDATE
+		agg_wallet_usage 
+	SET
+		updated_balance	= updated_wlt_balance
+	WHERE
+		id = v_agg_wlt_usg_id	
+	;
+	 
+	RETURN v_agg_wlt_usg_id;
+
+	END;
+	$$;
+
+	`)
+
+	return errors.Wrap(err, "db/CreateAggWltUsgFunctions")
+}
+
+// select agg_wlt_usg_payment_exec (1,-0.05,'NOW',1,2,'DOWNLINK_AGGREGATION');
