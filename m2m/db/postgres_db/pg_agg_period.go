@@ -16,7 +16,8 @@ func (*aggPeriodInterface) CreateAggPeriodTable() error {
 	CREATE TABLE IF NOT EXISTS agg_period (
 		id SERIAL PRIMARY KEY,
 		start_at  TIMESTAMP NOT NULL,
-		duration_minutes INT NOT NULL
+		duration_minutes INT NOT NULL,
+		execution_time  TIMESTAMP 
 	);
 	
 `)
@@ -24,16 +25,18 @@ func (*aggPeriodInterface) CreateAggPeriodTable() error {
 	return errors.Wrap(err, "db/pg_agg_period/CreateAggPeriodTable")
 }
 
-func (*aggPeriodInterface) InsertAggPeriod(startAt time.Time, durationMinutes int64) (insertInd int64, err error) {
+func (*aggPeriodInterface) InsertAggPeriod(startAt time.Time, durationMinutes int64, executionTime time.Time) (insertInd int64, err error) {
 	err = PgDB.QueryRow(`
 	INSERT INTO agg_period 
 		(start_at,
-		duration_minutes)
-	VALUES ($1, $2)
+		duration_minutes,
+		execution_time)
+	VALUES ($1, $2,$3)
 	RETURNING id;
 `,
 		startAt,
 		durationMinutes,
+		executionTime,
 	).Scan(&insertInd)
 	return insertInd, errors.Wrap(err, "db/pg_agg_period/InsertAggPeriod")
 }

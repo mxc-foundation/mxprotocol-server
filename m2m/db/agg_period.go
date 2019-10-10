@@ -8,7 +8,7 @@ import (
 
 type aggPeriodDBInterface interface {
 	CreateAggPeriodTable() error
-	InsertAggPeriod(startAt time.Time, durationMinutes int64) (insertInd int64, err error)
+	InsertAggPeriod(startAt time.Time, durationMinutes int64, executionTime time.Time) (insertInd int64, err error)
 }
 
 var AggPeriod = aggPeriodDBInterface(&pg.PgAggPeriod)
