@@ -67,29 +67,35 @@ dsn="{{ .PostgreSQL.DSN }}"
 automigrate={{ .PostgreSQL.Automigrate }}
 
 # This is the API and web-interface exposed to the end-user.
-[application_server.http_server]
+[m2m_server.http_server]
 # ip:port to bind the (user facing) http server to (web-interface and REST / gRPC api)
-bind="{{ .ApplicationServer.HttpServer.Bind }}"
+bind="{{ .M2MServer.HttpServer.Bind }}"
 
 # http server TLS certificate (optional)
-tls_cert="{{ .ApplicationServer.HttpServer.TLSCert }}"
+tls_cert="{{ .M2MServer.HttpServer.TLSCert }}"
 
 # http server TLS key (optional)
-tls_key="{{ .ApplicationServer.HttpServer.TLSKey }}"
+tls_key="{{ .M2MServer.HttpServer.TLSKey }}"
 
 # JWT secret used for api authentication / authorization
 # You could generate this by executing 'openssl rand -base64 32' for example
-jwt_secret="{{ .ApplicationServer.HttpServer.JWTSecret }}"
+jwt_secret="{{ .M2MServer.HttpServer.JWTSecret }}"
 
 # Allow origin header (CORS).
 #
 # Set this to allows cross-domain communication from the browser (CORS).
 # Example value: https://example.com.
 # When left blank (default), CORS will not be used.
-cors_allow_origin="{{ .ApplicationServer.HttpServer.CORSAllowOrigin }}"
+cors_allow_origin="{{ .M2MServer.HttpServer.CORSAllowOrigin }}"
 
 # when set, existing users can't be re-assigned (to avoid exposure of all users to an organization admin)"
-disable_assign_existing_users={{ .ApplicationServer.HttpServer.DisableAssignExistingUsers }}
+disable_assign_existing_users={{ .M2MServer.HttpServer.DisableAssignExistingUsers }}
+
+[appserver]
+appserver={{ .AppServer.Server }}
+ca_cert={{ .AppServer.CACert }}
+tls_cert={{ .AppServer.TLSCert }}
+tls_key={{ .AppServer.TLSKey }}
 
 [supernode]
 contract_address={{ .SuperNode.ContractAddress }}

@@ -5,14 +5,13 @@ import (
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/device"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 	"time"
 )
 
 type M2MServerAPI struct{}
-
-var timeLayout = "2006-01-02T15:04:05.000000Z"
 
 // M2MServerAPI returns a new M2MServerAPI.
 func NewM2MServerAPI() *M2MServerAPI {
@@ -31,19 +30,6 @@ func (*M2MServerAPI) AddDeviceInM2MServer(ctx context.Context, req *api.AddDevic
 
 	dev := types.Device{}
 	dev.DevEui = req.DevProfile.DevEui
-	/*	if createAt, err := time.Parse(timeLayout, req.DevProfile.CreatedAt); err != nil {
-			log.WithError(err).Error("time format error")
-			return &api.AddDeviceInM2MServerResponse{}, err
-		} else {
-			dev.CreatedAt = createAt
-		}*/
-
-	/*	if lastSeenAt, err := time.Parse(timeLayout, req.DevProfile.LastSeenAt); err != nil {
-			log.WithError(err).Error("time format error")
-			return &api.AddDeviceInM2MServerResponse{}, err
-		} else {
-			dev.LastSeenAt = lastSeenAt
-		}*/
 	dev.CreatedAt = time.Now()
 	dev.ApplicationId = req.DevProfile.ApplicationId
 	dev.Name = req.DevProfile.Name
@@ -52,7 +38,19 @@ func (*M2MServerAPI) AddDeviceInM2MServer(ctx context.Context, req *api.AddDevic
 
 	devId, err := db.Device.InsertDevice(dev)
 	if err != nil {
-		log.WithError(err).Error("Insert device to DB error")
+		log.WithError(err).Error("grpc_api/AddDeviceInM2MServer")
+		// retry
+		go func() {
+			for {
+				err := device.SyncDeviceProfileFromAppserver(dev, types.ADD)
+				if err != nil {
+					log.WithError(err).Error("grpc_api/AddDeviceInM2MServer: retry failed")
+					time.Sleep(5*time.Second)
+					continue
+				}
+				break;
+			}
+		}()
 		return &api.AddDeviceInM2MServerResponse{}, err
 	}
 
@@ -90,21 +88,6 @@ func (*M2MServerAPI) AddGatewayInM2MServer(ctx context.Context, req *api.AddGate
 
 	gw := types.Gateway{}
 	gw.Mac = req.GwProfile.Mac
-
-	/*	if createAt, err := time.Parse(timeLayout, req.GwProfile.CreateAt); err != nil {
-			log.WithError(err).Error("time format error")
-			return &api.AddGatewayInM2MServerResponse{}, err
-		} else {
-			gw.CreatedAt = createAt
-		}*/
-
-	/*	if lastSeenAt, err := time.Parse(timeLayout, req.GwProfile.LastSeenAt); err != nil {
-			log.WithError(err).Error("time format error")
-			return &api.AddGatewayInM2MServerResponse{}, err
-		} else {
-			gw.LastSeenAt = lastSeenAt
-		}*/
-
 	gw.CreatedAt = time.Now()
 	gw.OrgId = req.OrgId
 	gw.Description = req.GwProfile.Description

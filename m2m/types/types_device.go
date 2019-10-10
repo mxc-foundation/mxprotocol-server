@@ -21,3 +21,11 @@ const (
 	DV_WHOLE_NETWORK         DeviceMode = "DV_WHOLE_NETWORK"
 	DV_DELETED               DeviceMode = "DV_DELETED"
 )
+
+type OperationType string
+
+const (
+	ADD    OperationType = "add"
+	MODIFY OperationType = "modify"
+	DELETE OperationType = "delete"
+)

@@ -10,6 +10,11 @@ service M2MServerService {
     rpc DeleteGatewayInM2MServer (DeleteGatewayInM2MServerRequest) returns (DeleteGatewayInM2MServerResponse);
 }
 
+service AppServerService {
+    rpc GetDeviceByDevEui (GetDeviceByDevEuiRequest) returns (GetDeviceByDevEuiResponse);
+    rpc GetGatewayByMac (GetGatewayByMacRequest) returns (GetGatewayByMacResponse);
+}
+
 message AppServerDeviceProfile {
     string dev_eui = 1;
     int64 application_id = 2;
@@ -55,4 +60,22 @@ message DeleteGatewayInM2MServerRequest {
 
 message DeleteGatewayInM2MServerResponse {
     bool status = 1;
+}
+
+message GetDeviceByDevEuiRequest {
+    string dev_eui = 1;
+}
+
+message GetDeviceByDevEuiResponse {
+    int64 org_id = 1;
+    AppServerDeviceProfile dev_profile = 2;
+}
+
+message GetGatewayByMacRequest {
+    string mac = 1;
+}
+
+message GetGatewayByMacResponse {
+    int64 org_id = 1;
+    AppServerGatewayProfile gw_profile = 2;
 }

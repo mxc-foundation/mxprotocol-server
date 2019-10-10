@@ -25,7 +25,7 @@ type MxpConfig struct {
 		IdleTimeout time.Duration `mapstructure:"idle_timeout"`
 	}
 
-	ApplicationServer struct {
+	M2MServer struct {
 		HttpServer struct {
 			Bind                       string `mapstructure:"bind"`
 			TLSCert                    string `mapstructure:"tls_cert"`
@@ -34,7 +34,14 @@ type MxpConfig struct {
 			CORSAllowOrigin            string `mapstructure:"cors_allow_origin"`
 			DisableAssignExistingUsers bool   `mapstructure:"disable_assign_existing_users"`
 		} `mapstructure:"http_server"`
-	} `mapstructure:"application_server"`
+	} `mapstructure:"m2m_server"`
+
+	AppServer struct{
+		Server string `mapstructure:"appserver"`
+		CACert    string `mapstructure:"ca_cert"`
+		TLSCert   string `mapstructure:"tls_cert"`
+		TLSKey    string `mapstructure:"tls_key"`
+	} `mapstructure:"appserver"`
 
 	PaymentServer struct {
 		PaymentServiceAddress string `mapstructure:"payment_service_address"`
