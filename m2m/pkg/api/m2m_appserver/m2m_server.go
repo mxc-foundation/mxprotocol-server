@@ -6,6 +6,7 @@ import (
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/device"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/gateway"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 	"time"
@@ -25,6 +26,7 @@ func (*M2MServerAPI) AddDeviceInM2MServer(ctx context.Context, req *api.AddDevic
 
 	walletId, err := wallet.GetWalletId(req.OrgId)
 	if err != nil {
+		log.WithError(err).Error("grpc_api/AddDeviceInM2MServer")
 		return &api.AddDeviceInM2MServerResponse{}, err
 	}
 
@@ -42,7 +44,7 @@ func (*M2MServerAPI) AddDeviceInM2MServer(ctx context.Context, req *api.AddDevic
 		// retry
 		go func() {
 			for {
-				err := device.SyncDeviceProfileFromAppserver(dev, types.ADD)
+				err := device.SyncDeviceProfileFromAppserver(dev.Id, dev.DevEui)
 				if err != nil {
 					log.WithError(err).Error("grpc_api/AddDeviceInM2MServer: retry failed")
 					time.Sleep(5*time.Second)
@@ -64,12 +66,24 @@ func (*M2MServerAPI) DeleteDeviceInM2MServer(ctx context.Context, req *api.Delet
 
 	devId, err := db.Device.GetDeviceIdByDevEui(req.DevEui)
 	if err != nil {
-		log.WithError(err).Error("Get devId from DB error")
+		log.WithError(err).Error("grpc_api/DeleteDeviceInM2MServer")
 		return &api.DeleteDeviceInM2MServerResponse{}, err
 	}
-	err = db.Device.SetDeviceMode(devId, "DELETED")
+	err = db.Device.SetDeviceMode(devId, types.DV_DELETED)
 	if err != nil {
-		log.WithError(err).Error("Set devMode error")
+		log.WithError(err).Error("grpc_api/DeleteDeviceInM2MServer")
+		// retry
+		go func() {
+			for {
+				err := device.SyncDeviceProfileFromAppserver(devId, req.DevEui)
+				if err != nil {
+					log.WithError(err).Error("grpc_api/DeleteDeviceInM2MServer: retry failed")
+					time.Sleep(5*time.Second)
+					continue
+				}
+				break;
+			}
+		}()
 		return &api.DeleteDeviceInM2MServerResponse{}, err
 	}
 
@@ -83,6 +97,7 @@ func (*M2MServerAPI) AddGatewayInM2MServer(ctx context.Context, req *api.AddGate
 
 	walletId, err := wallet.GetWalletId(req.OrgId)
 	if err != nil {
+		log.WithError(err).Error("grpc_api/AddGatewayInM2MServer")
 		return &api.AddGatewayInM2MServerResponse{}, err
 	}
 
@@ -97,7 +112,19 @@ func (*M2MServerAPI) AddGatewayInM2MServer(ctx context.Context, req *api.AddGate
 
 	gwId, err := db.Gateway.InsertGateway(gw)
 	if err != nil {
-		log.WithError(err).Error("Insert gateway to DB error")
+		log.WithError(err).Error("grpc_api/AddGatewayInM2MServer")
+		// retry
+		go func() {
+			for {
+				err := gateway.SyncGatewayProfileFromAppserver(gw.Id, gw.Mac)
+				if err != nil {
+					log.WithError(err).Error("grpc_api/AddGatewayInM2MServer: retry failed")
+					time.Sleep(5*time.Second)
+					continue
+				}
+				break;
+			}
+		}()
 		return &api.AddGatewayInM2MServerResponse{}, err
 	}
 
@@ -111,12 +138,24 @@ func (*M2MServerAPI) DeleteGatewayInM2MServer(ctx context.Context, req *api.Dele
 
 	gwId, err := db.Gateway.GetGatewayIdByMac(req.MacAddress)
 	if err != nil {
-		log.WithError(err).Error("Get gwId from DB error")
+		log.WithError(err).Error("grpc_api/DeleteGatewayInM2MServer")
 		return &api.DeleteGatewayInM2MServerResponse{}, err
 	}
-	err = db.Gateway.SetGatewayMode(gwId, "DELETED")
+	err = db.Gateway.SetGatewayMode(gwId, types.GW_DELETED)
 	if err != nil {
-		log.WithError(err).Error("Set devMode error")
+		log.WithError(err).Error("grpc_api/DeleteGatewayInM2MServer")
+		// retry
+		go func() {
+			for {
+				err := gateway.SyncGatewayProfileFromAppserver(gwId, req.MacAddress)
+				if err != nil {
+					log.WithError(err).Error("grpc_api/DeleteGatewayInM2MServer: retry failed")
+					time.Sleep(5*time.Second)
+					continue
+				}
+				break;
+			}
+		}()
 		return &api.DeleteGatewayInM2MServerResponse{}, err
 	}
 

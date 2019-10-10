@@ -16,28 +16,28 @@ func Setup() error {
 	return nil
 }
 
-func SyncDeviceProfileFromAppserver(dev types.Device, oper types.OperationType) error {
+func SyncDeviceProfileFromAppserver(devId int64, devEui string) error {
 	client, err := appserver.GetPool().Get(config.Cstruct.AppServer.Server, []byte(config.Cstruct.AppServer.CACert),
 		[]byte(config.Cstruct.AppServer.TLSCert), []byte(config.Cstruct.AppServer.TLSKey))
 	if err != nil {
 		return err
 	}
 
-	device, err := client.GetDeviceByDevEui(context.Background(), &api.GetDeviceByDevEuiRequest{DevEui: dev.DevEui})
+	device, err := client.GetDeviceByDevEui(context.Background(), &api.GetDeviceByDevEuiRequest{DevEui: devEui})
 	if err == nil && device.DevProfile == nil {
 		// device no longer exist, delete from database
-		err := db.Device.SetDeviceMode(dev.Id, "DELETED")
+		err := db.Device.SetDeviceMode(devId, types.DV_DELETED)
 		if err != nil {
-			log.WithError(err).Warn("device/SyncDeviceProfileFromAppserver")
+			log.WithError(err).Warn("device/SyncDeviceProfileFromAppserver: devId", devId)
 		}
 	} else if err == nil {
 		// get device successfully, add/update device
 		walletId, err := db.Wallet.GetWalletIdFromOrgId(device.OrgId)
 		if err != nil {
 			log.WithError(err).Error("device/SyncDeviceProfileFromAppserver: device is not linked to any wallet")
-			err := db.Device.SetDeviceMode(dev.Id, "DELETED")
+			err := db.Device.SetDeviceMode(devId, types.DV_DELETED)
 			if err != nil {
-				log.WithError(err).Warn("device/SyncDeviceProfileFromAppserver")
+				log.WithError(err).Warn("device/SyncDeviceProfileFromAppserver: devId", devId)
 			}
 			// in this case, it is not necessary to retry again
 			return nil
