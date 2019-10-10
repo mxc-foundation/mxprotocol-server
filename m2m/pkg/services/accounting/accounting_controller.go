@@ -29,7 +29,7 @@ func testAccounting() error {
 	addPricesWltAgg(awuList, dlPrice) // error does not matter
 
 	addNonPriceFields(awuList, aggStartAt, aggDurationMinutes, aggPeriodId)
-	putIndDb(awuList)
+	putIndDbAggWltUsg(awuList)
 
 	fmt.Printf("awuList: %+v\n", awuList)
 
@@ -127,7 +127,7 @@ func addNonPriceFields(awuList []types.AggWltUsg, aggStartAt time.Time, aggDurat
 	return nil
 }
 
-func putIndDb(awuList []types.AggWltUsg) error {
+func putIndDbAggWltUsg(awuList []types.AggWltUsg) error {
 	for _, v := range awuList {
 
 		if v == (types.AggWltUsg{}) {
