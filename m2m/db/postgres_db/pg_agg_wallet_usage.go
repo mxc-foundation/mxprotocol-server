@@ -170,7 +170,7 @@ func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
 		v_fk_wallet_sender INT,
 		v_fk_wallet_receiver INT,
 		v_payment_cat PAYMENT_CATEGORY
-	) RETURNS  INT
+	) RETURNS  NUMERIC(28,18)
 	LANGUAGE plpgsql
 	AS $$
 
@@ -212,7 +212,7 @@ func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
 		id = v_agg_wlt_usg_id	
 	;
 	 
-	RETURN v_agg_wlt_usg_id;
+	RETURN updated_wlt_balance;
 
 	END;
 	$$;
@@ -222,4 +222,30 @@ func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
 	return errors.Wrap(err, "db/CreateAggWltUsgFunctions")
 }
 
-// select agg_wlt_usg_payment_exec (1,-0.05,'NOW',1,2,'DOWNLINK_AGGREGATION');
+// add row to internal_tx table and modify the balances
+func (*aggWalletUsageInterface) ExecAggWltUsgPayments(internalTx types.InternalTx) (updatedBalance float64, err error) {
+
+	err = PgDB.QueryRow(`
+	SELECT 
+		agg_wlt_usg_payment_exec (
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6
+		);`,
+
+		internalTx.TxInternalRef,
+		internalTx.Value,
+		internalTx.TimeTx,
+		internalTx.FkWalletSender,
+		internalTx.FkWalletRcvr,
+		internalTx.PaymentCat,
+	).Scan(&updatedBalance)
+
+	if err != nil {
+		return 0, errors.Wrap(err, "db/ExecAggWltUsgPayments")
+	}
+	return updatedBalance, errors.Wrap(err, "db/ExecAggWltUsgPayments")
+}
