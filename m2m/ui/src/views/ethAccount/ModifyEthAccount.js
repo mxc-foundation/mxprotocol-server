@@ -15,6 +15,9 @@ import styles from "./EthAccountStyle";
 import { ETHER } from "../../util/Coin-type";
 import { SUPER_ADMIN } from "../../util/M2mUtil";
 
+
+
+
 function verifyUser (resp) {
   const login = {};
   login.username = resp.username;
@@ -56,22 +59,27 @@ class ModifyEthAccount extends Component {
       super();
       this.state = {};
       this.loadData = this.loadData.bind(this);
+      
     }
-    
+    isAdmin = false;
+
     componentDidMount() {
       this.loadData();
     }
+    
     
     loadData() {
       const orgId = this.props.match.params.organizationID;
 
       if (orgId === SUPER_ADMIN) {
+        this.isAdmin = true;
         SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, orgId, resp => {
           this.setState({
             activeAccount: resp.supernodeActiveAccount,
           });
         });
       }else{
+        this.isAdmin = false;
         MoneyStore.getActiveMoneyAccount(ETHER, orgId, resp => {
           this.setState({
             activeAccount: resp.activeAccount,
@@ -118,14 +126,15 @@ class ModifyEthAccount extends Component {
   render() {
     
     const organizationID = this.props.match.params.organizationID;
-    const isAdmin = (organizationID === SUPER_ADMIN)?true:false;
+    
     
     return(
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
-                  <TitleBarTitle title="ETH Account" />
+                  <TitleBarTitle title={this.isAdmin?'Super Node ETH Account':'ETH Account'} />
+                 
                 </TitleBar>
                 {/* <Divider light={true}/>
                 <div className={this.props.classes.breadcrumb}>

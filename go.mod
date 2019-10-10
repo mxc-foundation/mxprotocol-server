@@ -20,6 +20,7 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/gobuffalo/packr v1.30.1 // indirect
 	github.com/golang/protobuf v1.3.2
+	github.com/goreleaser/nfpm v0.13.0 // indirect
 	github.com/gorilla/mux v1.7.3
 	github.com/gorilla/websocket v1.4.1 // indirect
 	github.com/graph-gophers/graphql-go v0.0.0-20190902214650-641ae197eec7 // indirect
@@ -29,6 +30,7 @@ require (
 	github.com/huin/goupnp v1.0.0 // indirect
 	github.com/influxdata/influxdb v1.7.7 // indirect
 	github.com/jackpal/go-nat-pmp v1.0.1 // indirect
+	github.com/jteeuwen/go-bindata v3.0.7+incompatible // indirect
 	github.com/karalabe/usb v0.0.0-20190819132248-550797b1cad8 // indirect
 	github.com/lib/pq v1.2.0
 	github.com/magiconair/properties v1.8.1 // indirect
