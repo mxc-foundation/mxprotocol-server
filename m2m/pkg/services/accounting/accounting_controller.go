@@ -12,8 +12,6 @@ func Setup(conf config.MxpConfig) error {
 
 	var aggDurationMinutes int64 = conf.Accounting.IntervalMin
 
-	performAccounting(time.Now().UTC(), 60*72, 0.1) ///@@ for test
-
 	tickerAccounting := time.NewTicker(time.Duration(aggDurationMinutes) * time.Minute)
 	go func() {
 		for range tickerAccounting.C {
