@@ -24,6 +24,17 @@ host_server={{ .General.HostServer }}
 auth_server={{ .General.AuthServer }}
 auth_url={{ .General.AuthServer }}
 
+[user_notification]
+low_balance_threshold={{ .UserNotification.LowBalanceThreshold }}
+
+[system_notification]
+low_balance_threshold={{ .SysNotification.LowBalanceThreshold }}
+
+[pricing]
+downlink_package_price={{ .Pricing.DownLinkPkgPrice }}
+
+[accounting]
+interval="{{ .Accounting.Interval }}"
 
 # PostgreSQL settings.
 #
@@ -65,6 +76,26 @@ dsn="{{ .PostgreSQL.DSN }}"
 # this setting. Make sure that you always make a backup when upgrading Lora
 # App Server and / or applying migrations.
 automigrate={{ .PostgreSQL.Automigrate }}
+
+[redis]
+url="{{ .Redis.URL }}"
+max_idle={{ .Redis.MaxIdle }}
+# Idle timeout.
+#
+# Close connections after remaining idle for this duration. If the value
+# is zero, then idle connections are not closed. You should set
+# the timeout to a value less than the server's timeout.
+idle_timeout="{{ .Redis.IdleTimeout }}"
+
+# Automatically apply database migrations.
+#
+# It is possible to apply the database-migrations by hand
+# (see https://github.com/brocaar/lora-app-server/tree/master/migrations)
+# or let LoRa App Server migrate to the latest state automatically, by using
+# this setting. Make sure that you always make a backup when upgrading Lora
+# App Server and / or applying migrations.
+automigrate=true
+
 
 # This is the API and web-interface exposed to the end-user.
 [application_server.http_server]

@@ -14,6 +14,22 @@ type MxpConfig struct {
 		AuthUrl                string `mapstructure:"auth_url"`
 	}
 
+	UserNotification struct {
+		LowBalanceThreshold float64 `mapstructure:"low_balance_threshold"`
+	} `mapstructure:"user_notification"`
+
+	SysNotification struct {
+		LowBalanceThreshold float64 `mapstructure:"low_balance_threshold"`
+	} `mapstructure:"system_notification"`
+
+	Pricing struct {
+		DownLinkPkgPrice float64 `mapstructure:"downlink_package_price"`
+	} `mapstructure:"pricing"`
+
+	Accounting struct {
+		Interval time.Duration `mapstructure:"interval"`
+	} `mapstructure:"accounting"`
+
 	PostgreSQL struct {
 		DSN         string `mapstructure:"dsn"`
 		Automigrate bool   `mapstructure:"automigrate"`
