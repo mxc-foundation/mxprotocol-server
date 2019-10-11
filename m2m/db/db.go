@@ -88,8 +88,16 @@ func dbInit() {
 		log.WithError(err).Fatal("db/CreateGatewayTable")
 	}
 
+	if err := AggPeriod.CreateAggPeriodTable(); err != nil {
+		log.WithError(err).Fatal("db/CreateAggPeriodTable")
+	}
+
 	if err := AggWalletUsage.CreateAggWltUsgTable(); err != nil {
 		log.WithError(err).Fatal("db/CreateAggWltUsgTable")
+	}
+
+	if err := AggWalletUsage.CreateAggWltUsgFunctions(); err != nil {
+		log.WithError(err).Fatal("db/CreateAggWltUsgFunctions")
 	}
 
 	if err := AggDeviceUsage.CreateAggDvUsgTable(); err != nil {

@@ -220,3 +220,14 @@ func (*walletInterface) TmpBalanceUpdatePktTx(dvWalletId, gwWalletId int64, amou
 
 	return errors.Wrap(err, "db/TmpBalanceUpdatePktTx")
 }
+
+func (*walletInterface) GetMaxWalletId() (maxWalletId int64, err error) {
+	err = PgDB.QueryRow(
+		`SELECT
+			MAX (id)
+		FROM
+			wallet 
+		;`).Scan(&maxWalletId)
+
+	return maxWalletId, errors.Wrap(err, "db/GetMaxWalletId")
+}
