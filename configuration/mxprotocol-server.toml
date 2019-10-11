@@ -25,7 +25,7 @@ low_balance_threshold=20
 downlink_package_price=10
 
 [accounting]
-interval="5m0s"
+interval_min = 60
 
 
 # PostgreSQL settings.
@@ -118,6 +118,8 @@ api_key="W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4"
 check_account_seconds=30
 external_currency_abv="Ether"
 ether_test_net=true
+
+down_link_price = 0.1
 
 [paymentserver]
 payment_service_address="payment"
