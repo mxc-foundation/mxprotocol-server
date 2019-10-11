@@ -27,7 +27,7 @@ type MxpConfig struct {
 	} `mapstructure:"pricing"`
 
 	Accounting struct {
-		Interval time.Duration `mapstructure:"interval"`
+		IntervalMin int64 `mapstructure:"interval_min"`
 	} `mapstructure:"accounting"`
 
 	PostgreSQL struct {
