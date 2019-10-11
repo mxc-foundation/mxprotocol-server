@@ -17,7 +17,7 @@ func performAccounting(execTime time.Time, aggDurationMinutes int64, dlPrice flo
 	if err != nil {
 		return errors.Wrap(err, "accounting/performAccounting Unable to start accounting")
 	}
-	log.Info("Wallet Usage Aggregation Period: ", aggPeriodId)
+	log.Info("accounting/ Wallet Usage Aggregation Period: ", aggPeriodId)
 
 	MaxWalletId, errMaxWalletId := db.Wallet.GetMaxWalletId()
 	if errMaxWalletId != nil {
@@ -155,6 +155,9 @@ func putInDbAggWltUsg(awuList []types.AggWltUsg, walletIdSuperNode int64) error 
 				"AggWltUsg": v,
 			}).WithError(errIns).Error("accounting/putInDbAggWltUsg impossible to write in DB ExecAggWltUsgPayments ")
 		}
+
+		syncTmpBalance(v.FkWallet)
+
 	}
 	return nil
 }

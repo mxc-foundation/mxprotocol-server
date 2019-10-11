@@ -121,7 +121,8 @@ func (*topupInterface) CreateTopupFunctions() error {
 		UPDATE
 			wallet 
 		SET
-			balance = balance + v_value
+			balance = balance + v_value,
+			tmp_balance = tmp_balance + v_value
 		WHERE
 			id = v_fk_wallet_receiver
 		;
