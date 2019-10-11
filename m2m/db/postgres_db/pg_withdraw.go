@@ -190,7 +190,8 @@ func (*withdrawInterface) CreateWithdrawFunctions() error {
 		UPDATE
 			wallet 
 		SET
-			balance = balance - v_value_fee_included
+			balance = balance - v_value_fee_included,
+			tmp_balance = tmp_balance - v_value_fee_included
 		WHERE
 			id = v_fk_wallet_sender
 		;
