@@ -1,12 +1,12 @@
 package postgres_db
 
 import (
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 	"time"
 
 	"github.com/ethereum/go-ethereum/log"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
 type topupInterface struct{}
@@ -179,7 +179,7 @@ func (*topupInterface) AddTopUpRequest(acntAdrSender string, acntAdrRcvr string,
 	}
 
 	it := types.InternalTx{
-		PaymentCat: string(TOP_UP),
+		PaymentCat: string(types.TOP_UP),
 	}
 
 	it.FkWalletRcvr, err = PgWallet.GetWalletIdofActiveAcnt(acntAdrSender, extCurAbv)

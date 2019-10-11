@@ -16,6 +16,7 @@ type walletDBInterface interface {
 	GetWalletIdSuperNode() (walletId int64, err error)
 	UpdateBalanceByWalletId(walletId int64, newBalance float64) error
 	TmpBalanceUpdatePktTx(dvWalletId, gwWalletId int64, amount float64) error
+	GetMaxWalletId() (maxWalletId int64, err error)
 }
 
 var Wallet = walletDBInterface(&pg.PgWallet)
