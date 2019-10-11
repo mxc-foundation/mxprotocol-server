@@ -1,50 +1,55 @@
 package accounting
 
 import (
-	"fmt"
 	"time"
 
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-func testAccounting(execTime time.Time, aggDurationMinutes int64, dlPrice float64) error {
+func performAccounting(execTime time.Time, aggDurationMinutes int64, dlPrice float64) error {
 
-	// aggStartAt := time.Now().UTC().AddDate(0, 0, -2) // change
 	aggStartAt := execTime.Add(-time.Duration(aggDurationMinutes) * time.Minute)
 
 	aggPeriodId, err := db.AggPeriod.InsertAggPeriod(aggStartAt, aggDurationMinutes, execTime)
-	fmt.Println("InsertAggPeriod() ind: ", aggPeriodId, "  err:", err)
+	if err != nil {
+		return errors.Wrap(err, "accounting/performAccounting Unable to start accounting")
+	}
+	log.Info("Wallet Usage Aggregation Period: ", aggPeriodId)
 
 	MaxWalletId, errMaxWalletId := db.Wallet.GetMaxWalletId()
 	if errMaxWalletId != nil {
-		fmt.Println("GetMaxWalletId: ", MaxWalletId, "|| err:", errMaxWalletId) //@@
-		return errMaxWalletId
+		return errors.Wrap(errMaxWalletId, "accounting/performAccounting Unable to start accounting")
 	}
 
 	awuList := make([]types.AggWltUsg, MaxWalletId+1)
-
 	if err := getWltAggFromDlPkts(aggStartAt, aggDurationMinutes, awuList); err != nil {
-		return err // @@ add path
+		return err
 	}
 
-	addPricesWltAgg(awuList, dlPrice) // error does not matter
+	addPricesWltAgg(awuList, dlPrice)
 
 	addNonPriceFields(awuList, aggStartAt, aggDurationMinutes, aggPeriodId)
 
 	walletIdSuperNode, errWltId := db.Wallet.GetWalletIdSuperNode()
-	fmt.Println("*** walletIdSuperNode: ", walletIdSuperNode) //@@
 	if errWltId != nil {
-		log.Info("Error / unable to get superNodeAccount") // error
-		return errWltId                                    // @@ wrap...
+		return errors.Wrap(errWltId, "accounting/performAccounting  Unable to write accounting in DB; unable to get superNodeAccount")
 	}
-	putInDbAggWltUsg(awuList, walletIdSuperNode)
 
-	fmt.Printf("awuList: %+v\n", awuList)
+	log.WithFields(log.Fields{
+		"Accounting  aggPeriodId": aggPeriodId,
+	}).Info("Accounting calculations is done; writing in the DB started!")
 
-	// forAggWltRecord
-	// 	inserrtAggWlt
+	if err := putInDbAggWltUsg(awuList, walletIdSuperNode); err != nil {
+		return errors.Wrap(errWltId, "accounting/performAccounting")
+	}
+
+	log.WithFields(log.Fields{
+		"Accounting  aggPeriodId": aggPeriodId,
+	}).Info("Accounting performed successfully!")
+
 	return nil
 
 }
@@ -52,13 +57,12 @@ func testAccounting(execTime time.Time, aggDurationMinutes int64, dlPrice float6
 func getWltAggFromDlPkts(aggStartAt time.Time, aggDurationMinutes int64, awuList []types.AggWltUsg) error {
 
 	if wltIds, cnts, err := db.DlPacket.GetAggDlPktDeviceWallet(aggStartAt, aggDurationMinutes); true {
-		fmt.Println("GetAggDlPktDeviceWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
+		// fmt.Println("GetAggDlPktDeviceWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
 		if err != nil {
-			fmt.Println(err) // add path
-			return err
+			return errors.Wrap(err, "accounting/getWltAggFromDlPkts")
 		}
 		if len(wltIds) != len(cnts) {
-			fmt.Println("Inequal length of arrays wltIds, Cnts GetAggDlPktDeviceWallet") // @@ add path to error
+			return errors.Wrap(err, "accounting/getWltAggFromDlPkts  Inequal length of arrays wltIds, Cnts GetAggDlPktDeviceWallet")
 		}
 		for k, v := range wltIds {
 			awuList[v].DlCntDv = cnts[k]
@@ -66,14 +70,12 @@ func getWltAggFromDlPkts(aggStartAt time.Time, aggDurationMinutes int64, awuList
 	}
 
 	if wltIds, cnts, err := db.DlPacket.GetAggDlPktGatewayWallet(aggStartAt, aggDurationMinutes); true {
-		fmt.Println("GetAggDlPktGatewayWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
+		// fmt.Println("GetAggDlPktGatewayWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
 		if err != nil {
-			fmt.Println(err) // add path
-			//return   //@@
-			return err
+			return errors.Wrap(err, "accounting/getWltAggFromDlPkts")
 		}
 		if len(wltIds) != len(cnts) {
-			fmt.Println("Inequal length of arrays wltIds, Cnts GetAggDlPktGatewayWallet") // @@ add path to error
+			return errors.Wrap(err, "accounting/getWltAggFromDlPkts  Inequal length of arrays wltIds, Cnts GetAggDlPktGatewayWallet")
 		}
 		for k, v := range wltIds {
 			awuList[v].DlCntGw = cnts[k]
@@ -81,13 +83,13 @@ func getWltAggFromDlPkts(aggStartAt time.Time, aggDurationMinutes int64, awuList
 	}
 
 	if wltIds, cnts, err := db.DlPacket.GetAggDlPktFreeWallet(aggStartAt, aggDurationMinutes); true {
-		fmt.Println("GetAggDlPktFreeWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
+		// fmt.Println("GetAggDlPktFreeWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
 		if err != nil {
-			fmt.Println(err) // add path
-			return err
+			return errors.Wrap(err, "accounting/getWltAggFromDlPkts")
 		}
 		if len(wltIds) != len(cnts) {
-			fmt.Println("Inequal length of arrays wltIds, Cnts GetAggDlPktFreeWallet") // @@ add path to error
+			return errors.Wrap(err, "accounting/GetAggDlPktFreeWallet  Inequal length of arrays wltIds, Cnts GetAggDlPktGatewayWallet")
+
 		}
 		for k, v := range wltIds {
 			awuList[v].DlCntDvFree = cnts[k]
@@ -97,7 +99,7 @@ func getWltAggFromDlPkts(aggStartAt time.Time, aggDurationMinutes int64, awuList
 	return nil
 }
 
-func addPricesWltAgg(awuList []types.AggWltUsg, dlPrice float64) error {
+func addPricesWltAgg(awuList []types.AggWltUsg, dlPrice float64) {
 	for k, v := range awuList {
 
 		if v == (types.AggWltUsg{}) {
@@ -109,7 +111,6 @@ func addPricesWltAgg(awuList []types.AggWltUsg, dlPrice float64) error {
 		awuList[k].BalanceIncrease = awuList[k].Income - awuList[k].Spend
 
 	}
-	return nil
 }
 
 func addNonPriceFields(awuList []types.AggWltUsg, aggStartAt time.Time, aggDurationMins int64, aggPeriodId int64) error {
@@ -127,7 +128,6 @@ func addNonPriceFields(awuList []types.AggWltUsg, aggStartAt time.Time, aggDurat
 }
 
 func putInDbAggWltUsg(awuList []types.AggWltUsg, walletIdSuperNode int64) error {
-	fmt.Println("putIndDbAggWltUsg 1")
 
 	for _, v := range awuList {
 
@@ -137,11 +137,11 @@ func putInDbAggWltUsg(awuList []types.AggWltUsg, walletIdSuperNode int64) error 
 
 		insertedAggWltUsgId, errIns := db.AggWalletUsage.InsertAggWltUsg(v)
 		if errIns != nil {
-			fmt.Println("accounting/putInDbAggWltUsg impossible to write in DB ", errIns)
-			/// return  //@@ to check return or not
+			log.WithFields(log.Fields{
+				"AggWltUsg": v,
+			}).WithError(errIns).Error("accounting/putInDbAggWltUsg impossible to write in DB InsertAggWltUsg ")
 		}
 
-		fmt.Println("putIndDbAggWltUsg 2")
 		_, err := db.AggWalletUsage.ExecAggWltUsgPayments(types.InternalTx{
 			FkWalletSender: walletIdSuperNode,
 			FkWalletRcvr:   v.FkWallet,
@@ -151,7 +151,9 @@ func putInDbAggWltUsg(awuList []types.AggWltUsg, walletIdSuperNode int64) error 
 			TimeTx:         time.Now().UTC(),
 		})
 		if err != nil {
-			fmt.Println("err ExecAggWltUsgPayments: ", err)
+			log.WithFields(log.Fields{
+				"AggWltUsg": v,
+			}).WithError(errIns).Error("accounting/putInDbAggWltUsg impossible to write in DB ExecAggWltUsgPayments ")
 		}
 	}
 	return nil
