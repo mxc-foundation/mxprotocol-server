@@ -123,7 +123,6 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 
 		if createAt, err := time.Parse(timeLayout, req.DlPkt.CreateAt); err != nil {
 			log.WithError(err).Error("time format error")
-			return err
 		} else {
 			dlPkt.CreatedAt = createAt
 		}
@@ -135,7 +134,6 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 		dvId, err := db.Device.GetDeviceIdByDevEui(req.DlPkt.DevEui)
 		if err != nil {
 			log.WithError(err).Error("db/cannot get devID")
-			return err
 		}
 
 		dlPkt.FkDevice = dvId
@@ -143,7 +141,6 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 		gwId, err := db.Gateway.GetGatewayIdByMac(req.DlPkt.GwMac)
 		if err != nil {
 			log.WithError(err).Error("db/cannot get gwID")
-			return err
 		}
 
 		dlPkt.FkGateway = gwId
@@ -151,25 +148,21 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 		_, err = db.DlPacket.InsertDlPkt(dlPkt)
 		if err != nil {
 			log.WithError(err).Error("db/cannot update dlPkt")
-			return err
 		}
 
 		err = db.Device.UpdateDeviceLastSeen(dvId, time.Now())
 		if err != nil {
 			log.WithError(err).Error("db/cannot update devicelastseen")
-			return err
 		}
 
 		dvwalletId, err := db.Device.GetWalletIdOfDevice(dvId)
 		if err != nil {
 			log.WithError(err).Error("db/cannot get dvWalletID")
-			return err
 		}
 
 		gwwalletId, err := db.Gateway.GetWalletIdOfGateway(gwId)
 		if err != nil {
 			log.WithError(err).Error("db/cannot get gwWalletID")
-			return err
 		}
 
 		if dvwalletId == gwwalletId {
@@ -178,7 +171,6 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 			err = db.Wallet.TmpBalanceUpdatePktTx(dvId, gwId, dlPrice)
 			if err != nil {
 				log.WithError(err).Error("db/cannot update balance")
-				return err
 			}
 		}
 
