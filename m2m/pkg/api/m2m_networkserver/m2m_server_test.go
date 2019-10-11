@@ -6,24 +6,23 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"testing"
 	log "github.com/sirupsen/logrus"
-	"time"
 )
 
-func tt(){
+/*func tt(){
 	t1 := time.Now() // get current time
 	TestDvUsageMode("98749874640c0bf2")
 
 	//fmt.Println("Resp Here: ", resp)
 	//elapsed := time.Since(t1)
 	//fmt.Println("Spent: ", elapsed)
-}
+}*/
+
+var dvEui = "98749874640c0bf2"
 
 func TestDvUsageMode(t *testing.T) {
 	log.WithFields(log.Fields{
 		"dvId": t,
 	}).Debug("grpc_api/DvUsageMode")
-
-	dvEui:= t.Name()
 
 	dvWalletId, dvMode, err := db.Device.GetDevWalletIdAndModeByEui(dvEui)
 	if err != nil {
