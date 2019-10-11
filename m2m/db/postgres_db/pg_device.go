@@ -100,20 +100,6 @@ func (*deviceInterface) DeleteDevice(dvId int64) (err error) {
 	return PgDevice.SetDeviceMode(dvId, types.DV_DELETED)
 }
 
-// func (*deviceInterface) DeleteDevice(dvId int64) (err error) {
-// 	_, err = PgDB.Exec(`
-// 		UPDATE
-// 			device
-// 		SET
-// 			mode = $1
-// 		WHERE
-// 			id = $2
-// 		;
-// 		`, types.DV_DELETED, dvId)
-
-// 	return errors.Wrap(err, "db/pg_device/DeleteDevice")
-// }
-
 func (*deviceInterface) GetDeviceIdByDevEui(devEui string) (devId int64, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
