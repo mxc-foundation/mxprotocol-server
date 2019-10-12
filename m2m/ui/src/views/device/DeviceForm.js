@@ -30,12 +30,20 @@ const styles = {
     maxWidth: 120
   }
 };
-//<Wallet color="primary.main"  />
+
 class DeviceForm extends Component {
   constructor(props) {
     super(props);
     this.getPage = this.getPage.bind(this);
     this.getRow = this.getRow.bind(this);
+  }
+
+  componentDidMount() {
+    DeviceStore.on('update', () => {
+      // re-render the table.
+      console.log('on(update)');
+      this.forceUpdate();
+    });
   }
 
   getPage(limit, offset, callbackFunc) {

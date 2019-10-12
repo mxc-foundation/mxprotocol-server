@@ -90,7 +90,7 @@ export default class SelectPlain extends Component {
 
         return (
             <Select 
-                cacheOptions 
+                //cacheOptions
                 defaultOptions
                 styles={customStyles}
                 theme={(theme) => ({
@@ -102,7 +102,7 @@ export default class SelectPlain extends Component {
                     },
                 })}
                 isDisabled={this.isDisabled}
-                defaultValue={dValue}
+                value={dValue}
                 onChange={this.onChange}
                 options={options}
             />
