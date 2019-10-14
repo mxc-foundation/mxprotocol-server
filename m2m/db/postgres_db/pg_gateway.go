@@ -159,6 +159,28 @@ func (*gatewayInterface) GetGatewayProfile(gwId int64) (gw types.Gateway, err er
 	return gw, errors.Wrap(err, "db/pg_gateway/GetGatewayProfile")
 }
 
+func (*gatewayInterface)GetAllGatewayMac()(macList []string, err error)  {
+	rows, err := PgDB.Query(
+		`SELECT
+			mac
+		FROM
+			gateway 
+		ORDER BY created_at DESC;`)
+
+	defer rows.Close()
+	if err != nil {
+		return macList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
+	}
+
+	var mac string
+	for rows.Next() {
+		rows.Scan(&mac)
+
+		macList = append(macList, mac)
+	}
+	return macList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
+}
+
 func (*gatewayInterface) GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {
 
 	rows, err := PgDB.Query(
