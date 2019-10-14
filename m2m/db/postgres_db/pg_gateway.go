@@ -114,6 +114,8 @@ func (*gatewayInterface) GetGatewayIdByMac(mac string) (gwId int64, err error) {
 			gateway 
 		WHERE
 			mac = $1 
+		AND
+			mode <> 'GW_DELETED'
 		ORDER BY id DESC 
 		LIMIT 1  
 		;`, mac).Scan(&gwId)
@@ -166,6 +168,8 @@ func (*gatewayInterface) GetGatewayListOfWallet(walletId int64, offset int64, li
 			gateway 
 		WHERE
 			fk_wallet = $1 
+		AND 
+			mode <> 'GW_DELETED'
 		ORDER BY id DESC
 		LIMIT $2 
 		OFFSET $3
@@ -206,6 +210,8 @@ func (*gatewayInterface) GetGatewayRecCnt(walletId int64) (recCnt int64, err err
 			gateway 
 		WHERE
 			fk_wallet = $1 
+		AND
+			mode <> 'GW_DELETED';
 	`, walletId).Scan(&recCnt)
 
 	return recCnt, errors.Wrap(err, "db/pg_gateway/GetGatewayRecCnt")
@@ -220,6 +226,8 @@ func (*gatewayInterface) GetFreeGwList(walletId int64) (gwId []int64, gwMac []st
 			gateway 
 		WHERE
 			fk_wallet = $1 
+		AND
+			mode <> 'GW_DELETED'
 	;`, walletId)
 
 	defer rows.Close()
