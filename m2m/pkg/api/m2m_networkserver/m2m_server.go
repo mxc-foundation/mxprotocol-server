@@ -23,16 +23,19 @@ var ulPktCount int64
 var timeLayout = "2006-01-02T15:04:05.000000Z"
 var dlPrice float64
 
-func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.DvUsageModeRequest) (resp *networkserver.DvUsageModeResponse, err error) {
+func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.DvUsageModeRequest) (*networkserver.DvUsageModeResponse, error) {
 	log.WithFields(log.Fields{
-		"dvId": req.DvEui,
+		"dvEui": req.DvEui,
 	}).Debug("grpc_api/DvUsageMode")
 
 	dvWalletId, dvMode, err := db.Device.GetDevWalletIdAndModeByEui(req.DvEui)
+
 	if err != nil {
 		log.WithError(err).Error("db/cannot get dvWalletId and dvMode")
 		return &networkserver.DvUsageModeResponse{}, err
 	}
+
+	resp := &networkserver.DvUsageModeResponse{}
 
 	switch string(dvMode) {
 	case networkserver.DeviceMode_name[int32(networkserver.DeviceMode_DV_INACTIVE)]:
@@ -48,6 +51,7 @@ func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.
 		for _, v := range gwMac {
 			fgws := networkserver.GwMac{}
 			fgws.GwMac = v
+
 			resp.FreeGwMac = append(resp.FreeGwMac, &fgws)
 		}
 
@@ -56,6 +60,7 @@ func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.
 		return resp, nil
 
 	case networkserver.DeviceMode_name[int32(networkserver.DeviceMode_DV_WHOLE_NETWORK)]:
+
 		walletId, err := db.Device.GetDevWalletIdByEui(req.DvEui)
 		if err != nil {
 			log.WithError(err).Error("db/cannot get walletId")
@@ -78,6 +83,7 @@ func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.
 			fgws := networkserver.GwMac{}
 			fgws.GwMac = v
 			resp.FreeGwMac = append(resp.FreeGwMac, &fgws)
+
 		}
 
 		resp.DvMode = networkserver.DeviceMode_DV_WHOLE_NETWORK
@@ -86,6 +92,7 @@ func (*M2MNetworkServerAPI) DvUsageMode(ctx context.Context, req *networkserver.
 		} else {
 			resp.EnoughBalance = true
 		}
+
 		return resp, nil
 
 	case networkserver.DeviceMode_name[int32(networkserver.DeviceMode_DV_DELETED)]:
@@ -111,19 +118,18 @@ func (*M2MNetworkServerAPI) GwUsageMode(ctx context.Context, req *networkserver.
 
 func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.DlPktSentRequest) (*networkserver.DlPktSentResponse, error) {
 	//create a new thread for db
-	go func()(error) {
+	go func() error {
 		log.WithFields(log.Fields{
 			"DlPktId": req.DlPkt.DlIdNs,
 		}).Debug("grpc_api/DlPktSent")
 
 		var dlPkt = types.DlPkt{}
 		dlPkt.DlIdNs = req.DlPkt.DlIdNs
-		dlPkt.Category = types.DlCategory(req.DlPkt.Category)
+		dlPkt.Category = types.DlCategory(networkserver.Category_name[int32(req.DlPkt.Category)])
 		dlPkt.Nonce = req.DlPkt.Nonce
 
 		if createAt, err := time.Parse(timeLayout, req.DlPkt.CreateAt); err != nil {
 			log.WithError(err).Error("time format error")
-			return err
 		} else {
 			dlPkt.CreatedAt = createAt
 		}
@@ -135,7 +141,6 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 		dvId, err := db.Device.GetDeviceIdByDevEui(req.DlPkt.DevEui)
 		if err != nil {
 			log.WithError(err).Error("db/cannot get devID")
-			return err
 		}
 
 		dlPkt.FkDevice = dvId
@@ -143,7 +148,6 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 		gwId, err := db.Gateway.GetGatewayIdByMac(req.DlPkt.GwMac)
 		if err != nil {
 			log.WithError(err).Error("db/cannot get gwID")
-			return err
 		}
 
 		dlPkt.FkGateway = gwId
@@ -151,25 +155,21 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 		_, err = db.DlPacket.InsertDlPkt(dlPkt)
 		if err != nil {
 			log.WithError(err).Error("db/cannot update dlPkt")
-			return err
 		}
 
 		err = db.Device.UpdateDeviceLastSeen(dvId, time.Now())
 		if err != nil {
 			log.WithError(err).Error("db/cannot update devicelastseen")
-			return err
 		}
 
 		dvwalletId, err := db.Device.GetWalletIdOfDevice(dvId)
 		if err != nil {
 			log.WithError(err).Error("db/cannot get dvWalletID")
-			return err
 		}
 
 		gwwalletId, err := db.Gateway.GetWalletIdOfGateway(gwId)
 		if err != nil {
 			log.WithError(err).Error("db/cannot get gwWalletID")
-			return err
 		}
 
 		if dvwalletId == gwwalletId {
@@ -178,7 +178,6 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 			err = db.Wallet.TmpBalanceUpdatePktTx(dvId, gwId, dlPrice)
 			if err != nil {
 				log.WithError(err).Error("db/cannot update balance")
-				return err
 			}
 		}
 

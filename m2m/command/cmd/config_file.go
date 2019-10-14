@@ -34,7 +34,7 @@ low_balance_threshold={{ .SysNotification.LowBalanceThreshold }}
 downlink_package_price={{ .Pricing.DownLinkPkgPrice }}
 
 [accounting]
-interval="{{ .Accounting.Interval }}"
+interval_min="{{ .Accounting.IntervalMin }}"
 
 # PostgreSQL settings.
 #

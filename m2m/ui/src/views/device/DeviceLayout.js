@@ -108,7 +108,6 @@ class DeviceLayout extends Component {
     }
     //console.log('onSwitchChange', mod);
     DeviceStore.setDeviceMode(this.props.match.params.organizationID, dvId, mod, data => {
-      this.props.history.go(0);
     });
   }
 
