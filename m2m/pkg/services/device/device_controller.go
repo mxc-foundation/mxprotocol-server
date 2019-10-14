@@ -17,7 +17,7 @@ func Setup() error {
 }
 
 func syncDevicesFromAppserverByBatch() error {
-	// get device list from local database
+/*	// get device list from local database
 	localGatewayMacList, err := db.Device.GetAllDeviceDevEui()
 	if err != nil {
 		log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
@@ -30,11 +30,12 @@ func syncDevicesFromAppserverByBatch() error {
 	if err != nil {
 		log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
 		return err
-	}
-
+	}*/
 
 
 	// do synchronization
+
+	return nil
 }
 
 func SyncDeviceProfileByDevEuiFromAppserver(devId int64, devEui string) error {
