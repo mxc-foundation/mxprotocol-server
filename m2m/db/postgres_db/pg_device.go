@@ -108,8 +108,10 @@ func (*deviceInterface) GetDeviceIdByDevEui(devEui string) (devId int64, err err
 			device 
 		WHERE
 			dev_eui = $1 
-			ORDER BY id DESC 
-			LIMIT 1  
+		AND
+			mode <> 'DV_DELETED'
+		ORDER BY id DESC 
+		LIMIT 1  
 		;`, devEui).Scan(&devId)
 	return devId, errors.Wrap(err, "db/pg_device/GetDeviceIdByDevEui")
 }
@@ -158,6 +160,8 @@ func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limi
 			device 
 		WHERE
 			fk_wallet = $1 
+		AND
+			mode <> 'DV_DELETED'
 		ORDER BY id DESC
 		LIMIT $2 
 		OFFSET $3
@@ -196,6 +200,8 @@ func (*deviceInterface) GetDeviceRecCnt(walletId int64) (recCnt int64, err error
 			device 
 		WHERE
 			fk_wallet = $1 
+		AND
+			mode <> 'DV_DELETED'
 	`, walletId).Scan(&recCnt)
 
 	return recCnt, errors.Wrap(err, "db/pg_device/GetDeviceRecCnt")
@@ -241,8 +247,10 @@ func (*deviceInterface) GetDevWalletIdAndModeByEui(devEui string) (dvWalletId in
 			device 
 		WHERE	
 			dev_eui = $1 
-			ORDER BY id DESC 
-			LIMIT 1  
+		AND
+			mode <> 'DV_DELETED'
+		ORDER BY id DESC 
+		LIMIT 1  
 		;`, devEui).Scan(&dvWalletId, &dvMode)
 	return dvWalletId, dvMode, errors.Wrap(err, "db/pg_device/GetDevWalletIdAndModeByEui")
 
