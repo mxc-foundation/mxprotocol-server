@@ -12,11 +12,21 @@ import (
 )
 
 func Setup() error {
-	log.Info("Setup gateway service")
+	log.Info("Syncronize gateways from appserver")
+	syncGatewaysFromAppserverByBatch()
 	return nil
 }
 
-func SyncGatewayProfileFromAppserver(gwId int64, mac string) error {
+func syncGatewaysFromAppserverByBatch() {
+	// get gateway list from local database
+
+	// get gateway list from appserver
+
+	// do synchronization
+
+}
+
+func SyncGatewayProfileByMacFromAppserver(gwId int64, mac string) error {
 	client, err := appserver.GetPool().Get(config.Cstruct.AppServer.Server, []byte(config.Cstruct.AppServer.CACert),
 		[]byte(config.Cstruct.AppServer.TLSCert), []byte(config.Cstruct.AppServer.TLSKey))
 	if err != nil {
@@ -28,16 +38,16 @@ func SyncGatewayProfileFromAppserver(gwId int64, mac string) error {
 		// gateway no longer exist, delete from database
 		err := db.Gateway.SetGatewayMode(gwId, types.GW_DELETED)
 		if err != nil {
-			log.WithError(err).Warn("gateway/SyncGatewayProfileFromAppserver: gwId", gwId)
+			log.WithError(err).Warn("gateway/SyncGatewayProfileByMacFromAppserver: gwId", gwId)
 		}
 	} else if err == nil {
 		// get gateway successfully, add/update device
 		walletId, err := db.Wallet.GetWalletIdFromOrgId(gateway.OrgId)
 		if err != nil {
-			log.WithError(err).Error("gateway/SyncGatewayProfileFromAppserver: gateway is not linked to any wallet")
+			log.WithError(err).Error("gateway/SyncGatewayProfileByMacFromAppserver: gateway is not linked to any wallet")
 			err := db.Gateway.SetGatewayMode(gwId, types.GW_DELETED)
 			if err != nil {
-				log.WithError(err).Warn("gateway/SyncGatewayProfileFromAppserver: gwId", gwId)
+				log.WithError(err).Warn("gateway/SyncGatewayProfileByMacFromAppserver: gwId", gwId)
 			}
 			// in this case, it is not necessary to retry again
 			return nil

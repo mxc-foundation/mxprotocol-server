@@ -2,6 +2,7 @@ package appserver
 
 import (
 	"context"
+	"github.com/golang/protobuf/ptypes"
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -32,7 +33,7 @@ func (*M2MServerAPI) AddDeviceInM2MServer(ctx context.Context, req *api.AddDevic
 
 	dev := types.Device{}
 	dev.DevEui = req.DevProfile.DevEui
-	dev.CreatedAt = time.Now()
+	dev.CreatedAt, _ = ptypes.Timestamp(req.DevProfile.CreatedAt)
 	dev.ApplicationId = req.DevProfile.ApplicationId
 	dev.Name = req.DevProfile.Name
 	dev.Mode = types.DV_WHOLE_NETWORK
@@ -44,7 +45,7 @@ func (*M2MServerAPI) AddDeviceInM2MServer(ctx context.Context, req *api.AddDevic
 		// retry
 		go func() {
 			for {
-				err := device.SyncDeviceProfileFromAppserver(dev.Id, dev.DevEui)
+				err := device.SyncDeviceProfileByDevEuiFromAppserver(dev.Id, dev.DevEui)
 				if err != nil {
 					log.WithError(err).Error("grpc_api/AddDeviceInM2MServer: retry failed")
 					time.Sleep(5*time.Second)
@@ -75,7 +76,7 @@ func (*M2MServerAPI) DeleteDeviceInM2MServer(ctx context.Context, req *api.Delet
 		// retry
 		go func() {
 			for {
-				err := device.SyncDeviceProfileFromAppserver(devId, req.DevEui)
+				err := device.SyncDeviceProfileByDevEuiFromAppserver(devId, req.DevEui)
 				if err != nil {
 					log.WithError(err).Error("grpc_api/DeleteDeviceInM2MServer: retry failed")
 					time.Sleep(5*time.Second)
@@ -103,7 +104,7 @@ func (*M2MServerAPI) AddGatewayInM2MServer(ctx context.Context, req *api.AddGate
 
 	gw := types.Gateway{}
 	gw.Mac = req.GwProfile.Mac
-	gw.CreatedAt = time.Now()
+	gw.CreatedAt, _ = ptypes.Timestamp(req.GwProfile.CreatedAt)
 	gw.OrgId = req.OrgId
 	gw.Description = req.GwProfile.Description
 	gw.Name = req.GwProfile.Name
@@ -116,7 +117,7 @@ func (*M2MServerAPI) AddGatewayInM2MServer(ctx context.Context, req *api.AddGate
 		// retry
 		go func() {
 			for {
-				err := gateway.SyncGatewayProfileFromAppserver(gw.Id, gw.Mac)
+				err := gateway.SyncGatewayProfileByMacFromAppserver(gw.Id, gw.Mac)
 				if err != nil {
 					log.WithError(err).Error("grpc_api/AddGatewayInM2MServer: retry failed")
 					time.Sleep(5*time.Second)
@@ -147,7 +148,7 @@ func (*M2MServerAPI) DeleteGatewayInM2MServer(ctx context.Context, req *api.Dele
 		// retry
 		go func() {
 			for {
-				err := gateway.SyncGatewayProfileFromAppserver(gwId, req.MacAddress)
+				err := gateway.SyncGatewayProfileByMacFromAppserver(gwId, req.MacAddress)
 				if err != nil {
 					log.WithError(err).Error("grpc_api/DeleteGatewayInM2MServer: retry failed")
 					time.Sleep(5*time.Second)

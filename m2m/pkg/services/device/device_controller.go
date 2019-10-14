@@ -12,11 +12,32 @@ import (
 )
 
 func Setup() error {
-	log.Info("Setup device service")
-	return nil
+	log.Info("Syncronize devices from appserver")
+	return syncDevicesFromAppserverByBatch()
 }
 
-func SyncDeviceProfileFromAppserver(devId int64, devEui string) error {
+func syncDevicesFromAppserverByBatch() error {
+	// get device list from local database
+	localGatewayMacList, err := db.Device.GetAllDeviceDevEui()
+	if err != nil {
+		log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
+		return err
+	}
+
+	// get device list from appserver
+	client, err := appserver.GetPool().Get(config.Cstruct.AppServer.Server, []byte(config.Cstruct.AppServer.CACert),
+		[]byte(config.Cstruct.AppServer.TLSCert), []byte(config.Cstruct.AppServer.TLSKey))
+	if err != nil {
+		log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
+		return err
+	}
+
+
+
+	// do synchronization
+}
+
+func SyncDeviceProfileByDevEuiFromAppserver(devId int64, devEui string) error {
 	client, err := appserver.GetPool().Get(config.Cstruct.AppServer.Server, []byte(config.Cstruct.AppServer.CACert),
 		[]byte(config.Cstruct.AppServer.TLSCert), []byte(config.Cstruct.AppServer.TLSKey))
 	if err != nil {
@@ -28,16 +49,16 @@ func SyncDeviceProfileFromAppserver(devId int64, devEui string) error {
 		// device no longer exist, delete from database
 		err := db.Device.SetDeviceMode(devId, types.DV_DELETED)
 		if err != nil {
-			log.WithError(err).Warn("device/SyncDeviceProfileFromAppserver: devId", devId)
+			log.WithError(err).Warn("device/SyncDeviceProfileByDevEuiFromAppserver: devId", devId)
 		}
 	} else if err == nil {
 		// get device successfully, add/update device
 		walletId, err := db.Wallet.GetWalletIdFromOrgId(device.OrgId)
 		if err != nil {
-			log.WithError(err).Error("device/SyncDeviceProfileFromAppserver: device is not linked to any wallet")
+			log.WithError(err).Error("device/SyncDeviceProfileByDevEuiFromAppserver: device is not linked to any wallet")
 			err := db.Device.SetDeviceMode(devId, types.DV_DELETED)
 			if err != nil {
-				log.WithError(err).Warn("device/SyncDeviceProfileFromAppserver: devId", devId)
+				log.WithError(err).Warn("device/SyncDeviceProfileByDevEuiFromAppserver: devId", devId)
 			}
 			// in this case, it is not necessary to retry again
 			return nil

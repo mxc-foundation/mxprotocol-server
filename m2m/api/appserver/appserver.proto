@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package appserver;
 
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
 service M2MServerService {
     rpc AddDeviceInM2MServer (AddDeviceInM2MServerRequest) returns (AddDeviceInM2MServerResponse);
     rpc DeleteDeviceInM2MServer (DeleteDeviceInM2MServerRequest) returns (DeleteDeviceInM2MServerResponse);
@@ -13,12 +16,15 @@ service M2MServerService {
 service AppServerService {
     rpc GetDeviceByDevEui (GetDeviceByDevEuiRequest) returns (GetDeviceByDevEuiResponse);
     rpc GetGatewayByMac (GetGatewayByMacRequest) returns (GetGatewayByMacResponse);
+    rpc GetDeviceDevEuiList (google.protobuf.Empty) returns (GetDeviceDevEuiListResponse);
+    rpc GetGatewayMacList (google.protobuf.Empty) returns (GetGatewayMacListResponse);
 }
 
 message AppServerDeviceProfile {
     string dev_eui = 1;
     int64 application_id = 2;
     string name = 3;
+    google.protobuf.Timestamp created_at = 4;
 }
 
 message AddDeviceInM2MServerRequest {
@@ -43,6 +49,7 @@ message AppServerGatewayProfile {
     int64 org_id = 2;
     string description = 3;
     string name = 4;
+    google.protobuf.Timestamp created_at = 5;
 }
 
 message AddGatewayInM2MServerRequest {
@@ -78,4 +85,12 @@ message GetGatewayByMacRequest {
 message GetGatewayByMacResponse {
     int64 org_id = 1;
     AppServerGatewayProfile gw_profile = 2;
+}
+
+message GetDeviceDevEuiListResponse {
+    repeated string dev_eui = 1;
+}
+
+message GetGatewayMacListResponse {
+    repeated string gateway_mac = 1;
 }
