@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import Typography from '@material-ui/core/Typography';
-
+import SessionStore from "../../stores/SessionStore.js";
 import DeviceStore from "../../stores/DeviceStore.js";
 import WalletStore from "../../stores/WalletStore.js";
 import GatewayStore from "../../stores/GatewayStore.js";
@@ -74,7 +74,7 @@ class DeviceLayout extends Component {
     if (this.props === oldProps) {
       return;
     }
-    //this.props.history.push(`/device/${this.props.match.params.organizationID}`);
+    this.loadData();
   }
   
   onSubmit = (e, apiWithdrawReqRequest) => {

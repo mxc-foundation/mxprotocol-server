@@ -10,6 +10,7 @@ import { DV_MODE_OPTION, DV_INACTIVE } from "../../util/Data"
 
 import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
+
 import DeviceStore from "../../stores/DeviceStore.js";
 import TitleBar from "../../components/TitleBar";
 import NativeSelects from "../../components/NativeSelects";
@@ -41,7 +42,6 @@ class DeviceForm extends Component {
   componentDidMount() {
     DeviceStore.on('update', () => {
       // re-render the table.
-      console.log('on(update)');
       this.forceUpdate();
     });
   }
