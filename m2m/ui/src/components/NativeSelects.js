@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
-//import SessionStore from "../stores/SessionStore";
 import { DV_MODE_OPTION, DV_FREE_GATEWAYS_LIMITED } from "../util/Data"
 
 const customStyles = {
@@ -54,15 +53,15 @@ export default class SelectPlain extends Component {
         this.state = {
             selectedValue: null,
             options:[],
-            isDisabled:false,
-            haveGateway:false
+            //isDisabled: (this.props.gwId)?true:false,
+            //haveGateway:false
         };
     } 
 
     componentDidMount() {
-      //this.loadData();
+      
     }
-
+      
     onChange = (v) => {
         let value = null;
         if (v !== null) {
@@ -101,7 +100,7 @@ export default class SelectPlain extends Component {
                         primary: '#00FFD950',
                     },
                 })}
-                isDisabled={this.isDisabled}
+                isDisabled={this.props.isDisabled}
                 value={dValue}
                 onChange={this.onChange}
                 options={options}
