@@ -175,7 +175,7 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 		if dvwalletId == gwwalletId {
 			return nil
 		} else {
-			err = db.Wallet.TmpBalanceUpdatePktTx(dvId, gwId, dlPrice)
+			err = db.Wallet.TmpBalanceUpdatePktTx(dvwalletId, gwwalletId, dlPrice)
 			if err != nil {
 				log.WithError(err).Error("db/cannot update balance")
 			}
