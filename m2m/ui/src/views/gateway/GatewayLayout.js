@@ -104,12 +104,12 @@ class GatewayLayout extends Component {
                 <TitleBar className={this.props.classes.padding}>
                     <TitleBarTitle title="Gateway" />
                 </TitleBar>    
-                <Divider light={true}/>
+                {/* <Divider light={true}/> */}
                 <div className={this.props.classes.between}>
                 <TitleBar>
-                    <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
+                    {/* <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
                     <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                    <TitleBarTitle component={Link} to="#" title="Gateway" className={this.props.classes.link}/>
+                    <TitleBarTitle component={Link} to="#" title="Gateway" className={this.props.classes.link}/> */}
                 </TitleBar>
                 </div>
             </div>

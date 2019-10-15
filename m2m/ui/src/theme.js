@@ -248,6 +248,7 @@ const theme = createMuiTheme({
         paper: {
           backgroundColor: blueBG,
           marginTop: '50px',
+          color: white
         }
       }
     },
