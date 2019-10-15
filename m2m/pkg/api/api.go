@@ -40,11 +40,11 @@ var (
 )
 
 func SetupHTTPServer(conf config.MxpConfig) error {
-	bind = conf.ApplicationServer.HttpServer.Bind
-	tlsCert = conf.ApplicationServer.HttpServer.TLSCert
-	tlsKey = conf.ApplicationServer.HttpServer.TLSKey
-	jwtSecret = conf.ApplicationServer.HttpServer.JWTSecret
-	corsAllowOrigin = conf.ApplicationServer.HttpServer.CORSAllowOrigin
+	bind = conf.M2MServer.HttpServer.Bind
+	tlsCert = conf.M2MServer.HttpServer.TLSCert
+	tlsKey = conf.M2MServer.HttpServer.TLSKey
+	jwtSecret = conf.M2MServer.HttpServer.JWTSecret
+	corsAllowOrigin = conf.M2MServer.HttpServer.CORSAllowOrigin
 
 	server := grpc.NewServer()
 
@@ -196,10 +196,10 @@ func getJSONGateway(ctx context.Context) (http.Handler, error) {
 		return nil, errors.Wrap(err, "register top_up handler error")
 	}
 	if err := m2m_grpc.RegisterWalletServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
-		return nil, errors.Wrap(err, "register top_up handler error")
+		return nil, errors.Wrap(err, "register wallet handler error")
 	}
 	if err := m2m_grpc.RegisterSuperNodeServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
-		return nil, errors.Wrap(err, "register top_up handler error")
+		return nil, errors.Wrap(err, "register superNode handler error")
 	}
 	if err := m2m_grpc.RegisterInternalServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register auth get jwt handler error")

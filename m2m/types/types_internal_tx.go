@@ -11,3 +11,12 @@ type InternalTx struct {
 	Value          float64   `db:"value"`
 	TimeTx         time.Time `db:"timestamp"`
 }
+
+type PaymentCategory string // db:payment_category
+const (
+	DOWNLINK_AGGREGATION  PaymentCategory = "DOWNLINK_AGGREGATION"
+	PURCHASE_SUBSCRIPTION PaymentCategory = "PURCHASE_SUBSCRIPTION"
+	BUY_SUBSCRIPTION      PaymentCategory = "BUY_SUBSCRIPTION"
+	TOP_UP                PaymentCategory = "TOP_UP"
+	WITHDRAW              PaymentCategory = "WITHDRAW"
+)

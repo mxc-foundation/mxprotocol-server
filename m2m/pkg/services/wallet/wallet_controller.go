@@ -2,12 +2,13 @@ package wallet
 
 import (
 	"errors"
+	"strings"
+
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
-	"strings"
 )
 
 func Setup(conf config.MxpConfig) error {
@@ -121,7 +122,7 @@ func UpdateBalance(orgId int64, oper PaymentCategory, deviceType DeviceType, amo
 		}
 	}
 
-	err = db.Wallet.UpdateBalanceByWalletId(walletId, balance)
+	// err = db.Wallet.UpdateBalanceByWalletId(walletId, balance)
 	if err != nil {
 		return err
 	}

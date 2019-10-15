@@ -96,6 +96,10 @@ func (*deviceInterface) SetDeviceMode(dvId int64, dvMode types.DeviceMode) (err 
 
 }
 
+func (*deviceInterface) DeleteDevice(dvId int64) (err error) {
+	return PgDevice.SetDeviceMode(dvId, types.DV_DELETED)
+}
+
 func (*deviceInterface) GetDeviceIdByDevEui(devEui string) (devId int64, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
@@ -104,8 +108,10 @@ func (*deviceInterface) GetDeviceIdByDevEui(devEui string) (devId int64, err err
 			device 
 		WHERE
 			dev_eui = $1 
-			ORDER BY id DESC 
-			LIMIT 1  
+		AND
+			mode <> 'DV_DELETED'
+		ORDER BY id DESC 
+		LIMIT 1  
 		;`, devEui).Scan(&devId)
 	return devId, errors.Wrap(err, "db/pg_device/GetDeviceIdByDevEui")
 }
@@ -145,11 +151,7 @@ func (*deviceInterface) GetDeviceProfile(dvId int64) (dv types.Device, err error
 	return dv, errors.Wrap(err, "db/pg_device/GetDeviceProfile")
 }
 
-func (*deviceInterface) GetDeviceListOfWallet(orgId int64, offset int64, limit int64) (dvList []types.Device, err error) {
-	walletId, err := PgWallet.GetWalletIdFromOrgId(orgId)
-	if err != nil {
-		return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
-	}
+func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error) {
 
 	rows, err := PgDB.Query(
 		`SELECT
@@ -158,14 +160,18 @@ func (*deviceInterface) GetDeviceListOfWallet(orgId int64, offset int64, limit i
 			device 
 		WHERE
 			fk_wallet = $1 
+		AND
+			mode <> 'DV_DELETED'
 		ORDER BY id DESC
 		LIMIT $2 
 		OFFSET $3
 	;`, walletId, limit, offset)
 
 	defer rows.Close()
+	if err != nil {
+		return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
+	}
 
-	// res := make([]WithdrawHistRet, 0)
 	var dv types.Device
 
 	for rows.Next() {
@@ -185,6 +191,28 @@ func (*deviceInterface) GetDeviceListOfWallet(orgId int64, offset int64, limit i
 	return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
 }
 
+func (*deviceInterface) GetAllDeviceDevEui() (devEuiLIst []string, err error) {
+	rows, err := PgDB.Query(
+		`SELECT
+			dev_eui
+		FROM
+			device 
+		ORDER BY created_at DESC;`)
+
+	defer rows.Close()
+	if err != nil {
+		return devEuiLIst, errors.Wrap(err, "db/pg_device/GetAllDeviceDevEui")
+	}
+
+	var devEui string
+	for rows.Next() {
+		rows.Scan(&devEui)
+
+		devEuiLIst = append(devEuiLIst, devEui)
+	}
+	return devEuiLIst, errors.Wrap(err, "db/pg_device/GetAllDeviceDevEui")
+}
+
 func (*deviceInterface) GetDeviceRecCnt(walletId int64) (recCnt int64, err error) {
 
 	err = PgDB.QueryRow(`
@@ -194,25 +222,58 @@ func (*deviceInterface) GetDeviceRecCnt(walletId int64) (recCnt int64, err error
 			device 
 		WHERE
 			fk_wallet = $1 
+		AND
+			mode <> 'DV_DELETED'
 	`, walletId).Scan(&recCnt)
 
 	return recCnt, errors.Wrap(err, "db/pg_device/GetDeviceRecCnt")
 }
 
-//ToDo:
-func (*deviceInterface) GetWalletIdOfDevice(dvId int64) (dvWalletId int64, err error) {
-	return 1, nil
-}
+// DeleteDevice
 
-//ToDo: queries
-func (*deviceInterface) GetDeviceModeByEui(devEui string) (dvMode types.DeviceMode, err error) {
-	return types.DV_INACTIVE, nil
+func (*deviceInterface) GetWalletIdOfDevice(dvId int64) (dvWalletId int64, err error) {
+
+	err = PgDB.QueryRow(
+		`SELECT
+			fk_wallet
+		FROM
+			device 
+		WHERE	
+			id = $1 
+			ORDER BY id DESC 
+			LIMIT 1  
+		;`, dvId).Scan(&dvWalletId)
+	return dvWalletId, errors.Wrap(err, "db/pg_device/GetWalletIdOfDevice")
 }
 
 func (*deviceInterface) GetDevWalletIdByEui(devEui string) (walletId int64, err error) {
-	return 1, nil
+
+	dvId, err := PgDevice.GetDeviceIdByDevEui(devEui)
+	if err != nil {
+		return 0, errors.Wrap(err, "db/pg_device/GetDevWalletIdByEui")
+	}
+
+	walletId, err = PgDevice.GetWalletIdOfDevice(dvId)
+	if err != nil {
+		return 0, errors.Wrap(err, "db/pg_device/GetDevWalletIdByEui")
+	}
+	return walletId, err
 }
 
 func (*deviceInterface) GetDevWalletIdAndModeByEui(devEui string) (dvWalletId int64, dvMode types.DeviceMode, err error) {
-	return 1, types.DV_INACTIVE, nil
+
+	err = PgDB.QueryRow(
+		`SELECT
+			fk_wallet, mode
+		FROM
+			device 
+		WHERE	
+			dev_eui = $1 
+		AND
+			mode <> 'DV_DELETED'
+		ORDER BY id DESC 
+		LIMIT 1  
+		;`, devEui).Scan(&dvWalletId, &dvMode)
+	return dvWalletId, dvMode, errors.Wrap(err, "db/pg_device/GetDevWalletIdAndModeByEui")
+
 }

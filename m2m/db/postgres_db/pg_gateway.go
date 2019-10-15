@@ -102,6 +102,10 @@ func (*gatewayInterface) SetGatewayMode(gwId int64, gwMode types.GatewayMode) (e
 
 }
 
+func (*gatewayInterface) DeleteGateway(gwId int64) (err error) {
+	return PgGateway.SetGatewayMode(gwId, types.GW_DELETED)
+}
+
 func (*gatewayInterface) GetGatewayIdByMac(mac string) (gwId int64, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
@@ -110,6 +114,8 @@ func (*gatewayInterface) GetGatewayIdByMac(mac string) (gwId int64, err error) {
 			gateway 
 		WHERE
 			mac = $1 
+		AND
+			mode <> 'GW_DELETED'
 		ORDER BY id DESC 
 		LIMIT 1  
 		;`, mac).Scan(&gwId)
@@ -153,11 +159,29 @@ func (*gatewayInterface) GetGatewayProfile(gwId int64) (gw types.Gateway, err er
 	return gw, errors.Wrap(err, "db/pg_gateway/GetGatewayProfile")
 }
 
-func (*gatewayInterface) GetGatewayListOfWallet(orgId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {
-	walletId, err := PgWallet.GetWalletIdFromOrgId(orgId)
+func (*gatewayInterface)GetAllGatewayMac()(macList []string, err error)  {
+	rows, err := PgDB.Query(
+		`SELECT
+			mac
+		FROM
+			gateway 
+		ORDER BY created_at DESC;`)
+
+	defer rows.Close()
 	if err != nil {
-		return gwList, errors.Wrap(err, "db/pg_gateway/GetGatewayListOfWallet")
+		return macList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
 	}
+
+	var mac string
+	for rows.Next() {
+		rows.Scan(&mac)
+
+		macList = append(macList, mac)
+	}
+	return macList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
+}
+
+func (*gatewayInterface) GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {
 
 	rows, err := PgDB.Query(
 		`SELECT
@@ -166,12 +190,18 @@ func (*gatewayInterface) GetGatewayListOfWallet(orgId int64, offset int64, limit
 			gateway 
 		WHERE
 			fk_wallet = $1 
+		AND 
+			mode <> 'GW_DELETED'
 		ORDER BY id DESC
 		LIMIT $2 
 		OFFSET $3
 	;`, walletId, limit, offset)
 
 	defer rows.Close()
+
+	if err != nil {
+		return gwList, errors.Wrap(err, "db/pg_gateway/GetGatewayListOfWallet")
+	}
 
 	var gw types.Gateway
 
@@ -202,21 +232,58 @@ func (*gatewayInterface) GetGatewayRecCnt(walletId int64) (recCnt int64, err err
 			gateway 
 		WHERE
 			fk_wallet = $1 
+		AND
+			mode <> 'GW_DELETED';
 	`, walletId).Scan(&recCnt)
 
 	return recCnt, errors.Wrap(err, "db/pg_gateway/GetGatewayRecCnt")
 }
 
-//Todo:
-func (*gatewayInterface) GetFreeGwList() (gwId []int64, gwMac []string, err error) {
-	return nil, nil, nil
+func (*gatewayInterface) GetFreeGwList(walletId int64) (gwId []int64, gwMac []string, err error) {
+
+	rows, err := PgDB.Query(
+		`SELECT
+			id as gwId, mac
+		FROM
+			gateway 
+		WHERE
+			fk_wallet = $1 
+		AND
+			mode <> 'GW_DELETED'
+	;`, walletId)
+
+	defer rows.Close()
+
+	if err != nil {
+		return gwId, gwMac, errors.Wrap(err, "db/pg_gateway/GetFreeGwList")
+	}
+
+	var id int64
+	var mac string
+
+	for rows.Next() {
+		rows.Scan(
+			&id,
+			&mac,
+		)
+
+		gwId = append(gwId, id)
+		gwMac = append(gwMac, mac)
+	}
+	return gwId, gwMac, errors.Wrap(err, "db/pg_gateway/GetFreeGwList")
+
 }
 
-//ToDo:
 func (*gatewayInterface) GetWalletIdOfGateway(gwId int64) (gwWalletId int64, err error) {
-	return 1, nil
-}
-
-func (*gatewayInterface) GetGwModeByMac(gwMac string) (gwMode types.GatewayMode, err error) {
-	return types.GW_INACTIVE, nil
+	err = PgDB.QueryRow(
+		`SELECT
+			fk_wallet
+		FROM
+			gateway 
+		WHERE	
+			id = $1 
+			ORDER BY id DESC 
+			LIMIT 1  
+		;`, gwId).Scan(&gwWalletId)
+	return gwWalletId, errors.Wrap(err, "db/pg_gateway/GetWalletIdOfGateway")
 }

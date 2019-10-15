@@ -122,6 +122,20 @@
             "required": true,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -176,29 +190,46 @@
     "apiGetWalletUsageHist": {
       "type": "object",
       "properties": {
-        "StartTime": {
+        "StartAt": {
           "type": "string"
         },
-        "Duration": {
-          "type": "string"
-        },
-        "CountUplinkPktsDv": {
+        "DurationMinutes": {
           "type": "string",
           "format": "int64"
         },
-        "CountDownlinkPktsDv": {
+        "DlCntDv": {
           "type": "string",
           "format": "int64"
         },
-        "CountUplinkPktsGw": {
+        "DlCntDvFree": {
           "type": "string",
           "format": "int64"
         },
-        "CountDownlinkPktsGw": {
+        "UlCntDv": {
           "type": "string",
           "format": "int64"
         },
-        "Cost": {
+        "UlCntDvFree": {
+          "type": "string",
+          "format": "int64"
+        },
+        "DlCntGw": {
+          "type": "string",
+          "format": "int64"
+        },
+        "DlCntGwFree": {
+          "type": "string",
+          "format": "int64"
+        },
+        "UlCntGw": {
+          "type": "string",
+          "format": "int64"
+        },
+        "UlCntGwFree": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Spend": {
           "type": "number",
           "format": "double"
         },
@@ -206,7 +237,7 @@
           "type": "number",
           "format": "double"
         },
-        "TotalPayment": {
+        "UpdatedBalance": {
           "type": "number",
           "format": "double"
         }
@@ -223,6 +254,10 @@
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
+        },
+        "count": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },

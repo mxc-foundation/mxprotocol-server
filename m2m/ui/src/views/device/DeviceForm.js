@@ -25,21 +25,26 @@ const styles = {
   },
   flex2: {
     left: 'calc(100%/3)',
-    
   },
   maxW:{
     maxWidth: 120
   }
 };
-//<Wallet color="primary.main"  />
+
 class DeviceForm extends Component {
   constructor(props) {
     super(props);
     this.getPage = this.getPage.bind(this);
     this.getRow = this.getRow.bind(this);
   }
-  
-  
+
+  componentDidMount() {
+    DeviceStore.on('update', () => {
+      // re-render the table.
+      console.log('on(update)');
+      this.forceUpdate();
+    });
+  }
 
   getPage(limit, offset, callbackFunc) {
     DeviceStore.getDeviceList(this.props.match.params.organizationID, offset, limit, data => {
@@ -69,8 +74,7 @@ class DeviceForm extends Component {
   }
 
   getRow(obj, index) {
-    //const url = `${getLoraHost()}/#/organizations/${this.props.match.params.organizationID}/applications/${obj.application_id}/devices/${obj.devEui}`;
-    const url = `${getLoraHost()}`;
+    const url = `${getLoraHost()}/#/organizations/${this.props.match.params.organizationID}/applications/${obj.application_id}/devices/${obj.devEui}`;
     
     let dValue = null;
     const options = DV_MODE_OPTION;
@@ -118,10 +122,10 @@ class DeviceForm extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell align={'center'}>Device</TableCell>
-                <TableCell align={'center'}>Status</TableCell>
-                <TableCell align={'center'}>Available</TableCell>
-                <TableCell className={this.props.classes.maxW} align={'center'}>Mode</TableCell>
+                <TableCell align={'left'}>Device</TableCell>
+                <TableCell align={'left'}>Status</TableCell>
+                <TableCell align={'left'}>Available</TableCell>
+                <TableCell className={this.props.classes.maxW} align={'left'}>Mode</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
