@@ -119,12 +119,12 @@ class DeviceLayout extends Component {
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title="Devices" />
               </TitleBar>    
-              <Divider light={true}/>
+              {/* <Divider light={true}/> */}
               <div className={this.props.classes.between}>
               <TitleBar>
-                <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
+                {/* <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
                 <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/>
+                <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
               </TitleBar>
               <div className={this.props.classes.subTitle2}>
                 Downlink fee {this.state.downlinkFee}MXC
