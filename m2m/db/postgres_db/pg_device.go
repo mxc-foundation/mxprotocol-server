@@ -201,7 +201,7 @@ func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limi
 	return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
 }
 
-func (*deviceInterface) GetAllDeviceDevEui() (devEuiLIst []string, err error) {
+func (*deviceInterface) GetAllDevices() (devList []types.Device, err error) {
 	rows, err := PgDB.Query(
 		`SELECT
 			dev_eui
@@ -213,16 +213,16 @@ func (*deviceInterface) GetAllDeviceDevEui() (devEuiLIst []string, err error) {
 
 	defer rows.Close()
 	if err != nil {
-		return devEuiLIst, errors.Wrap(err, "db/pg_device/GetAllDeviceDevEui")
+		return devList, errors.Wrap(err, "db/pg_device/GetAllDeviceDevEui")
 	}
 
-	var devEui string
+	var dev types.Device
 	for rows.Next() {
-		rows.Scan(&devEui)
+		rows.Scan(&dev)
 
-		devEuiLIst = append(devEuiLIst, devEui)
+		devList = append(devList, dev)
 	}
-	return devEuiLIst, errors.Wrap(err, "db/pg_device/GetAllDeviceDevEui")
+	return devList, errors.Wrap(err, "db/pg_device/GetAllDeviceDevEui")
 }
 
 func (*deviceInterface) GetDeviceRecCnt(walletId int64) (recCnt int64, err error) {

@@ -22,13 +22,13 @@ func Setup() error {
 
 func syncDevicesFromAppserverByBatch() {
 	// get device list from local database
-	localDeviceDevEuiList, err := db.Device.GetAllDeviceDevEui()
+	localDeviceList, err := db.Device.GetAllDevices()
 	if err != nil {
 		// reset timer
 		timer.Reset(10 * time.Second)
 		return
 	}
-	log.Debug("syncDevicesFromAppserverByBatch_local: count=", len(localDeviceDevEuiList), " list=", localDeviceDevEuiList)
+	log.Debug("syncDevicesFromAppserverByBatch_local: count=", len(localDeviceList))
 
 	// get device list from appserver
 	client, err := appserver.GetPool().Get(config.Cstruct.AppServer.Server, []byte(config.Cstruct.AppServer.CACert),
@@ -49,7 +49,11 @@ func syncDevicesFromAppserverByBatch() {
 	log.Debug("syncDevicesFromAppserverByBatch_appserver: count=", len(devEuiList.DevEui), " list=", devEuiList.DevEui)
 
 	// do synchronization
-
+	for _, localDev := range localDeviceDevEuiList {
+		for _, appDev := range devEuiList.DevEui {
+			id, err := db.Device.GetDeviceIdByDevEui(localDev)
+		}
+	}
 
 	return
 }
@@ -92,7 +96,7 @@ func SyncDeviceProfileByDevEuiFromAppserver(devId int64, devEui string) error {
 		if err != nil {
 			return err
 		}
-	} else if err != nil {
+	} else {
 		return err
 	}
 
