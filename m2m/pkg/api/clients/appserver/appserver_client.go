@@ -75,7 +75,7 @@ func (p *pool) Get(hostname string, caCert, tlsCert, tlsKey []byte) (appserver.A
 	if connect {
 		clientConn, nsClient, err := p.createClient(hostname, caCert, tlsCert, tlsKey)
 		if err != nil {
-			return nil, errors.Wrap(err, "create m2m-server api client error")
+			return nil, errors.Wrap(err, "create appserver client error")
 		}
 		c = appserverServiceClient{
 			client:     nsClient,

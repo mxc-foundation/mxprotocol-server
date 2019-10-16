@@ -28,7 +28,7 @@ func (*gatewayInterface) CreateGatewayTable() error {
 		END IF;
 			CREATE TABLE IF NOT EXISTS gateway (
 			id SERIAL PRIMARY KEY,
-			mac VARCHAR(128) NOT NULL,
+			mac VARCHAR(128) NOT NULL UNIQUE,
 			fk_gateway_ns INT NOT NULL,
 			fk_wallet INT REFERENCES wallet (id) NOT NULL,
 			mode GATEWAY_MODE    NOT NULL,
@@ -60,6 +60,13 @@ func (*gatewayInterface) InsertGateway(gw types.Gateway) (insertIndex int64, err
 			) 
 		VALUES 
 			($1,$2,$3,$4,$5,$6,$7,$8,$9)
+		ON CONFLICT(mac) DO UPDATE 
+		SET 
+		    fk_wallet = $10,
+		    mode = $11, 
+		    org_id = $12,
+		    description = $13,
+		    name = $14
 		RETURNING id ;
 	`,
 		gw.Mac,
@@ -68,6 +75,11 @@ func (*gatewayInterface) InsertGateway(gw types.Gateway) (insertIndex int64, err
 		gw.Mode,
 		gw.CreatedAt,
 		gw.LastSeenAt,
+		gw.OrgId,
+		gw.Description,
+		gw.Name,
+		gw.FkWallet,
+		gw.Mode,
 		gw.OrgId,
 		gw.Description,
 		gw.Name,
@@ -165,6 +177,8 @@ func (*gatewayInterface)GetAllGatewayMac()(macList []string, err error)  {
 			mac
 		FROM
 			gateway 
+		WHERE
+			mode <> 'GW_DELETED'
 		ORDER BY created_at DESC;`)
 
 	defer rows.Close()

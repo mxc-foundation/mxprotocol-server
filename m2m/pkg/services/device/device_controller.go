@@ -2,6 +2,7 @@ package device
 
 import (
 	"context"
+	"github.com/golang/protobuf/ptypes/empty"
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -11,31 +12,46 @@ import (
 	"time"
 )
 
+var timer *time.Timer
+
 func Setup() error {
 	log.Info("Syncronize devices from appserver")
-	return syncDevicesFromAppserverByBatch()
+	timer = time.AfterFunc(1 * time.Second, syncDevicesFromAppserverByBatch)
+	return nil
 }
 
-func syncDevicesFromAppserverByBatch() error {
-/*	// get device list from local database
-	localGatewayMacList, err := db.Device.GetAllDeviceDevEui()
+func syncDevicesFromAppserverByBatch() {
+	// get device list from local database
+	localDeviceDevEuiList, err := db.Device.GetAllDeviceDevEui()
 	if err != nil {
-		log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
-		return err
+		// reset timer
+		timer.Reset(10 * time.Second)
+		return
 	}
+	log.Debug("syncDevicesFromAppserverByBatch_local: count=", len(localDeviceDevEuiList), " list=", localDeviceDevEuiList)
 
 	// get device list from appserver
 	client, err := appserver.GetPool().Get(config.Cstruct.AppServer.Server, []byte(config.Cstruct.AppServer.CACert),
 		[]byte(config.Cstruct.AppServer.TLSCert), []byte(config.Cstruct.AppServer.TLSKey))
 	if err != nil {
-		log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
-		return err
-	}*/
+		// reset timer
+		timer.Reset(10 * time.Second)
+		return
+	}
 
+	devEuiList, err := client.GetDeviceDevEuiList(context.Background(), &empty.Empty{})
+	if err != nil {
+		// reset timer
+		timer.Reset(10 * time.Second)
+		return
+	}
+
+	log.Debug("syncDevicesFromAppserverByBatch_appserver: count=", len(devEuiList.DevEui), " list=", devEuiList.DevEui)
 
 	// do synchronization
 
-	return nil
+
+	return
 }
 
 func SyncDeviceProfileByDevEuiFromAppserver(devId int64, devEui string) error {

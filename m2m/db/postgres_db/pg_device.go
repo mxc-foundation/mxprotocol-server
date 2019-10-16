@@ -28,7 +28,7 @@ func (*deviceInterface) CreateDeviceTable() error {
 		END IF;
 			CREATE TABLE IF NOT EXISTS device (
 			id SERIAL PRIMARY KEY,
-			dev_eui VARCHAR(64) NOT NULL,
+			dev_eui VARCHAR(64) NOT NULL UNIQUE,
 			fk_wallet INT REFERENCES wallet (id) NOT NULL,
 			mode DEVICE_MODE    NOT NULL,
 			created_at     TIMESTAMP,
@@ -56,6 +56,12 @@ func (*deviceInterface) InsertDevice(dv types.Device) (insertIndex int64, err er
 			) 
 		VALUES 
 			($1,$2,$3,$4,$5,$6,$7)
+		ON CONFLICT(dev_dui) DO UPDATE 
+		SET
+			fk_wallet=$8,
+			mode=$9,
+			application_id=$10,
+			name=$11		    
 		RETURNING id ;
 	`,
 		dv.DevEui,
@@ -63,6 +69,10 @@ func (*deviceInterface) InsertDevice(dv types.Device) (insertIndex int64, err er
 		dv.Mode,
 		dv.CreatedAt,
 		dv.LastSeenAt,
+		dv.ApplicationId,
+		dv.Name,
+		dv.FkWallet,
+		dv.Mode,
 		dv.ApplicationId,
 		dv.Name,
 	).Scan(&insertIndex)
@@ -197,6 +207,8 @@ func (*deviceInterface) GetAllDeviceDevEui() (devEuiLIst []string, err error) {
 			dev_eui
 		FROM
 			device 
+		WHERE 
+			mode <> 'DV_DELETED'
 		ORDER BY created_at DESC;`)
 
 	defer rows.Close()
