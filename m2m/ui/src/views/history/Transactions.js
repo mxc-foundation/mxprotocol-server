@@ -84,7 +84,7 @@ class Transactions extends Component {
                 <TableCell align={'center'}>To</TableCell>
                 <TableCell align={'center'}>TxHash</TableCell>
                 <TableCell align={'center'}>Type</TableCell>
-                <TableCell align={'center'}>VMXC Amount</TableCell>
+                <TableCell align={'center'}>MXC Amount</TableCell>
                 <TableCell align={'center'}>Update Date</TableCell>
                 <TableCell align={'center'}>Status</TableCell>
               </TableRow>
