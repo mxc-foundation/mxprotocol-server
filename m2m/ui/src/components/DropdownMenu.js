@@ -33,7 +33,16 @@ const customStyles = {
       background: '#1a2d6e',
       // kill the white space on first and last option
       paddingTop: 0,
-    })
+    }),
+    option: base => ({
+        ...base,
+        // kill the white space on first and last option
+        padding: '10px',
+        maxWidth: 229,
+        whiteSpace: 'nowrap', 
+        overflow: 'hidden',
+        textOverflow: 'ellipsis'
+      }),
   };
  
 const getOrgList = (organizations) => {
