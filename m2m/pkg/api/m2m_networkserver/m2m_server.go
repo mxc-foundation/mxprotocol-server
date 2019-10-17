@@ -157,6 +157,11 @@ func (*M2MNetworkServerAPI) DlPktSent(ctx context.Context, req *networkserver.Dl
 			log.WithError(err).Error("db/cannot update dlPkt")
 		}
 
+		err = db.Gateway.UpdateGatewayLastSeen(gwId, time.Now())
+		if err != nil {
+			log.WithError(err).Error("db/cannot update gatewaylastseen")
+		}
+
 		err = db.Device.UpdateDeviceLastSeen(dvId, time.Now())
 		if err != nil {
 			log.WithError(err).Error("db/cannot update devicelastseen")
