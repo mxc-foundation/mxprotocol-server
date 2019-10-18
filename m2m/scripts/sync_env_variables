@@ -1,0 +1,11 @@
+#!/bin/sh
+
+echo "running script: sync_env_variables "
+
+PROJECT_PATH=$(dirname $0)/..
+ENV_CONFIGURATION=$PROJECT_PATH/ui/.env.production
+
+if [ -f $ENV_CONFIGURATION ]; then
+  echo "### assign paremeter 'REACT_APP_LORA_APP_SERVER' in" $ENV_CONFIGURATION "with" $APPSERVER
+  sed -i.bak 's,REACT_APP_LORA_APP_SERVER=.*,REACT_APP_LORA_APP_SERVER="'$APPSERVER'",' $ENV_CONFIGURATION
+fi
