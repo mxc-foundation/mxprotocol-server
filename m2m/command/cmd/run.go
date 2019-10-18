@@ -40,9 +40,9 @@ func run(cmd *cobra.Command, args []string) error {
 		setupWithdraw,
 		setupTopUp,
 		setupSupernode,
+		setupAPI,
 		setupDevice,
 		setupGateway,
-		setupAPI,
 		setupAccounting,
 	}
 

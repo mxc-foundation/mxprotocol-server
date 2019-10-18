@@ -28,7 +28,7 @@ func (*gatewayInterface) CreateGatewayTable() error {
 		END IF;
 			CREATE TABLE IF NOT EXISTS gateway (
 			id SERIAL PRIMARY KEY,
-			mac VARCHAR(128) NOT NULL UNIQUE,
+			mac VARCHAR(128) NOT NULL,
 			fk_gateway_ns INT NOT NULL,
 			fk_wallet INT REFERENCES wallet (id) NOT NULL,
 			mode GATEWAY_MODE    NOT NULL,
@@ -60,13 +60,6 @@ func (*gatewayInterface) InsertGateway(gw types.Gateway) (insertIndex int64, err
 			) 
 		VALUES 
 			($1,$2,$3,$4,$5,$6,$7,$8,$9)
-		ON CONFLICT(mac) DO UPDATE 
-		SET 
-		    fk_wallet = $10,
-		    mode = $11, 
-		    org_id = $12,
-		    description = $13,
-		    name = $14
 		RETURNING id ;
 	`,
 		gw.Mac,
@@ -75,11 +68,6 @@ func (*gatewayInterface) InsertGateway(gw types.Gateway) (insertIndex int64, err
 		gw.Mode,
 		gw.CreatedAt,
 		gw.LastSeenAt,
-		gw.OrgId,
-		gw.Description,
-		gw.Name,
-		gw.FkWallet,
-		gw.Mode,
 		gw.OrgId,
 		gw.Description,
 		gw.Name,
@@ -171,10 +159,10 @@ func (*gatewayInterface) GetGatewayProfile(gwId int64) (gw types.Gateway, err er
 	return gw, errors.Wrap(err, "db/pg_gateway/GetGatewayProfile")
 }
 
-func (*gatewayInterface)GetAllGatewayMac()(macList []string, err error)  {
+func (*gatewayInterface)GetAllGateways()(gatewayList []types.Gateway, err error) {
 	rows, err := PgDB.Query(
 		`SELECT
-			mac
+			*
 		FROM
 			gateway 
 		WHERE
@@ -183,16 +171,26 @@ func (*gatewayInterface)GetAllGatewayMac()(macList []string, err error)  {
 
 	defer rows.Close()
 	if err != nil {
-		return macList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
+		return gatewayList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
 	}
 
-	var mac string
+	var gw types.Gateway
 	for rows.Next() {
-		rows.Scan(&mac)
+		rows.Scan(
+			&gw.Id,
+			&gw.Mac,
+			&gw.FkGatewayNs,
+			&gw.FkWallet,
+			&gw.Mode,
+			&gw.CreatedAt,
+			&gw.LastSeenAt,
+			&gw.OrgId,
+			&gw.Description,
+			&gw.Name)
 
-		macList = append(macList, mac)
+		gatewayList = append(gatewayList, gw)
 	}
-	return macList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
+	return gatewayList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
 }
 
 func (*gatewayInterface) GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {

@@ -28,7 +28,7 @@ func (*deviceInterface) CreateDeviceTable() error {
 		END IF;
 			CREATE TABLE IF NOT EXISTS device (
 			id SERIAL PRIMARY KEY,
-			dev_eui VARCHAR(64) NOT NULL UNIQUE,
+			dev_eui VARCHAR(64) NOT NULL,
 			fk_wallet INT REFERENCES wallet (id) NOT NULL,
 			mode DEVICE_MODE    NOT NULL,
 			created_at     TIMESTAMP,
@@ -56,12 +56,6 @@ func (*deviceInterface) InsertDevice(dv types.Device) (insertIndex int64, err er
 			) 
 		VALUES 
 			($1,$2,$3,$4,$5,$6,$7)
-		ON CONFLICT(dev_eui) DO UPDATE 
-		SET
-			fk_wallet=$8,
-			mode=$9,
-			application_id=$10,
-			name=$11		    
 		RETURNING id ;
 	`,
 		dv.DevEui,
@@ -69,10 +63,6 @@ func (*deviceInterface) InsertDevice(dv types.Device) (insertIndex int64, err er
 		dv.Mode,
 		dv.CreatedAt,
 		dv.LastSeenAt,
-		dv.ApplicationId,
-		dv.Name,
-		dv.FkWallet,
-		dv.Mode,
 		dv.ApplicationId,
 		dv.Name,
 	).Scan(&insertIndex)
@@ -204,7 +194,7 @@ func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limi
 func (*deviceInterface) GetAllDevices() (devList []types.Device, err error) {
 	rows, err := PgDB.Query(
 		`SELECT
-			dev_eui
+			*
 		FROM
 			device 
 		WHERE 
@@ -213,16 +203,25 @@ func (*deviceInterface) GetAllDevices() (devList []types.Device, err error) {
 
 	defer rows.Close()
 	if err != nil {
-		return devList, errors.Wrap(err, "db/pg_device/GetAllDeviceDevEui")
+		return devList, errors.Wrap(err, "db/pg_device/GetAllDevices")
 	}
 
 	var dev types.Device
 	for rows.Next() {
-		rows.Scan(&dev)
+		rows.Scan(
+			&dev.Id,
+			&dev.DevEui,
+			&dev.FkWallet,
+			&dev.Mode,
+			&dev.CreatedAt,
+			&dev.LastSeenAt,
+			&dev.ApplicationId,
+			&dev.Name,
+		)
 
 		devList = append(devList, dev)
 	}
-	return devList, errors.Wrap(err, "db/pg_device/GetAllDeviceDevEui")
+	return devList, errors.Wrap(err, "db/pg_device/GetAllDevices")
 }
 
 func (*deviceInterface) GetDeviceRecCnt(walletId int64) (recCnt int64, err error) {
