@@ -56,7 +56,7 @@ func (*deviceInterface) InsertDevice(dv types.Device) (insertIndex int64, err er
 			) 
 		VALUES 
 			($1,$2,$3,$4,$5,$6,$7)
-		ON CONFLICT(dev_dui) DO UPDATE 
+		ON CONFLICT(dev_eui) DO UPDATE 
 		SET
 			fk_wallet=$8,
 			mode=$9,

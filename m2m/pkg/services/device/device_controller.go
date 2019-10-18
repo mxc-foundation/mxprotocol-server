@@ -2,6 +2,7 @@ package device
 
 import (
 	"context"
+	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/empty"
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
@@ -16,7 +17,10 @@ var timer *time.Timer
 
 func Setup() error {
 	log.Info("Syncronize devices from appserver")
-	timer = time.AfterFunc(1 * time.Second, syncDevicesFromAppserverByBatch)
+	timer = time.AfterFunc(1*time.Second, syncDevicesFromAppserverByBatch)
+
+	// give it time to sync before whole service starts
+	time.Sleep(10 * time.Second)
 	return nil
 }
 
@@ -24,6 +28,7 @@ func syncDevicesFromAppserverByBatch() {
 	// get device list from local database
 	localDeviceList, err := db.Device.GetAllDevices()
 	if err != nil {
+		log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
 		// reset timer
 		timer.Reset(10 * time.Second)
 		return
@@ -34,6 +39,7 @@ func syncDevicesFromAppserverByBatch() {
 	client, err := appserver.GetPool().Get(config.Cstruct.AppServer.Server, []byte(config.Cstruct.AppServer.CACert),
 		[]byte(config.Cstruct.AppServer.TLSCert), []byte(config.Cstruct.AppServer.TLSKey))
 	if err != nil {
+		log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
 		// reset timer
 		timer.Reset(10 * time.Second)
 		return
@@ -41,6 +47,7 @@ func syncDevicesFromAppserverByBatch() {
 
 	devEuiList, err := client.GetDeviceDevEuiList(context.Background(), &empty.Empty{})
 	if err != nil {
+		log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
 		// reset timer
 		timer.Reset(10 * time.Second)
 		return
@@ -49,10 +56,77 @@ func syncDevicesFromAppserverByBatch() {
 	log.Debug("syncDevicesFromAppserverByBatch_appserver: count=", len(devEuiList.DevEui), " list=", devEuiList.DevEui)
 
 	// do synchronization
-	for _, localDev := range localDeviceDevEuiList {
-		for _, appDev := range devEuiList.DevEui {
-			id, err := db.Device.GetDeviceIdByDevEui(localDev)
+	type syncDevice struct {
+		device           types.Device
+		existInAppserver bool
+	}
+	syncDeviceList := make(map[string]syncDevice)
+
+	for _, localDevIter := range localDeviceList {
+		dev := syncDevice{device: localDevIter, existInAppserver: false}
+		syncDeviceList[dev.device.DevEui] = dev
+
+		for _, appDevIter := range devEuiList.DevEui {
+			if appDevIter == dev.device.DevEui {
+				dev.existInAppserver = true
+				continue
+			}
+			newDev := syncDevice{device: types.Device{DevEui: appDevIter}, existInAppserver: true}
+			syncDeviceList[newDev.device.DevEui] = newDev
 		}
+	}
+
+	// process syncDeviceList
+	for k, v := range syncDeviceList {
+		if v.existInAppserver == false {
+			// when device no longer exists in appserver, set mode to deleted from m2m server
+			if err := db.Device.SetDeviceMode(v.device.Id, types.DV_DELETED); err != nil {
+				log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
+				timer.Reset(10 * time.Second)
+				return
+			}
+		} else {
+			// 	when device exists in appserver, update device walletId, name and applicationId
+			appserverClient, err := appserver.GetPool().Get(config.Cstruct.AppServer.Server, []byte(config.Cstruct.AppServer.CACert),
+				[]byte(config.Cstruct.AppServer.TLSCert), []byte(config.Cstruct.AppServer.TLSKey))
+			if err != nil {
+				log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
+				timer.Reset(10 * time.Second)
+				return
+			}
+
+			resp, err := appserverClient.GetDeviceByDevEui(context.Background(), &api.GetDeviceByDevEuiRequest{DevEui: k})
+			if err != nil {
+				log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
+				timer.Reset(10 * time.Second)
+				return
+			}
+
+			walletId, err := db.Wallet.GetWalletIdFromOrgId(resp.OrgId)
+			if err != nil {
+				log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
+				timer.Reset(10 * time.Second)
+				return
+			}
+
+			createdTimeUpdated, _ := ptypes.Timestamp(resp.DevProfile.CreatedAt)
+			devUpdate := types.Device{
+				DevEui: k,
+				FkWallet: walletId,
+				Mode: v.device.Mode,
+				CreatedAt: createdTimeUpdated,
+				ApplicationId: resp.DevProfile.ApplicationId,
+				Name: resp.DevProfile.Name,
+			}
+
+			_, err = db.Device.InsertDevice(devUpdate)
+			if err != nil {
+				log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
+				timer.Reset(10 * time.Second)
+				return
+			}
+		}	
+
 	}
 
 	return
