@@ -75,8 +75,8 @@ type MxpConfig struct {
 	}
 
 	Withdraw struct {
-		ResendToPS  int `mapstructure:"resend_ps_time"`
-		RecheckStat int `mapstructure:"recheck_status_time"`
+		ResendToPS  int `mapstructure:"resend_ps_time_second"`
+		RecheckStat int `mapstructure:"recheck_status_time_second"`
 	}
 
 	Version string
