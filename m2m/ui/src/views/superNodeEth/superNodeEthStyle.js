@@ -1,6 +1,6 @@
 import theme from "../../theme";
 
-const ControlPanelStyle = {
+const SuperNodeEthStyle = {
     tabs: {
         borderBottom: "1px solid " + theme.palette.divider,
         height: "49px",
@@ -44,4 +44,4 @@ const ControlPanelStyle = {
       },
   };
   
-export default ControlPanelStyle;
+export default SuperNodeEthStyle;

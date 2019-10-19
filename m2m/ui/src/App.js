@@ -28,7 +28,7 @@ import Topup from "./views/topup/Topup"
 import Withdraw from "./views/withdraw/Withdraw"
 import HistoryLayout from "./views/history/HistoryLayout"
 import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
-import ControlPanel from "./views/controlPanel/ControlPanel";
+//import ControlPanel from "./views/controlPanel/ControlPanel";
 import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
 
@@ -163,7 +163,7 @@ class App extends Component {
                     <Route path="/topup/:organizationID" component={Topup} />
                     <Route path="/history/:organizationID" component={HistoryLayout} />
                     <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
-                    <Route path="/control-panel/:organizationID" component={ControlPanel} />
+                  {/* <Route path="/control-panel/:organizationID" component={ControlPanel} />*/}
                     <Route path="/device/:organizationID" component={DeviceLayout} />
                     <Route path="/gateway/:organizationID" component={GatewayLayout} />
 

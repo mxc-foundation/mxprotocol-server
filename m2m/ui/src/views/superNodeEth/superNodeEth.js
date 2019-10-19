@@ -9,11 +9,11 @@ import Divider from '@material-ui/core/Divider';
 import Spinner from "../../components/ScaleLoader";
 import { SUPER_ADMIN } from "../../util/M2mUtil";
 import SupernodeStore from "../../stores/SupernodeStore";
-import styles from "./ControlPanelStyle"
+import styles from "./superNodeEthStyle"
 import { ETHER } from "../../util/Coin-type";
 
 
-class ControlPanel extends Component {
+class SuperNodeEth extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -75,4 +75,4 @@ class ControlPanel extends Component {
   }
 }
 
-export default withStyles(styles)(withRouter(ControlPanel));
+export default withStyles(styles)(withRouter(SuperNodeEth));
