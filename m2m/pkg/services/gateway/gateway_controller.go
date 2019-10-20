@@ -98,9 +98,9 @@ func syncGatewaysFromAppserverByBatch() {
 	// if len(localGatewayList) != 0 && len(gwMacList.GatewayMac) != 0, compare and synchronize
 	if len(localGatewayList) != 0 && len(gwMacList.GatewayMac) != 0 {
 		type syncGateway struct {
-			gateway          	types.Gateway
-			existInAppserver 	bool
-			existInLocalServer	bool
+			gateway            types.Gateway
+			existInAppserver   bool
+			existInLocalServer bool
 		}
 		syncGatewayList := make(map[string]syncGateway)
 

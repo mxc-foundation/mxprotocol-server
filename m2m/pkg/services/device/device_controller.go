@@ -150,7 +150,7 @@ func syncDevicesFromAppserverByBatch() {
 					timer.Reset(10 * time.Second)
 					return
 				}
-				
+
 			}
 
 			if v.existInLocalServer == true && v.existInAppserver == true {

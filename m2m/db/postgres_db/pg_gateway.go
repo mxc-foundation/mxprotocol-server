@@ -159,7 +159,7 @@ func (*gatewayInterface) GetGatewayProfile(gwId int64) (gw types.Gateway, err er
 	return gw, errors.Wrap(err, "db/pg_gateway/GetGatewayProfile")
 }
 
-func (*gatewayInterface)GetAllGateways()(gatewayList []types.Gateway, err error) {
+func (*gatewayInterface) GetAllGateways() (gatewayList []types.Gateway, err error) {
 	rows, err := PgDB.Query(
 		`SELECT
 			*

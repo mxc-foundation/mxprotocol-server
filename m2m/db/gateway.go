@@ -17,7 +17,7 @@ type gatewayDBInterface interface {
 	UpdateGatewayLastSeen(gwId int64, newTime time.Time) (err error)
 	GetGatewayProfile(gwId int64) (gw types.Gateway, err error)
 	GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error)
-	GetAllGateways()(gatewayList []types.Gateway, err error)
+	GetAllGateways() (gatewayList []types.Gateway, err error)
 	GetGatewayRecCnt(walletId int64) (recCnt int64, err error)
 	GetFreeGwList(walletId int64) (gwId []int64, gwMac []string, err error)
 	GetWalletIdOfGateway(gwId int64) (gwWalletId int64, err error)
