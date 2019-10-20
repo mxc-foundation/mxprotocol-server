@@ -32,6 +32,8 @@ func Setup(conf config.MxpConfig) error {
 		log.WithField("count", n).Info("db/PostgreSQL data migrations applied")
 	}
 
+	// testDb()
+
 	return nil
 }
 
@@ -40,6 +42,10 @@ func dbInit() {
 
 	if err := Wallet.CreateWalletTable(); err != nil {
 		log.WithError(err).Fatal("db/CreateWalletTable")
+	}
+
+	if err := Wallet.CreateWalletFunctions(); err != nil {
+		log.WithError(err).Fatal("db/CreateWalletFunctions")
 	}
 
 	if err := InternalTx.CreateInternalTxTable(); err != nil {
@@ -82,8 +88,16 @@ func dbInit() {
 		log.WithError(err).Fatal("db/CreateGatewayTable")
 	}
 
+	if err := AggPeriod.CreateAggPeriodTable(); err != nil {
+		log.WithError(err).Fatal("db/CreateAggPeriodTable")
+	}
+
 	if err := AggWalletUsage.CreateAggWltUsgTable(); err != nil {
 		log.WithError(err).Fatal("db/CreateAggWltUsgTable")
+	}
+
+	if err := AggWalletUsage.CreateAggWltUsgFunctions(); err != nil {
+		log.WithError(err).Fatal("db/CreateAggWltUsgFunctions")
 	}
 
 	if err := AggDeviceUsage.CreateAggDvUsgTable(); err != nil {

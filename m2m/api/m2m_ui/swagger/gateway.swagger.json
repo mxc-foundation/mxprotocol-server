@@ -217,7 +217,7 @@
           "format": "int64"
         },
         "mode": {
-          "type": "string"
+          "$ref": "#/definitions/apiGatewayMode"
         },
         "createAt": {
           "type": "string"
@@ -256,6 +256,10 @@
           "items": {
             "$ref": "#/definitions/apiGatewayProfile"
           }
+        },
+        "count": {
+          "type": "string",
+          "format": "int64"
         },
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"

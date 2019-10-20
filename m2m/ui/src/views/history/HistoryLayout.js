@@ -13,8 +13,8 @@ import Spinner from "../../components/ScaleLoader"
 
 //import Transactions from "./Transactions";
 import EthAccount from "./EthAccount";
-import WithdrawHistory from "./WithdrawHistory";
-import TopupHistory from "./TopupHistory";
+import Transactions from "./Transactions";
+import NetworkActivityHistory from "./NetworkActivityHistory";
 
 import styles from "./HistoryStyle";
 
@@ -56,7 +56,7 @@ class HistoryLayout extends Component {
     let tab = 0;
     if (window.location.href.endsWith("/eth-account")) {
       tab = 1;
-    } else if (window.location.href.endsWith("/withdraw")) {
+    } else if (window.location.href.endsWith("/network-activity")) {
       tab = 2;
     }  
     
@@ -74,7 +74,7 @@ class HistoryLayout extends Component {
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
-                  <TitleBarTitle title="History" />
+                  <TitleBarTitle title="Histories" />
                 </TitleBar>
                 {/* <Divider light={true}/>
                 <div className={this.props.classes.breadcrumb}>
@@ -97,19 +97,17 @@ class HistoryLayout extends Component {
             scrollButtons="auto"
             textColor="primary"
           >
-            <Tab label="Top up" component={Link} to={`/history/${organizationID}/`} />
-            <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth-account`} />
-            <Tab label="Withdraw" component={Link} to={`/history/${organizationID}/withdraw`} />
-            
+            <Tab label="Transactions" component={Link} to={`/history/${organizationID}/`} />
+            <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth_account`} />
+            <Tab label="Network Activity" component={Link} to={`/history/${organizationID}/network-activity`} />
           </Tabs>
         </Grid>
 
         <Grid item xs={12}>
           <Switch>
-            <Route exact path={`${this.props.match.path}/`} render={props => <TopupHistory organizationID={organizationID} {...props} />} />
-            <Route exact path={`${this.props.match.path}/eth-account`} render={props => <EthAccount {...props} />} />
-            <Route exact path={`${this.props.match.path}/withdraw`} render={props => <WithdrawHistory {...props} />} /> 
-
+            <Route exact path={`${this.props.match.path}/`} render={props => <Transactions organizationID={organizationID} {...props} />} />
+            <Route exact path={`${this.props.match.path}/eth_account`} render={props => <EthAccount {...props} />} />
+            <Route exact path={`${this.props.match.path}/network-activity`} render={props => <NetworkActivityHistory organizationID={organizationID} {...props} />} />
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}
           </Switch>
         </Grid>

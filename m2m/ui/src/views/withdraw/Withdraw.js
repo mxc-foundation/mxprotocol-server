@@ -23,9 +23,9 @@ function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function loadWithdrawFee(ETHER, orgId) {
+function loadWithdrawFee(ETHER, organizationID) {
   return new Promise((resolve, reject) => {
-    WithdrawStore.getWithdrawFee(ETHER, orgId,
+    WithdrawStore.getWithdrawFee(ETHER, organizationID,
       resp => {
         resp.moneyAbbr = ETHER;
         resolve(resp);

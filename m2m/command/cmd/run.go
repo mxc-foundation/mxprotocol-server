@@ -2,8 +2,7 @@ package cmd
 
 import (
 	"context"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/device"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/gateway"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/clients/appserver"
 	"os"
 	"os/signal"
 	"syscall"
@@ -15,7 +14,10 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/accounting"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/device"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/ext_account"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/gateway"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/supernode"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/topup"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
@@ -31,15 +33,17 @@ func run(cmd *cobra.Command, args []string) error {
 		setLogLevel,
 		printStartMessage,
 		setupDb,
+		setupAppserver,
 		setupAuth,
 		setupMoney,
 		setupWallet,
 		setupWithdraw,
 		setupTopUp,
 		setupSupernode,
+		setupAPI,
 		setupDevice,
 		setupGateway,
-		setupAPI,
+		setupAccounting,
 	}
 
 	for _, t := range tasks {
@@ -87,6 +91,13 @@ func setupAuth() error {
 func setupDb() error {
 	if err := db.Setup(config.Cstruct); err != nil {
 		return errors.Wrap(err, "setup db error")
+	}
+	return nil
+}
+
+func setupAppserver() error {
+	if err := appserver.Setup(config.Cstruct); err != nil {
+		return errors.Wrap(err, "setup appserver client pool error")
 	}
 	return nil
 }
@@ -143,6 +154,13 @@ func setupGateway() error {
 func setupAPI() error {
 	if err := api.SetupHTTPServer(config.Cstruct); err != nil {
 		return errors.Wrap(err, "setup api error")
+	}
+	return nil
+}
+
+func setupAccounting() error {
+	if err := accounting.Setup(config.Cstruct); err != nil {
+		return errors.Wrap(err, "setup service accounting error")
 	}
 	return nil
 }

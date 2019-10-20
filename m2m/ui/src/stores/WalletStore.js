@@ -27,6 +27,36 @@ class WalletStore extends EventEmitter {
     });
   }
 
+  getDlPrice(orgId, callbackFunc) {
+    this.swagger.then(client => {
+      client.apis.WalletService.GetDlPrice({
+        orgId,
+      })
+      .then(checkStatus)
+      //.then(updateOrganizations)
+      .then(resp => {
+        callbackFunc(resp.obj);
+      })
+      .catch(errorHandler);
+    });
+  }
+
+  getWalletUsageHist(orgId, offset, limit, callbackFunc) {
+    this.swagger.then(client => {
+      client.apis.WalletService.GetWalletUsageHist({
+        orgId,
+        offset,
+        limit
+      })
+      .then(checkStatus)
+      //.then(updateOrganizations)
+      .then(resp => {
+        callbackFunc(resp.body);
+      })
+      .catch(errorHandler);
+    });
+  }
+
   notify(action) {
     dispatcher.dispatch({
       type: "CREATE_NOTIFICATION",
