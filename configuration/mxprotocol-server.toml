@@ -106,7 +106,7 @@ cors_allow_origin="http://localhost:8080"
 disable_assign_existing_users=false
 
 [appserver]
-appserver="appserver:8080"
+appserver="appserver:8002"
 
 [supernode]
 ## For official Eth network

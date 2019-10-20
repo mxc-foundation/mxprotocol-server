@@ -52,11 +52,11 @@ type MxpConfig struct {
 		} `mapstructure:"http_server"`
 	} `mapstructure:"m2m_server"`
 
-	AppServer struct{
-		Server string `mapstructure:"appserver"`
-		CACert    string `mapstructure:"ca_cert"`
-		TLSCert   string `mapstructure:"tls_cert"`
-		TLSKey    string `mapstructure:"tls_key"`
+	AppServer struct {
+		Server  string `mapstructure:"appserver"`
+		CACert  string `mapstructure:"ca_cert"`
+		TLSCert string `mapstructure:"tls_cert"`
+		TLSKey  string `mapstructure:"tls_key"`
 	} `mapstructure:"appserver"`
 
 	PaymentServer struct {
@@ -75,8 +75,8 @@ type MxpConfig struct {
 	}
 
 	Withdraw struct {
-		ResendToPS  int `mapstructure:"resend_ps_time"`
-		RecheckStat int `mapstructure:"recheck_status_time"`
+		ResendToPS  int `mapstructure:"resend_ps_time_second"`
+		RecheckStat int `mapstructure:"recheck_status_time_second"`
 	}
 
 	Version string

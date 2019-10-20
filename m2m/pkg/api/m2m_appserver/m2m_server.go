@@ -6,11 +6,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/device"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/gateway"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
-	"time"
 )
 
 type M2MServerAPI struct{}
@@ -55,18 +52,18 @@ func (*M2MServerAPI) AddDeviceInM2MServer(ctx context.Context, req *api.AddDevic
 	devId, err := db.Device.InsertDevice(dev)
 	if err != nil {
 		log.WithError(err).Error("grpc_api/AddDeviceInM2MServer")
-		// retry
-		go func() {
-			for {
-				err := device.SyncDeviceProfileByDevEuiFromAppserver(dev.Id, dev.DevEui)
-				if err != nil {
-					log.WithError(err).Error("grpc_api/AddDeviceInM2MServer: retry failed")
-					time.Sleep(5*time.Second)
-					continue
-				}
-				break;
-			}
-		}()
+		/*		// retry
+				go func() {
+					for {
+						err := device.SyncDeviceProfileByDevEuiFromAppserver(dev.Id, dev.DevEui)
+						if err != nil {
+							log.WithError(err).Error("grpc_api/AddDeviceInM2MServer: retry failed")
+							time.Sleep(5*time.Second)
+							continue
+						}
+						break;
+					}
+				}()*/
 		return &api.AddDeviceInM2MServerResponse{}, err
 	}
 
@@ -86,18 +83,18 @@ func (*M2MServerAPI) DeleteDeviceInM2MServer(ctx context.Context, req *api.Delet
 	err = db.Device.SetDeviceMode(devId, types.DV_DELETED)
 	if err != nil {
 		log.WithError(err).Error("grpc_api/DeleteDeviceInM2MServer")
-		// retry
-		go func() {
-			for {
-				err := device.SyncDeviceProfileByDevEuiFromAppserver(devId, req.DevEui)
-				if err != nil {
-					log.WithError(err).Error("grpc_api/DeleteDeviceInM2MServer: retry failed")
-					time.Sleep(5*time.Second)
-					continue
-				}
-				break;
-			}
-		}()
+		/*		// retry
+				go func() {
+					for {
+						err := device.SyncDeviceProfileByDevEuiFromAppserver(devId, req.DevEui)
+						if err != nil {
+							log.WithError(err).Error("grpc_api/DeleteDeviceInM2MServer: retry failed")
+							time.Sleep(5*time.Second)
+							continue
+						}
+						break;
+					}
+				}()*/
 		return &api.DeleteDeviceInM2MServerResponse{}, err
 	}
 
@@ -127,18 +124,18 @@ func (*M2MServerAPI) AddGatewayInM2MServer(ctx context.Context, req *api.AddGate
 	gwId, err := db.Gateway.InsertGateway(gw)
 	if err != nil {
 		log.WithError(err).Error("grpc_api/AddGatewayInM2MServer")
-		// retry
-		go func() {
-			for {
-				err := gateway.SyncGatewayProfileByMacFromAppserver(gw.Id, gw.Mac)
-				if err != nil {
-					log.WithError(err).Error("grpc_api/AddGatewayInM2MServer: retry failed")
-					time.Sleep(5*time.Second)
-					continue
-				}
-				break;
-			}
-		}()
+		/*		// retry
+				go func() {
+					for {
+						err := gateway.SyncGatewayProfileByMacFromAppserver(gw.Id, gw.Mac)
+						if err != nil {
+							log.WithError(err).Error("grpc_api/AddGatewayInM2MServer: retry failed")
+							time.Sleep(5*time.Second)
+							continue
+						}
+						break;
+					}
+				}()*/
 		return &api.AddGatewayInM2MServerResponse{}, err
 	}
 
@@ -158,18 +155,18 @@ func (*M2MServerAPI) DeleteGatewayInM2MServer(ctx context.Context, req *api.Dele
 	err = db.Gateway.SetGatewayMode(gwId, types.GW_DELETED)
 	if err != nil {
 		log.WithError(err).Error("grpc_api/DeleteGatewayInM2MServer")
-		// retry
-		go func() {
-			for {
-				err := gateway.SyncGatewayProfileByMacFromAppserver(gwId, req.MacAddress)
-				if err != nil {
-					log.WithError(err).Error("grpc_api/DeleteGatewayInM2MServer: retry failed")
-					time.Sleep(5*time.Second)
-					continue
-				}
-				break;
-			}
-		}()
+		/*		// retry
+				go func() {
+					for {
+						err := gateway.SyncGatewayProfileByMacFromAppserver(gwId, req.MacAddress)
+						if err != nil {
+							log.WithError(err).Error("grpc_api/DeleteGatewayInM2MServer: retry failed")
+							time.Sleep(5*time.Second)
+							continue
+						}
+						break;
+					}
+				}()*/
 		return &api.DeleteGatewayInM2MServerResponse{}, err
 	}
 
