@@ -14,6 +14,7 @@ class SessionStore extends EventEmitter {
     this.branding = {};
 
     this.swagger = Swagger("/swagger/profile.swagger.json", this.getClientOpts());
+    this.profileSwagger = new Swagger("/swagger/profile.swagger.json", this.getClientOpts());
 
     this.swagger.then(client => {
       this.client = client;
@@ -66,12 +67,12 @@ class SessionStore extends EventEmitter {
   }
 
   getOrganizationName() {
-    const orgName = localStorage.getItem("organizationName");
-    if (orgName === "") {
+    const orgId = localStorage.getItem("organizationName");
+    if (orgId === "") {
       return null;
     }
 
-    return orgName;
+    return orgId;
   }
 
   setOrganizationName(name) {
@@ -164,7 +165,7 @@ class SessionStore extends EventEmitter {
   }
 
   login(login, callBackFunc) {
-    this.swagger.then(client => {
+    this.profileSwagger.then(client => {
       client.apis.InternalService.Login({body: login})
         .then(checkStatus)
         .then(resp => {
