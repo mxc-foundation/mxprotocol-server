@@ -15,10 +15,10 @@ class HistoryStore extends EventEmitter {
     this.walletSwagger = new Swagger("/swagger/wallet.swagger.json", sessionStore.getClientOpts());
     this.moneySwagger = new Swagger("/swagger/ext_account.swagger.json", sessionStore.getClientOpts());
   }
-  getTopUpHistory(orgId, limit, offset, callbackFunc) {
-    this.topupSwagger.then((client) => {      
-      client.apis.TopupService.GetTopUpHistory({
 
+  getTopUpHistory(orgId, offset, limit, callbackFunc) {
+    this.swagger.then(client => {
+      client.apis.TopUpService.GetTopUpHistory({
         orgId,
         offset,
         limit
