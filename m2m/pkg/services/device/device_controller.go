@@ -10,7 +10,6 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/clients/appserver"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
-	"strings"
 	"time"
 )
 
@@ -99,68 +98,70 @@ func syncDevicesFromAppserverByBatch() {
 	// if len(localDeviceList) != 0, len(devEuiList) != 0, compare and synchronize
 	if len(localDeviceList) != 0 && len(devEuiList.DevEui) != 0 {
 		type syncDevice struct {
-			device           types.Device
-			existInAppserver bool
+			device             types.Device
+			existInAppserver   bool
+			existInLocalServer bool
 		}
 		syncDeviceList := make(map[string]syncDevice)
 
 		for _, localDevIter := range localDeviceList {
-			dev := syncDevice{device: localDevIter, existInAppserver: false}
+			dev := syncDevice{device: localDevIter, existInAppserver: false, existInLocalServer: true}
 			syncDeviceList[dev.device.DevEui] = dev
+		}
 
-			for _, appDevIter := range devEuiList.DevEui {
-				if appDevIter == dev.device.DevEui {
-					dev.existInAppserver = true
-					continue
-				}
-				newDev := syncDevice{device: types.Device{DevEui: appDevIter, Mode: types.DV_WHOLE_NETWORK}, existInAppserver: true}
+		for _, appDevIter := range devEuiList.DevEui {
+			if val, ok := syncDeviceList[appDevIter]; ok {
+				val.existInAppserver = true
+			} else {
+				newDev := syncDevice{device: types.Device{DevEui: appDevIter}, existInAppserver: true, existInLocalServer: false}
 				syncDeviceList[newDev.device.DevEui] = newDev
 			}
 		}
 
 		// process syncDeviceList
 		for k, v := range syncDeviceList {
-			if v.existInAppserver == false {
-				// when device no longer exists in appserver, set mode to deleted from m2m server
+			// synchronize devices
+			// v.existInLocalServer == true && v.existInAppserver == false, delete device locally
+			// v.existInLocalServer == false && v.existInAppserver == true, insert new device
+			// v.existInLocalServer == true && v.existInAppserver == true, do nothing, continue loop
+			// v.existInLocalServer == false && v.existInAppserver == false, this option does not exist
+
+			if v.existInLocalServer == true && v.existInAppserver == false {
+				// delete device locally
 				if err := db.Device.SetDeviceMode(v.device.Id, types.DV_DELETED); err != nil {
 					log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
 					timer.Reset(10 * time.Second)
 					return
 				}
-			} else {
-				// 	when device exists in appserver, check if it exists locally first
-				_, err := db.Device.GetDeviceIdByDevEui(k)
+			}
+
+			if v.existInLocalServer == false && v.existInAppserver == true {
+				// insert new device
+				device, err := getDeviceFromAppserver(k)
 				if err != nil {
-					if false == strings.HasSuffix(err.Error(), db.DbError.NoRowQueryRes.Error()) {
-						log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
-						timer.Reset(10 * time.Second)
-						return
-					}
-
-					// device does not exist locally
-					device, err := getDeviceFromAppserver(k)
-					if err != nil {
-						log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
-						timer.Reset(10 * time.Second)
-						return
-					}
-
-					 _, err = db.Device.InsertDevice(device)
-					 if err != nil {
-						 log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
-						 timer.Reset(10 * time.Second)
-						 return
-					 }
-
-					continue
+					log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
+					timer.Reset(10 * time.Second)
+					return
 				}
-				// TODO: when it is necessary to update a device
+
+				_, err = db.Device.InsertDevice(device)
+				if err != nil {
+					log.WithError(err).Error("service/device/syncDevicesFromAppserverByBatch")
+					timer.Reset(10 * time.Second)
+					return
+				}
+				
+			}
+
+			if v.existInLocalServer == true && v.existInAppserver == true {
+				// do nothing
+				continue
 			}
 
 		}
-	}
 
-	return
+		return
+	}
 }
 
 func getDeviceFromAppserver(devEui string) (types.Device, error) {
@@ -182,15 +183,16 @@ func getDeviceFromAppserver(devEui string) (types.Device, error) {
 	}
 
 	createdTimeUpdated, _ := ptypes.Timestamp(resp.DevProfile.CreatedAt)
-	device.DevEui 			= devEui
-	device.Mode 			= types.DV_WHOLE_NETWORK
-	device.Name 			= resp.DevProfile.Name
-	device.FkWallet 		= walletId
-	device.CreatedAt 		= createdTimeUpdated
-	device.ApplicationId 	= resp.DevProfile.ApplicationId
+	device.DevEui = devEui
+	device.Mode = types.DV_WHOLE_NETWORK
+	device.Name = resp.DevProfile.Name
+	device.FkWallet = walletId
+	device.CreatedAt = createdTimeUpdated
+	device.ApplicationId = resp.DevProfile.ApplicationId
 
 	return device, nil
 }
+
 /*
 func SyncDeviceProfileByDevEuiFromAppserver(devId int64, devEui string) error {
 	client, err := appserver.GetPool().Get(config.Cstruct.AppServer.Server, []byte(config.Cstruct.AppServer.CACert),

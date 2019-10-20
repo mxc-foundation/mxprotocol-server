@@ -28,7 +28,7 @@ func syncGatewaysFromAppserverByBatch() {
 	// get gateway list from local database
 	localGatewayList, err := db.Gateway.GetAllGateways()
 	if err != nil {
-		log.WithError(err).Error("service/device/syncGatewaysFromAppserverByBatch")
+		log.WithError(err).Error("service/gateway/syncGatewaysFromAppserverByBatch")
 		// reset timer
 		timer.Reset(10 * time.Second)
 		return
@@ -39,7 +39,7 @@ func syncGatewaysFromAppserverByBatch() {
 	client, err := appserver.GetPool().Get(config.Cstruct.AppServer.Server, []byte(config.Cstruct.AppServer.CACert),
 		[]byte(config.Cstruct.AppServer.TLSCert), []byte(config.Cstruct.AppServer.TLSKey))
 	if err != nil {
-		log.WithError(err).Error("service/device/syncGatewaysFromAppserverByBatch")
+		log.WithError(err).Error("service/gateway/syncGatewaysFromAppserverByBatch")
 		// reset timer
 		timer.Reset(10 * time.Second)
 		return
@@ -47,7 +47,7 @@ func syncGatewaysFromAppserverByBatch() {
 
 	gwMacList, err := client.GetGatewayMacList(context.Background(), &empty.Empty{})
 	if err != nil {
-		log.WithError(err).Error("service/device/syncGatewaysFromAppserverByBatch")
+		log.WithError(err).Error("service/gateway/syncGatewaysFromAppserverByBatch")
 		// reset timer
 		timer.Reset(10 * time.Second)
 		return
@@ -65,7 +65,7 @@ func syncGatewaysFromAppserverByBatch() {
 		for _, v := range gwMacList.GatewayMac {
 			gateway, err := getGatewayFromAppserver(v)
 			if err != nil {
-				log.WithError(err).Error("service/device/syncGatewaysFromAppserverByBatch")
+				log.WithError(err).Error("service/gateway/syncGatewaysFromAppserverByBatch")
 				// reset timer
 				timer.Reset(10 * time.Second)
 				return
@@ -73,7 +73,7 @@ func syncGatewaysFromAppserverByBatch() {
 
 			_, err = db.Gateway.InsertGateway(gateway)
 			if err != nil {
-				log.WithError(err).Error("service/device/syncGatewaysFromAppserverByBatch")
+				log.WithError(err).Error("service/gateway/syncGatewaysFromAppserverByBatch")
 				timer.Reset(10 * time.Second)
 				return
 			}
@@ -82,10 +82,87 @@ func syncGatewaysFromAppserverByBatch() {
 		return
 	}
 
-	//
+	// if len(localGatewayList) != 0, len(gwMacList.GatewayMac) == 0, just delete all gateways
+	if len(localGatewayList) != 0 && len(gwMacList.GatewayMac) == 0 {
+		for _, v := range localGatewayList {
+			if err := db.Gateway.SetGatewayMode(v.Id, types.GW_DELETED); err != nil {
+				log.WithError(err).Error("service/gateway/syncGatewaysFromAppserverByBatch")
+				timer.Reset(10 * time.Second)
+				return
+			}
+		}
 
-	// do synchronization
+		return
+	}
 
+	// if len(localGatewayList) != 0 && len(gwMacList.GatewayMac) != 0, compare and synchronize
+	if len(localGatewayList) != 0 && len(gwMacList.GatewayMac) != 0 {
+		type syncGateway struct {
+			gateway          	types.Gateway
+			existInAppserver 	bool
+			existInLocalServer	bool
+		}
+		syncGatewayList := make(map[string]syncGateway)
+
+		for _, localGwIter := range localGatewayList {
+			gw := syncGateway{gateway: localGwIter, existInAppserver: false, existInLocalServer: true}
+			syncGatewayList[gw.gateway.Mac] = gw
+		}
+
+		for _, appGwIter := range gwMacList.GatewayMac {
+			if val, ok := syncGatewayList[appGwIter]; ok {
+				val.existInAppserver = true
+			} else {
+				newGw := syncGateway{gateway: types.Gateway{Mac: appGwIter}, existInAppserver: true, existInLocalServer: false}
+				syncGatewayList[newGw.gateway.Mac] = newGw
+			}
+		}
+
+		// process syncGatewayList
+		for k, v := range syncGatewayList {
+			// synchronize gateways
+			// v.existInLocalServer == true && v.existInAppserver == false, delete gateway locally
+			// v.existInLocalServer == false && v.existInAppserver == true, insert new gateway
+			// v.existInLocalServer == true && v.existInAppserver == true, do nothing, continue loop
+			// v.existInLocalServer == false && v.existInAppserver == false, this option does not exist
+
+			if v.existInLocalServer == true && v.existInAppserver == false {
+				// delete local gateway
+				if err := db.Gateway.SetGatewayMode(v.gateway.Id, types.GW_DELETED); err != nil {
+					log.WithError(err).Error("service/gateway/syncGatewaysFromAppserverByBatch")
+					timer.Reset(10 * time.Second)
+					return
+				}
+
+			}
+
+			if v.existInLocalServer == false && v.existInAppserver == true {
+				// insert new gateway
+				gateway, err := getGatewayFromAppserver(k)
+				if err != nil {
+					log.WithError(err).Error("service/gateway/syncGatewaysFromAppserverByBatch")
+					timer.Reset(10 * time.Second)
+					return
+				}
+
+				_, err = db.Gateway.InsertGateway(gateway)
+				if err != nil {
+					log.WithError(err).Error("service/gateway/syncGatewaysFromAppserverByBatch")
+					timer.Reset(10 * time.Second)
+					return
+				}
+
+			}
+
+			if v.existInLocalServer == true && v.existInAppserver == true {
+				// do nothing
+				continue
+			}
+
+		}
+
+		return
+	}
 }
 
 func getGatewayFromAppserver(mac string) (types.Gateway, error) {
@@ -107,13 +184,13 @@ func getGatewayFromAppserver(mac string) (types.Gateway, error) {
 	}
 
 	createdTimeUpdated, _ := ptypes.Timestamp(resp.GwProfile.CreatedAt)
-	gateway.Mac 		= resp.GwProfile.Mac
-	gateway.FkWallet 	= walletId
-	gateway.Mode 		= types.GW_WHOLE_NETWORK
-	gateway.CreatedAt 	= createdTimeUpdated
-	gateway.OrgId 		= resp.OrgId
+	gateway.Mac = resp.GwProfile.Mac
+	gateway.FkWallet = walletId
+	gateway.Mode = types.GW_WHOLE_NETWORK
+	gateway.CreatedAt = createdTimeUpdated
+	gateway.OrgId = resp.OrgId
 	gateway.Description = resp.GwProfile.Description
-	gateway.Name 		= resp.GwProfile.Name
+	gateway.Name = resp.GwProfile.Name
 
 	return gateway, nil
 }
