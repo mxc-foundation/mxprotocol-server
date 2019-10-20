@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/clients/appserver"
 	"os"
 	"os/signal"
 	"syscall"
@@ -32,15 +33,16 @@ func run(cmd *cobra.Command, args []string) error {
 		setLogLevel,
 		printStartMessage,
 		setupDb,
+		setupAppserver,
 		setupAuth,
 		setupMoney,
 		setupWallet,
 		setupWithdraw,
 		setupTopUp,
 		setupSupernode,
+		setupAPI,
 		setupDevice,
 		setupGateway,
-		setupAPI,
 		setupAccounting,
 	}
 
@@ -89,6 +91,13 @@ func setupAuth() error {
 func setupDb() error {
 	if err := db.Setup(config.Cstruct); err != nil {
 		return errors.Wrap(err, "setup db error")
+	}
+	return nil
+}
+
+func setupAppserver() error {
+	if err := appserver.Setup(config.Cstruct); err != nil {
+		return errors.Wrap(err, "setup appserver client pool error")
 	}
 	return nil
 }

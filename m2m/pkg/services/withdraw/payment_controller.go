@@ -56,10 +56,10 @@ func PaymentReq(conf *config.MxpConfig, amount, receiverAdd string, reqId int64)
 
 	reply, err := client.TokenTxReq(context.Background(), &ps.TxReqType{
 		PaymentClientEnum: 3,
-		ReqIdClient: reqId,
-		ReceiverAdr: receiverAdd,
-		Amount: amount,
-		TokenNameEnum: 0,
+		ReqIdClient:       reqId,
+		ReceiverAdr:       receiverAdd,
+		Amount:            amount,
+		TokenNameEnum:     0,
 	})
 	if err != nil {
 		log.WithError(err).Error("PaymentReq/cannot get reply from payment service")

@@ -52,11 +52,11 @@ type MxpConfig struct {
 		} `mapstructure:"http_server"`
 	} `mapstructure:"m2m_server"`
 
-	AppServer struct{
-		Server string `mapstructure:"appserver"`
-		CACert    string `mapstructure:"ca_cert"`
-		TLSCert   string `mapstructure:"tls_cert"`
-		TLSKey    string `mapstructure:"tls_key"`
+	AppServer struct {
+		Server  string `mapstructure:"appserver"`
+		CACert  string `mapstructure:"ca_cert"`
+		TLSCert string `mapstructure:"tls_cert"`
+		TLSKey  string `mapstructure:"tls_key"`
 	} `mapstructure:"appserver"`
 
 	PaymentServer struct {
