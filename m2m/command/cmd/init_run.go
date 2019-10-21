@@ -59,6 +59,9 @@ func init() {
 	viper.SetDefault("paymentserver.payment_service_address", "localhost")
 	viper.SetDefault("paymentserver.payment_service_port", ":8081")
 
+	viper.SetDefault("withdraw.resend_ps_time_second=120", "120")
+	viper.SetDefault("withdraw.recheck_status_time_second", "20")
+
 	cmdMXP.AddCommand(cmdConfig)
 	cmdMXP.AddCommand(cmdVersion)
 }

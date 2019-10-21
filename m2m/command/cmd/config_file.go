@@ -142,8 +142,8 @@ payment_service_address={{ .PaymentServer.PaymentServiceAddress }}
 payment_service_port={{ .PaymentServer.PaymentServicePort }}
 
 [withdraw]
-resend_ps_time={{ .Withdraw.ResendToPS }}
-recheck_status_time={{ .Withdraw.RecheckStat }}
+resend_ps_time_second={{ .Withdraw.ResendToPS }}
+recheck_status_time_second={{ .Withdraw.RecheckStat }}
 `
 
 var cmdConfig = &cobra.Command{
