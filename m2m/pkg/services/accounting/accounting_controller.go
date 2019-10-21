@@ -1,7 +1,6 @@
 package accounting
 
 import (
-	"fmt"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -10,19 +9,34 @@ import (
 
 func Setup(conf config.MxpConfig) error {
 
-	var aggDurationMinutes int64 = conf.Accounting.IntervalMin
-
-	tickerAccounting := time.NewTicker(time.Duration(aggDurationMinutes) * time.Minute)
 	go func() {
-		for range tickerAccounting.C {
+
+		// set the first accounting time to be run at the closest hh:00'
+		now := time.Now().UTC()
+		nextTickTimeDiff := now.Truncate(time.Hour).Add(time.Hour).Sub(now)
+		t := time.NewTicker(nextTickTimeDiff)
+		for {
+			// Wait for tick from the ticker
+			<-t.C
+
 			execTime := time.Now().UTC()
-			log.Info("Accounting routine started")
 			var dlPrice float64 = conf.SuperNode.DlPrice
-			fmt.Println("dlPrice:", dlPrice)
+			var aggDurationMinutes int64 = conf.Accounting.IntervalMin
+
+			log.Info("Accounting routine started. dl_price: ", dlPrice)
 
 			if err := performAccounting(execTime, aggDurationMinutes, dlPrice); err != nil {
 				log.WithError(err).Error(" Accounting Failed! ")
 			}
+
+			now := time.Now().UTC()
+			if aggDurationMinutes%60 == 0 {
+				nextTickTimeDiff = now.Truncate(time.Hour).Add(time.Minute * time.Duration(aggDurationMinutes)).Sub(now) // change parameters:  time.Minute => hour // time.Minute -> conofig...
+			} else {
+				nextTickTimeDiff = time.Minute * time.Duration(aggDurationMinutes)
+			}
+			t = time.NewTicker(nextTickTimeDiff)
+
 		}
 	}()
 
