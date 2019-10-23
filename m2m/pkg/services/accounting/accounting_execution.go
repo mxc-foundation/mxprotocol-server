@@ -17,7 +17,10 @@ func performAccounting(execTime time.Time, aggDurationMinutes int64, dlPrice flo
 
 	aggStartAt := execTime.Add(-time.Duration(aggDurationMinutes) * time.Minute)
 
-	aggPeriodId, err := db.AggPeriod.InsertAggPeriod(aggStartAt, aggDurationMinutes, execTime)
+	// aggPeriodId, err := db.AggPeriod.InsertAggPeriod(aggStartAt, aggDurationMinutes, execTime)
+	var latsetId int64 = 0 //@@ to be get form DB
+	aggPeriodId, err := db.AggPeriod.InsertAggPeriod(latsetId, aggDurationMinutes, execTime)
+
 	if err != nil {
 		return errors.Wrap(err, "accounting/performAccounting Unable to start accounting")
 	}
