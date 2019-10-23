@@ -52,17 +52,17 @@ type MxpConfig struct {
 		} `mapstructure:"http_server"`
 	} `mapstructure:"m2m_server"`
 
-	AppServer struct{
-		Server string `mapstructure:"appserver"`
-		CACert    string `mapstructure:"ca_cert"`
-		TLSCert   string `mapstructure:"tls_cert"`
-		TLSKey    string `mapstructure:"tls_key"`
+	AppServer struct {
+		Server  string `mapstructure:"appserver"`
+		CACert  string `mapstructure:"ca_cert"`
+		TLSCert string `mapstructure:"tls_cert"`
+		TLSKey  string `mapstructure:"tls_key"`
 	} `mapstructure:"appserver"`
 
 	PaymentServer struct {
 		PaymentServiceAddress string `mapstructure:"payment_service_address"`
 		PaymentServicePort    string `mapstructure:"payment_service_port"`
-	}
+	} `mapstructure:"paymentserver"`
 
 	SuperNode struct {
 		ContractAddress     string  `mapstructure:"contract_address"`
@@ -72,12 +72,12 @@ type MxpConfig struct {
 		ExtCurrAbv          string  `mapstructure:"external_currency_abv"`
 		TestNet             bool    `mapstructure:"ether_test_net"`
 		DlPrice             float64 `mapstructure:"down_link_price"`
-	}
+	} `mapstructure:"supernode"`
 
 	Withdraw struct {
-		ResendToPS  int `mapstructure:"resend_ps_time"`
-		RecheckStat int `mapstructure:"recheck_status_time"`
-	}
+		ResendToPS  int `mapstructure:"resend_ps_time_second"`
+		RecheckStat int `mapstructure:"recheck_status_time_second"`
+	} `mapstructure:"withdraw"`
 
 	Version string
 }

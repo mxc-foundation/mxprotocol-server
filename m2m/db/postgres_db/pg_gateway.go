@@ -159,26 +159,38 @@ func (*gatewayInterface) GetGatewayProfile(gwId int64) (gw types.Gateway, err er
 	return gw, errors.Wrap(err, "db/pg_gateway/GetGatewayProfile")
 }
 
-func (*gatewayInterface)GetAllGatewayMac()(macList []string, err error)  {
+func (*gatewayInterface) GetAllGateways() (gatewayList []types.Gateway, err error) {
 	rows, err := PgDB.Query(
 		`SELECT
-			mac
+			*
 		FROM
 			gateway 
+		WHERE
+			mode <> 'GW_DELETED'
 		ORDER BY created_at DESC;`)
 
 	defer rows.Close()
 	if err != nil {
-		return macList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
+		return gatewayList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
 	}
 
-	var mac string
+	var gw types.Gateway
 	for rows.Next() {
-		rows.Scan(&mac)
+		rows.Scan(
+			&gw.Id,
+			&gw.Mac,
+			&gw.FkGatewayNs,
+			&gw.FkWallet,
+			&gw.Mode,
+			&gw.CreatedAt,
+			&gw.LastSeenAt,
+			&gw.OrgId,
+			&gw.Description,
+			&gw.Name)
 
-		macList = append(macList, mac)
+		gatewayList = append(gatewayList, gw)
 	}
-	return macList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
+	return gatewayList, errors.Wrap(err, "db/pg_gateway/GetAllGatewayMac")
 }
 
 func (*gatewayInterface) GetGatewayListOfWallet(walletId int64, offset int64, limit int64) (gwList []types.Gateway, err error) {

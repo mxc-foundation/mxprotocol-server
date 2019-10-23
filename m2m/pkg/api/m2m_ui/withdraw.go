@@ -213,7 +213,7 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 
 		// make a new goroutine for checking the payment service
 		go func() {
-			paymentRoutine(ctx, &config.Cstruct, receiverAdd, walletID, withdrawID, req)
+			paymentRoutine(&config.Cstruct, receiverAdd, walletID, withdrawID, req)
 		}()
 		return &api.WithdrawReqResponse{Status: true, UserProfile: &userProfile}, nil
 	}
@@ -221,17 +221,18 @@ func (s *WithdrawServerAPI) WithdrawReq(ctx context.Context, req *api.WithdrawRe
 	return nil, status.Errorf(codes.Unknown, "")
 }
 
-func paymentRoutine(ctx context.Context, conf *config.MxpConfig, receiverAdd string, walletID, withdrawID int64, req *api.WithdrawReqRequest) {
+func paymentRoutine(conf *config.MxpConfig, receiverAdd string, walletID, withdrawID int64, req *api.WithdrawReqRequest) {
 	amount := fmt.Sprintf("%f", req.Amount)
-	paymentReply, err := withdraw.PaymentReq(ctx, &config.Cstruct, amount, receiverAdd, withdrawID)
+	paymentReply, err := withdraw.PaymentReq(&config.Cstruct, amount, receiverAdd, withdrawID)
 	if err != nil {
-		log.Error("send payment request failed: ", err)
+		log.Error("paymentRoutine/send payment request failed: ", err)
 		for {
-			time.Sleep(time.Duration(config.Cstruct.Withdraw.ResendToPS) * time.Minute)
-			paymentReply, err = withdraw.PaymentReq(ctx, &config.Cstruct, amount, receiverAdd, withdrawID)
+			time.Sleep(time.Duration(config.Cstruct.Withdraw.ResendToPS) * time.Second)
+			paymentReply, err = withdraw.PaymentReq(&config.Cstruct, amount, receiverAdd, withdrawID)
 			if err != nil {
 				continue
 			}
+			break
 		}
 	}
 
@@ -242,7 +243,7 @@ func paymentRoutine(ctx context.Context, conf *config.MxpConfig, receiverAdd str
 	}
 
 	for {
-		time.Sleep(time.Duration(config.Cstruct.Withdraw.RecheckStat) * time.Second)
+		time.Sleep(time.Duration(conf.Withdraw.RecheckStat) * time.Second)
 		statusReply, err := withdraw.CheckTxStatus(&config.Cstruct, paymentReply.ReqQueryRef)
 		if err != nil {
 			log.Error("Cannot get the reply from paymentService: ", err)
@@ -256,7 +257,7 @@ func paymentRoutine(ctx context.Context, conf *config.MxpConfig, receiverAdd str
 
 		status := fmt.Sprintf("%s", statusReply.TxPaymentStatusEnum)
 		if status != withdraw.SUCCESSFUL {
-			log.Info("Still pending...")
+			log.Info("Still pending..., the queryId is:", paymentReply.ReqQueryRef)
 			continue
 		} else {
 			layout := "2006-01-02 15:04:05"
@@ -274,6 +275,7 @@ func paymentRoutine(ctx context.Context, conf *config.MxpConfig, receiverAdd str
 				log.Error("Cannot update withdrawID to db: ", err)
 				continue
 			}
+			break
 		}
 	}
 }

@@ -27,26 +27,43 @@ func paymentServiceAvailable(conf config.MxpConfig) bool {
 		return false
 	}
 
-	defer conn.Close()
+	defer func() {
+		err := conn.Close()
+		if err != nil {
+			log.WithError(err).Error("/connot close conn")
+		}
+	}()
 
 	return true
 }
 
-func PaymentReq(ctx context.Context, conf *config.MxpConfig, amount, receiverAdd string, reqId int64) (*ps.TxReqReplyType, error) {
+func PaymentReq(conf *config.MxpConfig, amount, receiverAdd string, reqId int64) (*ps.TxReqReplyType, error) {
 	address := conf.PaymentServer.PaymentServiceAddress + conf.PaymentServer.PaymentServicePort
 
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
-		return nil, errors.Wrap(err, "cannot reach payment service")
+		return nil, errors.Wrap(err, "PaymentReq/cannot reach payment service")
 	}
-	defer conn.Close()
+	//defer conn.Close()
+	defer func() {
+		err := conn.Close()
+		if err != nil {
+			log.WithError(err).Error("/connot close conn")
+		}
+	}()
 
 	client := ps.NewPaymentClient(conn)
 
-	reply, err := client.TokenTxReq(ctx, &ps.TxReqType{PaymentClientEnum: 3, ReqIdClient: reqId, ReceiverAdr: receiverAdd,
-		Amount: amount, TokenNameEnum: 0})
+	reply, err := client.TokenTxReq(context.Background(), &ps.TxReqType{
+		PaymentClientEnum: 3,
+		ReqIdClient:       reqId,
+		ReceiverAdr:       receiverAdd,
+		Amount:            amount,
+		TokenNameEnum:     0,
+	})
 	if err != nil {
-		return nil, errors.Wrap(err, "cannot get reply from payment service")
+		log.WithError(err).Error("PaymentReq/cannot get reply from payment service")
+		return nil, errors.Wrap(err, "PaymentReq/cannot get reply from payment service")
 	}
 
 	return reply, nil
@@ -59,14 +76,19 @@ func CheckTxStatus(conf *config.MxpConfig, qreID int64) (*ps.CheckTxStatusReplyT
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot reach payment service")
 	}
-	defer conn.Close()
+	//defer conn.Close()
+	defer func() {
+		err := conn.Close()
+		if err != nil {
+			log.WithError(err).Error("/connot close conn")
+		}
+	}()
 
 	client := ps.NewPaymentClient(conn)
 
-	//ToDo: get the ReqID from db
 	reply, err := client.CheckTxStatus(context.Background(), &ps.CheckTxStatusType{ReqQueryRef: qreID})
 	if err != nil {
-		return nil, errors.Wrap(err, "cannot get reply from payment service")
+		return nil, errors.Wrap(err, "CheckTxStatus/cannot get reply from payment service")
 	}
 
 	return reply, nil
