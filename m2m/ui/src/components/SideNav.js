@@ -172,6 +172,12 @@ class SideNav extends Component {
                   <ListItemIcon>
                     <AccessPoint />
                   </ListItemIcon>
+                  <ListItemText primary="NB-IoT Server" />
+                </ListItem>
+                <ListItem button component={LinkToLora} className={this.props.classes.static}>  
+                  <ListItemIcon>
+                    <AccessPoint />
+                  </ListItemIcon>
                   <ListItemText primary="LoRa Server" />
                 </ListItem>
                 <ListItem>
