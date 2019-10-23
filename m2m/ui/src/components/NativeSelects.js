@@ -6,6 +6,7 @@ const customStyles = {
     control: (base, state) => ({
       ...base,
       marginTop: 0,
+      color: state.isDisabled ? 'grey' : 'white',
       marginBottom: 0,
       // match with the menu
       borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
@@ -82,9 +83,9 @@ export default class SelectPlain extends Component {
         let options = this.props.options;
 
         if(!this.props.haveGateway){
-            options = options.filter(function(value, index, arr){
+          options = options.filter(function(value, index, arr){
             return value.value !== DV_FREE_GATEWAYS_LIMITED;//private
-            });
+          });
         }
 
         return (
