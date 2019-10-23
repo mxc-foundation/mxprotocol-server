@@ -74,7 +74,7 @@ class DeviceForm extends Component {
   }
 
   getRow(obj, index) {
-    const url = `${getLoraHost()}/#/organizations/${this.props.match.params.organizationID}/applications/${obj.application_id}/devices/${obj.devEui}`;
+    const url = `${getLoraHost()}/#/organizations/${this.props.match.params.organizationID}/applications/${obj.applicationId}/devices/${obj.devEui}`;
     
     let dValue = null;
     const options = DV_MODE_OPTION;
