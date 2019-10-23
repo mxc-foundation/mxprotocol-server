@@ -23,8 +23,6 @@ func Setup(conf config.MxpConfig) error {
 			var dlPrice float64 = conf.SuperNode.DlPrice
 			var aggDurationMinutes int64 = conf.Accounting.IntervalMin
 
-			log.Info("Accounting routine started. dl_price: ", dlPrice)
-
 			if err := performAccounting(execTime, aggDurationMinutes, dlPrice); err != nil {
 				log.WithError(err).Error(" Accounting Failed! ")
 			}

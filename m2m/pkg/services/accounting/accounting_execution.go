@@ -11,6 +11,10 @@ import (
 
 func performAccounting(execTime time.Time, aggDurationMinutes int64, dlPrice float64) error {
 
+	log.WithFields(log.Fields{
+		"dl_price": dlPrice,
+	}).Info("Accounting routine started!")
+
 	aggStartAt := execTime.Add(-time.Duration(aggDurationMinutes) * time.Minute)
 
 	aggPeriodId, err := db.AggPeriod.InsertAggPeriod(aggStartAt, aggDurationMinutes, execTime)
