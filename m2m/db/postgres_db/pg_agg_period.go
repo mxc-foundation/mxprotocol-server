@@ -1,6 +1,7 @@
 package postgres_db
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/pkg/errors"
@@ -61,12 +62,12 @@ func (*aggPeriodInterface) InsertAggPeriod(latestIdAccountedDlPkt int64, duratio
 	return insertInd, errors.Wrap(err, "db/pg_agg_period/InsertAggPeriod")
 }
 
-func (*aggPeriodInterface) UpdateExecutedAggPeriod(aggPeriodId int64, execEndAt time.Time) (insertInd int64, err error) {
+func (*aggPeriodInterface) UpdateExecutedAggPeriod(aggPeriodId int64, execEndAt time.Time) (err error) {
 	_, err = PgDB.Exec(`
 		UPDATE agg_period 
 			SET 
 				execution_end_at = $1 , 
-				mode = $2
+				status = $2
 			WHERE
 				id = $3
 			;
@@ -75,12 +76,28 @@ func (*aggPeriodInterface) UpdateExecutedAggPeriod(aggPeriodId int64, execEndAt 
 		types.AGG_COMPLETED,
 		aggPeriodId,
 	)
-	return insertInd, errors.Wrap(err, "db/pg_agg_period/UpdateExecutedAggPeriod")
+	return errors.Wrap(err, fmt.Sprintf("db/pg_agg_period/UpdateExecutedAggPeriod aggPeriodId: %d", aggPeriodId))
 }
 
 func (*aggPeriodInterface) GetLatestAccountedDlPktId() (latestAccountedDlPktId int64, err error) {
-	var status string
+
+	var cntRec int64
 	err = PgDB.QueryRow(`
+		SELECT
+			count(*)
+		FROM 
+			agg_period 
+	;
+	`).Scan(&cntRec)
+
+	if err != nil {
+		return 0, errors.Wrap(err, "db/pg_agg_period/GetLatestAccountedDlPktId: Unable to get count of records! ")
+	} else if cntRec == 0 {
+		return 0, nil
+	} else {
+
+		var status string
+		err = PgDB.QueryRow(`
 		SELECT
 			fk_dl_pkt_latest_id_accounted, 
 			status
@@ -91,14 +108,16 @@ func (*aggPeriodInterface) GetLatestAccountedDlPktId() (latestAccountedDlPktId i
 	;
 	`).Scan(&latestAccountedDlPktId, &status)
 
-	if err != nil {
-		return 0, errors.Wrap(err, "db/pg_agg_period/GetLatestAccountedDlPktId")
-	}
+		if err != nil {
+			return 0, errors.Wrap(err, "db/pg_agg_period/GetLatestAccountedDlPktId")
+		}
 
-	if status == string(types.AGG_COMPLETED) {
-		return latestAccountedDlPktId, nil
-	} else {
-		return 0, errors.New("db/pg_agg_period/GetLatestAccountedDlPktId: last Aggregation period is not completed!")
+		if status == string(types.AGG_COMPLETED) {
+			return latestAccountedDlPktId, nil
+		} else {
+			return 0, errors.New("db/pg_agg_period/GetLatestAccountedDlPktId: last Aggregation period is not completed!")
+
+		}
 	}
 
 }
