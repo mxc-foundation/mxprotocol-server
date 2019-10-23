@@ -168,7 +168,7 @@ class SideNav extends Component {
 
               <List className={this.props.classes.card}>
               <Divider />
-                <ListItem button component={LinkToLora} className={this.props.classes.static}>  
+                <ListItem button className={this.props.classes.static}>  
                   <ListItemIcon>
                     <AccessPoint />
                   </ListItemIcon>
