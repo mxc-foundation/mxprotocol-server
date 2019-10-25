@@ -9,8 +9,12 @@ import (
 
 func Setup(conf config.MxpConfig) error {
 
-	go func() {
+	// @@ test:
+	if err := performAccounting(60, 0.01); err != nil {
+		log.WithError(err).Error(" Accounting Failed! ")
+	}
 
+	go func() {
 		// set the first accounting time to be run at the closest hh:00'
 		now := time.Now().UTC()
 		nextTickTimeDiff := now.Truncate(time.Hour).Add(time.Hour).Sub(now)

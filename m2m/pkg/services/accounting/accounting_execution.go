@@ -1,6 +1,7 @@
 package accounting
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/pkg/errors"
@@ -15,24 +16,33 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 		"dl_price": dlPrice,
 	}).Info("Accounting routine started!")
 
-	// aggPeriodId, err := db.AggPeriod.InsertAggPeriod(aggStartAt, aggDurationMinutes, execTime)
-
-	aggPeriodId, err := db.AggPeriod.InsertAggPeriod(aggDurationMinutes)
+	aggPeriodId, latestIdAccountedDlPkt, err := db.AggPeriod.InsertAggPeriod(aggDurationMinutes)
 
 	if err != nil {
 		return errors.Wrap(err, "accounting/performAccounting: Unable to start accounting")
 	}
 	log.Info("accounting/ Aggregation Period: ", aggPeriodId)
+	fmt.Println("latestIdAccountedDlPkt: ", latestIdAccountedDlPkt) //@@
+
+	latestReceivdDlPktId, err := db.DlPacket.GetLastReceviedDlPktId()
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("accounting/performAccounting: Unable to start accounting. aggPeriodId: ", aggPeriodId))
+	}
+	fmt.Println("latestReceivdDlPktId: ", latestReceivdDlPktId) //@@ to be removeds
+
+	if latestReceivdDlPktId < latestIdAccountedDlPkt {
+		return errors.New(fmt.Sprintf("accounting/performAccounting latestReceivdDlPktId < latestIdAccountedDlPkt!   aggPeriodId: ", aggPeriodId))
+	}
 
 	MaxWalletId, errMaxWalletId := db.Wallet.GetMaxWalletId()
 	if errMaxWalletId != nil {
-		return errors.Wrap(errMaxWalletId, "accounting/performAccounting Unable to start accounting")
+		return errors.Wrap(errMaxWalletId, fmt.Sprintf("accounting/performAccounting Unable to start accounting!  aggPeriodId: ", aggPeriodId))
 	}
 
 	awuList := make([]types.AggWltUsg, MaxWalletId+1)
 
 	aggStartAt := time.Now().UTC() // to be removed!
-	if err := getWltAggFromDlPkts(aggStartAt, aggDurationMinutes, awuList); err != nil {
+	if err := getWltAggFromDlPkts(latestIdAccountedDlPkt+1, latestReceivdDlPktId, awuList); err != nil {
 		return err
 	}
 
@@ -42,7 +52,7 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 
 	walletIdSuperNode, errWltId := db.Wallet.GetWalletIdSuperNode()
 	if errWltId != nil {
-		return errors.Wrap(errWltId, "accounting/performAccounting  Unable to write accounting in DB; unable to get superNodeAccount")
+		return errors.Wrap(errWltId, fmt.Sprintf("accounting/performAccounting  Unable to write accounting in DB; unable to get superNodeAccount! aggPeriodId: ", aggPeriodId))
 	}
 
 	log.WithFields(log.Fields{
@@ -53,6 +63,12 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 		return errors.Wrap(errWltId, "accounting/performAccounting")
 	}
 
+	err = db.AggPeriod.UpdateSuccessfulExecutedAggPeriod(aggPeriodId)
+
+	if err != nil {
+		return errors.Wrap(err, "accounting/performAccounting: Unable to update agg_period")
+	}
+
 	log.WithFields(log.Fields{
 		"Accounting  aggPeriodId": aggPeriodId,
 	}).Info("Accounting performed successfully!")
@@ -61,10 +77,10 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 
 }
 
-func getWltAggFromDlPkts(aggStartAt time.Time, aggDurationMinutes int64, awuList []types.AggWltUsg) error {
+func getWltAggFromDlPkts(startIndDlPkt int64, endIndDlPkt int64, awuList []types.AggWltUsg) error {
 
-	if wltIds, cnts, err := db.DlPacket.GetAggDlPktDeviceWallet(aggStartAt, aggDurationMinutes); true {
-		// fmt.Println("GetAggDlPktDeviceWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
+	if wltIds, cnts, err := db.DlPacket.GetAggDlPktDeviceWallet(startIndDlPkt, endIndDlPkt); true {
+		fmt.Println("GetAggDlPktDeviceWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err) //@@
 		if err != nil {
 			return errors.Wrap(err, "accounting/getWltAggFromDlPkts")
 		}
@@ -76,8 +92,8 @@ func getWltAggFromDlPkts(aggStartAt time.Time, aggDurationMinutes int64, awuList
 		}
 	}
 
-	if wltIds, cnts, err := db.DlPacket.GetAggDlPktGatewayWallet(aggStartAt, aggDurationMinutes); true {
-		// fmt.Println("GetAggDlPktGatewayWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
+	if wltIds, cnts, err := db.DlPacket.GetAggDlPktGatewayWallet(startIndDlPkt, endIndDlPkt); true {
+		fmt.Println("GetAggDlPktGatewayWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err) //@@
 		if err != nil {
 			return errors.Wrap(err, "accounting/getWltAggFromDlPkts")
 		}
@@ -89,8 +105,8 @@ func getWltAggFromDlPkts(aggStartAt time.Time, aggDurationMinutes int64, awuList
 		}
 	}
 
-	if wltIds, cnts, err := db.DlPacket.GetAggDlPktFreeWallet(aggStartAt, aggDurationMinutes); true {
-		// fmt.Println("GetAggDlPktFreeWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
+	if wltIds, cnts, err := db.DlPacket.GetAggDlPktFreeWallet(startIndDlPkt, endIndDlPkt); true {
+		fmt.Println("GetAggDlPktFreeWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err) //@@
 		if err != nil {
 			return errors.Wrap(err, "accounting/getWltAggFromDlPkts")
 		}
