@@ -9,22 +9,21 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-func performAccounting(execTime time.Time, aggDurationMinutes int64, dlPrice float64) error {
+func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 
 	log.WithFields(log.Fields{
 		"dl_price": dlPrice,
 	}).Info("Accounting routine started!")
 
-	aggStartAt := execTime.Add(-time.Duration(aggDurationMinutes) * time.Minute)
-
 	// aggPeriodId, err := db.AggPeriod.InsertAggPeriod(aggStartAt, aggDurationMinutes, execTime)
-	var latsetId int64 = 0 //@@ to be get form DB
-	aggPeriodId, err := db.AggPeriod.InsertAggPeriod(latsetId, aggDurationMinutes, execTime)
+
+	latestAccountedDlPktId := db.AggPeriod.GetLatestAccountedDlPktId()
+	aggPeriodId, err := db.AggPeriod.InsertAggPeriod(latestAccountedDlPktId, aggDurationMinutes)
 
 	if err != nil {
-		return errors.Wrap(err, "accounting/performAccounting Unable to start accounting")
+		return errors.Wrap(err, "accounting/performAccounting: Unable to start accounting")
 	}
-	log.Info("accounting/ Wallet Usage Aggregation Period: ", aggPeriodId)
+	log.Info("accounting/ Aggregation Period: ", aggPeriodId)
 
 	MaxWalletId, errMaxWalletId := db.Wallet.GetMaxWalletId()
 	if errMaxWalletId != nil {

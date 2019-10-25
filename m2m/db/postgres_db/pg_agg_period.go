@@ -42,7 +42,7 @@ func (*aggPeriodInterface) CreateAggPeriodTable() error {
 	return errors.Wrap(err, "db/pg_agg_period/CreateAggPeriodTable")
 }
 
-func (*aggPeriodInterface) InsertAggPeriod(latestIdAccountedDlPkt int64, durationMinutes int64, execStartAt time.Time) (insertInd int64, err error) {
+func (*aggPeriodInterface) InsertAggPeriod(latestIdAccountedDlPkt int64, durationMinutes int64) (insertInd int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO agg_period 
 			(
@@ -57,7 +57,7 @@ func (*aggPeriodInterface) InsertAggPeriod(latestIdAccountedDlPkt int64, duratio
 		latestIdAccountedDlPkt,
 		durationMinutes,
 		types.AGG_IN_PROCESS,
-		execStartAt,
+		time.Now().UTC(),
 	).Scan(&insertInd)
 	return insertInd, errors.Wrap(err, "db/pg_agg_period/InsertAggPeriod")
 }
