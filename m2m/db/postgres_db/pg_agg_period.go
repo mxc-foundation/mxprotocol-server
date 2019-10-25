@@ -67,7 +67,7 @@ func (*aggPeriodInterface) InsertAggPeriod(durationMinutes int64) (insertInd int
 	return insertInd, latestIdAccountedDlPkt, errors.Wrap(err, "db/pg_agg_period/InsertAggPeriod")
 }
 
-func (*aggPeriodInterface) UpdateExecutedAggPeriod(aggPeriodId int64, execEndAt time.Time) (err error) {
+func (*aggPeriodInterface) UpdateSuccessfulExecutedAggPeriod(aggPeriodId int64) (err error) {
 	_, err = PgDB.Exec(`
 		UPDATE agg_period 
 			SET 
