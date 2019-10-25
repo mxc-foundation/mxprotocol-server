@@ -17,8 +17,7 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 
 	// aggPeriodId, err := db.AggPeriod.InsertAggPeriod(aggStartAt, aggDurationMinutes, execTime)
 
-	latestAccountedDlPktId := db.AggPeriod.GetLatestAccountedDlPktId()
-	aggPeriodId, err := db.AggPeriod.InsertAggPeriod(latestAccountedDlPktId, aggDurationMinutes)
+	aggPeriodId, err := db.AggPeriod.InsertAggPeriod(aggDurationMinutes)
 
 	if err != nil {
 		return errors.Wrap(err, "accounting/performAccounting: Unable to start accounting")
@@ -31,6 +30,8 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 	}
 
 	awuList := make([]types.AggWltUsg, MaxWalletId+1)
+
+	aggStartAt := time.Now().UTC() // to be removed!
 	if err := getWltAggFromDlPkts(aggStartAt, aggDurationMinutes, awuList); err != nil {
 		return err
 	}
