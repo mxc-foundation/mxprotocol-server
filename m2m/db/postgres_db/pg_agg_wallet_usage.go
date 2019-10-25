@@ -197,8 +197,7 @@ func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
 	UPDATE
 		wallet 
 	SET
-		balance = balance + v_balance_increase,
-		tmp_balance = tmp_balance + v_balance_increase
+		balance = balance + v_balance_increase
 	WHERE
 		id = v_fk_wallet_receiver
 	RETURNING balance INTO updated_wlt_balance
