@@ -199,3 +199,14 @@ func (*dlPacketInterface) GetAggDlPktFreeWallet(startAt time.Time, durationMin i
 
 	return walletId, count, nil
 }
+
+func (*dlPacketInterface) GetLastReceviedDlPktId() (latestId int64, err error) {
+	err = PgDB.QueryRow(`
+		SELECT
+			MAX (id)
+		FROM
+			dl_pkt
+		;
+	`).Scan(&latestId)
+	return latestId, errors.Wrap(err, "db/pg_dl_pkt/getLastReceviedDlPktId")
+}
