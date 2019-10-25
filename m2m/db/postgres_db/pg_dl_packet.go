@@ -1,8 +1,6 @@
 package postgres_db
 
 import (
-	"time"
-
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
@@ -75,7 +73,7 @@ func (*dlPacketInterface) InsertDlPkt(dlPkt types.DlPkt) (insertIndex int64, err
 	return insertIndex, errors.Wrap(err, "db/pg_dl_pkt/InsertDlPkt")
 }
 
-func (*dlPacketInterface) GetAggDlPktDeviceWallet(startAt time.Time, durationMin int64) (walletId []int64, count []int64, err error) {
+func (*dlPacketInterface) GetAggDlPktDeviceWallet(startIndDlPkt, endIndDlPkt int64) (walletId []int64, count []int64, err error) {
 	rows, err := PgDB.Query(`
 	SELECT
 		dv.fk_wallet as wallet_id,
@@ -86,13 +84,13 @@ func (*dlPacketInterface) GetAggDlPktDeviceWallet(startAt time.Time, durationMin
 	WHERE
 		dlp.fk_device = dv.id
 	AND
-		dlp.created_at BETWEEN
+		dlp.id BETWEEN
 			$1
 		AND
-			$1 + ($2 * interval '1 minute')
+			$2
 	GROUP BY
 		dv.fk_wallet;
-	`, startAt, durationMin)
+	`, startIndDlPkt, endIndDlPkt)
 
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "db/pg_dl_packet/getAggDlPktWallet")
@@ -115,7 +113,7 @@ func (*dlPacketInterface) GetAggDlPktDeviceWallet(startAt time.Time, durationMin
 	return walletId, count, nil
 }
 
-func (*dlPacketInterface) GetAggDlPktGatewayWallet(startAt time.Time, durationMin int64) (walletId []int64, count []int64, err error) {
+func (*dlPacketInterface) GetAggDlPktGatewayWallet(startIndDlPkt, endIndDlPkt int64) (walletId []int64, count []int64, err error) {
 	rows, err := PgDB.Query(`
 	SELECT 
 		gw.fk_wallet as wallet_id,
@@ -126,13 +124,13 @@ func (*dlPacketInterface) GetAggDlPktGatewayWallet(startAt time.Time, durationMi
 	WHERE 
 		dlp.fk_gateway = gw.id
 	AND
-		dlp.created_at BETWEEN
+		dlp.id BETWEEN
 			$1 
 		AND
-			$1 + ($2 * interval '1 minute')
+			$2
 	GROUP BY
 		gw.fk_wallet;
-	`, startAt, durationMin)
+	`, startIndDlPkt, endIndDlPkt)
 
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "db/pg_dl_packet/GetAggDlPktGatewayWallet")
@@ -155,7 +153,7 @@ func (*dlPacketInterface) GetAggDlPktGatewayWallet(startAt time.Time, durationMi
 	return walletId, count, nil
 }
 
-func (*dlPacketInterface) GetAggDlPktFreeWallet(startAt time.Time, durationMin int64) (walletId []int64, count []int64, err error) {
+func (*dlPacketInterface) GetAggDlPktFreeWallet(startIndDlPkt, endIndDlPkt int64) (walletId []int64, count []int64, err error) {
 	rows, err := PgDB.Query(`
 	SELECT
 		dv.fk_wallet as wallet_id,
@@ -171,13 +169,13 @@ func (*dlPacketInterface) GetAggDlPktFreeWallet(startAt time.Time, durationMin i
 		AND
 		dv.fk_wallet = gw.fk_wallet
 		AND
-		dlp.created_at BETWEEN
+		dlp.id BETWEEN
 			$1
 		AND
-			$1 + ($2 * interval '1 minute')
+			$2
 	GROUP BY
 		dv.fk_wallet;
-	`, startAt, durationMin)
+	`, startIndDlPkt, endIndDlPkt)
 
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "db/pg_dl_packet/GetAggDlPktFreeWallet")
