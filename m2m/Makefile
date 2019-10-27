@@ -1,9 +1,9 @@
-.PHONY: scripts build clean api pkg/static statics/swagger/api.swagger.json dev-requirements pkg/migrations scripts
+.PHONY: build clean api pkg/static statics/swagger/api.swagger.json dev-requirements pkg/migrations scripts
 PKGS := $(shell go list ./... | grep -v /vendor |grep -v m2m/api | grep -v m2m/migrations \
             | grep -v m2m/static | grep -v m2m/ui| grep -v grpc_api-paymemt_service )
 VERSION := $(shell git describe --tags |sed -e "s/^v//")
 
-build: scripts ui/build pkg/static pkg/migrations
+build: ui/build pkg/static pkg/migrations
 	mkdir -p build
 	go build $(GO_EXTRA_BUILD_ARGS) -ldflags "-s -w -X main.version=$(VERSION)" -o build/m2m command/main.go
 
@@ -47,6 +47,3 @@ static/swagger/api.swagger.json:
 ui-requirements:
 	@echo "Installing UI requirements"
 	@cd ui && npm install
-
-scripts:
-	@sh $(shell pwd)/scripts/sync_env_variables

@@ -1,0 +1,9 @@
+version: "2"
+services:
+  mxprotocol-server:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - APPSERVER=http://localhost:8080
+      - MXPROTOCOL_SERVER=http://localhost:4000
