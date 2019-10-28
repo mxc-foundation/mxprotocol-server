@@ -163,19 +163,21 @@ func putInDbAggWltUsg(awuList []types.AggWltUsg, walletIdSuperNode int64) error 
 			}).WithError(errIns).Error("accounting/putInDbAggWltUsg impossible to write in DB InsertAggWltUsg ")
 		}
 
-		_, err := db.AggWalletUsage.ExecAggWltUsgPayments(
-			types.InternalTx{
-				FkWalletSender: walletIdSuperNode,
-				FkWalletRcvr:   v.FkWallet,
-				PaymentCat:     string(types.DOWNLINK_AGGREGATION),
-				TxInternalRef:  insertedAggWltUsgId,
-				Value:          v.BalanceIncrease,
-				TimeTx:         time.Now().UTC(),
-			})
-		if err != nil {
-			log.WithFields(log.Fields{
-				"AggWltUsg": v,
-			}).WithError(errIns).Error("accounting/putInDbAggWltUsg impossible to write in DB ExecAggWltUsgPayments ")
+		if v.BalanceIncrease != 0 {
+			_, err := db.AggWalletUsage.ExecAggWltUsgPayments(
+				types.InternalTx{
+					FkWalletSender: walletIdSuperNode,
+					FkWalletRcvr:   v.FkWallet,
+					PaymentCat:     string(types.DOWNLINK_AGGREGATION),
+					TxInternalRef:  insertedAggWltUsgId,
+					Value:          v.BalanceIncrease,
+					TimeTx:         time.Now().UTC(),
+				})
+			if err != nil {
+				log.WithFields(log.Fields{
+					"AggWltUsg": v,
+				}).WithError(errIns).Error("accounting/putInDbAggWltUsg impossible to write in DB ExecAggWltUsgPayments ")
+			}
 		}
 
 		syncTmpBalance(v.FkWallet)
