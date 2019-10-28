@@ -28,7 +28,7 @@ func (*aggPeriodInterface) CreateAggPeriodTable() error {
 
 			CREATE TABLE IF NOT EXISTS agg_period (
 				id SERIAL PRIMARY KEY,
-				fk_dl_pkt_latest_id_accounted INT REFERENCES dl_pkt (id) NOT NULL,
+				fk_dl_pkt_latest_id_accounted INT REFERENCES dl_pkt (id),
 				duration_minutes INT NOT NULL,
 				status aggregation_status NOT NULL,
 				execution_start_at   TIMESTAMP NOT NULL,
@@ -51,32 +51,31 @@ func (*aggPeriodInterface) InsertAggPeriod(durationMinutes int64) (insertInd int
 	err = PgDB.QueryRow(`
 		INSERT INTO agg_period 
 			(
-			fk_dl_pkt_latest_id_accounted,
 			duration_minutes,
 			status,
 			execution_start_at
 			)
-		VALUES ($1, $2, $3, $4)
+		VALUES ($1, $2, $3)
 		RETURNING id;
-`,
-		latestIdAccountedDlPkt,
-		durationMinutes,
+	`, durationMinutes,
 		types.AGG_IN_PROCESS,
 		time.Now().UTC(),
 	).Scan(&insertInd)
 	return insertInd, latestIdAccountedDlPkt, errors.Wrap(err, "db/pg_agg_period/InsertAggPeriod")
 }
 
-func (*aggPeriodInterface) UpdateSuccessfulExecutedAggPeriod(aggPeriodId int64) (err error) {
+func (*aggPeriodInterface) UpdateSuccessfulExecutedAggPeriod(aggPeriodId int64, latestIdAccountedDlPkt int64) (err error) {
 	_, err = PgDB.Exec(`
 		UPDATE agg_period 
 			SET 
-				execution_end_at = $1 , 
-				status = $2
+				fk_dl_pkt_latest_id_accounted = $1,
+				execution_end_at = $2, 
+				status = $3
 			WHERE
-				id = $3
+				id = $4
 			;
 		`,
+		latestIdAccountedDlPkt,
 		time.Now().UTC(),
 		types.AGG_COMPLETED,
 		aggPeriodId,

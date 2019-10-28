@@ -41,14 +41,13 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 
 	awuList := make([]types.AggWltUsg, MaxWalletId+1)
 
-	aggStartAt := time.Now().UTC() // to be removed!
 	if err := getWltAggFromDlPkts(latestIdAccountedDlPkt+1, latestReceivdDlPktId, awuList); err != nil {
 		return err
 	}
 
 	addPricesWltAgg(awuList, dlPrice)
 
-	addNonPriceFields(awuList, aggStartAt, aggDurationMinutes, aggPeriodId)
+	addNonPriceFields(awuList, aggDurationMinutes, aggPeriodId)
 
 	walletIdSuperNode, errWltId := db.Wallet.GetWalletIdSuperNode()
 	if errWltId != nil {
@@ -63,7 +62,7 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 		return errors.Wrap(errWltId, "accounting/performAccounting")
 	}
 
-	err = db.AggPeriod.UpdateSuccessfulExecutedAggPeriod(aggPeriodId)
+	err = db.AggPeriod.UpdateSuccessfulExecutedAggPeriod(aggPeriodId, latestReceivdDlPktId)
 
 	if err != nil {
 		return errors.Wrap(err, "accounting/performAccounting: Unable to update agg_period")
@@ -136,14 +135,13 @@ func addPricesWltAgg(awuList []types.AggWltUsg, dlPrice float64) {
 	}
 }
 
-func addNonPriceFields(awuList []types.AggWltUsg, aggStartAt time.Time, aggDurationMins int64, aggPeriodId int64) error {
+func addNonPriceFields(awuList []types.AggWltUsg, aggDurationMins int64, aggPeriodId int64) error {
 	for k, v := range awuList {
 
 		if v == (types.AggWltUsg{}) {
 			continue
 		}
 		awuList[k].FkAggPeriod = aggPeriodId
-		awuList[k].StartAt = aggStartAt
 		awuList[k].DurationMinutes = aggDurationMins
 		awuList[k].FkWallet = int64(k)
 	}
@@ -165,14 +163,15 @@ func putInDbAggWltUsg(awuList []types.AggWltUsg, walletIdSuperNode int64) error 
 			}).WithError(errIns).Error("accounting/putInDbAggWltUsg impossible to write in DB InsertAggWltUsg ")
 		}
 
-		_, err := db.AggWalletUsage.ExecAggWltUsgPayments(types.InternalTx{
-			FkWalletSender: walletIdSuperNode,
-			FkWalletRcvr:   v.FkWallet,
-			PaymentCat:     string(types.DOWNLINK_AGGREGATION),
-			TxInternalRef:  insertedAggWltUsgId,
-			Value:          v.BalanceIncrease,
-			TimeTx:         time.Now().UTC(),
-		})
+		_, err := db.AggWalletUsage.ExecAggWltUsgPayments(
+			types.InternalTx{
+				FkWalletSender: walletIdSuperNode,
+				FkWalletRcvr:   v.FkWallet,
+				PaymentCat:     string(types.DOWNLINK_AGGREGATION),
+				TxInternalRef:  insertedAggWltUsgId,
+				Value:          v.BalanceIncrease,
+				TimeTx:         time.Now().UTC(),
+			})
 		if err != nil {
 			log.WithFields(log.Fields{
 				"AggWltUsg": v,
