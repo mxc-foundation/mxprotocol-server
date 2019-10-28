@@ -130,7 +130,7 @@ func addPricesWltAgg(awuList []types.AggWltUsg, dlPrice float64) {
 
 		awuList[k].Spend = float64(v.DlCntDv-v.DlCntDvFree) * dlPrice
 		awuList[k].Income = float64(v.DlCntGw-v.DlCntGwFree) * dlPrice
-		awuList[k].BalanceIncrease = awuList[k].Income - awuList[k].Spend
+		awuList[k].BalanceDelta = awuList[k].Income - awuList[k].Spend
 
 	}
 }
@@ -163,20 +163,20 @@ func putInDbAggWltUsg(awuList []types.AggWltUsg, walletIdSuperNode int64) error 
 			}).WithError(errIns).Error("accounting/putInDbAggWltUsg impossible to write in DB InsertAggWltUsg ")
 		}
 
-		if v.BalanceIncrease != 0 {
+		if v.BalanceDelta != 0 {
 			_, err := db.AggWalletUsage.ExecAggWltUsgPayments(
 				types.InternalTx{
 					FkWalletSender: walletIdSuperNode,
 					FkWalletRcvr:   v.FkWallet,
 					PaymentCat:     string(types.DOWNLINK_AGGREGATION),
 					TxInternalRef:  insertedAggWltUsgId,
-					Value:          v.BalanceIncrease,
+					Value:          v.BalanceDelta,
 					TimeTx:         time.Now().UTC(),
 				})
 			if err != nil {
 				log.WithFields(log.Fields{
 					"AggWltUsg": v,
-				}).WithError(errIns).Error("accounting/putInDbAggWltUsg impossible to write in DB ExecAggWltUsgPayments ")
+				}).WithError(err).Error("accounting/putInDbAggWltUsg impossible to write in DB ExecAggWltUsgPayments ")
 			}
 		}
 

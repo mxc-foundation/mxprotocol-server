@@ -27,7 +27,7 @@ func (*aggWalletUsageInterface) CreateAggWltUsgTable() error {
 			ul_cnt_gw_free INT  DEFAULT 0,
 			spend  NUMERIC(28,18) DEFAULT 0,
 			income  NUMERIC(28,18) DEFAULT 0,
-			balance_increase  NUMERIC(28,18) DEFAULT 0,
+			balance_delta  NUMERIC(28,18) DEFAULT 0,
 			updated_balance  NUMERIC(28,18) DEFAULT 0
 
 		);		
@@ -51,7 +51,7 @@ func (*aggWalletUsageInterface) InsertAggWltUsg(awu types.AggWltUsg) (insertInde
 			ul_cnt_gw_free,
 			spend,
 			income,
-			balance_increase,
+			balance_delta,
 			updated_balance
 			) 
 		VALUES 
@@ -70,7 +70,7 @@ func (*aggWalletUsageInterface) InsertAggWltUsg(awu types.AggWltUsg) (insertInde
 		awu.UlCntGwFree,
 		awu.Spend,
 		awu.Income,
-		awu.BalanceIncrease,
+		awu.BalanceDelta,
 		awu.UpdatedBalance,
 	).Scan(&insertIndex)
 	return insertIndex, errors.Wrap(err, "db/pg_agg_wallet_usage/InsertAggWltUsg")
@@ -93,7 +93,7 @@ func (*aggWalletUsageInterface) GetWalletUsageHist(walletId int64, offset int64,
 			awu.ul_cnt_gw_free,
 			awu.spend,  
 			awu.income, 
-			awu.balance_increase,
+			awu.balance_delta,
 			awu.updated_balance,  
 			ap.start_at,
 			ap.duration_minutes
@@ -133,7 +133,7 @@ func (*aggWalletUsageInterface) GetWalletUsageHist(walletId int64, offset int64,
 			&awu.UlCntGwFree,
 			&awu.Spend,
 			&awu.Income,
-			&awu.BalanceIncrease,
+			&awu.BalanceDelta,
 			&awu.UpdatedBalance,
 			&awu.StartAt,
 			&awu.DurationMinutes,
@@ -165,7 +165,7 @@ func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
 	CREATE OR REPLACE FUNCTION agg_wlt_usg_payment_exec (
 
 		v_agg_wlt_usg_id INT,
-		v_balance_increase NUMERIC(28,18),
+		v_balance_delta NUMERIC(28,18),
 		v_time TIMESTAMP,
 		v_fk_wallet_sender INT,
 		v_fk_wallet_receiver INT,
@@ -190,14 +190,14 @@ func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
 		v_fk_wallet_receiver,
 		v_payment_cat,
 		v_agg_wlt_usg_id,
-		v_balance_increase,
+		v_balance_delta,
 		v_time)
 		;
 
 	UPDATE
 		wallet 
 	SET
-		balance = balance + v_balance_increase
+		balance = balance + v_balance_delta
 	WHERE
 		id = v_fk_wallet_receiver
 	RETURNING balance INTO updated_wlt_balance
