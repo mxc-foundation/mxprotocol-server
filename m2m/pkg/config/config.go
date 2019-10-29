@@ -80,7 +80,7 @@ type MxpConfig struct {
 	} `mapstructure:"withdraw"`
 
 	Staking struct {
-
+		StakingPercentage float64 `mapstructure:"staking_percentage"`
 	} `mapstructure:"staking"`
 
 	Version string
