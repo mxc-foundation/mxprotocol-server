@@ -26,17 +26,17 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 
 	latestReceivdDlPktId, err := db.DlPacket.GetLastReceviedDlPktId()
 	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("accounting/performAccounting: Unable to start accounting. aggPeriodId: ", aggPeriodId))
+		return errors.Wrap(err, fmt.Sprintf("accounting/performAccounting: Unable to start accounting. aggPeriodId: %d", aggPeriodId))
 	}
 	fmt.Println("latestReceivdDlPktId: ", latestReceivdDlPktId) //@@ to be removeds
 
 	if latestReceivdDlPktId < latestIdAccountedDlPkt {
-		return errors.New(fmt.Sprintf("accounting/performAccounting latestReceivdDlPktId < latestIdAccountedDlPkt!   aggPeriodId: ", aggPeriodId))
+		return errors.New(fmt.Sprintf("accounting/performAccounting latestReceivdDlPktId < latestIdAccountedDlPkt!   aggPeriodId: %d", aggPeriodId))
 	}
 
 	MaxWalletId, errMaxWalletId := db.Wallet.GetMaxWalletId()
 	if errMaxWalletId != nil {
-		return errors.Wrap(errMaxWalletId, fmt.Sprintf("accounting/performAccounting Unable to start accounting!  aggPeriodId: ", aggPeriodId))
+		return errors.Wrap(errMaxWalletId, fmt.Sprintf("accounting/performAccounting Unable to start accounting!  aggPeriodId: %d", aggPeriodId))
 	}
 
 	awuList := make([]types.AggWltUsg, MaxWalletId+1)
@@ -51,7 +51,7 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 
 	walletIdSuperNode, errWltId := db.Wallet.GetWalletIdSuperNode()
 	if errWltId != nil {
-		return errors.Wrap(errWltId, fmt.Sprintf("accounting/performAccounting  Unable to write accounting in DB; unable to get superNodeAccount! aggPeriodId: ", aggPeriodId))
+		return errors.Wrap(errWltId, fmt.Sprintf("accounting/performAccounting  Unable to write accounting in DB; unable to get superNodeAccount! aggPeriodId: %d", aggPeriodId))
 	}
 
 	log.WithFields(log.Fields{
