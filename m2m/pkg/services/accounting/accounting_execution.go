@@ -22,13 +22,11 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 		return errors.Wrap(err, "accounting/performAccounting: Unable to start accounting")
 	}
 	log.Info("accounting/ Aggregation Period: ", aggPeriodId)
-	fmt.Println("latestIdAccountedDlPkt: ", latestIdAccountedDlPkt) //@@
 
 	latestReceivdDlPktId, err := db.DlPacket.GetLastReceviedDlPktId()
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("accounting/performAccounting: Unable to start accounting. aggPeriodId: %d", aggPeriodId))
 	}
-	fmt.Println("latestReceivdDlPktId: ", latestReceivdDlPktId) //@@ to be removeds
 
 	if latestReceivdDlPktId < latestIdAccountedDlPkt {
 		return errors.New(fmt.Sprintf("accounting/performAccounting latestReceivdDlPktId < latestIdAccountedDlPkt!   aggPeriodId: %d", aggPeriodId))
@@ -79,7 +77,7 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 func getWltAggFromDlPkts(startIndDlPkt int64, endIndDlPkt int64, awuList []types.AggWltUsg) error {
 
 	if wltIds, cnts, err := db.DlPacket.GetAggDlPktDeviceWallet(startIndDlPkt, endIndDlPkt); true {
-		fmt.Println("GetAggDlPktDeviceWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err) //@@
+		// fmt.Println("GetAggDlPktDeviceWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
 		if err != nil {
 			return errors.Wrap(err, "accounting/getWltAggFromDlPkts")
 		}
@@ -92,7 +90,7 @@ func getWltAggFromDlPkts(startIndDlPkt int64, endIndDlPkt int64, awuList []types
 	}
 
 	if wltIds, cnts, err := db.DlPacket.GetAggDlPktGatewayWallet(startIndDlPkt, endIndDlPkt); true {
-		fmt.Println("GetAggDlPktGatewayWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err) //@@
+		// fmt.Println("GetAggDlPktGatewayWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
 		if err != nil {
 			return errors.Wrap(err, "accounting/getWltAggFromDlPkts")
 		}
@@ -105,7 +103,7 @@ func getWltAggFromDlPkts(startIndDlPkt int64, endIndDlPkt int64, awuList []types
 	}
 
 	if wltIds, cnts, err := db.DlPacket.GetAggDlPktFreeWallet(startIndDlPkt, endIndDlPkt); true {
-		fmt.Println("GetAggDlPktFreeWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err) //@@
+		// fmt.Println("GetAggDlPktFreeWallet   wltIds: ", wltIds, "  cnts: ", cnts, "   err: ", err)
 		if err != nil {
 			return errors.Wrap(err, "accounting/getWltAggFromDlPkts")
 		}
