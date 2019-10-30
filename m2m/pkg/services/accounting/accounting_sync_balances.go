@@ -30,4 +30,11 @@ func syncTmpBalance(walletId int64) {
 		}).Warn("accounting/syncTmpBalance tmp Balance and Balance differs!")
 	}
 
+	if updatedBalance < 0 {
+		log.WithFields(log.Fields{
+			"walletId": walletId,
+			"balance":  updatedBalance,
+		}).Warn("accounting/syncTmpBalance Account balance is NEGATIVE!")
+	}
+
 }
