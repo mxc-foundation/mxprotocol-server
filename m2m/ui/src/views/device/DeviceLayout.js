@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import Typography from '@material-ui/core/Typography';
-
+import SessionStore from "../../stores/SessionStore.js";
 import DeviceStore from "../../stores/DeviceStore.js";
 import WalletStore from "../../stores/WalletStore.js";
 import GatewayStore from "../../stores/GatewayStore.js";
@@ -74,7 +74,7 @@ class DeviceLayout extends Component {
     if (this.props === oldProps) {
       return;
     }
-    //this.props.history.push(`/device/${this.props.match.params.organizationID}`);
+    this.loadData();
   }
   
   onSubmit = (e, apiWithdrawReqRequest) => {
@@ -108,7 +108,6 @@ class DeviceLayout extends Component {
     }
     //console.log('onSwitchChange', mod);
     DeviceStore.setDeviceMode(this.props.match.params.organizationID, dvId, mod, data => {
-      this.props.history.go(0);
     });
   }
 
@@ -120,12 +119,12 @@ class DeviceLayout extends Component {
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title="Devices" />
               </TitleBar>    
-              <Divider light={true}/>
+              {/* <Divider light={true}/> */}
               <div className={this.props.classes.between}>
               <TitleBar>
-                <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
+                {/* <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
                 <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/>
+                <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
               </TitleBar>
               <div className={this.props.classes.subTitle2}>
                 Downlink fee {this.state.downlinkFee}MXC

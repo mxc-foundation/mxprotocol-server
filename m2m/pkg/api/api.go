@@ -40,11 +40,11 @@ var (
 )
 
 func SetupHTTPServer(conf config.MxpConfig) error {
-	bind = conf.ApplicationServer.HttpServer.Bind
-	tlsCert = conf.ApplicationServer.HttpServer.TLSCert
-	tlsKey = conf.ApplicationServer.HttpServer.TLSKey
-	jwtSecret = conf.ApplicationServer.HttpServer.JWTSecret
-	corsAllowOrigin = conf.ApplicationServer.HttpServer.CORSAllowOrigin
+	bind = conf.M2MServer.HttpServer.Bind
+	tlsCert = conf.M2MServer.HttpServer.TLSCert
+	tlsKey = conf.M2MServer.HttpServer.TLSKey
+	jwtSecret = conf.M2MServer.HttpServer.JWTSecret
+	corsAllowOrigin = conf.M2MServer.HttpServer.CORSAllowOrigin
 
 	server := grpc.NewServer()
 

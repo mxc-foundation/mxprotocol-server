@@ -1,12 +1,12 @@
 package postgres_db
 
 import (
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 	"time"
 
 	"github.com/ethereum/go-ethereum/log"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
 type withdrawInterface struct{}
@@ -190,7 +190,8 @@ func (*withdrawInterface) CreateWithdrawFunctions() error {
 		UPDATE
 			wallet 
 		SET
-			balance = balance - v_value_fee_included
+			balance = balance - v_value_fee_included,
+			tmp_balance = tmp_balance - v_value_fee_included
 		WHERE
 			id = v_fk_wallet_sender
 		;
@@ -262,7 +263,7 @@ func (*withdrawInterface) InitWithdrawReq(walletId int64, value float64, extCurr
 
 	it := types.InternalTx{
 		FkWalletSender: walletId,
-		PaymentCat:     string(WITHDRAW),
+		PaymentCat:     string(types.WITHDRAW),
 		Value:          value + withdrawFeeAmnt,
 	}
 

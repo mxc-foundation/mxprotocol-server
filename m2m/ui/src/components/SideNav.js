@@ -81,7 +81,7 @@ class SideNav extends Component {
       
       this.setState({
         organizationID,
-        version: serverInfo.version.substring(0,5)
+        version: serverInfo.version
       })
 
       this.setState({loading: true})
@@ -189,7 +189,7 @@ class SideNav extends Component {
                   </ListItemIcon>
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary={`Version ${this.state.version}`} />
+                  <ListItemText secondary={`Version ${this.state.version}`} />
                 </ListItem>
               </List>
 

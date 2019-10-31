@@ -26,7 +26,8 @@ const DeviceStyles = {
     width: '50%',
     light: true,
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    padding: '0px 0px 50px 0px' 
   },
   divider: {
     padding: 0,
@@ -51,7 +52,7 @@ const DeviceStyles = {
     padding: 0,
     fontWeight: "bold",
     fontSize: 12,
-    color: theme.palette.textSecondary.main,
+    color: theme.palette.textPrimary.main,
     cursor: "pointer",
     opacity: 0.7,
       "&:hover": {

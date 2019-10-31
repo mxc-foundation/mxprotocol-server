@@ -12,6 +12,22 @@ host_server="localhost"
 auth_server="http://appserver:8080"
 auth_url="/api/internal/profile"
 
+# settings for notify events targeting users
+[user_notification]
+low_balance_threshold=20
+
+# settings for notify events targeting system
+[system_notification]
+low_balance_threshold=20
+
+# pricing management related settings
+[pricing]
+downlink_package_price=10
+
+[accounting]
+interval_min = 60
+
+
 # PostgreSQL settings.
 #
 # Please note that PostgreSQL 9.5+ is required.
@@ -65,7 +81,7 @@ idle_timeout="5m0s"
 automigrate=true
 
 # This is the API and web-interface exposed to the end-user.
-[application_server.http_server]
+[m2m_server.http_server]
 # ip:port to bind the (user facing) http server to (web-interface and REST / gRPC api)
 bind=":4000"
 
@@ -84,10 +100,13 @@ jwt_secret="DOE1KiNzpQ82elRQ9HMWyxmADQ5f2B2TBAgOjL7ZZWA="
 # Set this to allows cross-domain communication from the browser (CORS).
 # Example value: https://example.com.
 # When left blank (default), CORS will not be used.
-cors_allow_origin="http://localhost:3001"
+cors_allow_origin="http://localhost:8080"
 
 # when set, existing users can't be re-assigned (to avoid exposure of all users to an organization admin)"
 disable_assign_existing_users=false
+
+[appserver]
+appserver="appserver:8002"
 
 [supernode]
 ## For official Eth network
@@ -102,6 +121,8 @@ api_key="W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4"
 check_account_seconds=30
 external_currency_abv="Ether"
 ether_test_net=true
+
+down_link_price = 0.1
 
 [paymentserver]
 payment_service_address="payment"

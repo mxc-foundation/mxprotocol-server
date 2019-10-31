@@ -96,6 +96,10 @@ func (*deviceInterface) SetDeviceMode(dvId int64, dvMode types.DeviceMode) (err 
 
 }
 
+func (*deviceInterface) DeleteDevice(dvId int64) (err error) {
+	return PgDevice.SetDeviceMode(dvId, types.DV_DELETED)
+}
+
 func (*deviceInterface) GetDeviceIdByDevEui(devEui string) (devId int64, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
@@ -104,8 +108,10 @@ func (*deviceInterface) GetDeviceIdByDevEui(devEui string) (devId int64, err err
 			device 
 		WHERE
 			dev_eui = $1 
-			ORDER BY id DESC 
-			LIMIT 1  
+		AND
+			mode <> 'DV_DELETED'
+		ORDER BY id DESC 
+		LIMIT 1  
 		;`, devEui).Scan(&devId)
 	return devId, errors.Wrap(err, "db/pg_device/GetDeviceIdByDevEui")
 }
@@ -146,9 +152,6 @@ func (*deviceInterface) GetDeviceProfile(dvId int64) (dv types.Device, err error
 }
 
 func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limit int64) (dvList []types.Device, err error) {
-	if err != nil {
-		return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
-	}
 
 	rows, err := PgDB.Query(
 		`SELECT
@@ -157,12 +160,17 @@ func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limi
 			device 
 		WHERE
 			fk_wallet = $1 
+		AND
+			mode <> 'DV_DELETED'
 		ORDER BY id DESC
 		LIMIT $2 
 		OFFSET $3
 	;`, walletId, limit, offset)
 
 	defer rows.Close()
+	if err != nil {
+		return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
+	}
 
 	var dv types.Device
 
@@ -183,6 +191,39 @@ func (*deviceInterface) GetDeviceListOfWallet(walletId int64, offset int64, limi
 	return dvList, errors.Wrap(err, "db/pg_device/GetDeviceListOfWallet")
 }
 
+func (*deviceInterface) GetAllDevices() (devList []types.Device, err error) {
+	rows, err := PgDB.Query(
+		`SELECT
+			*
+		FROM
+			device 
+		WHERE 
+			mode <> 'DV_DELETED'
+		ORDER BY created_at DESC;`)
+
+	defer rows.Close()
+	if err != nil {
+		return devList, errors.Wrap(err, "db/pg_device/GetAllDevices")
+	}
+
+	var dev types.Device
+	for rows.Next() {
+		rows.Scan(
+			&dev.Id,
+			&dev.DevEui,
+			&dev.FkWallet,
+			&dev.Mode,
+			&dev.CreatedAt,
+			&dev.LastSeenAt,
+			&dev.ApplicationId,
+			&dev.Name,
+		)
+
+		devList = append(devList, dev)
+	}
+	return devList, errors.Wrap(err, "db/pg_device/GetAllDevices")
+}
+
 func (*deviceInterface) GetDeviceRecCnt(walletId int64) (recCnt int64, err error) {
 
 	err = PgDB.QueryRow(`
@@ -192,6 +233,8 @@ func (*deviceInterface) GetDeviceRecCnt(walletId int64) (recCnt int64, err error
 			device 
 		WHERE
 			fk_wallet = $1 
+		AND
+			mode <> 'DV_DELETED'
 	`, walletId).Scan(&recCnt)
 
 	return recCnt, errors.Wrap(err, "db/pg_device/GetDeviceRecCnt")
@@ -237,8 +280,10 @@ func (*deviceInterface) GetDevWalletIdAndModeByEui(devEui string) (dvWalletId in
 			device 
 		WHERE	
 			dev_eui = $1 
-			ORDER BY id DESC 
-			LIMIT 1  
+		AND
+			mode <> 'DV_DELETED'
+		ORDER BY id DESC 
+		LIMIT 1  
 		;`, devEui).Scan(&dvWalletId, &dvMode)
 	return dvWalletId, dvMode, errors.Wrap(err, "db/pg_device/GetDevWalletIdAndModeByEui")
 

@@ -9,7 +9,7 @@ import (
 
 func TestGetDlPrice(t *testing.T) {
 	s := WalletServerAPI{}
-	req := &api.GetDownLinkPriceRequest{OrgId:1}
+	req := &api.GetDownLinkPriceRequest{OrgId: 1}
 	resp, err := s.GetDlPrice(context.Background(), req)
 	if err != nil {
 		t.Errorf("GetDlPriceTest got unexpected error")

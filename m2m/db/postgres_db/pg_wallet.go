@@ -39,7 +39,7 @@ func (*walletInterface) CreateWalletTable() error {
 			fk_org_la INT UNIQUE NOT NULL, -- foreign_key LoRa app server DB
 			type WALLET_TYPE NOT NULL,
 			balance NUMERIC(28,18) NOT NULL DEFAULT 0,
-			tmp_balance NUMERIC(28,18) DEFAULT 0
+			tmp_balance NUMERIC(28,18) NOT NULL DEFAULT 0
 		);
 
 		END$$;
@@ -120,7 +120,7 @@ func (*walletInterface) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
 func (*walletInterface) GetWalletBalance(walletId int64) (float64, error) {
 	balance := float64(0)
 	err := PgDB.QueryRow(
-		`SELECT balance
+		`SELECT tmp_balance
 		FROM wallet
 		WHERE
 			id = $1;`,
@@ -129,16 +129,32 @@ func (*walletInterface) GetWalletBalance(walletId int64) (float64, error) {
 	return balance, errors.Wrap(err, "db/GetWalletBalance")
 }
 
-func (*walletInterface) GetWalletTmpBalance(walletId int64) (float64, error) {
+func (*walletInterface) SyncTmpBalance(walletId int64) (balance float64, err error) {
+
+	err = PgDB.QueryRow(
+		`UPDATE
+			wallet
+		 SET
+			tmp_balance = balance
+		 WHERE
+		  	id = $1
+		RETURNING balance;
+		`,
+		walletId).Scan(&balance)
+
+	return balance, errors.Wrap(err, "db/SyncTmpBalance")
+}
+
+func (*walletInterface) getWalletNotTmpeBalance(walletId int64) (float64, error) {
 	balance := float64(0)
 	err := PgDB.QueryRow(
-		`SELECT tmp_balance
+		`SELECT balance
 		FROM wallet
 		WHERE
 			id = $1;`,
 		walletId).Scan(&balance)
 
-	return balance, errors.Wrap(err, "db/GetWalletTmpBalance")
+	return balance, errors.Wrap(err, "db/getWalletNotTmpBalance")
 }
 
 func (*walletInterface) GetWalletIdofActiveAcnt(acntAdr string, externalCur string) (walletId int64, err error) {
@@ -199,7 +215,7 @@ func (*walletInterface) GetWalletIdSuperNode() (walletId int64, err error) {
 	return walletId, errors.Wrap(err, "db/GetWalletIdSuperNode")
 }
 
-func (*walletInterface) UpdateBalanceByWalletId(walletId int64, newBalance float64) error {
+func (*walletInterface) updateBalanceByWalletId(walletId int64, newBalance float64) error {
 	_, err := PgDB.Exec(`
 	UPDATE
 		wallet 
@@ -219,4 +235,15 @@ func (*walletInterface) TmpBalanceUpdatePktTx(dvWalletId, gwWalletId int64, amou
 	`, dvWalletId, gwWalletId, amount)
 
 	return errors.Wrap(err, "db/TmpBalanceUpdatePktTx")
+}
+
+func (*walletInterface) GetMaxWalletId() (maxWalletId int64, err error) {
+	err = PgDB.QueryRow(
+		`SELECT
+			MAX (id)
+		FROM
+			wallet 
+		;`).Scan(&maxWalletId)
+
+	return maxWalletId, errors.Wrap(err, "db/GetMaxWalletId")
 }
