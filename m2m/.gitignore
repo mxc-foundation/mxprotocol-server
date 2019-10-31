@@ -1,6 +1,5 @@
 # hidden files
 .*
-!.env
 
 # logs
 *.log
@@ -28,3 +27,7 @@
 
 # node modules
 node_modules
+
+#docker-compose
+/*.yml
+*.sum
