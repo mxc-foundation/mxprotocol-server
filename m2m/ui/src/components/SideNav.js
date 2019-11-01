@@ -212,12 +212,14 @@ class SideNav extends Component {
         */}
 
         {(this.isAdmin)&&<List>
-        
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+        <div>
+        <DropdownMenu default={ this.state.default } onChange={this.onChange} />
+        </div>
+        <ListItem selected={active('/control-panel/dashboard')} button component={Link} to={`/control-panel/dashboard/${organizationID}`}>
           <ListItemIcon>
             <WalletOutline />
           </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="Dashboard" />
+          <ListItemText classes={selected('/control-panel/dashboard')} primary="Dashboard" />
         </ListItem>
 
         <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
@@ -248,15 +250,15 @@ class SideNav extends Component {
           <ListItemText classes={selected('/modify-account')} primary="Gateways" />
         </ListItem>
 
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+        <ListItem selected={active('/control-panel/organization')} button component={Link} to={`/control-panel/organizations/${organizationID}`}>
           <ListItemIcon>
             <BlurRadial />
           </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="Organizations" />
+          <ListItemText classes={selected('/control-panel/organization')} primary="Organizations" />
         </ListItem>
 
 
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+        <ListItem selected={active('/modify-account')} button component={Link} to={`/control-panel/organizations/${organizationID}`}>
           <ListItemIcon>
             <RadioTower />
           </ListItemIcon>

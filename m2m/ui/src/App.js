@@ -18,6 +18,7 @@ import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
 
+
 //import ProfileStore from "./stores/ProfileStore";
 
 // search
@@ -31,6 +32,9 @@ import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
 //import ControlPanel from "./views/controlPanel/ControlPanel";
 import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
+import Dashboard from "./views/controlPanel/dashboard/dashboard"
+import Organization from "./views/controlPanel/organizations/organization"
+import UserList from "./views/controlPanel/organizations/userList"
 
 
 const drawerWidth = 270;
@@ -166,6 +170,10 @@ class App extends Component {
                   {/* <Route path="/control-panel/:organizationID" component={ControlPanel} />*/}
                     <Route path="/device/:organizationID" component={DeviceLayout} />
                     <Route path="/gateway/:organizationID" component={GatewayLayout} />
+
+                    <Route path="/control-panel/dashboard/:organizationID" component={Dashboard} />
+                    <Route path="/control-panel/organizations/:organizationID" component={Organization} />
+                    <Route path="/control-panel/userList/:organizationID" component={UserList} />
 
                     <Route render={BackToLora} />
                   </Switch>
