@@ -52,7 +52,9 @@ func (s *DeviceServerAPI) GetDeviceList(ctx context.Context, req *api.GetDeviceL
 			return &api.GetDeviceListResponse{UserProfile: &userProfile}, err
 		}
 
-		dvList, err := db.Device.GetDeviceListOfWallet(walletId, req.Offset, req.Limit)
+		offset := req.Offset * req.Limit
+
+		dvList, err := db.Device.GetDeviceListOfWallet(walletId, offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetDeviceList")
 			return &api.GetDeviceListResponse{UserProfile: &userProfile}, err

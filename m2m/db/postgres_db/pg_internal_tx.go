@@ -15,16 +15,6 @@ const (
 	ARC    FieldStatus = "ARC"
 )
 
-type PaymentCategory string // db:payment_category
-const (
-	UPLINK                PaymentCategory = "UPLINK"
-	DOWNLINK              PaymentCategory = "DOWNLINK"
-	PURCHASE_SUBSCRIPTION PaymentCategory = "PURCHASE_SUBSCRIPTION"
-	GATEWAY_INCOME        PaymentCategory = "GATEWAY_INCOME"
-	TOP_UP                PaymentCategory = "TOP_UP"
-	WITHDRAW              PaymentCategory = "WITHDRAW"
-)
-
 func (*internalTxInterface) CreateInternalTxTable() error {
 	_, err := PgDB.Exec(`
 	DO $$
@@ -42,10 +32,9 @@ func (*internalTxInterface) CreateInternalTxTable() error {
 			(SELECT 1 FROM pg_type WHERE typname = 'payment_category')
 		THEN
 		CREATE TYPE PAYMENT_CATEGORY AS ENUM (
-			'UPLINK',
-			'DOWNLINK',
+			'DOWNLINK_AGGREGATION',
 			'PURCHASE_SUBSCRIPTION',
-			'GATEWAY_INCOME',
+			'BUY_SUBSCRIPTION',
 			'TOP_UP',
 			'WITHDRAW'
 		);

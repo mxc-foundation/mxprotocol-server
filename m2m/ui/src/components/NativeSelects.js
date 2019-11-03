@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
-//import SessionStore from "../stores/SessionStore";
 import { DV_MODE_OPTION, DV_FREE_GATEWAYS_LIMITED } from "../util/Data"
 
 const customStyles = {
     control: (base, state) => ({
       ...base,
       marginTop: 0,
+      color: state.isDisabled ? 'grey' : 'white',
       marginBottom: 0,
       // match with the menu
       borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
@@ -54,15 +54,15 @@ export default class SelectPlain extends Component {
         this.state = {
             selectedValue: null,
             options:[],
-            isDisabled:false,
-            haveGateway:false
+            //isDisabled: (this.props.gwId)?true:false,
+            //haveGateway:false
         };
     } 
 
     componentDidMount() {
-      //this.loadData();
+      
     }
-
+      
     onChange = (v) => {
         let value = null;
         if (v !== null) {
@@ -83,14 +83,14 @@ export default class SelectPlain extends Component {
         let options = this.props.options;
 
         if(!this.props.haveGateway){
-            options = options.filter(function(value, index, arr){
+          options = options.filter(function(value, index, arr){
             return value.value !== DV_FREE_GATEWAYS_LIMITED;//private
-            });
+          });
         }
 
         return (
             <Select 
-                cacheOptions 
+                //cacheOptions
                 defaultOptions
                 styles={customStyles}
                 theme={(theme) => ({
@@ -101,8 +101,8 @@ export default class SelectPlain extends Component {
                         primary: '#00FFD950',
                     },
                 })}
-                isDisabled={this.isDisabled}
-                defaultValue={dValue}
+                isDisabled={this.props.isDisabled}
+                value={dValue}
                 onChange={this.onChange}
                 options={options}
             />

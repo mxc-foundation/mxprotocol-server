@@ -52,7 +52,9 @@ func (s *GatewayServerAPI) GetGatewayList(ctx context.Context, req *api.GetGatew
 			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err
 		}
 
-		gwList, err := db.Gateway.GetGatewayListOfWallet(walletId, req.Offset, req.Limit)
+		offset := req.Offset * req.Limit
+
+		gwList, err := db.Gateway.GetGatewayListOfWallet(walletId, offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetGatewayList")
 			return &api.GetGatewayListResponse{UserProfile: &userProfile}, err

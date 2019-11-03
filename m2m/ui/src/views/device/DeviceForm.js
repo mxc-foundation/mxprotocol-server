@@ -10,6 +10,7 @@ import { DV_MODE_OPTION, DV_INACTIVE } from "../../util/Data"
 
 import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
+
 import DeviceStore from "../../stores/DeviceStore.js";
 import TitleBar from "../../components/TitleBar";
 import NativeSelects from "../../components/NativeSelects";
@@ -25,21 +26,25 @@ const styles = {
   },
   flex2: {
     left: 'calc(100%/3)',
-    
   },
   maxW:{
     maxWidth: 120
   }
 };
-//<Wallet color="primary.main"  />
+
 class DeviceForm extends Component {
   constructor(props) {
     super(props);
     this.getPage = this.getPage.bind(this);
     this.getRow = this.getRow.bind(this);
   }
-  
-  
+
+  componentDidMount() {
+    DeviceStore.on('update', () => {
+      // re-render the table.
+      this.forceUpdate();
+    });
+  }
 
   getPage(limit, offset, callbackFunc) {
     DeviceStore.getDeviceList(this.props.match.params.organizationID, offset, limit, data => {
@@ -69,10 +74,9 @@ class DeviceForm extends Component {
   }
 
   getRow(obj, index) {
-    //const url = `${getLoraHost()}/#/organizations/${this.props.match.params.organizationID}/applications/${obj.application_id}/devices/${obj.devEui}`;
-    const url = `${getLoraHost()}`;
+    const url = `${getLoraHost()}/#/organizations/${this.props.match.params.organizationID}/applications/${obj.applicationId}/devices/${obj.devEui}`;
     
-    let dValue = null;
+    /* let dValue = null;
     const options = DV_MODE_OPTION;
     
     switch(obj.mode) {
@@ -85,16 +89,19 @@ class DeviceForm extends Component {
         default:
         dValue = options[0];
         break;
-    }  
+    }   */
+    const options = DV_MODE_OPTION;
+    const dValue = options[1];
     
     let on = (obj.mode !== DV_INACTIVE) ? true : false;
+    const isDisabled = on ? false : true;
     
     return(
       <TableRow key={ index }>
         <TableCellExtLink align={'left'} for={'lora'} to={url}>{obj.name}</TableCellExtLink>
         <TableCell align={'left'}>{obj.lastSeenAt.substring(0, 19)}</TableCell>
         <TableCell><span className={this.props.classes.flex}><SwitchLabels on={ on } dvId={obj.id} onSwitchChange={ this.onSwitchChange } /></span></TableCell>
-        <TableCell><span><NativeSelects options={options} defaultValue={dValue} haveGateway={this.props.haveGateway} mode={ obj.mode } dvId={obj.id} onSelectChange={ this.onSelectChange } /></span></TableCell>
+        <TableCell><span><NativeSelects options={options} isDisabled={isDisabled} defaultValue={dValue} haveGateway={this.props.haveGateway} mode={ obj.mode } dvId={obj.id} onSelectChange={ this.onSelectChange } /></span></TableCell>
       </TableRow>
     );
   }
@@ -118,10 +125,10 @@ class DeviceForm extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell align={'center'}>Device</TableCell>
-                <TableCell align={'center'}>Status</TableCell>
-                <TableCell align={'center'}>Available</TableCell>
-                <TableCell className={this.props.classes.maxW} align={'center'}>Mode</TableCell>
+                <TableCell align={'left'}>Device</TableCell>
+                <TableCell align={'left'}>Status</TableCell>
+                <TableCell align={'left'}>Available</TableCell>
+                <TableCell className={this.props.classes.maxW} align={'left'}>Mode</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

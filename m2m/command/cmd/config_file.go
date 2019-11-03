@@ -24,6 +24,17 @@ host_server={{ .General.HostServer }}
 auth_server={{ .General.AuthServer }}
 auth_url={{ .General.AuthServer }}
 
+[user_notification]
+low_balance_threshold={{ .UserNotification.LowBalanceThreshold }}
+
+[system_notification]
+low_balance_threshold={{ .SysNotification.LowBalanceThreshold }}
+
+[pricing]
+downlink_package_price={{ .Pricing.DownLinkPkgPrice }}
+
+[accounting]
+interval_min="{{ .Accounting.IntervalMin }}"
 
 # PostgreSQL settings.
 #
@@ -66,30 +77,56 @@ dsn="{{ .PostgreSQL.DSN }}"
 # App Server and / or applying migrations.
 automigrate={{ .PostgreSQL.Automigrate }}
 
+[redis]
+url="{{ .Redis.URL }}"
+max_idle={{ .Redis.MaxIdle }}
+# Idle timeout.
+#
+# Close connections after remaining idle for this duration. If the value
+# is zero, then idle connections are not closed. You should set
+# the timeout to a value less than the server's timeout.
+idle_timeout="{{ .Redis.IdleTimeout }}"
+
+# Automatically apply database migrations.
+#
+# It is possible to apply the database-migrations by hand
+# (see https://github.com/brocaar/lora-app-server/tree/master/migrations)
+# or let LoRa App Server migrate to the latest state automatically, by using
+# this setting. Make sure that you always make a backup when upgrading Lora
+# App Server and / or applying migrations.
+automigrate=true
+
+
 # This is the API and web-interface exposed to the end-user.
-[application_server.http_server]
+[m2m_server.http_server]
 # ip:port to bind the (user facing) http server to (web-interface and REST / gRPC api)
-bind="{{ .ApplicationServer.HttpServer.Bind }}"
+bind="{{ .M2MServer.HttpServer.Bind }}"
 
 # http server TLS certificate (optional)
-tls_cert="{{ .ApplicationServer.HttpServer.TLSCert }}"
+tls_cert="{{ .M2MServer.HttpServer.TLSCert }}"
 
 # http server TLS key (optional)
-tls_key="{{ .ApplicationServer.HttpServer.TLSKey }}"
+tls_key="{{ .M2MServer.HttpServer.TLSKey }}"
 
 # JWT secret used for api authentication / authorization
 # You could generate this by executing 'openssl rand -base64 32' for example
-jwt_secret="{{ .ApplicationServer.HttpServer.JWTSecret }}"
+jwt_secret="{{ .M2MServer.HttpServer.JWTSecret }}"
 
 # Allow origin header (CORS).
 #
 # Set this to allows cross-domain communication from the browser (CORS).
 # Example value: https://example.com.
 # When left blank (default), CORS will not be used.
-cors_allow_origin="{{ .ApplicationServer.HttpServer.CORSAllowOrigin }}"
+cors_allow_origin="{{ .M2MServer.HttpServer.CORSAllowOrigin }}"
 
 # when set, existing users can't be re-assigned (to avoid exposure of all users to an organization admin)"
-disable_assign_existing_users={{ .ApplicationServer.HttpServer.DisableAssignExistingUsers }}
+disable_assign_existing_users={{ .M2MServer.HttpServer.DisableAssignExistingUsers }}
+
+[appserver]
+appserver={{ .AppServer.Server }}
+ca_cert={{ .AppServer.CACert }}
+tls_cert={{ .AppServer.TLSCert }}
+tls_key={{ .AppServer.TLSKey }}
 
 [supernode]
 contract_address={{ .SuperNode.ContractAddress }}
@@ -105,8 +142,8 @@ payment_service_address={{ .PaymentServer.PaymentServiceAddress }}
 payment_service_port={{ .PaymentServer.PaymentServicePort }}
 
 [withdraw]
-resend_ps_time={{ .Withdraw.ResendToPS }}
-recheck_status_time={{ .Withdraw.RecheckStat }}
+resend_ps_time_second={{ .Withdraw.ResendToPS }}
+recheck_status_time_second={{ .Withdraw.RecheckStat }}
 `
 
 var cmdConfig = &cobra.Command{

@@ -14,6 +14,6 @@ func NewServerInfoAPI() *ServerInfoAPI {
 	return &ServerInfoAPI{}
 }
 
-func (s *ServerInfoAPI)GetVersion(ctx context.Context, req *empty.Empty) (*api.GetVersionResponse, error) {
-	return &api.GetVersionResponse{Version:config.Cstruct.Version}, nil
+func (s *ServerInfoAPI) GetVersion(ctx context.Context, req *empty.Empty) (*api.GetVersionResponse, error) {
+	return &api.GetVersionResponse{Version: config.Cstruct.Version}, nil
 }

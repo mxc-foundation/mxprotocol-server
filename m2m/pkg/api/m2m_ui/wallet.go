@@ -105,7 +105,9 @@ func (s *WalletServerAPI) GetWalletUsageHist(ctx context.Context, req *api.GetWa
 			return &api.GetWalletUsageHistResponse{UserProfile: &userProfile}, nil
 		}
 
-		wuList, err := db.AggWalletUsage.GetWalletUsageHist(walletId, req.Offset, req.Limit)
+		offset := req.Offset * req.Limit
+
+		wuList, err := db.AggWalletUsage.GetWalletUsageHist(walletId, offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("grpc_api/GetWalletUsageHist")
 			return &api.GetWalletUsageHistResponse{UserProfile: &userProfile}, nil
