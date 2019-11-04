@@ -2,11 +2,11 @@ package ui
 
 import (
 	"context"
+	"strconv"
 
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
-	pdb "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -32,19 +32,33 @@ func (s *SettingsServerAPI) GetSettings(ctx context.Context, in *api.GetSettings
 		return nil, status.Error(codes.Unknown, "")
 	}
 
-	config, err := db.ConfigTable.Get()
+	configs, err := db.ConfigTable.GetConfigs([]string{
+		"downlink_fee",
+		"transaction_percentage_share",
+		"low_balance_warning",
+	})
 
 	if err != nil {
 		log.WithError(err).Error("grpc_api/GetSettings")
 		return nil, status.Error(codes.Internal, "")
 	}
 
-	log.Info(config)
+	result := &api.GetSettingsResponse{}
 
-	result := &api.GetSettingsResponse{
-		DownlinkFee:                int64(*config.DownlinkFee),
-		LowBalanceWarning:          int64(*config.LowBalanceWarning),
-		TransactionPercentageShare: int64(*config.TransactionPercentageShare),
+	for _, c := range configs {
+		value, err := strconv.Atoi(c.Value.(string))
+		if err != nil {
+			log.WithError(err).Error("grpc_api/GetSettings")
+			return nil, status.Error(codes.Internal, "")
+		}
+		switch true {
+		case c.Key == "downlink_fee":
+			result.DownlinkFee = int64(value)
+		case c.Key == "transaction_percentage_share":
+			result.TransactionPercentageShare = int64(value)
+		case c.Key == "low_balance_warning":
+			result.LowBalanceWarning = int64(value)
+		}
 	}
 
 	return result, nil
@@ -65,21 +79,21 @@ func (s *SettingsServerAPI) ModifySettings(ctx context.Context, in *api.ModifySe
 		return nil, status.Error(codes.InvalidArgument, "")
 	}
 
-	data := &pdb.Config{}
+	data := map[string]interface{}{}
 
 	if in.TransactionPercentageShare != nil {
-		data.TransactionPercentageShare = intPnt(in.TransactionPercentageShare.Value)
+		data["transaction_percentage_share"] = in.TransactionPercentageShare.Value
 	}
 
 	if in.LowBalanceWarning != nil {
-		data.LowBalanceWarning = intPnt(in.LowBalanceWarning.Value)
+		data["low_balance_warning"] = in.LowBalanceWarning.Value
 	}
 
 	if in.DownlinkFee != nil {
-		data.DownlinkFee = intPnt(in.DownlinkFee.Value)
+		data["downlink_fee"] = in.DownlinkFee.Value
 	}
 
-	err := db.ConfigTable.Update(data)
+	err := db.ConfigTable.UpdateConfigs(data)
 	if err != nil {
 		log.WithError(err).Error("grpc_api/ModifySettings")
 		return nil, status.Error(codes.Internal, "")
@@ -88,9 +102,4 @@ func (s *SettingsServerAPI) ModifySettings(ctx context.Context, in *api.ModifySe
 	return &api.ModifySettingsResponse{
 		Status: true,
 	}, nil
-}
-
-func intPnt(data int64) *int {
-	value := int(data)
-	return &value
 }

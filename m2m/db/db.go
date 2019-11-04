@@ -6,7 +6,6 @@ import (
 	migrate "github.com/rubenv/sql-migrate"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	db "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/migrations"
 )
@@ -119,18 +118,14 @@ func dbInit() {
 	} else {
 		// set default config
 
-		downlinkFee := viper.GetInt("pricing.downlink_fee")
-		transactionPercentageShare := viper.GetInt("pricing.transaction_percentage_share")
-		lowBalanceWarning := viper.GetInt("system_notification.low_balance_warning")
-
-		config := &db.Config{
-			DownlinkFee:                &downlinkFee,
-			TransactionPercentageShare: &transactionPercentageShare,
-			LowBalanceWarning:          &lowBalanceWarning,
+		config := map[string]interface{}{
+			"downlink_fee":                 viper.GetInt("pricing.downlink_fee"),
+			"transaction_percentage_share": viper.GetInt("pricing.transaction_percentage_share"),
+			"low_balance_warning":          viper.GetInt("system_notification.low_balance_warning"),
 		}
 
-		if err = ConfigTable.Insert(config, true); err != nil {
-			log.WithError(err).Fatal("db/InsertConfig")
+		if err = ConfigTable.InsertConfigs(config, true); err != nil {
+			log.WithError(err).Fatal("db/InsertConfigs")
 		}
 	}
 }
