@@ -9,7 +9,7 @@ export const GW_FREE_GATEWAYS_LIMITED = 'GW_FREE_GATEWAYS_LIMITED';
 export const GW_WHOLE_NETWORK = 'GW_WHOLE_NETWORK';
 
 export const DV_MODE_OPTION = [
-    { value: DV_INACTIVE, label: INACTIVE },
+    //{ value: DV_INACTIVE, label: INACTIVE },
     { value: DV_FREE_GATEWAYS_LIMITED, label: PRIVATE },
     { value: DV_WHOLE_NETWORK, label: NETWORK }];
 

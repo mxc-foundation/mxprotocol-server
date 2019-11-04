@@ -101,14 +101,13 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() ([]byte, error){
-	"0001_create_wallet_relations.sql":      _0001_create_wallet_relations_sql,
+	"0001_create_wallet_relations.sql": _0001_create_wallet_relations_sql,
 	"0002_create_ext_account_relations.sql": _0002_create_ext_account_relations_sql,
 	"0003_create_withdrawfee_relations.sql": _0003_create_withdrawfee_relations_sql,
-	"002_create_internal_tx_relations.sql":  _002_create_internal_tx_relations_sql,
-	"005_create_withdraw_relations.sql":     _005_create_withdraw_relations_sql,
-	"006_create_topup_relations.sql":        _006_create_topup_relations_sql,
+	"002_create_internal_tx_relations.sql": _002_create_internal_tx_relations_sql,
+	"005_create_withdraw_relations.sql": _005_create_withdraw_relations_sql,
+	"006_create_topup_relations.sql": _006_create_topup_relations_sql,
 }
-
 // AssetDir returns the file names below a certain
 // directory embedded in the file by go-bindata.
 // For example if you run go-bindata on data/... and data contains the
@@ -145,15 +144,20 @@ func AssetDir(name string) ([]string, error) {
 }
 
 type _bintree_t struct {
-	Func     func() ([]byte, error)
+	Func func() ([]byte, error)
 	Children map[string]*_bintree_t
 }
-
 var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
-	"0001_create_wallet_relations.sql":      &_bintree_t{_0001_create_wallet_relations_sql, map[string]*_bintree_t{}},
-	"0002_create_ext_account_relations.sql": &_bintree_t{_0002_create_ext_account_relations_sql, map[string]*_bintree_t{}},
-	"0003_create_withdrawfee_relations.sql": &_bintree_t{_0003_create_withdrawfee_relations_sql, map[string]*_bintree_t{}},
-	"002_create_internal_tx_relations.sql":  &_bintree_t{_002_create_internal_tx_relations_sql, map[string]*_bintree_t{}},
-	"005_create_withdraw_relations.sql":     &_bintree_t{_005_create_withdraw_relations_sql, map[string]*_bintree_t{}},
-	"006_create_topup_relations.sql":        &_bintree_t{_006_create_topup_relations_sql, map[string]*_bintree_t{}},
+	"0001_create_wallet_relations.sql": &_bintree_t{_0001_create_wallet_relations_sql, map[string]*_bintree_t{
+	}},
+	"0002_create_ext_account_relations.sql": &_bintree_t{_0002_create_ext_account_relations_sql, map[string]*_bintree_t{
+	}},
+	"0003_create_withdrawfee_relations.sql": &_bintree_t{_0003_create_withdrawfee_relations_sql, map[string]*_bintree_t{
+	}},
+	"002_create_internal_tx_relations.sql": &_bintree_t{_002_create_internal_tx_relations_sql, map[string]*_bintree_t{
+	}},
+	"005_create_withdraw_relations.sql": &_bintree_t{_005_create_withdraw_relations_sql, map[string]*_bintree_t{
+	}},
+	"006_create_topup_relations.sql": &_bintree_t{_006_create_topup_relations_sql, map[string]*_bintree_t{
+	}},
 }}

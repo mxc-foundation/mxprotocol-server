@@ -9,6 +9,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_networkserver"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -44,7 +45,7 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	tlsCert = conf.M2MServer.HttpServer.TLSCert
 	tlsKey = conf.M2MServer.HttpServer.TLSKey
 	jwtSecret = conf.M2MServer.HttpServer.JWTSecret
-	corsAllowOrigin = conf.M2MServer.HttpServer.CORSAllowOrigin
+	corsAllowOrigin = os.Getenv("APPSERVER")
 
 	server := grpc.NewServer()
 
