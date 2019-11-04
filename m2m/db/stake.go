@@ -6,6 +6,7 @@ import (
 
 type stakeDBInterface interface {
 	CreateStakeTable() error
+	InsertStake(walletId int64, amount float64) (insertIndex int64, err error)
 }
 
 var Stake = stakeDBInterface(&pg.PgStake)
