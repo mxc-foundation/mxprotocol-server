@@ -2,6 +2,7 @@ package postgres_db
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/pkg/errors"
@@ -9,9 +10,23 @@ import (
 
 type configTableInterface struct{}
 
+type ConfigKey string
+
+const (
+	LowBalanceWarningKey          = "low_balance_warning"
+	DownlinkFeeKey                = "downlink_fee"
+	TransactionPercentageShareKey = "transaction_percentage_share"
+)
+
 type Config struct {
-	Key   string
-	Value interface{}
+	LowBalanceWarning          *int
+	DownlinkFee                *int
+	TransactionPercentageShare *int
+}
+
+type row struct {
+	Key   ConfigKey
+	Value string
 }
 
 var PgConfigTable configTableInterface
@@ -30,32 +45,12 @@ func (*configTableInterface) CreateConfigTable() error {
 	return errors.Wrap(err, "db/pg_congif_table/CreateDlPktTable")
 }
 
-func (*configTableInterface) InsertConfig(key string, value string) (err error) {
-	_, err = PgDB.Exec(`
-	INSERT INTO config_table 
-		(key,
-		value,
-		updated_time)
-	VALUES ($1, $2, $3)
-`,
-		key,
-		value,
-		time.Now().UTC(),
-	)
-	return errors.Wrap(err, "db/pg_congif_table/InsertConfig")
-}
-
-func (*configTableInterface) InsertConfigs(data map[string]interface{}, ignoreDuplicateKey bool) (err error) {
-	updatedTime := time.Now().UTC()
-
+func (*configTableInterface) Insert(config *Config, ignoreDuplicateKey bool) (err error) {
 	query := "INSERT INTO config_table (key, value, updated_time) VALUES "
-	values := []interface{}{}
+	values := getValues(config)
 
-	i := 0
-	for key, value := range data {
+	for i := 0; i < len(values); i += 3 {
 		query += fmt.Sprintf("($%d, $%d, $%d),", i+1, i+2, i+3)
-		values = append(values, key, value, updatedTime)
-		i += 3
 	}
 
 	//trim the last ,
@@ -69,32 +64,65 @@ func (*configTableInterface) InsertConfigs(data map[string]interface{}, ignoreDu
 	stmt, err := PgDB.Prepare(query)
 
 	if err != nil {
-		return errors.Wrap(err, "db/pg_congif_table/InsertConfigs")
+		return errors.Wrap(err, "db/pg_congif_table/Insert")
 	}
 
 	//format all vals at once
 	_, err = stmt.Exec(values...)
 
-	return errors.Wrap(err, "db/pg_congif_table/InsertConfigs")
+	return errors.Wrap(err, "db/pg_congif_table/Insert")
 }
 
-func (*configTableInterface) UpdateConfig(key string, value string) (err error) {
-	_, err = PgDB.Exec(`
-	UPDATE config_table 
-	SET
-		value = $1 , 
-		updated_time = $2
-	WHERE
-		key = $3;
-`,
-		value,
-		time.Now().UTC(),
-		key,
-	)
-	return errors.Wrap(err, "db/pg_congif_table/UpdateConfig")
+func (*configTableInterface) Get() (config *Config, err error) {
+	result, err := PgDB.Query(`
+		SELECT key, value
+		FROM config_table
+	`)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "db/pg_congif_table/Get")
+	}
+
+	defer result.Close()
+
+	rows := make([]*row, 0)
+
+	for result.Next() {
+		r := &row{}
+
+		result.Scan(
+			&r.Key,
+			&r.Value,
+		)
+
+		rows = append(rows, r)
+	}
+
+	config = &Config{}
+
+	err = setValues(rows, config)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "db/pg_congif_table/Get")
+	}
+
+	return config, nil
 }
 
-func (*configTableInterface) UpdateConfigs(data map[string]interface{}) (err error) {
+func (*configTableInterface) GetOne(key ConfigKey) (value string, err error) {
+	err = PgDB.QueryRow(`
+		SELECT
+			value
+		FROM
+				config_table
+		WHERE
+			key = $1
+		`, key).Scan(&value)
+
+	return value, errors.Wrap(err, "db/pg_congif_table/GetOne")
+}
+
+func (*configTableInterface) Update(config *Config) (err error) {
 	query := `UPDATE config_table AS t
 		SET
 			key = c.key,
@@ -102,14 +130,10 @@ func (*configTableInterface) UpdateConfigs(data map[string]interface{}) (err err
 			updated_time = c.updated_time
 		FROM (values `
 
-	updatedTime := time.Now().UTC()
-	values := []interface{}{}
+	values := getValues(config)
 
-	i := 0
-	for key, value := range data {
+	for i := 0; i < len(values); i += 3 {
 		query += fmt.Sprintf("($%d, $%d, $%d::timestamptz),", i+1, i+2, i+3)
-		values = append(values, key, value, updatedTime)
-		i += 3
 	}
 
 	//trim the last ,
@@ -123,53 +147,73 @@ func (*configTableInterface) UpdateConfigs(data map[string]interface{}) (err err
 	stmt, err := PgDB.Prepare(query)
 
 	if err != nil {
-		return errors.Wrap(err, "db/pg_congif_table/UpdateConfigs")
+		return errors.Wrap(err, "db/pg_congif_table/Update")
 	}
 
 	//format all vals at once
 	_, err = stmt.Exec(values...)
 
-	return errors.Wrap(err, "db/pg_congif_table/UpdateConfigs")
+	return errors.Wrap(err, "db/pg_congif_table/Update")
 }
 
-func (*configTableInterface) GetConfig(key string) (val string, err error) {
-	err = PgDB.QueryRow(`
-	SELECT 
-		value
-	FROM
-	    config_table 
-	WHERE
-		key = $1
-	;`, key).Scan(&val)
-	return val, errors.Wrap(err, "db/pg_congif_table/GetConfig")
-}
-
-func (*configTableInterface) GetConfigs(keys []string) (configs []Config, err error) {
-	rows, err := PgDB.Query(`
-		SELECT 
-			key, value
-		FROM
-				config_table 
+func (*configTableInterface) UpdateOne(key ConfigKey, value string) (err error) {
+	_, err = PgDB.Exec(`
+		UPDATE config_table
+		SET
+			value = $1 ,
+			updated_time = $2
 		WHERE
-			key IN ($1)
-		;`, keys)
+			key = $3;
+	`,
+		value,
+		time.Now().UTC(),
+		key,
+	)
+	return errors.Wrap(err, "db/pg_congif_table/UpdateOne")
+}
 
-	if err != nil {
-		return nil, errors.Wrap(err, "db/pg_congif_table/GetConfigs")
+func getValues(config *Config) []interface{} {
+	updatedTime := time.Now().UTC()
+	values := []interface{}{}
+
+	if config.LowBalanceWarning != nil {
+		values = append(values, LowBalanceWarningKey, config.LowBalanceWarning, updatedTime)
 	}
 
-	defer rows.Close()
-
-	config := Config{}
-
-	for rows.Next() {
-		rows.Scan(
-			&config.Key,
-			&config.Value,
-		)
-
-		configs = append(configs, config)
+	if config.DownlinkFee != nil {
+		values = append(values, DownlinkFeeKey, config.DownlinkFee, updatedTime)
 	}
 
-	return configs, errors.Wrap(err, "db/pg_congif_table/GetConfigs")
+	if config.TransactionPercentageShare != nil {
+		values = append(values, TransactionPercentageShareKey, config.TransactionPercentageShare, updatedTime)
+	}
+
+	return values
+}
+
+func setValues(rows []*row, config *Config) error {
+	for _, r := range rows {
+		switch true {
+		case r.Key == LowBalanceWarningKey:
+			value, err := strconv.Atoi(r.Value)
+			if err != nil {
+				return err
+			}
+			config.LowBalanceWarning = &value
+		case r.Key == DownlinkFeeKey:
+			value, err := strconv.Atoi(r.Value)
+			if err != nil {
+				return err
+			}
+			config.DownlinkFee = &value
+		case r.Key == TransactionPercentageShareKey:
+			value, err := strconv.Atoi(r.Value)
+			if err != nil {
+				return err
+			}
+			config.TransactionPercentageShare = &value
+		}
+	}
+
+	return nil
 }
