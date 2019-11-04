@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	migrate "github.com/rubenv/sql-migrate"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/migrations"
 )
@@ -112,4 +113,18 @@ func dbInit() {
 		log.WithError(err).Fatal("db/CreateDlPktTable")
 	}
 
+	if err := ConfigTable.CreateConfigTable(); err != nil {
+		log.WithError(err).Fatal("db/CreateConfigTable")
+	} else {
+		// set default configs
+		configs := map[string]interface{}{
+			"downlink_fee":                 viper.GetInt64("pricing.downlink_fee"),
+			"transaction_percentage_share": viper.GetInt64("pricing.transaction_percentage_share"),
+			"low_balance_warning":          viper.GetInt64("system_notification.low_balance_warning"),
+		}
+
+		if err = ConfigTable.InsertConfigs(configs, true); err != nil {
+			log.WithError(err).Fatal("db/InsertConfigs")
+		}
+	}
 }
