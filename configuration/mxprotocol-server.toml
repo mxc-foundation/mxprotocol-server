@@ -19,10 +19,13 @@ low_balance_threshold=20
 # settings for notify events targeting system
 [system_notification]
 low_balance_threshold=20
+low_balance_warning=1000
 
 # pricing management related settings
 [pricing]
 downlink_package_price=10
+downlink_fee=10
+transaction_percentage_share=1
 
 [accounting]
 interval_min = 60
