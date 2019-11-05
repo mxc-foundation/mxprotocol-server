@@ -1,6 +1,7 @@
 package postgres_db
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/pkg/errors"
@@ -64,4 +65,19 @@ func (*stakeRevenuePeriodInterface) InsertStakeRevenuePeriod(StakingPeriodStart 
 		types.STAKE_REVENUE_IN_PROCESS,
 	).Scan(&insertIndex)
 	return insertIndex, errors.Wrap(err, "db/pg_stake_revenue_period/InsertStakeRevenuePeriod")
+}
+
+func (*stakeRevenuePeriodInterface) UpdateCompletedStakeReveneuPeriod(stakeReveneuPeriodId int64) error {
+	_, err := PgDB.Exec(` 
+	UPDATE 
+		stake_revenue_period
+	SET
+		status = $1 ,
+		exec_end_time = $2
+	WHERE
+		id = $3
+	;`, types.STAKE_REVENUE_COMPLETED,
+		time.Now().UTC(),
+		stakeReveneuPeriodId)
+	return errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue_period/UpdateCompletedStakeReveneuPeriod   stakeReveneuPeriodId: %d", stakeReveneuPeriodId))
 }
