@@ -61,13 +61,21 @@ func (*stakeInterface) InsertStake(walletId int64, amount float64) (insertIndex 
 }
 
 func (*stakeInterface) Unstake(stakeId int64) error {
+	// TODO
+	// in a single operation:
+	// UPDATE status, unstake_time
+	// update balance (user, stake)
+	// make internal_tx
+
 	return nil
 }
 
 func (*stakeInterface) GetActiveStake(walletId int64) (stakeProfile types.Stake, err error) {
+	// TODO
 	return stakeProfile, nil
 }
 
 func (*stakeInterface) GetActiveStakes() (stakeProfiles []types.Stake, err error) {
+	// TODO
 	return stakeProfiles, nil
 }
