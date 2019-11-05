@@ -134,36 +134,92 @@ class SideNav extends Component {
         open={this.props.open}
         classes={{paper: this.props.classes.drawerPaper}}
       >
-        {(organizationID&&!this.isAdmin) && <List className={this.props.classes.static}>
-          {/* <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}> */}
-          <div>
-            <DropdownMenu default={ this.state.default } onChange={this.onChange} />
-          </div>
-          {/* <Divider /> */}
-          <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${organizationID}`}>
+
+{(this.isAdmin)&&<List>
+       
+        <ListItem selected={active('/control-panel/dashboard')} button component={Link} to={`/control-panel/dashboard/${organizationID}`}>
+          <ListItemIcon>
+            <WalletOutline />
+          </ListItemIcon>
+          <ListItemText classes={selected('/control-panel/dashboard')} primary="Dashboard" />
+        </ListItem>
+
+        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+          <ListItemIcon>
+            <CreditCard />
+          </ListItemIcon>
+          <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
+        </ListItem>
+
+        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+          <ListItemIcon>
+            <CalendarCheckOutline />
+          </ListItemIcon>
+          <ListItemText classes={selected('/modify-account')} primary="History" />
+        </ListItem>
+
+        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+          <ListItemIcon>
+            <MapOutline />
+          </ListItemIcon>
+          <ListItemText classes={selected('/modify-account')} primary="Map" />
+        </ListItem>
+
+        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+          <ListItemIcon>
+            <WrenchOutline />
+          </ListItemIcon>
+          <ListItemText classes={selected('/modify-account')} primary="Staking" />
+        </ListItem>
+
+        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+          <ListItemIcon>
+            <WrenchOutline />
+          </ListItemIcon>
+          <ListItemText classes={selected('/modify-account')} primary="System Settings" />
+        </ListItem>
+
+        <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${organizationID}`}>
             <ListItemIcon className={this.props.classes.iconStyle}>
               <PagePreviousOutline />
             </ListItemIcon>
             <ListItemText classes={selected('/withdraw')} primary="Withdraw" />
           </ListItem>
-          <ListItem selected={active('/topup')} button component={Link} to={`/topup/${organizationID}`}>
+
+  
+        </List>
+        }
+
+        {(organizationID) && <List className={this.props.classes.static}>
+          {/* <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}> */}
+          <div>
+            <DropdownMenu default={ this.state.default } onChange={this.onChange} />
+          </div>
+          {/* <Divider /> */}
+          {(!this.isAdmin) && <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${organizationID}`}>
+            <ListItemIcon className={this.props.classes.iconStyle}>
+              <PagePreviousOutline />
+            </ListItemIcon>
+            <ListItemText classes={selected('/withdraw')} primary="Withdraw" />
+          </ListItem>}
+          {(!this.isAdmin) &&  <ListItem selected={active('/topup')} button component={Link} to={`/topup/${organizationID}`}>
             <ListItemIcon>
               <PageNextOutline />
             </ListItemIcon>
             <ListItemText classes={selected('/topup')} primary="Top up" />
-          </ListItem>
+          </ListItem>}
           <ListItem selected={active('/history')} button component={Link} to={`/history/${organizationID}`}>
             <ListItemIcon>
               <CalendarCheckOutline />
             </ListItemIcon>
             <ListItemText classes={selected('/history')} primary="History" />
           </ListItem>
-          <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+          {(!this.isAdmin) &&   <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
             <ListItemIcon>
               <CreditCard />
             </ListItemIcon>
             <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
-          </ListItem>
+          </ListItem>}
           <ListItem selected={active('/device')} button component={Link} to={`/device/${organizationID}`}>
             <ListItemIcon>
               <Remote />
@@ -177,7 +233,9 @@ class SideNav extends Component {
             <ListItemText classes={selected('/gateway')} primary="Gateway" />
           </ListItem>
 
-              <List className={this.props.classes.card}>
+             
+
+      
               <Divider />
                 <ListItem button component={LinkToLora} className={this.props.classes.static}>  
                   <ListItemIcon>
@@ -195,8 +253,6 @@ class SideNav extends Component {
                   <ListItemText secondary={`Version ${this.state.version}`} />
                 </ListItem>
               </List>
-
-        </List>
      
         }
 
@@ -211,96 +267,7 @@ class SideNav extends Component {
           
         */}
 
-        {(this.isAdmin)&&<List>
-        <div>
-        <DropdownMenu default={ this.state.default } onChange={this.onChange} />
-        </div>
-        <ListItem selected={active('/control-panel/dashboard')} button component={Link} to={`/control-panel/dashboard/${organizationID}`}>
-          <ListItemIcon>
-            <WalletOutline />
-          </ListItemIcon>
-          <ListItemText classes={selected('/control-panel/dashboard')} primary="Dashboard" />
-        </ListItem>
-
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <CalendarCheckOutline />
-          </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="History" />
-        </ListItem>
-
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <CreditCard />
-          </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
-        </ListItem>
-
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <Remote />
-          </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="Devices" />
-        </ListItem>
-       
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <VideoInputAntenna />
-          </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="Gateways" />
-        </ListItem>
-
-        <ListItem selected={active('/control-panel/organization')} button component={Link} to={`/control-panel/organizations/${organizationID}`}>
-          <ListItemIcon>
-            <BlurRadial />
-          </ListItemIcon>
-          <ListItemText classes={selected('/control-panel/organization')} primary="Organizations" />
-        </ListItem>
-
-
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/control-panel/organizations/${organizationID}`}>
-          <ListItemIcon>
-            <RadioTower />
-          </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="Send MXC" />
-        </ListItem>
-
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <PlaylistCheck />
-          </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="Subscriptions" />
-        </ListItem>
-
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <CommentQuestionOutline />
-          </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="Support" />
-        </ListItem>
-
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <WrenchOutline />
-          </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="System" />
-        </ListItem>
-
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <WrenchOutline />
-          </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="Staking" />
-        </ListItem>
-
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <MapOutline />
-          </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="Map" />
-        </ListItem>
-        </List>
-        }
+      
 
         
 
