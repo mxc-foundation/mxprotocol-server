@@ -1,7 +1,10 @@
 package postgres_db
 
 import (
+	"time"
+
 	"github.com/pkg/errors"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
 type stakeRevenuePeriodInterface struct{}
@@ -26,7 +29,7 @@ func (*stakeRevenuePeriodInterface) CreateStakeRevenuePeriodTable() error {
 			staking_period_start TIMESTAMP NOT NULL,
 			staking_period_end TIMESTAMP NOT NULL,
 			supernode_income NUMERIC(28,18) NOT NULL,
-			income_to_stake_percentage FLOAT NOT NULL,
+			income_to_stake_portion FLOAT NOT NULL  CHECK (income_to_stake_portion >= 0 AND income_to_stake_portion <= 1),
 			exec_start_time TIMESTAMP,
 			exec_end_time TIMESTAMP,
 			status stake_revenue_period_status
@@ -37,4 +40,28 @@ func (*stakeRevenuePeriodInterface) CreateStakeRevenuePeriodTable() error {
 	`)
 	return errors.Wrap(err, "db/pg_stake_revenue_period/CreateStakeRevenuePeriodTable")
 
+}
+
+func (*stakeRevenuePeriodInterface) InsertStakeRevenuePeriod(StakingPeriodStart time.Time, StakingPeriodEnd time.Time, SuperNodeIncome float64, IncomeToStakePortion float64) (insertIndex int64, err error) {
+	err = PgDB.QueryRow(`
+		INSERT INTO stake_revenue_period (
+			staking_period_start ,
+			staking_period_end ,
+			supernode_income ,	
+			income_to_stake_portion,
+			exec_start_time,
+			status
+			) 
+		VALUES 
+			($1,$2,$3,$4,$5,$6)
+		RETURNING id ;
+	`,
+		StakingPeriodStart,
+		StakingPeriodEnd,
+		SuperNodeIncome,
+		IncomeToStakePortion,
+		time.Now().UTC(),
+		types.STAKE_REVENUE_IN_PROCESS,
+	).Scan(&insertIndex)
+	return insertIndex, errors.Wrap(err, "db/pg_stake_revenue_period/InsertStakeRevenuePeriod")
 }
