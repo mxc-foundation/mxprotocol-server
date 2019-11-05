@@ -10,6 +10,7 @@ import (
 )
 
 func Setup(conf config.MxpConfig) error {
+
 	i = &dbM2M
 	err := openDB(i, conf)
 	if err != nil {
@@ -32,13 +33,15 @@ func Setup(conf config.MxpConfig) error {
 		log.WithField("count", n).Info("db/PostgreSQL data migrations applied")
 	}
 
-	// testDb()
-
 	return nil
 }
 
 func dbInit() {
 	dbErrorInit()
+
+	if err := ConfigTable.CreateConfigTable(); err != nil {
+		log.WithError(err).Fatal("db/CreateConfigTable")
+	}
 
 	if err := Wallet.CreateWalletTable(); err != nil {
 		log.WithError(err).Fatal("db/CreateWalletTable")
@@ -88,6 +91,10 @@ func dbInit() {
 		log.WithError(err).Fatal("db/CreateGatewayTable")
 	}
 
+	if err := DlPacket.CreateDlPktTable(); err != nil {
+		log.WithError(err).Fatal("db/CreateDlPktTable")
+	}
+
 	if err := AggPeriod.CreateAggPeriodTable(); err != nil {
 		log.WithError(err).Fatal("db/CreateAggPeriodTable")
 	}
@@ -106,10 +113,6 @@ func dbInit() {
 
 	if err := AggGatewayUsage.CreateAggGwUsgTable(); err != nil {
 		log.WithError(err).Fatal("db/CreateAggGwUsgTable")
-	}
-
-	if err := DlPacket.CreateDlPktTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateDlPktTable")
 	}
 
 }
