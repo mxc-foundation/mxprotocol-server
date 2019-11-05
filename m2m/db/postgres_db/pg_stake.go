@@ -59,3 +59,15 @@ func (*stakeInterface) InsertStake(walletId int64, amount float64) (insertIndex 
 	).Scan(&insertIndex)
 	return insertIndex, errors.Wrap(err, "db/pg_stake/InsertStake")
 }
+
+func (*stakeInterface) Unstake(stakeId int64) error {
+	return nil
+}
+
+func (*stakeInterface) GetActiveStake(walletId int64) (stakeProfile types.Stake, err error) {
+	return stakeProfile, nil
+}
+
+func (*stakeInterface) GetActiveStakes() (stakeProfiles []types.Stake, err error) {
+	return stakeProfiles, nil
+}
