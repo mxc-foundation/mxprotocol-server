@@ -14,9 +14,9 @@ func (*stakeRevenuePeriodInterface) CreateStakeRevenuePeriodTable() error {
 		`DO $$
 		BEGIN
 			IF NOT EXISTS 
-				(SELECT 1 FROM pg_type WHERE typname = 'STAKE_REVENUE_PERIOD_STATUS') 
+				(SELECT 1 FROM pg_type WHERE typname = 'stake_revenue_period_status') 
 			THEN
-				CREATE TYPE STAKE_REVENUE_PERIOD_STATUS AS ENUM (
+				CREATE TYPE stake_revenue_period_status AS ENUM (
 					'IN_PROCESS',
  					'COMPLETED'
 		);
@@ -29,7 +29,7 @@ func (*stakeRevenuePeriodInterface) CreateStakeRevenuePeriodTable() error {
 			income_to_stake_percentage FLOAT NOT NULL,
 			exec_start_time TIMESTAMP,
 			exec_end_time TIMESTAMP,
-			status STAKE_REVENUE_PERIOD_STATUS
+			status stake_revenue_period_status
 		);	
 
 		END$$;
