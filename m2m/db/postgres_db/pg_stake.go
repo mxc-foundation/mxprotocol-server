@@ -75,6 +75,16 @@ func (*stakeInterface) GetActiveStake(walletId int64) (stakeProfile types.Stake,
 	return stakeProfile, nil
 }
 
+func (*stakeInterface) GetStakeHistory(walletId int64, offset int64, limit int64) (stakeProfiles []types.Stake, err error) {
+	// TODO
+	return stakeProfiles, nil
+}
+
+func (*stakeInterface) GetStakeHistoryCnt(walletId int64) (recCnt int64, err error) {
+	// TODO
+	return recCnt, nil
+}
+
 func (*stakeInterface) GetActiveStakes() (stakeProfiles []types.Stake, err error) {
 	// TODO
 	return stakeProfiles, nil

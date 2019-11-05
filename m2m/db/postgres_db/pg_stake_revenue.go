@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
 type stakeRevenueInterface struct{}
@@ -39,4 +40,12 @@ func (*stakeRevenueInterface) InsertStakeRevenue(stakeId int64, stakeReveneuPeri
 	*/
 
 	return insertIndex, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/InsertStakeRevenue  stakeId: %d, stakeReveneuPeriodId: %d", stakeId, stakeReveneuPeriodId))
+}
+
+func (*stakeRevenueInterface) GetStakeReveneuHistory(walletId int64, offset int64, limit int64) (stakeRevenueHists []types.StakeRevenueHist, err error) {
+	return stakeRevenueHists, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/GetStakeReveneuHistory  walletId: %d", walletId))
+}
+
+func (*stakeRevenueInterface) GetStakeReveneuHistoryCnt(walletId int64) (recCnt int64, err error) {
+	return recCnt, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/GetStakeReveneuHistoryCnt  walletId: %d", walletId))
 }
