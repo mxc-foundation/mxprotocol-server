@@ -67,6 +67,10 @@ const settingsStyle = {
             opacity: 1,
           }
       },
+      settingsForm:{
+        marginTop:'25px',
+        marginBottom:'45px',
+      }
   };
   
 export default settingsStyle;

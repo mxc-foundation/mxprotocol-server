@@ -1,31 +1,68 @@
 import React, { Component } from 'react';
 
-import { Grid, Card, Table, TableBody, TextField } from '@material-ui/core';
+import { Grid, Card, Table, TableBody, TextField, Button } from '@material-ui/core';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import { withRouter, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import HistoryStore from '../../../stores/HistoryStore';
+
 import TitleBar from '../../../components/TitleBar';
 import TitleBarTitle from '../../../components/TitleBarTitle';
 import TitleBarButton from '../../../components/TitleBarButton';
 import DataTable from '../../../components/DataTable';
 import styles from './settingsStyle';
 import Divider from '@material-ui/core/Divider';
+import WithdrawStore from '../../../stores/WithdrawStore';
+import { ETHER } from "../../../util/Coin-type";
 
 class Settings extends Component {
 	constructor(props) {
 		super(props);
-		this.getPage = this.getPage.bind(this);
+    this.loadData = this.loadData.bind(this);
+    this.state = {
+
+    };
 	}
 
-	getPage(limit, offset, callbackFunc) {}
+  componentDidMount() {
+    this.loadSettings();
+  }
+
+  loadSettings = async () => {
+    try {
+      const organizationID = 0;
+      //this.setState({loading: true})
+      WithdrawStore.getWithdrawFee(ETHER, organizationID, resp => {
+        this.setState({withdrawFee:resp.withdrawFee});
+      });
+    
+  }catch(e){
+
+  }
+
+}
+
+  saveSettings = async()=>{
+    try {
+     
+      let body = {
+        "moneyAbbr": "Ether",
+        "orgId": "0",
+        "withdrawFee": this.state.withdrawFee;
+      }
+    
+      WithdrawStore.setWithdrawFee(ETHER, organizationID, body, resp => {
+        console.log(resp)
+      });
+    
+  }catch(e){
+  }
 
 	render() {
 		return (
 			<Grid container spacing={3} className={this.props.classes.root}>
 				<Grid item xs={12}>
-					<Grid item container xs={6} direction="column" className={this.props.classes.divider} padding={12}>
+					<Grid item container xs={6} direction="column" >
 						<TitleBar>
 							<TitleBarTitle title="System Settings" />
 						</TitleBar>
@@ -56,9 +93,9 @@ class Settings extends Component {
 						</div>
 					</Grid>
 
-					<Grid item container direction="column" xs={6}>
+					<Grid item container direction="column" xs={6} className={this.props.classes.settingsForm}>
 						<TextField
-							id="standard-number"
+							id="withdrawFee"
 							label="Widthdraw Fee"
 							className={this.props.classes.TextField}
 							variant="filled"
@@ -67,10 +104,11 @@ class Settings extends Component {
 								shrink: true
 							}}
 							margin="normal"
+              value = {this.state.withdrawFee}
 						/>
 
 						<TextField
-							id="standard-number"
+							id="downlinkPrice"
 							label="Downlink Price"
 							className={this.props.classes.TextField}
 							variant="filled"
@@ -82,7 +120,7 @@ class Settings extends Component {
 						/>
 
 						<TextField
-							id="standard-number"
+							id="percentageShare"
 							label="Percentage Share per transaction"
 							className={this.props.classes.TextField}
 							variant="filled"
@@ -94,7 +132,7 @@ class Settings extends Component {
 						/>
 
 						<TextField
-							id="standard-number"
+							id="lbWarning"
 							label="Low Balance warning"
 							className={this.props.classes.TextField}
 							variant="filled"
@@ -104,8 +142,20 @@ class Settings extends Component {
 							}}
 							margin="normal"
 						/>
+
+          
 					</Grid>
+            <Grid container item xs={6} direction="row" justify="flex-end" spacing={2}>
+				
+						<Button variant="contained" className={this.props.classes.Button}>
+							CANCEL
+						</Button>
+			
+						<Button className={this.props.classes.Button}>SAVE CHANGES</Button>
+					
 				</Grid>
+				</Grid>
+			
 			</Grid>
 		);
 	}
