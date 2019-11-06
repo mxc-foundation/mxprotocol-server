@@ -4,10 +4,16 @@ import (
 	"context"
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"time"
 )
+
+var timeLayout = "2006-01-02 15:04:05"
 
 type StakingServerAPI struct{
 	serviceName string
@@ -37,16 +43,29 @@ func (s *StakingServerAPI) Stake (ctx context.Context, req *api.StakeRequest) (*
 		log.WithFields(log.Fields{
 			"orgId": req.OrgId,
 		}).Debug("grpc_api/Stake")
-		//Todo: check if this person already has staking in DB.
-		//getActiveStake(walletId) nil or not nil
+		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
+		if err != nil {
+			log.WithError(err).Error("StakeAPI/Cannot get walletId from DB")
+		}
 
-		/*//Todo: get the min staking time
-		minDay := config.MxpConfig{}.Staking.StakingMinDays*/
+		stakeProf, err := db.Stake.GetActiveStake(walletId)
+		if err != nil {
+			log.WithError(err).Error("StakeAPI/Cannot get staking profile from DB")
+		}
 
-		//Todo: write the stake value to DB
-		//addStake(walletId, amount)
+		//If this person has one staking in DB already, return.
+		var nilStake = types.Stake{}
+		if stakeProf == nilStake {
+			return &api.StakeResponse{Status:"There is already one active stake, you should do the unstake first.", UserProfile: &userProfile}, nil
+		}
 
-		return &api.StakeResponse{UserProfile: &userProfile}, nil
+		//add the stake value to DB
+		_, err = db.Stake.InsertStake(walletId, req.Amount)
+		if err != nil {
+			log.WithError(err).Error("StakeAPI/Cannot insert new stake to DB")
+		}
+
+		return &api.StakeResponse{Status:"Stake successful.", UserProfile: &userProfile}, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "Internal error")
@@ -71,16 +90,41 @@ func (s *StakingServerAPI) Unstake (ctx context.Context, req *api.UnstakeRequest
 		log.WithFields(log.Fields{
 			"orgId": req.OrgId,
 		}).Debug("grpc_api/Unstake")
-		//Todo: get the start date from DB
-		//getActiveStake()
+		walletID, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
+		if err != nil {
+			log.WithError(err).Error("UnstakeAPI/Cannot get walletID from DB")
+		}
 
-		//Todo: get the min day from config, and compare if already longer than the min day.
-		//year, month, today := time.Now().Date()
+		//get the start date from stakeProf
+		stakeProf, err := db.Stake.GetActiveStake(walletID)
+		//startTime := stakeProf.StartStakeTime.Format(timeLayout)
+		startTime, err := time.Parse(timeLayout, stakeProf.StartStakeTime.String())
+		if err != nil {
+			log.WithError(err).Error("startTime time format error")
+		}
 
-		//Todo: update unstake_time and status to DB.
-		//unstake(stakeID)
 
-		return &api.UnstakeResponse{UserProfile: &userProfile}, nil
+		//get the min day from config, and compare if already longer than the min day.
+		minStakeDays := config.MxpConfig{}.Staking.StakingMinDays
+
+		now, err := time.Parse(timeLayout, time.Now().String())
+		if err != nil {
+			log.WithError(err).Error("time.now format error")
+		}
+
+		//check if it's longer than minStakeDays
+		period := startTime.Sub(now)
+		if (period.Hours()/24) < float64(minStakeDays) {
+			return &api.UnstakeResponse{Status:"The minimum unstake period is " + string(minStakeDays) + " days"}, nil
+		}
+
+		//update unstake_time and status to DB.
+		err = db.Stake.Unstake(stakeProf.Id)
+		if err != nil {
+			log.WithError(err).Error("StakeAPI/Cannot update unstake to DB")
+		}
+
+		return &api.UnstakeResponse{Status:"Unstake successful." ,UserProfile: &userProfile}, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "Internal error")
