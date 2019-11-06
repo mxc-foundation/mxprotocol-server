@@ -5,16 +5,16 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
-import TitleBar from "../../components/TitleBar";
-import TitleBarTitle from "../../components/TitleBarTitle";
-import Spinner from "../../components/ScaleLoader"
+import Divider from '@material-ui/core/Divider';
+import TitleBar from "../../../components/TitleBar";
+import TitleBarTitle from "../../../components/TitleBarTitle";
+import Spinner from "../../../components/ScaleLoader"
 //import SessionStore from "../../stores/SessionStore";
 
 //import Transactions from "./Transactions";
-import EthAccount from "./EthAccount";
-import Transactions from "./Transactions";
-import NetworkActivityHistory from "./NetworkActivityHistory";
+import EthAccount from "../../history/EthAccount";
+import Transactions from "../../history/Transactions";
+import NetworkActivityHistory from "../../history/NetworkActivityHistory";
 
 import styles from "./HistoryStyle";
 
@@ -66,25 +66,27 @@ class HistoryLayout extends Component {
   }
 
   render() {
-    const organizationID = this.props.match.params.organizationID;
+    const organizationID = 0;
     
     return(
       <Grid container spacing={24}>
         <Spinner on={this.state.loading}/>
-        <Grid item xs={12} className={this.props.classes.divider}>
-          <div className={this.props.classes.TitleBar}>
-                <TitleBar className={this.props.classes.padding}>
-                  <TitleBarTitle title="Histories" />
+        <Grid item container xs={6} direction="column" className={this.props.classes.divider} padding={12}>
+       
+                <TitleBar >
+                  <TitleBarTitle title="History" />
                 </TitleBar>
-                {/* <Divider light={true}/>
+                 <Divider light={true}/>
                 <div className={this.props.classes.breadcrumb}>
                 <TitleBar>
                   <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                  <TitleBarTitle title="/" className={this.props.classes.navText}/>
+                  <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
+                  <TitleBarTitle component={Link} to="#" title="Control Panel" className={this.props.classes.link}/>
+                  <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
                   <TitleBarTitle component={Link} to="#" title="History" className={this.props.classes.link}/>
                 </TitleBar>
-                </div> */}
-            </div>
+                </div> 
+          
         </Grid>
 
         <Grid item xs={12}>
@@ -97,17 +99,17 @@ class HistoryLayout extends Component {
             scrollButtons="auto"
             textColor="primary"
           >
-            <Tab label="Transactions" component={Link} to={`/history/${organizationID}/`} />
-            <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth-account`} />
-            <Tab label="Network Activity" component={Link} to={`/history/${organizationID}/network-activity`} />
+            <Tab label="Transactions" component={Link} to={`/control-panel/history/`} />
+            <Tab label="ETH Account" component={Link} to={`/control-panel/history/eth-account`} />
+            <Tab label="Network Activity" component={Link} to={`/control-panel/history/network-activity`} />
           </Tabs>
         </Grid>
 
         <Grid item xs={12}>
           <Switch>
-            <Route exact path={`${this.props.match.path}/`} render={props => <Transactions organizationID={organizationID} {...props} />} />
-            <Route exact path={`${this.props.match.path}/eth-account`} render={props => <EthAccount organizationID={organizationID} {...props} />} />
-            <Route exact path={`${this.props.match.path}/network-activity`} render={props => <NetworkActivityHistory organizationID={organizationID} {...props} />} />
+            <Route exact path={`/control-panel/history/`} render={props => <Transactions organizationID={organizationID} {...props} />} />
+            <Route exact path={`/control-panel/history/eth-account`} render={props => <EthAccount organizationID={organizationID} {...props} />} />
+            <Route exact path={`/control-panel/history/network-activity`} render={props => <NetworkActivityHistory organizationID={organizationID} {...props} />} />
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}
           </Switch>
         </Grid>

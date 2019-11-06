@@ -162,7 +162,7 @@ class Withdraw extends Component {
      
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
 
-       {this.state.isAdmin && <Redirect push to={`/control-panel/dashboard/${SUPER_ADMIN}`}/> /*in case of superadmin - rredirect to control page*/ }
+       {/*this.state.isAdmin && <Redirect push to={`/supernode/history`}/> /*in case of superadmin - rredirect to control page*/ }
         {this.state.modal && 
           <Modal title={CONFIRMATION} description={CONFIRMATION_TEXT} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
         <Grid item xs={12} className={this.props.classes.divider}>

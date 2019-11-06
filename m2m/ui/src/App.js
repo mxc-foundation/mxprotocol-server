@@ -32,8 +32,9 @@ import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
 //import ControlPanel from "./views/controlPanel/ControlPanel";
 import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
-import Dashboard from "./views/controlPanel/dashboard/dashboard"
-
+import Dashboard from "./views/ControlPanel/dashboard/dashboard"
+import SupernodeHistory from "./views/ControlPanel/history/History"
+import SystemSettings from "./views/ControlPanel/settings/settings"
 
 const drawerWidth = 270;
 
@@ -169,9 +170,9 @@ class App extends Component {
                     <Route path="/device/:organizationID" component={DeviceLayout} />
                     <Route path="/gateway/:organizationID" component={GatewayLayout} />
 
-                    <Route path="/control-panel/dashboard/:organizationID" component={Dashboard} />
-    
-                  
+                   {/* <Route path="/control-panel/dashboard/:organizationID" component={Dashboard} />*/}
+                    <Route path="/control-panel/history" component={SupernodeHistory} />
+                   <Route path="/control-panel/system-settings" component={SystemSettings} />
                     <Route render={BackToLora} />
                   </Switch>
                 </Grid>

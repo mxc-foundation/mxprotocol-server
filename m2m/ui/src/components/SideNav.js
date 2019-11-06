@@ -151,32 +151,32 @@ class SideNav extends Component {
           <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
         </ListItem>
 
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+        <ListItem selected={active('/control-panel/history')} button component={Link} to={`/control-panel/history`}>
           <ListItemIcon>
             <CalendarCheckOutline />
           </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="History" />
+          <ListItemText classes={selected('/control-panel/history')} primary="History" />
         </ListItem>
 
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+        <ListItem selected={active('/t')} button component={Link} to={`/modify-account/${organizationID}`}>
           <ListItemIcon>
             <MapOutline />
           </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="Map" />
+          <ListItemText classes={selected('/')} primary="Map" />
         </ListItem>
 
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+        <ListItem selected={active('/t')} button component={Link} to={`/modify-account/${organizationID}`}>
           <ListItemIcon>
             <WrenchOutline />
           </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="Staking" />
+          <ListItemText classes={selected('/')} primary="Staking" />
         </ListItem>
 
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+        <ListItem selected={active('/control-panel/system-settings')} button component={Link} to={`/control-panel/system-settings`}>
           <ListItemIcon>
             <WrenchOutline />
           </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="System Settings" />
+          <ListItemText classes={selected('/control-panel/system-settings')} primary="System Settings" />
         </ListItem>
 
         <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${organizationID}`}>
