@@ -2,8 +2,8 @@ package ui
 
 import (
 	"context"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	log "github.com/sirupsen/logrus"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -37,7 +37,14 @@ func (s *StakingServerAPI) Stake (ctx context.Context, req *api.StakeRequest) (*
 		log.WithFields(log.Fields{
 			"orgId": req.OrgId,
 		}).Debug("grpc_api/Stake")
+		//Todo: check if this person already has staking in DB.
+		//getActiveStake(walletId) nil or not nil
 
+		/*//Todo: get the min staking time
+		minDay := config.MxpConfig{}.Staking.StakingMinDays*/
+
+		//Todo: write the stake value to DB
+		//addStake(walletId, amount)
 
 		return &api.StakeResponse{UserProfile: &userProfile}, nil
 	}
@@ -64,7 +71,14 @@ func (s *StakingServerAPI) Unstake (ctx context.Context, req *api.UnstakeRequest
 		log.WithFields(log.Fields{
 			"orgId": req.OrgId,
 		}).Debug("grpc_api/Unstake")
+		//Todo: get the start date from DB
+		//getActiveStake()
 
+		//Todo: get the min day from config, and compare if already longer than the min day.
+		//year, month, today := time.Now().Date()
+
+		//Todo: update unstake_time and status to DB.
+		//unstake(stakeID)
 
 		return &api.UnstakeResponse{UserProfile: &userProfile}, nil
 	}

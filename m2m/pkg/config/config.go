@@ -81,6 +81,7 @@ type MxpConfig struct {
 
 	Staking struct {
 		StakingPercentage float64 `mapstructure:"staking_percentage"`
+		StakingMinDays int `mapstructure:"staking_min_days"`
 	} `mapstructure:"staking"`
 
 	Version string
