@@ -15,6 +15,50 @@ import Divider from '@material-ui/core/Divider';
 import WithdrawStore from '../../../stores/WithdrawStore';
 import SettingsStore from '../../../stores/SettingsStore';
 import { ETHER } from "../../../util/Coin-type";
+import NumberFormat from "react-number-format";
+import PropTypes from "prop-types";
+
+function NumberFormatMXC(props) {
+  const { inputRef, onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={values => {
+        onChange({
+          target: {
+            value: values.value
+          }
+        });
+      }}
+     
+      suffix=" MXC"
+    />
+  );
+}
+
+function NumberFormatPerc(props) {
+  const { inputRef, onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={values => {
+        onChange({
+          target: {
+            value: values.value
+          }
+        });
+      }}
+     
+      suffix=" %"
+    />
+  );
+}
+
+
 
 class Settings extends Component {
 	constructor(props) {
@@ -133,10 +177,14 @@ handleChange = (name,event) => {
 							label="Widthdraw Fee"
 							className={this.props.classes.TextField}
 							variant="filled"
-							type="number"
+						
 							InputLabelProps={{
-								shrink: true
+								shrink: true,
+                
 							}}
+              InputProps={{
+                inputComponent: NumberFormatMXC
+              }}
 							margin="normal"
               value = {this.state.withdrawFee}
               onChange={(e) => this.handleChange("withdrawFee", e)}
@@ -147,10 +195,13 @@ handleChange = (name,event) => {
 							label="Downlink Price"
 							className={this.props.classes.TextField}
 							variant="filled"
-							type="number"
+							
 							InputLabelProps={{
 								shrink: true
 							}}
+              InputProps={{
+                inputComponent: NumberFormatMXC
+              }}
 							margin="normal"
               value = {this.state.downlinkPrice}
               onChange={(e) => this.handleChange("downlinkPrice", e)}
@@ -161,10 +212,13 @@ handleChange = (name,event) => {
 							label="Percentage Share per transaction"
 							className={this.props.classes.TextField}
 							variant="filled"
-							type="number"
+							
 							InputLabelProps={{
 								shrink: true
 							}}
+              InputProps={{
+                inputComponent: NumberFormatPerc
+              }}
 							margin="normal"
               value = {this.state.percentageShare}
               onChange={(e) => this.handleChange("percentageShare", e)}
@@ -175,10 +229,13 @@ handleChange = (name,event) => {
 							label="Low Balance warning"
 							className={this.props.classes.TextField}
 							variant="filled"
-							type="number"
+						
 							InputLabelProps={{
 								shrink: true
 							}}
+              InputProps={{
+                inputComponent: NumberFormatMXC
+              }}
 							margin="normal"
               value = {this.state.lbWarning}
               onChange={(e) => this.handleChange("lbWarning", e)}
