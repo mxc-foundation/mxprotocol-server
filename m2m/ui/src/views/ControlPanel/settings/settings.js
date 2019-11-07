@@ -13,12 +13,13 @@ import DataTable from '../../../components/DataTable';
 import styles from './settingsStyle';
 import Divider from '@material-ui/core/Divider';
 import WithdrawStore from '../../../stores/WithdrawStore';
+import SettingsStore from '../../../stores/SettingsStore';
 import { ETHER } from "../../../util/Coin-type";
 
 class Settings extends Component {
 	constructor(props) {
 		super(props);
-    this.loadData = this.loadData.bind(this);
+
     this.state = {
 
     };
@@ -32,9 +33,22 @@ class Settings extends Component {
     try {
       const organizationID = 0;
       //this.setState({loading: true})
+      
       WithdrawStore.getWithdrawFee(ETHER, organizationID, resp => {
+        
         this.setState({withdrawFee:resp.withdrawFee});
       });
+
+      SettingsStore.getSystemSettings(resp => {
+     
+        this.setState({
+          downlinkPrice:resp.downlinkFee,
+          percentageShare:resp.transactionPercentageShare,
+          lbWarning:resp.lowBalanceWarning
+        });
+      });
+
+
     
   }catch(e){
 
@@ -45,19 +59,38 @@ class Settings extends Component {
   saveSettings = async()=>{
     try {
      
-      let body = {
+      let bodyWF = {
         "moneyAbbr": "Ether",
         "orgId": "0",
         "withdrawFee": this.state.withdrawFee 
       }
+
+      let bodySettings = {
+        "downlinkFee": this.state.downlinkPrice,
+        "lowBalanceWarning": this.state.lbWarning,
+        "transactionPercentageShare": this.state.percentageShare
+      }
     
-      WithdrawStore.setWithdrawFee(ETHER, 0, body, resp => {
-        console.log(resp)
+      WithdrawStore.setWithdrawFee(ETHER, 0, bodyWF, resp => {
+        
       });
+      
+      SettingsStore.setSystemSettings(bodySettings, resp => {
+      
+      });
+
     
   }catch(e){
   }
 }
+
+handleChange = (name,event) => {
+  this.setState({
+    [name]: event.target.value,
+  });
+};
+
+
 
 	render() {
 		return (
@@ -106,6 +139,7 @@ class Settings extends Component {
 							}}
 							margin="normal"
               value = {this.state.withdrawFee}
+              onChange={(e) => this.handleChange("withdrawFee", e)}
 						/>
 
 						<TextField
@@ -118,6 +152,8 @@ class Settings extends Component {
 								shrink: true
 							}}
 							margin="normal"
+              value = {this.state.downlinkPrice}
+              onChange={(e) => this.handleChange("downlinkPrice", e)}
 						/>
 
 						<TextField
@@ -130,6 +166,8 @@ class Settings extends Component {
 								shrink: true
 							}}
 							margin="normal"
+              value = {this.state.percentageShare}
+              onChange={(e) => this.handleChange("percentageShare", e)}
 						/>
 
 						<TextField
@@ -142,17 +180,19 @@ class Settings extends Component {
 								shrink: true
 							}}
 							margin="normal"
+              value = {this.state.lbWarning}
+              onChange={(e) => this.handleChange("lbWarning", e)}
 						/>
 
           
 					</Grid>
             <Grid container item xs={6} direction="row" justify="flex-end" spacing={2}>
 				
-						<Button variant="contained" className={this.props.classes.Button}>
+						<Button variant="contained" className={this.props.classes.Button} onClick = {this.loadSettings}>
 							CANCEL
 						</Button>
 			
-						<Button className={this.props.classes.Button}>SAVE CHANGES</Button>
+						<Button className={this.props.classes.Button} onClick = {this.saveSettings}>SAVE CHANGES</Button>
 					
 				</Grid>
 				</Grid>

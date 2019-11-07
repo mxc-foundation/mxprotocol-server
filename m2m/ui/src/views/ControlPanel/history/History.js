@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 import { Route, Switch, Link, withRouter } from "react-router-dom";
-
+import {Card,Table,TableBody,TableRow,TableCell,Grid,Tabs,Tab,Divider} from '@material-ui/core';
 import { withStyles } from "@material-ui/core/styles";
-import Grid from '@material-ui/core/Grid';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Divider from '@material-ui/core/Divider';
 import TitleBar from "../../../components/TitleBar";
 import TitleBarTitle from "../../../components/TitleBarTitle";
 import Spinner from "../../../components/ScaleLoader"
@@ -16,6 +12,7 @@ import EthAccount from "../../history/EthAccount";
 import Transactions from "../../history/Transactions";
 import NetworkActivityHistory from "../../history/NetworkActivityHistory";
 
+import topupStore from "../../../stores/TopupStore";
 import styles from "./HistoryStyle";
 
 
@@ -26,6 +23,7 @@ class HistoryLayout extends Component {
       tab: 0,
       loading: false,
       admin: false,
+      income:0
     };
 
     this.onChangeTab = this.onChangeTab.bind(this);
@@ -36,6 +34,7 @@ class HistoryLayout extends Component {
     this.setState({loading:true});
     this.locationToTab();
     this.setState({loading:false});
+    this.getIncome();
   }
 
   componentDidUpdate(oldProps) {
@@ -44,6 +43,12 @@ class HistoryLayout extends Component {
     }
 
     this.locationToTab();
+  }
+
+  getIncome(){
+    topupStore.getIncome(0, resp => {
+      this.setState({income:resp.amount});
+    });
   }
 
   onChangeTab(e, v) {
@@ -89,7 +94,8 @@ class HistoryLayout extends Component {
           
         </Grid>
 
-        <Grid item xs={12}>
+
+        <Grid item container xs={12} justify="space-between" className={this.props.classes.tabsBlock}>
           <Tabs
             value={this.state.tab}
             onChange={this.onChangeTab}
@@ -103,6 +109,12 @@ class HistoryLayout extends Component {
             <Tab label="ETH Account" component={Link} to={`/control-panel/history/eth-account`} />
             <Tab label="Network Activity" component={Link} to={`/control-panel/history/network-activity`} />
           </Tabs>
+
+            <Grid container justify="space-between" alignItems="center" className={this.props.classes.card}>
+               <Grid item>Last 24h income</Grid>
+              <Grid item align="right"><b>{this.state.income}MXC</b></Grid>
+            </Grid>
+        
         </Grid>
 
         <Grid item xs={12}>

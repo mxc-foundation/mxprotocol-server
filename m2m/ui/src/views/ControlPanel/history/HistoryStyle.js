@@ -4,6 +4,11 @@ const HistoryStyle = {
     tabs: {
         borderBottom: "1px solid " + theme.palette.divider,
         height: "49px",
+        
+      },
+      tabsBlock:{
+        marginTop:'25px',
+        marginBottom:'15px'
       },
       navText: {
         fontSize: 14,
@@ -17,8 +22,10 @@ const HistoryStyle = {
       },
       card: {
         minWidth: 180,
-        width: 220,
-        backgroundColor: "#0C0270",
+        width: 250,
+        backgroundColor: "#0C027060",
+        color:'#ffffff',
+        padding:'15px'
       },
       divider: {
         padding: 0,
@@ -38,6 +45,7 @@ const HistoryStyle = {
             opacity: 1,
           }
       },
+      
   };
   
 export default HistoryStyle;
