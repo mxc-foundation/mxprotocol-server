@@ -55,7 +55,7 @@ func (s *StakingServerAPI) Stake (ctx context.Context, req *api.StakeRequest) (*
 
 		//If this person has one staking in DB already, return.
 		var nilStake = types.Stake{}
-		if stakeProf == nilStake {
+		if stakeProf != nilStake {
 			return &api.StakeResponse{Status:"There is already one active stake, you should do the unstake first.", UserProfile: &userProfile}, nil
 		}
 
@@ -97,12 +97,17 @@ func (s *StakingServerAPI) Unstake (ctx context.Context, req *api.UnstakeRequest
 
 		//get the start date from stakeProf
 		stakeProf, err := db.Stake.GetActiveStake(walletID)
-		//startTime := stakeProf.StartStakeTime.Format(timeLayout)
+
+		//If this person has one staking in DB already, return.
+		var nilStake = types.Stake{}
+		if stakeProf == nilStake {
+			return &api.UnstakeResponse{Status:"There is no active stake.", UserProfile: &userProfile}, nil
+		}
+
 		startTime, err := time.Parse(timeLayout, stakeProf.StartStakeTime.String())
 		if err != nil {
 			log.WithError(err).Error("startTime time format error")
 		}
-
 
 		//get the min day from config, and compare if already longer than the min day.
 		minStakeDays := config.MxpConfig{}.Staking.StakingMinDays
@@ -113,12 +118,13 @@ func (s *StakingServerAPI) Unstake (ctx context.Context, req *api.UnstakeRequest
 		}
 
 		//check if it's longer than minStakeDays
-		period := startTime.Sub(now)
-		if (period.Hours()/24) < float64(minStakeDays) {
-			return &api.UnstakeResponse{Status:"The minimum unstake period is " + string(minStakeDays) + " days"}, nil
+		//Todo: Change the org
+		period := time.Now().Sub(startTime).Hours() //startTime.Sub(now)
+		if (period/24) < float64(minStakeDays) {
+			return &api.UnstakeResponse{Status:"The minimum unstake period is " + string(minStakeDays) + " days."}, nil
 		}
 
-		//update unstake_time and status to DB.
+		//update unstake time and status to DB.
 		err = db.Stake.Unstake(stakeProf.Id)
 		if err != nil {
 			log.WithError(err).Error("StakeAPI/Cannot update unstake to DB")
