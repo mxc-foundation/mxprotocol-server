@@ -48,15 +48,16 @@ class Settings extends Component {
       let body = {
         "moneyAbbr": "Ether",
         "orgId": "0",
-        "withdrawFee": this.state.withdrawFee;
+        "withdrawFee": this.state.withdrawFee 
       }
     
-      WithdrawStore.setWithdrawFee(ETHER, organizationID, body, resp => {
+      WithdrawStore.setWithdrawFee(ETHER, 0, body, resp => {
         console.log(resp)
       });
     
   }catch(e){
   }
+}
 
 	render() {
 		return (
