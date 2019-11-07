@@ -59,6 +59,7 @@ class SideNav extends Component {
     this.state = {
       open: true,
       //organization: {},
+      supernodeOrgID:'',
       organizationID: '',
       cacheCounter: 0,
       version: '1.0.0'
@@ -76,7 +77,12 @@ class SideNav extends Component {
     try {
       const organizationID = SessionStore.getOrganizationID();
       if (organizationID === SUPER_ADMIN) {
-        this.isAdmin = true;}else{
+        this.isAdmin = true;
+       this.setState({
+        supernodeOrgID:0
+      })
+
+      }else{
           this.isAdmin = false;
         }
       var data = await loadServerVersion();
@@ -84,6 +90,7 @@ class SideNav extends Component {
       
       this.setState({
         organizationID,
+        
         version: serverInfo.version
       })
 
@@ -100,14 +107,21 @@ class SideNav extends Component {
   }
 
   onChange(e) {
+if(!this.isAdmin){
     SessionStore.setOrganizationID(e.target.value);
-    
+    SessionStore.setOrganizationName(e.target.label);
     this.setState({
       organizationID: e.target.value
     })
     
     const currentLocation = this.props.history.location.pathname.split('/')[1];
     this.props.history.push(`/${currentLocation}/${e.target.value}`);
+  }else{
+    this.setState({
+      supernodeOrgID: e.target.value
+    })
+  }
+
   }
 
   selectClicked = async () => {
@@ -115,7 +129,7 @@ class SideNav extends Component {
   }
 
   render() {
-    const { organizationID } = this.state;
+    const { organizationID,supernodeOrgID } = this.state;
     const { pathname } = this.props.location;
 
     const active = (path) => Boolean(pathname.match(path));
@@ -208,7 +222,7 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/topup')} primary="Top up" />
           </ListItem>}
-          <ListItem selected={active('/history')} button component={Link} to={`/history/${organizationID}`}>
+          <ListItem selected={active('/history')} button component={Link} to={!this.isAdmin?`/history/${organizationID}`:`/history/${this.state.supernodeOrgID}`}>
             <ListItemIcon>
               <CalendarCheckOutline />
             </ListItemIcon>
@@ -220,13 +234,13 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
           </ListItem>}
-          <ListItem selected={active('/device')} button component={Link} to={`/device/${organizationID}`}>
+          <ListItem selected={active('/device')} button component={Link} to={!this.isAdmin?`/device/${organizationID}`:`/device/${this.state.supernodeOrgID}`}>
             <ListItemIcon>
               <Remote />
             </ListItemIcon>
             <ListItemText classes={selected('/device')} primary="Device" />
           </ListItem>
-          <ListItem selected={active('/gateway')} button component={Link} to={`/gateway/${organizationID}`}>
+          <ListItem selected={active('/gateway')} button component={Link} to={!this.isAdmin?`/gateway/${organizationID}`:`/gateway/${this.state.supernodeOrgID}`}>
             <ListItemIcon>
               <VideoInputAntenna />
             </ListItemIcon>

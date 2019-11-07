@@ -87,8 +87,9 @@ export default class WithPromises extends Component {
             value = v.value;
         }
         
-        SessionStore.setOrganizationID(v.value);
-        SessionStore.setOrganizationName(v.label);
+        //SessionStore.setOrganizationID(v.value);
+        //SessionStore.setOrganizationName(v.label);
+        
         this.props.onChange({
             target: {
                 id: this.props.id,
