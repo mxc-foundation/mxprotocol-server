@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/clients/appserver"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/staking"
 	"os"
 	"os/signal"
 	"syscall"
@@ -44,6 +45,7 @@ func run(cmd *cobra.Command, args []string) error {
 		setupDevice,
 		setupGateway,
 		setupAccounting,
+		setupStaking,
 	}
 
 	for _, t := range tasks {
@@ -161,6 +163,13 @@ func setupAPI() error {
 func setupAccounting() error {
 	if err := accounting.Setup(config.Cstruct); err != nil {
 		return errors.Wrap(err, "setup service accounting error")
+	}
+	return nil
+}
+
+func setupStaking() error {
+	if err := staking.Setup(config.Cstruct); err != nil {
+		return errors.Wrap(err, "setup service staking error")
 	}
 	return nil
 }

@@ -48,6 +48,7 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/prometheus/tsdb v0.10.0 // indirect
 	github.com/rjeczalik/notify v0.9.2 // indirect
+	github.com/robfig/cron v1.2.0
 	github.com/rogpeppe/go-internal v1.3.2 // indirect
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20190902133344-8926f37f0bc1

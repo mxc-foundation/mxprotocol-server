@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package api;
+
+import "google/api/annotations.proto";
+import "profile.proto";
+
+service StakingService {
+    rpc Stake(StakeRequest) returns (StakeResponse) {
+        option(google.api.http) = {
+            get: "/api/staking/{org_id}/stake"
+        };
+    };
+
+    rpc Unstake(UnstakeRequest) returns (UnstakeResponse) {
+        option(google.api.http) = {
+            get: "/api/staking/{org_id}/unstake"
+        };
+    };
+
+    rpc GetStakingHistory(StakingHistoryRequest) returns (StakingHistoryResponse) {
+        option(google.api.http) = {
+            get: "/api/staking/{org_id}/history"
+        };
+    };
+}
+
+message StakeRequest {
+    int64 org_id = 1;
+    double amount = 2;
+}
+
+message StakeResponse {
+    string status = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message UnstakeRequest {
+    int64 org_id = 1;
+}
+
+message UnstakeResponse {
+    string status = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message StakingHistoryRequest {
+    int64 org_id = 1;
+}
+
+message StakingHistoryResponse {
+    ProfileResponse user_profile = 1;
+    double stake_amount = 2;
+    string start = 3;
+    string end = 4;
+    string rev_month = 5;
+    double network_income = 6;
+    double monthly_rate = 7;
+    double revenue = 8;
+    double balance = 9;
+}
