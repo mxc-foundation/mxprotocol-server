@@ -168,6 +168,12 @@ class SideNav extends Component {
 
               <List className={this.props.classes.card}>
               <Divider />
+                <ListItem button className={this.props.classes.static}>  
+                  <ListItemIcon>
+                    <AccessPoint />
+                  </ListItemIcon>
+                  <ListItemText primary="NB-IoT Server" />
+                </ListItem>
                 <ListItem button component={LinkToLora} className={this.props.classes.static}>  
                   <ListItemIcon>
                     <AccessPoint />

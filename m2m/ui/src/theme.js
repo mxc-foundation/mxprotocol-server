@@ -1,4 +1,5 @@
 import { createMuiTheme } from "@material-ui/core/styles";
+import { border } from "@material-ui/system";
 //import { teal } from "@material-ui/core/colors";
 
 const tealHighLight = '#00FFD9';
@@ -56,6 +57,7 @@ const theme = createMuiTheme({
         },
         body1: {
           color: white,
+          fontSize: '0.8rem'
         },
         body2: {
           color: white,
@@ -134,7 +136,8 @@ const theme = createMuiTheme({
       MuiTableCell: {
         head: {
           color: white,
-          fontWeight: 'bold',
+          fontWeight: '800',
+          fontSize: '1em',
           padding: 10, 
         },
         body: {
@@ -143,14 +146,18 @@ const theme = createMuiTheme({
           //maxWidth: 140,
           whiteSpace: 'nowrap', 
           //overflow: 'hidden',
-          textOverflow: 'ellipsis' 
+          textOverflow: 'ellipsis',
+          fontWeight: '400', 
         },
         root: {
           padding: '4px 5px',
           //maxWidth: 140,
           whiteSpace: 'nowrap', 
           //overflow: 'hidden',
-          textOverflow: 'ellipsis'
+          textOverflow: 'ellipsis',
+          borderBottom: 'solid 1px #070033',
+          lineHeight: '40px',
+          textAlign: 'left',
         }
       },
       MuiPaper: {
