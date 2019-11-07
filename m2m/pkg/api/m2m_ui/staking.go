@@ -119,7 +119,7 @@ func (s *StakingServerAPI) Unstake (ctx context.Context, req *api.UnstakeRequest
 
 		//check if it's longer than minStakeDays
 		//Todo: Change the org
-		period := time.Now().Sub(startTime).Hours() //startTime.Sub(now)
+		period := now.Sub(startTime).Hours() //startTime.Sub(now)
 		if (period/24) < float64(minStakeDays) {
 			return &api.UnstakeResponse{Status:"The minimum unstake period is " + string(minStakeDays) + " days."}, nil
 		}
