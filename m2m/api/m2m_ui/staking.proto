@@ -49,5 +49,13 @@ message StakingHistoryRequest {
 }
 
 message StakingHistoryResponse {
-    ProfileResponse user_profile = 2;
+    ProfileResponse user_profile = 1;
+    double stake_amount = 2;
+    string start = 3;
+    string end = 4;
+    string rev_month = 5;
+    double network_income = 6;
+    double monthly_rate = 7;
+    double revenue = 8;
+    double balance = 9;
 }

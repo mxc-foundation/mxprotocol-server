@@ -175,6 +175,35 @@
       "properties": {
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
+        },
+        "stakeAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        },
+        "end": {
+          "type": "string"
+        },
+        "revMonth": {
+          "type": "string"
+        },
+        "networkIncome": {
+          "type": "number",
+          "format": "double"
+        },
+        "monthlyRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "revenue": {
+          "type": "number",
+          "format": "double"
+        },
+        "balance": {
+          "type": "number",
+          "format": "double"
         }
       }
     },
