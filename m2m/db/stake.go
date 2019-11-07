@@ -10,8 +10,6 @@ type stakeDBInterface interface {
 	InsertStake(walletId int64, amount float64) (insertIndex int64, err error)
 	Unstake(stakeId int64) error
 	GetActiveStake(walletId int64) (stakeProfile types.Stake, err error)
-	GetStakeHistory(walletId int64, offset int64, limit int64) (stakeProfiles []types.Stake, err error)
-	GetStakeHistoryCnt(walletId int64) (recCnt int64, err error)
 	GetActiveStakes() (stakeProfiles []types.Stake, err error)
 }
 
