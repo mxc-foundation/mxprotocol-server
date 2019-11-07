@@ -71,8 +71,26 @@ func (*stakeInterface) Unstake(stakeId int64) error {
 }
 
 func (*stakeInterface) GetActiveStake(walletId int64) (stakeProfile types.Stake, err error) {
-	// TODO
-	return stakeProfile, nil
+
+	err = PgDB.QueryRow(
+		`SELECT
+			id, fk_wallet, amount, status, start_stake_time
+		FROM
+			stake 
+		WHERE
+			fk_wallet = $1 
+		AND
+			status = 'ACTIVE'
+		ORDER BY id DESC 
+		LIMIT 1  
+		;`, walletId).Scan(
+		&stakeProfile.Id,
+		&stakeProfile.FkWallet,
+		&stakeProfile.Amount,
+		&stakeProfile.Status,
+		&stakeProfile.StartStakeTime)
+	return stakeProfile, errors.Wrap(err, "db/pg_stake/GetActiveStake")
+
 }
 
 func (*stakeInterface) getStakeHistory(walletId int64, offset int64, limit int64) (stakeProfiles []types.Stake, err error) {
