@@ -104,6 +104,31 @@ func (*stakeInterface) getStakeHistoryCnt(walletId int64) (recCnt int64, err err
 }
 
 func (*stakeInterface) GetActiveStakes() (stakeProfiles []types.Stake, err error) {
-	// TODO
-	return stakeProfiles, nil
+
+	rows, err := PgDB.Query(
+		`SELECT
+			id, fk_wallet, amount, status, start_stake_time
+		FROM
+			stake 
+		WHERE
+			status = 'ACTIVE'
+	;`)
+
+	defer rows.Close()
+
+	stakePrf := types.Stake{}
+
+	for rows.Next() {
+		rows.Scan(
+			&stakePrf.Id,
+			&stakePrf.FkWallet,
+			&stakePrf.Amount,
+			&stakePrf.Status,
+			&stakePrf.StartStakeTime,
+		)
+
+		stakeProfiles = append(stakeProfiles, stakePrf)
+	}
+	return stakeProfiles, errors.Wrap(err, "db/pg_stake/GetActiveStakes")
+
 }
