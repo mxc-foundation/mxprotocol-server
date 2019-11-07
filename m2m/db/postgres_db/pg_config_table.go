@@ -21,7 +21,7 @@ func (*configTableInterface) CreateConfigTable() error {
 	
 `)
 
-	return errors.Wrap(err, "db/pg_congif_table/CreateDlPktTable")
+	return errors.Wrap(err, "db/pg_congif_table/CreateConfigTable")
 }
 
 func (*configTableInterface) InsertConfig(key string, value string) (err error) {
