@@ -13,10 +13,10 @@ func Setup(conf config.MxpConfig) error {
 	c := cron.New()
 	//first day of the month at 12:00 (24-hour)
 	err := c.AddFunc("0 0 12 1 * ?", func() {
-		log.Info("Start stakingReveneuExec")
+		log.Info("Start stakingRevenueExec")
 		err := stakingRevenueExec(conf)
 		if err != nil {
-			log.WithError(err).Error("StakingReveneu Error")
+			log.WithError(err).Error("StakingRevenue Error")
 		}
 	})
 	if err != nil {
