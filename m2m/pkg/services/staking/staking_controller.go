@@ -11,8 +11,8 @@ import (
 func Setup(conf config.MxpConfig) error {
 	log.Info("cron task begin...")
 	c := cron.New()
-	//first day of the month at 1pm
-	err := c.AddFunc("0011*?", func() {
+	//first day of the month at 12:00 (24-hour)
+	err := c.AddFunc("0 0 12 1 * ?", func() {
 		log.Info("Start stakingReveneuExec")
 		err := stakingRevenueExec(conf)
 		if err != nil {
@@ -23,7 +23,7 @@ func Setup(conf config.MxpConfig) error {
 		log.Fatal(err)
 	}
 
-	c.Start()
+	go c.Start()
 
 	return nil
 }
@@ -62,10 +62,10 @@ func stakingRevenueExec(conf config.MxpConfig) error {
 		var stakingTimePortion float64
 		//how many hours from startTime until now
 		stakingHours := time.Now().Sub(i.StartStakeTime).Hours() //i.StartStakeTime.Sub(time.Now()).Hours()
-		if (stakingHours/24) >= stakingRevDays {
+		if (stakingHours / 24) >= stakingRevDays {
 			stakingTimePortion = 1
 		} else {
-			stakingTimePortion = (stakingHours/24)/stakingRevDays
+			stakingTimePortion = (stakingHours / 24) / stakingRevDays
 		}
 		//sum up denominator
 		totalPortion += i.Amount * stakingTimePortion
@@ -75,10 +75,10 @@ func stakingRevenueExec(conf config.MxpConfig) error {
 		var stakingTimePortion float64
 		//how many hours from startTime until now
 		stakingHours := time.Now().Sub(j.StartStakeTime).Hours()
-		if (stakingHours/24) >= stakingRevDays {
+		if (stakingHours / 24) >= stakingRevDays {
 			stakingTimePortion = 1
 		} else {
-			stakingTimePortion = (stakingHours/24)/stakingRevDays
+			stakingTimePortion = (stakingHours / 24) / stakingRevDays
 		}
 
 		//how much revenue this person should get.
