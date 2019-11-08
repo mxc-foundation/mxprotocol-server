@@ -75,8 +75,8 @@ class WithdrawForm extends FormComponent {
         
         <TextField
           id="destination"
-          label="Destination"
-          helperText="ETH Account."
+          label="To ETH Account"
+          helperText=""
           margin="normal"
           value={this.props.txinfo.account || ""}
           onChange={this.onChange}

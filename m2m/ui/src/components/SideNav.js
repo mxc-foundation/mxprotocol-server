@@ -178,7 +178,7 @@ class SideNav extends Component {
                   <ListItemIcon>
                     <AccessPoint />
                   </ListItemIcon>
-                  <ListItemText primary="LoRa Server" />
+                  <ListItemText primary="LPWAN Server" />
                 </ListItem>
                 <ListItem>
                   <ListItemText primary="Powered by" />

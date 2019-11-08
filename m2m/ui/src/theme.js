@@ -8,7 +8,7 @@ const blueMxcBrand = '#09006E';
 const blueBG = '#070033';
 const overlayBG = '#0C027060';
 const white = '#F9FAFC';
-const linkTextColor = '#CAFCF5';
+const linkTextColor = '#BBE9E8';
 
 const theme = createMuiTheme({
     palette: {
@@ -118,12 +118,6 @@ const theme = createMuiTheme({
           }
         }
       }, */
-      MuiTable: {
-        root: {
-          background: 'transparent',
-          //minWidth: 840,
-        }
-      },
       MuiDivider: {
         root: {
           backgroundColor: '#00000040',
@@ -131,6 +125,12 @@ const theme = createMuiTheme({
         },
         light: {
           backgroundColor: '#FFFFFF50',
+        }
+      },
+      MuiTable: {
+        root: {
+          background: 'transparent',
+          //minWidth: 840,
         }
       },
       MuiTableCell: {
@@ -183,21 +183,20 @@ const theme = createMuiTheme({
           boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
           "&:hover": {
             backgroundColor: "#00CCAE",
-            fontSize: '1rem'
           },
         },
         outlined: {
-          backgroundColor: blueBG,
+          backgroundColor: 'transparent',
           color: tealHighLight,
           //padding: 30,
           fontWeight: 900,
           lineHeight: 1.5,
           borderWidth: 2,
-          borderColor: tealHighLight,
+          borderColor: white,
           "&:hover": {
             backgroundColor: tealHighLight20,
             borderColor: "#00CCAE",
-            color: "#00CCAE",
+            color: white,
           },
         },
 /*         link: {
