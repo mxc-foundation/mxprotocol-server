@@ -3,9 +3,10 @@ import React from "react";
 import TextField from '@material-ui/core/TextField';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
+import TitleBarTitle from "../../components/TitleBarTitle";
 //import Button from "@material-ui/core/Button";
 import Spinner from "../../components/ScaleLoader"
-import { withRouter } from "react-router-dom";
+import { withRouter, Link  } from "react-router-dom";
 
 class WithdrawForm extends FormComponent {
   
@@ -87,6 +88,7 @@ class WithdrawForm extends FormComponent {
           
           fullWidth
         />
+        <TitleBarTitle component={Link} to={`/modify-account/${this.props.orgId}`} title="CHANGE ETH ACCOUNT" />
       </Form>
     );
   }
