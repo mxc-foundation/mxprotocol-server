@@ -166,7 +166,7 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/gateway')} primary="Gateway" />
           </ListItem>
-          <ListItem selected={active('')} button component={Link} to={``}>
+          <ListItem button component={Link} to={``}>
             <ListItemIcon>
               <Vote />
             </ListItemIcon>
