@@ -16,6 +16,7 @@ import CreditCard from "mdi-material-ui/CreditCard";
 import AccessPoint from "mdi-material-ui/AccessPoint";
 import Remote from "mdi-material-ui/Remote";
 import VideoInputAntenna from "mdi-material-ui/VideoInputAntenna";
+import Vote from "mdi-material-ui/Vote"
 
 import ServerInfoStore from "../stores/ServerInfoStore"
 import ProfileStore from "../stores/ProfileStore"
@@ -165,6 +166,12 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/gateway')} primary="Gateway" />
           </ListItem>
+          <ListItem button component={Link} to={``}>
+            <ListItemIcon>
+              <Vote />
+            </ListItemIcon>
+            <ListItemText classes={selected('')} primary="Staking" />
+          </ListItem>
 
               <List className={this.props.classes.card}>
               <Divider />
@@ -178,7 +185,7 @@ class SideNav extends Component {
                   <ListItemIcon>
                     <AccessPoint />
                   </ListItemIcon>
-                  <ListItemText primary="LoRa Server" />
+                  <ListItemText primary="LPWAN Server" />
                 </ListItem>
                 <ListItem>
                   <ListItemText primary="Powered by" />

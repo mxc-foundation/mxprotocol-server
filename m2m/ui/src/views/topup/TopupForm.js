@@ -38,7 +38,7 @@ class TopupForm extends FormComponent {
       >
         <TextField
           id="to"
-          label="From"
+          label="From ETH Account"
           margin="normal"
           value={this.props.reps.account || "Can not find any account."}
           InputProps={{
@@ -46,9 +46,10 @@ class TopupForm extends FormComponent {
           }}
           fullWidth
         />
+        <TitleBarTitle component={Link} to={`/modify-account/${this.props.orgId}`} title="CHANGE ETH ACCOUNT" />
         <TextField
           id="to"
-          label="To"
+          label="To ETH Account"
           margin="normal"
           value={this.props.reps.superNodeAccount || "Can not find any account."}
           InputProps={{
@@ -56,7 +57,6 @@ class TopupForm extends FormComponent {
           }}
           fullWidth
         />
-        <TitleBarTitle component={Link} to={`/modify-account/${this.props.orgId}`} title="CHANGE ETH ACCOUNT" />
       </Form>
     );
   }
