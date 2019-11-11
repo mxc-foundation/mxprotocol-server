@@ -71,21 +71,64 @@ func (*stakeInterface) Unstake(stakeId int64) error {
 }
 
 func (*stakeInterface) GetActiveStake(walletId int64) (stakeProfile types.Stake, err error) {
-	// TODO
-	return stakeProfile, nil
+
+	err = PgDB.QueryRow(
+		`SELECT
+			id, fk_wallet, amount, status, start_stake_time
+		FROM
+			stake 
+		WHERE
+			fk_wallet = $1 
+		AND
+			status = 'ACTIVE'
+		ORDER BY id DESC 
+		LIMIT 1  
+		;`, walletId).Scan(
+		&stakeProfile.Id,
+		&stakeProfile.FkWallet,
+		&stakeProfile.Amount,
+		&stakeProfile.Status,
+		&stakeProfile.StartStakeTime)
+	return stakeProfile, errors.Wrap(err, "db/pg_stake/GetActiveStake")
+
 }
 
-func (*stakeInterface) GetStakeHistory(walletId int64, offset int64, limit int64) (stakeProfiles []types.Stake, err error) {
-	// TODO
+func (*stakeInterface) getStakeHistory(walletId int64, offset int64, limit int64) (stakeProfiles []types.Stake, err error) {
+	// Can be added later to have a separated history page for stakes and another one for stake revenues
 	return stakeProfiles, nil
 }
 
-func (*stakeInterface) GetStakeHistoryCnt(walletId int64) (recCnt int64, err error) {
-	// TODO
+func (*stakeInterface) getStakeHistoryCnt(walletId int64) (recCnt int64, err error) {
+	// Can be added later to have a separated history page for stakes and another one for stake revenues
 	return recCnt, nil
 }
 
 func (*stakeInterface) GetActiveStakes() (stakeProfiles []types.Stake, err error) {
-	// TODO
-	return stakeProfiles, nil
+
+	rows, err := PgDB.Query(
+		`SELECT
+			id, fk_wallet, amount, status, start_stake_time
+		FROM
+			stake 
+		WHERE
+			status = 'ACTIVE'
+	;`)
+
+	defer rows.Close()
+
+	stakePrf := types.Stake{}
+
+	for rows.Next() {
+		rows.Scan(
+			&stakePrf.Id,
+			&stakePrf.FkWallet,
+			&stakePrf.Amount,
+			&stakePrf.Status,
+			&stakePrf.StartStakeTime,
+		)
+
+		stakeProfiles = append(stakeProfiles, stakePrf)
+	}
+	return stakeProfiles, errors.Wrap(err, "db/pg_stake/GetActiveStakes")
+
 }
