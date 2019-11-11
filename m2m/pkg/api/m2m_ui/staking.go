@@ -2,6 +2,7 @@ package ui
 
 import (
 	"context"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -104,24 +105,21 @@ func (s *StakingServerAPI) Unstake(ctx context.Context, req *api.UnstakeRequest)
 			return &api.UnstakeResponse{Status: "There is no active stake.", UserProfile: &userProfile}, nil
 		}
 
-		startTime, err := time.Parse(timeLayout, stakeProf.StartStakeTime.String())
-		if err != nil {
-			log.WithError(err).Error("startTime time format error")
-		}
-
 		//get the min day from config, and compare if already longer than the min day.
-		minStakeDays := config.MxpConfig{}.Staking.StakingMinDays
-
-		now, err := time.Parse(timeLayout, time.Now().String())
-		if err != nil {
-			log.WithError(err).Error("time.now format error")
-		}
+		minStakeDays := config.Cstruct.Staking.StakingMinDays
 
 		//check if it's longer than minStakeDays
-		//Todo: Change the org
-		period := now.Sub(startTime).Hours() //startTime.Sub(now)
+		period := time.Now().UTC().Sub(stakeProf.StartStakeTime).Hours() //startTime.Sub(now)
+
+		fmt.Println("start Time:", stakeProf.StartStakeTime)
+		fmt.Println("Now: ", time.Now().UTC())
+		fmt.Println("minStakeDays: ", minStakeDays)
+		fmt.Println("Period: ", period)
+
 		if (period / 24) < float64(minStakeDays) {
-			return &api.UnstakeResponse{Status: "The minimum unstake period is " + string(minStakeDays) + " days."}, nil
+			status := fmt.Sprintf("The minimum unstake period is %v days", minStakeDays)
+			return &api.UnstakeResponse{Status: status,
+				UserProfile:&userProfile}, nil
 		}
 
 		//update unstake time and status to DB.
