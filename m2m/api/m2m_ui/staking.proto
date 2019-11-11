@@ -6,20 +6,20 @@ import "google/api/annotations.proto";
 import "profile.proto";
 
 service StakingService {
-    rpc Stake(StakeRequest) returns (StakeResponse) {
-        option(google.api.http) = {
+    rpc Stake (StakeRequest) returns (StakeResponse) {
+        option (google.api.http) = {
             get: "/api/staking/{org_id}/stake"
         };
     };
 
-    rpc Unstake(UnstakeRequest) returns (UnstakeResponse) {
-        option(google.api.http) = {
+    rpc Unstake (UnstakeRequest) returns (UnstakeResponse) {
+        option (google.api.http) = {
             get: "/api/staking/{org_id}/unstake"
         };
     };
 
-    rpc GetStakingHistory(StakingHistoryRequest) returns (StakingHistoryResponse) {
-        option(google.api.http) = {
+    rpc GetStakingHistory (StakingHistoryRequest) returns (StakingHistoryResponse) {
+        option (google.api.http) = {
             get: "/api/staking/{org_id}/history"
         };
     };

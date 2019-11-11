@@ -15,7 +15,7 @@ import (
 
 var timeLayout = "2006-01-02 15:04:05"
 
-type StakingServerAPI struct{
+type StakingServerAPI struct {
 	serviceName string
 }
 
@@ -24,7 +24,7 @@ func NewStakingServerAPI() *StakingServerAPI {
 	return &StakingServerAPI{serviceName: "staking"}
 }
 
-func (s *StakingServerAPI) Stake (ctx context.Context, req *api.StakeRequest) (*api.StakeResponse, error){
+func (s *StakingServerAPI) Stake(ctx context.Context, req *api.StakeRequest) (*api.StakeResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
@@ -56,7 +56,7 @@ func (s *StakingServerAPI) Stake (ctx context.Context, req *api.StakeRequest) (*
 		//If this person has one staking in DB already, return.
 		var nilStake = types.Stake{}
 		if stakeProf != nilStake {
-			return &api.StakeResponse{Status:"There is already one active stake, you should do the unstake first.", UserProfile: &userProfile}, nil
+			return &api.StakeResponse{Status: "There is already one active stake, you should do the unstake first.", UserProfile: &userProfile}, nil
 		}
 
 		//add the stake value to DB
@@ -65,13 +65,13 @@ func (s *StakingServerAPI) Stake (ctx context.Context, req *api.StakeRequest) (*
 			log.WithError(err).Error("StakeAPI/Cannot insert new stake to DB")
 		}
 
-		return &api.StakeResponse{Status:"Stake successful.", UserProfile: &userProfile}, nil
+		return &api.StakeResponse{Status: "Stake successful.", UserProfile: &userProfile}, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "Internal error")
 }
 
-func (s *StakingServerAPI) Unstake (ctx context.Context, req *api.UnstakeRequest) (*api.UnstakeResponse, error) {
+func (s *StakingServerAPI) Unstake(ctx context.Context, req *api.UnstakeRequest) (*api.UnstakeResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
@@ -101,7 +101,7 @@ func (s *StakingServerAPI) Unstake (ctx context.Context, req *api.UnstakeRequest
 		//If this person has one staking in DB already, return.
 		var nilStake = types.Stake{}
 		if stakeProf == nilStake {
-			return &api.UnstakeResponse{Status:"There is no active stake.", UserProfile: &userProfile}, nil
+			return &api.UnstakeResponse{Status: "There is no active stake.", UserProfile: &userProfile}, nil
 		}
 
 		startTime, err := time.Parse(timeLayout, stakeProf.StartStakeTime.String())
@@ -120,8 +120,8 @@ func (s *StakingServerAPI) Unstake (ctx context.Context, req *api.UnstakeRequest
 		//check if it's longer than minStakeDays
 		//Todo: Change the org
 		period := now.Sub(startTime).Hours() //startTime.Sub(now)
-		if (period/24) < float64(minStakeDays) {
-			return &api.UnstakeResponse{Status:"The minimum unstake period is " + string(minStakeDays) + " days."}, nil
+		if (period / 24) < float64(minStakeDays) {
+			return &api.UnstakeResponse{Status: "The minimum unstake period is " + string(minStakeDays) + " days."}, nil
 		}
 
 		//update unstake time and status to DB.
@@ -130,13 +130,13 @@ func (s *StakingServerAPI) Unstake (ctx context.Context, req *api.UnstakeRequest
 			log.WithError(err).Error("StakeAPI/Cannot update unstake to DB")
 		}
 
-		return &api.UnstakeResponse{Status:"Unstake successful." ,UserProfile: &userProfile}, nil
+		return &api.UnstakeResponse{Status: "Unstake successful.", UserProfile: &userProfile}, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "Internal error")
 }
 
-func (s *StakingServerAPI) GetStakingHistory (ctx context.Context, req *api.StakingHistoryRequest) (*api.StakingHistoryResponse, error){
+func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.StakingHistoryRequest) (*api.StakingHistoryResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
 	switch res.Type {
@@ -155,7 +155,6 @@ func (s *StakingServerAPI) GetStakingHistory (ctx context.Context, req *api.Stak
 		log.WithFields(log.Fields{
 			"orgId": req.OrgId,
 		}).Debug("grpc_api/GetStakingHistory")
-
 
 		return &api.StakingHistoryResponse{UserProfile: &userProfile}, nil
 	}
