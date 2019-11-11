@@ -109,17 +109,12 @@ func (s *StakingServerAPI) Unstake(ctx context.Context, req *api.UnstakeRequest)
 		minStakeDays := config.Cstruct.Staking.StakingMinDays
 
 		//check if it's longer than minStakeDays
-		period := time.Now().UTC().Sub(stakeProf.StartStakeTime).Hours() //startTime.Sub(now)
-
-		fmt.Println("start Time:", stakeProf.StartStakeTime)
-		fmt.Println("Now: ", time.Now().UTC())
-		fmt.Println("minStakeDays: ", minStakeDays)
-		fmt.Println("Period: ", period)
+		period := time.Now().UTC().Sub(stakeProf.StartStakeTime).Hours()
 
 		if (period / 24) < float64(minStakeDays) {
 			status := fmt.Sprintf("The minimum unstake period is %v days", minStakeDays)
 			return &api.UnstakeResponse{Status: status,
-				UserProfile:&userProfile}, nil
+				UserProfile: &userProfile}, nil
 		}
 
 		//update unstake time and status to DB.
