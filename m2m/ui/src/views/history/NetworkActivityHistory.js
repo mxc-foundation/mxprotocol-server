@@ -84,11 +84,11 @@ class NetworkActivityHistory extends Component {
             header={
               <TableRow>
                 <TableCell align={'center'}>Time</TableCell>
-                <TableCell align={'right'}>Pkts Sent</TableCell>
-                <TableCell align={'right'}>Free Pkts</TableCell>
-                <TableCell align={'right'}>Received</TableCell>
-                <TableCell align={'right'}>Income</TableCell>
-                <TableCell align={'right'}>Cost</TableCell>
+                <TableCell align={'right'}>Packets Sent</TableCell>
+                <TableCell align={'right'}>Free Packets</TableCell>
+                <TableCell align={'right'}>Packets Received</TableCell>
+                <TableCell align={'right'}>Earned</TableCell>
+                <TableCell align={'right'}>Spent</TableCell>
                 <TableCell align={'right'}>Balance</TableCell>
               </TableRow>
             }
