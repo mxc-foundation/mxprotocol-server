@@ -33,6 +33,20 @@
             "required": true,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -99,6 +113,40 @@
     }
   },
   "definitions": {
+    "apiGetStakingHistory": {
+      "type": "object",
+      "properties": {
+        "stakeAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        },
+        "end": {
+          "type": "string"
+        },
+        "revMonth": {
+          "type": "string"
+        },
+        "networkIncome": {
+          "type": "number",
+          "format": "double"
+        },
+        "monthlyRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "revenue": {
+          "type": "number",
+          "format": "double"
+        },
+        "balance": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "apiOrganizationLink": {
       "type": "object",
       "properties": {
@@ -176,34 +224,15 @@
         "userProfile": {
           "$ref": "#/definitions/apiProfileResponse"
         },
-        "stakeAmount": {
-          "type": "number",
-          "format": "double"
+        "stakingHist": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiGetStakingHistory"
+          }
         },
-        "start": {
-          "type": "string"
-        },
-        "end": {
-          "type": "string"
-        },
-        "revMonth": {
-          "type": "string"
-        },
-        "networkIncome": {
-          "type": "number",
-          "format": "double"
-        },
-        "monthlyRate": {
-          "type": "number",
-          "format": "double"
-        },
-        "revenue": {
-          "type": "number",
-          "format": "double"
-        },
-        "balance": {
-          "type": "number",
-          "format": "double"
+        "count": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },

@@ -155,8 +155,41 @@ func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.Staki
 		log.WithFields(log.Fields{
 			"orgId": req.OrgId,
 		}).Debug("grpc_api/GetStakingHistory")
+		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
+		if err != nil {
+			log.WithError(err).Error("GetStakingHistory/Cannot get walletID from DB")
+		}
 
-		return &api.StakingHistoryResponse{UserProfile: &userProfile}, nil
+		stakingHists, err := db.StakeRevenue.GetStakeReveneuHistory(walletId, req.Offset, req.Limit)
+		if err != nil {
+			log.WithError(err).Error("GetStakingHistory/Cannot get histories from DB")
+		}
+
+		totalHists, err := db.StakeRevenue.GetStakeReveneuHistoryCnt(walletId)
+		if err != nil {
+			log.WithError(err).Error("GetStakingHistory/Cannot get total numbers of histories from DB")
+		}
+
+		resp := &api.StakingHistoryResponse{}
+
+		for _, v := range stakingHists {
+			stakeHist := &api.GetStakingHistory{}
+			stakeHist.StakeAmount = v.StakeAmount
+			stakeHist.Start = v.StartStakeTime.String()
+			stakeHist.End = v.StakingPeriodEnd.String()
+			stakeHist.RevMonth = time.Now().Month().String()
+			stakeHist.NetworkIncome = v.SuperNodeIncome
+			stakeHist.MonthlyRate = v.IncomeToStakePortion * 100
+			stakeHist.Revenue = v.RevenueAmount
+			stakeHist.Balance = v.UpdatedBalance
+
+			resp.StakingHist = append(resp.StakingHist, stakeHist)
+		}
+
+		resp.Count = totalHists
+		resp.UserProfile = &userProfile
+
+		return resp, nil
 	}
 
 	return nil, status.Errorf(codes.Unknown, "Internal error")
