@@ -23,13 +23,13 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 	}
 	log.Info("accounting/ Aggregation Period: ", aggPeriodId)
 
-	latestReceivdDlPktId, err := db.DlPacket.GetLastReceviedDlPktId()
+	latestReceivedDlPktId, err := db.DlPacket.GetLastReceivedDlPktId()
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("accounting/performAccounting: Unable to start accounting. aggPeriodId: %d", aggPeriodId))
 	}
 
-	if latestReceivdDlPktId < latestIdAccountedDlPkt {
-		return errors.New(fmt.Sprintf("accounting/performAccounting latestReceivdDlPktId < latestIdAccountedDlPkt!   aggPeriodId: %d", aggPeriodId))
+	if latestReceivedDlPktId < latestIdAccountedDlPkt {
+		return errors.New(fmt.Sprintf("accounting/performAccounting latestReceivedDlPktId < latestIdAccountedDlPkt!   aggPeriodId: %d", aggPeriodId))
 	}
 
 	MaxWalletId, errMaxWalletId := db.Wallet.GetMaxWalletId()
@@ -39,7 +39,7 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 
 	awuList := make([]types.AggWltUsg, MaxWalletId+1)
 
-	if err := getWltAggFromDlPkts(latestIdAccountedDlPkt+1, latestReceivdDlPktId, awuList); err != nil {
+	if err := getWltAggFromDlPkts(latestIdAccountedDlPkt+1, latestReceivedDlPktId, awuList); err != nil {
 		return err
 	}
 
@@ -60,7 +60,7 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 		return errors.Wrap(errWltId, "accounting/performAccounting")
 	}
 
-	err = db.AggPeriod.UpdateSuccessfulExecutedAggPeriod(aggPeriodId, latestReceivdDlPktId)
+	err = db.AggPeriod.UpdateSuccessfulExecutedAggPeriod(aggPeriodId, latestReceivedDlPktId)
 
 	if err != nil {
 		return errors.Wrap(err, "accounting/performAccounting: Unable to update agg_period")

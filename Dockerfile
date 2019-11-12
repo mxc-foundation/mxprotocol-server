@@ -18,5 +18,8 @@ FROM alpine:latest AS production
 WORKDIR /root/
 RUN apk --no-cache add ca-certificates
 RUN mkdir /etc/mxprotocol-server
-COPY --from=development /mxprotocol-server/m2m/build .
-ENTRYPOINT ["./m2m"]
+COPY --from=development /mxprotocol-server/m2m/build/ .
+COPY --from=development /mxprotocol-server/configuration/ .
+COPY --from=development /mxprotocol-server/m2m/scripts/init .
+RUN ["chmod", "+x", "./start"]
+ENTRYPOINT ["./start"]

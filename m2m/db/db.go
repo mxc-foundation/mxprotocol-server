@@ -11,6 +11,7 @@ import (
 )
 
 func Setup(conf config.MxpConfig) error {
+
 	i = &dbM2M
 	err := openDB(i, conf)
 	if err != nil {
@@ -33,84 +34,42 @@ func Setup(conf config.MxpConfig) error {
 		log.WithField("count", n).Info("db/PostgreSQL data migrations applied")
 	}
 
-	// testDb()
-
 	return nil
 }
 
 func dbInit() {
 	dbErrorInit()
 
-	if err := Wallet.CreateWalletTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateWalletTable")
+	var InitDbTableTasks = []func() error{
+
+		ConfigTable.CreateConfigTable,
+		Wallet.CreateWalletTable,
+		Wallet.CreateWalletFunctions,
+		InternalTx.CreateInternalTxTable,
+		ExtCurrency.CreateExtCurrencyTable,
+		ExtAccount.CreateExtAccountTable,
+		WithdrawFee.CreateWithdrawFeeTable,
+		Withdraw.CreateWithdrawTable,
+		Withdraw.CreateWithdrawFunctions,
+		Topup.CreateTopupTable,
+		Topup.CreateTopupFunctions,
+		Device.CreateDeviceTable,
+		Gateway.CreateGatewayTable,
+		DlPacket.CreateDlPktTable,
+		AggPeriod.CreateAggPeriodTable,
+		AggWalletUsage.CreateAggWltUsgTable,
+		AggWalletUsage.CreateAggWltUsgFunctions,
+		AggDeviceUsage.CreateAggDvUsgTable,
+		AggGatewayUsage.CreateAggGwUsgTable,
+		Stake.CreateStakeTable,
+		StakeRevenuePeriod.CreateStakeRevenuePeriodTable,
+		StakeRevenue.CreateStakeRevenueTable,
 	}
 
-	if err := Wallet.CreateWalletFunctions(); err != nil {
-		log.WithError(err).Fatal("db/CreateWalletFunctions")
-	}
-
-	if err := InternalTx.CreateInternalTxTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateInternalTxTable")
-	}
-
-	if err := ExtCurrency.CreateExtCurrencyTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateExtCurrencyTable")
-	}
-
-	if err := ExtAccount.CreateExtAccountTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateExtAccountTable")
-	}
-
-	if err := WithdrawFee.CreateWithdrawFeeTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateWithdrawFeeTable")
-	}
-
-	if err := Withdraw.CreateWithdrawTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateWithdrawTable")
-	}
-
-	if err := Withdraw.CreateWithdrawFunctions(); err != nil {
-		log.WithError(err).Fatal("db/CreateWithdrawFunctions")
-	}
-
-	if err := Topup.CreateTopupTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateTopupTable")
-	}
-
-	if err := Topup.CreateTopupFunctions(); err != nil {
-		log.WithError(err).Fatal("db/CreateTopupFunctions")
-	}
-
-	if err := Device.CreateDeviceTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateDeviceTable")
-	}
-
-	if err := Gateway.CreateGatewayTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateGatewayTable")
-	}
-
-	if err := AggPeriod.CreateAggPeriodTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateAggPeriodTable")
-	}
-
-	if err := AggWalletUsage.CreateAggWltUsgTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateAggWltUsgTable")
-	}
-
-	if err := AggWalletUsage.CreateAggWltUsgFunctions(); err != nil {
-		log.WithError(err).Fatal("db/CreateAggWltUsgFunctions")
-	}
-
-	if err := AggDeviceUsage.CreateAggDvUsgTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateAggDvUsgTable")
-	}
-
-	if err := AggGatewayUsage.CreateAggGwUsgTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateAggGwUsgTable")
-	}
-
-	if err := DlPacket.CreateDlPktTable(); err != nil {
-		log.WithError(err).Fatal("db/CreateDlPktTable")
+	for _, t := range InitDbTableTasks {
+		if err := t(); err != nil {
+			log.WithError(err).Fatal()
+		}
 	}
 
 	if err := ConfigTable.CreateConfigTable(); err != nil {

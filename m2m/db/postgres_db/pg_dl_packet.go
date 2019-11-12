@@ -198,7 +198,7 @@ func (*dlPacketInterface) GetAggDlPktFreeWallet(startIndDlPkt, endIndDlPkt int64
 	return walletId, count, nil
 }
 
-func (*dlPacketInterface) GetLastReceviedDlPktId() (latestId int64, err error) {
+func (*dlPacketInterface) GetLastReceivedDlPktId() (latestId int64, err error) {
 	err = PgDB.QueryRow(`
 		SELECT
 			MAX (id)
@@ -206,5 +206,5 @@ func (*dlPacketInterface) GetLastReceviedDlPktId() (latestId int64, err error) {
 			dl_pkt
 		;
 	`).Scan(&latestId)
-	return latestId, errors.Wrap(err, "db/pg_dl_pkt/getLastReceviedDlPktId")
+	return latestId, errors.Wrap(err, "db/pg_dl_pkt/GetLastReceivedDlPktId")
 }

@@ -11,7 +11,7 @@ type dlPacketDBInterface interface {
 	GetAggDlPktDeviceWallet(startIndDlPkt, endIndDlPkt int64) (walletId []int64, count []int64, err error)
 	GetAggDlPktGatewayWallet(startIndDlPkt, endIndDlPkt int64) (walletId []int64, count []int64, err error)
 	GetAggDlPktFreeWallet(startIndDlPkt, endIndDlPkt int64) (walletId []int64, count []int64, err error)
-	GetLastReceviedDlPktId() (latestId int64, err error)
+	GetLastReceivedDlPktId() (latestId int64, err error)
 }
 
 var DlPacket = dlPacketDBInterface(&pg.PgDlPacket)

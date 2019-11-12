@@ -71,7 +71,7 @@ class WithdrawStore extends EventEmitter {
       type: "CREATE_NOTIFICATION",
       notification: {
         type: "success",
-        message: "Withdrawal succeeded"
+        message: "Successful Withdraw"
       },
     });
   }

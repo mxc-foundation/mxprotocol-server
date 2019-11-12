@@ -126,7 +126,7 @@ class DeviceLayout extends Component {
                 <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
                 <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
               </TitleBar>
-              <div className={this.props.classes.subTitle2}>
+              <div className={this.props.classes.subTitle}>
                 Downlink fee {this.state.downlinkFee}MXC
               </div>
               </div>

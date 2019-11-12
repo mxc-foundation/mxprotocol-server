@@ -79,6 +79,11 @@ type MxpConfig struct {
 		RecheckStat int `mapstructure:"recheck_status_time_second"`
 	} `mapstructure:"withdraw"`
 
+	Staking struct {
+		StakingPercentage float64 `mapstructure:"staking_percentage"`
+		StakingMinDays    int     `mapstructure:"staking_min_days"`
+	} `mapstructure:"staking"`
+
 	Version string
 }
 
