@@ -93,16 +93,6 @@ func (*stakeInterface) GetActiveStake(walletId int64) (stakeProfile types.Stake,
 
 }
 
-func (*stakeInterface) getStakeHistory(walletId int64, offset int64, limit int64) (stakeProfiles []types.Stake, err error) {
-	// Can be added later to have a separated history page for stakes and another one for stake revenues
-	return stakeProfiles, nil
-}
-
-func (*stakeInterface) getStakeHistoryCnt(walletId int64) (recCnt int64, err error) {
-	// Can be added later to have a separated history page for stakes and another one for stake revenues
-	return recCnt, nil
-}
-
 func (*stakeInterface) GetActiveStakes() (stakeProfiles []types.Stake, err error) {
 
 	rows, err := PgDB.Query(
