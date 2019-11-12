@@ -30,7 +30,9 @@ func (*walletInterface) CreateWalletTable() error {
 			THEN
 				CREATE TYPE WALLET_TYPE AS ENUM (
 					'SUPER_ADMIN',
- 					'USER'
+					'SUPER_NODE_INCOME',
+					 'STAKE_STORAGE',
+					 'USER'
 		);
 		END IF;
 			CREATE TABLE IF NOT EXISTS wallet (
