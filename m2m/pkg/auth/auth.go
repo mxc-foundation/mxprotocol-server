@@ -339,3 +339,23 @@ func (s *InternalServerAPI) GetUserOrganizationList(ctx context.Context, req *ap
 
 	return nil, status.Errorf(codes.Unknown, "")
 }
+
+func (s *InternalServerAPI) GetUserProfile(ctx context.Context, req *api.GetUserProfileRequest) (*api.GetUserProfileResponse, error) {
+	userProfile, res := VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
+
+	switch res.Type {
+	case AuthFailed:
+		fallthrough
+	case JsonParseError:
+		fallthrough
+	case OrganizationIdMisMatch:
+
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
+
+	case OrganizationIdRearranged:
+		fallthrough
+	case OK:
+		return &api.GetUserProfileResponse{UserProfile: &userProfile}, nil
+	}
+	return nil, status.Errorf(codes.Unknown, "")
+}

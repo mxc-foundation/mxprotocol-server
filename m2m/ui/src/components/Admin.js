@@ -31,15 +31,10 @@ class Admin extends Component {
   }
 
   setIsAdmin() {
-    if (this.props.organizationID !== undefined) {
-      this.setState({
-        admin: SessionStore.isAdmin() || SessionStore.isOrganizationAdmin(this.props.organizationID),
-      });
-    } else {
       this.setState({
         admin: SessionStore.isAdmin(),
       });
-    }
+    console.log("#################",  SessionStore.isAdmin())
   }
 
   render() {

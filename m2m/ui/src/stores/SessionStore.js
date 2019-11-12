@@ -161,6 +161,7 @@ class SessionStore extends EventEmitter {
     this.setUsername(username);
     this.setOrganizationID(orgId);
     this.setOrganizationName(orgName);
+    this.fetchProfile()
   }
 
   login(login, callBackFunc) {
@@ -189,11 +190,14 @@ class SessionStore extends EventEmitter {
   }
 
   fetchProfile(callBackFunc) {
+    const orgId = this.getOrganizationID()
     this.swagger.then(client => {
-      client.apis.InternalService.Profile({})
+      client.apis.InternalService.GetUserProfile({
+        orgId: orgId
+      })
         .then(checkStatus)
         .then(resp => {
-          this.user = resp.obj.user;
+          this.user = resp.obj.userProfile.user;
 
           if(resp.obj.organizations !== undefined) {
             this.organizations = resp.obj.organizations;
@@ -204,10 +208,12 @@ class SessionStore extends EventEmitter {
           }
 
           this.emit("change");
-          callBackFunc();
+          //callBackFunc();
         })
         .catch(errorHandler);
     });
+
+    console.log("############### this.user", this.user)
   }
 
   globalSearch(search, limit, offset, callbackFunc) {

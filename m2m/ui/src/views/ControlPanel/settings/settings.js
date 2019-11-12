@@ -56,7 +56,7 @@ const NumberFormatPerc =(props) =>{
 	);
 }
 
-class Settings extends Component {
+class SystemSettings extends Component {
 	constructor(props) {
 		super(props);
 
@@ -227,4 +227,4 @@ class Settings extends Component {
 	}
 }
 
-export default withStyles(styles)(withRouter(Settings));
+export default withStyles(styles)(withRouter(SystemSettings));

@@ -17,7 +17,7 @@ import styles from "./HistoryStyle";
 
 
 
-class HistoryLayout extends Component {
+class SupernodeHistory extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -131,4 +131,4 @@ class HistoryLayout extends Component {
   }
 }
 
-export default withStyles(styles)(withRouter(HistoryLayout));
+export default withStyles(styles)(withRouter(SupernodeHistory));

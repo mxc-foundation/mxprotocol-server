@@ -25,11 +25,9 @@ import PageNextOutline from "mdi-material-ui/PageNextOutline";
 import PagePreviousOutline from "mdi-material-ui/PagePreviousOutline";
 import { getLoraHost } from "../util/M2mUtil";
 import styles from "./SideNavStyle";
-
-import WalletOutline from "mdi-material-ui/WalletOutline";
-import {BlurRadial,RadioTower, CommentQuestionOutline,PlaylistCheck, WrenchOutline,MapOutline} from "mdi-material-ui";
-
-import { SUPER_ADMIN } from "../util/M2mUtil";
+import Admin from "./Admin"
+import WalletOutline from "@material-ui/core/SvgIcon/SvgIcon";
+import {MapOutline, WrenchOutline} from "mdi-material-ui";
 
 
 
@@ -60,7 +58,6 @@ class SideNav extends Component {
     this.state = {
       open: true,
       //organization: {},
-      supernodeOrgID:'',
       organizationID: '',
       cacheCounter: 0,
       version: '1.0.0'
@@ -72,26 +69,14 @@ class SideNav extends Component {
     window.location.replace(`http://mxc.org/`);
   } 
 
-  isAdmin = false;
-
   loadData = async () => {
     try {
       const organizationID = SessionStore.getOrganizationID();
-      if (organizationID === SUPER_ADMIN) {
-        this.isAdmin = true;
-       this.setState({
-        supernodeOrgID:0
-      })
-
-      }else{
-          this.isAdmin = false;
-        }
       var data = await loadServerVersion();
       const serverInfo = JSON.parse(data);
       
       this.setState({
         organizationID,
-        
         version: serverInfo.version
       })
 
@@ -108,21 +93,14 @@ class SideNav extends Component {
   }
 
   onChange(e) {
-if(!this.isAdmin){
     SessionStore.setOrganizationID(e.target.value);
-    SessionStore.setOrganizationName(e.target.label);
+    
     this.setState({
       organizationID: e.target.value
     })
     
     const currentLocation = this.props.history.location.pathname.split('/')[1];
     this.props.history.push(`/${currentLocation}/${e.target.value}`);
-  }else{
-    this.setState({
-      supernodeOrgID: e.target.value
-    })
-  }
-
   }
 
   selectClicked = async () => {
@@ -130,7 +108,7 @@ if(!this.isAdmin){
   }
 
   render() {
-    const { organizationID,supernodeOrgID } = this.state;
+    const { organizationID } = this.state;
     const { pathname } = this.props.location;
 
     const active = (path) => Boolean(pathname.match(path));
@@ -149,99 +127,72 @@ if(!this.isAdmin){
         open={this.props.open}
         classes={{paper: this.props.classes.drawerPaper}}
       >
+        <Admin>
+          <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+            <ListItemIcon>
+              <CreditCard />
+            </ListItemIcon>
+            <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
+          </ListItem>
 
-{(this.isAdmin)&&<List>
-       
-        <ListItem selected={active('/control-panel/dashboard')} button component={Link} to={`/control-panel/dashboard/${organizationID}`}>
-          <ListItemIcon>
-            <WalletOutline />
-          </ListItemIcon>
-          <ListItemText classes={selected('/control-panel/dashboard')} primary="Dashboard" />
-        </ListItem>
+          <ListItem selected={active('/control-panel/history')} button component={Link} to={`/control-panel/history`}>
+            <ListItemIcon>
+              <CalendarCheckOutline />
+            </ListItemIcon>
+            <ListItemText classes={selected('/control-panel/history')} primary="History" />
+          </ListItem>
 
-        <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <CreditCard />
-          </ListItemIcon>
-          <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
-        </ListItem>
+          <ListItem selected={active('/control-panel/system-settings')} button component={Link} to={`/control-panel/system-settings`}>
+            <ListItemIcon>
+              <WrenchOutline />
+            </ListItemIcon>
+            <ListItemText classes={selected('/control-panel/system-settings')} primary="System Settings" />
+          </ListItem>
 
-        <ListItem selected={active('/control-panel/history')} button component={Link} to={`/control-panel/history`}>
-          <ListItemIcon>
-            <CalendarCheckOutline />
-          </ListItemIcon>
-          <ListItemText classes={selected('/control-panel/history')} primary="History" />
-        </ListItem>
-
-        <ListItem selected={active('/t')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <MapOutline />
-          </ListItemIcon>
-          <ListItemText classes={selected('/')} primary="Map" />
-        </ListItem>
-
-        <ListItem selected={active('/t')} button component={Link} to={`/modify-account/${organizationID}`}>
-          <ListItemIcon>
-            <WrenchOutline />
-          </ListItemIcon>
-          <ListItemText classes={selected('/')} primary="Staking" />
-        </ListItem>
-
-        <ListItem selected={active('/control-panel/system-settings')} button component={Link} to={`/control-panel/system-settings`}>
-          <ListItemIcon>
-            <WrenchOutline />
-          </ListItemIcon>
-          <ListItemText classes={selected('/control-panel/system-settings')} primary="System Settings" />
-        </ListItem>
-
-        <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${organizationID}`}>
+          <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${organizationID}`}>
             <ListItemIcon className={this.props.classes.iconStyle}>
               <PagePreviousOutline />
             </ListItemIcon>
             <ListItemText classes={selected('/withdraw')} primary="Withdraw" />
           </ListItem>
-
-  
-        </List>
-        }
-
-        {(organizationID) && <List className={this.props.classes.static}>
+        </Admin>
+        {organizationID && <List className={this.props.classes.static}>
           {/* <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}> */}
           <div>
             <DropdownMenu default={ this.state.default } onChange={this.onChange} />
           </div>
           {/* <Divider /> */}
-          {(!this.isAdmin) && <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${organizationID}`}>
+          <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${organizationID}`}>
             <ListItemIcon className={this.props.classes.iconStyle}>
               <PagePreviousOutline />
             </ListItemIcon>
             <ListItemText classes={selected('/withdraw')} primary="Withdraw" />
-          </ListItem>}
-          {(!this.isAdmin) &&  <ListItem selected={active('/topup')} button component={Link} to={`/topup/${organizationID}`}>
+          </ListItem>
+          <ListItem selected={active('/topup')} button component={Link} to={`/topup/${organizationID}`}>
             <ListItemIcon>
               <PageNextOutline />
             </ListItemIcon>
             <ListItemText classes={selected('/topup')} primary="Top up" />
-          </ListItem>}
-          <ListItem selected={active('/history')} button component={Link} to={!this.isAdmin?`/history/${organizationID}`:`/history/${this.state.supernodeOrgID}`}>
+          </ListItem>
+          <ListItem selected={active('/history')} button component={Link} to={`/history/${organizationID}`}>
             <ListItemIcon>
               <CalendarCheckOutline />
             </ListItemIcon>
             <ListItemText classes={selected('/history')} primary="History" />
           </ListItem>
-          {(!this.isAdmin) &&   <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+          <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
             <ListItemIcon>
               <CreditCard />
             </ListItemIcon>
             <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
-          </ListItem>}
-          <ListItem selected={active('/device')} button component={Link} to={!this.isAdmin?`/device/${organizationID}`:`/device/${this.state.supernodeOrgID}`}>
+          </ListItem>
+          <ListItem selected={active('/device')} button component={Link} to={`/device/${organizationID}`}>
             <ListItemIcon>
               <Remote />
             </ListItemIcon>
             <ListItemText classes={selected('/device')} primary="Device" />
           </ListItem>
-          <ListItem selected={active('/gateway')} button component={Link} to={!this.isAdmin?`/gateway/${organizationID}`:`/gateway/${this.state.supernodeOrgID}`}>
+          <ListItem selected={active('/gateway')} button component={Link} to={`/gateway/${organizationID}`}>
             <ListItemIcon>
               <VideoInputAntenna />
             </ListItemIcon>
@@ -254,9 +205,7 @@ if(!this.isAdmin){
             <ListItemText classes={selected('')} primary="Staking" />
           </ListItem>
 
-             
-
-      
+              <List className={this.props.classes.card}>
               <Divider />
                 <ListItem button className={this.props.classes.static}>  
                   <ListItemIcon>
@@ -280,24 +229,7 @@ if(!this.isAdmin){
                   <ListItemText secondary={`Version ${this.state.version}`} />
                 </ListItem>
               </List>
-     
-        }
-
-        {/*(this.isAdmin)&&<List>
-        <ListItem selected={active('/control-panel')} button component={Link} to={`/control-panel/${organizationID}`}>
-            <ListItemIcon>
-              <CreditCard />
-            </ListItemIcon>
-            <ListItemText classes={selected('/control-panel')} primary="Control Panel" />
-          </ListItem>
-        </List>
-          
-        */}
-
-      
-
-        
-
+        </List>}
       </Drawer>
     );
   }
