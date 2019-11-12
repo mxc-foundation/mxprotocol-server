@@ -21,7 +21,7 @@ func (*stakeInterface) CreateStakeTable() error {
 			THEN
 				CREATE TYPE stake_status AS ENUM (
 					'ACTIVE',
- 					'ARC'
+ 					'UNSTAKED'
 		);
 		END IF;
 		CREATE TABLE IF NOT EXISTS stake (
@@ -54,7 +54,7 @@ func (*stakeInterface) InsertStake(walletId int64, amount float64) (insertIndex 
 	`,
 		walletId,
 		amount,
-		types.STAKE_ACTIVE,
+		types.STAKING_ACTIVE,
 		time.Now().UTC(),
 	).Scan(&insertIndex)
 	return insertIndex, errors.Wrap(err, "db/pg_stake/InsertStake")
