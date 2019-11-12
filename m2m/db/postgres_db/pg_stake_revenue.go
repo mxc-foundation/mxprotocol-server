@@ -26,7 +26,7 @@ func (*stakeRevenueInterface) CreateStakeRevenueTable() error {
 	return errors.Wrap(err, "db/pg_stake_revenue/CreateStakeRevenueTable")
 }
 
-func (*stakeRevenueInterface) InsertStakeRevenue(stakeId int64, stakeReveneuPeriodId int64, revenueAmount float64) (insertIndex int64, err error) {
+func (*stakeRevenueInterface) InsertStakeRevenue(stakeId int64, stakeRevenuePeriodId int64, revenueAmount float64) (insertIndex int64, err error) {
 
 	/*
 		TODO
@@ -39,10 +39,10 @@ func (*stakeRevenueInterface) InsertStakeRevenue(stakeId int64, stakeReveneuPeri
 			insert internal_tx row
 	*/
 
-	return insertIndex, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/InsertStakeRevenue  stakeId: %d, stakeReveneuPeriodId: %d", stakeId, stakeReveneuPeriodId))
+	return insertIndex, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/InsertStakeRevenue  stakeId: %d, stakeRevenuePeriodId: %d", stakeId, stakeRevenuePeriodId))
 }
 
-func (*stakeRevenueInterface) GetStakeReveneuHistory(walletId int64, offset int64, limit int64) (stakeRevenueHists []types.StakeRevenueHist, err error) {
+func (*stakeRevenueInterface) GetStakeRevenueHistory(walletId int64, offset int64, limit int64) (stakeRevenueHists []types.StakeRevenueHist, err error) {
 
 	rows, err := PgDB.Query(
 		`SELECT 
@@ -77,7 +77,7 @@ func (*stakeRevenueInterface) GetStakeReveneuHistory(walletId int64, offset int6
 	;`, walletId, limit, offset)
 
 	if err != nil {
-		return stakeRevenueHists, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/GetStakeReveneuHistory  walletId: %d", walletId))
+		return stakeRevenueHists, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/GetStakeRevenueHistory  walletId: %d", walletId))
 	}
 
 	defer rows.Close()
@@ -102,10 +102,10 @@ func (*stakeRevenueInterface) GetStakeReveneuHistory(walletId int64, offset int6
 		stakeRevenueHists = append(stakeRevenueHists, srh)
 	}
 
-	return stakeRevenueHists, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/GetStakeReveneuHistory  walletId: %d", walletId))
+	return stakeRevenueHists, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/GetStakeRevenueHistory  walletId: %d", walletId))
 }
 
-func (*stakeRevenueInterface) GetStakeReveneuHistoryCnt(walletId int64) (recCnt int64, err error) {
+func (*stakeRevenueInterface) GetStakeRevenueHistoryCnt(walletId int64) (recCnt int64, err error) {
 
 	err = PgDB.QueryRow(`
 		SELECT 
@@ -121,5 +121,5 @@ func (*stakeRevenueInterface) GetStakeReveneuHistoryCnt(walletId int64) (recCnt 
 		;
 	`, walletId).Scan(&recCnt)
 
-	return recCnt, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/GetStakeReveneuHistoryCnt  walletId: %d", walletId))
+	return recCnt, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/GetStakeRevenueHistoryCnt  walletId: %d", walletId))
 }

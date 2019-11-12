@@ -153,12 +153,12 @@ func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.Staki
 			log.WithError(err).Error("GetStakingHistory/Cannot get walletID from DB")
 		}
 
-		stakingHists, err := db.StakeRevenue.GetStakeReveneuHistory(walletId, req.Offset, req.Limit)
+		stakingHists, err := db.StakeRevenue.GetStakeRevenueHistory(walletId, req.Offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("GetStakingHistory/Cannot get histories from DB")
 		}
 
-		totalHists, err := db.StakeRevenue.GetStakeReveneuHistoryCnt(walletId)
+		totalHists, err := db.StakeRevenue.GetStakeRevenueHistoryCnt(walletId)
 		if err != nil {
 			log.WithError(err).Error("GetStakingHistory/Cannot get total numbers of histories from DB")
 		}
