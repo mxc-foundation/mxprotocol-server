@@ -21,7 +21,7 @@ func (*stakeInterface) CreateStakeTable() error {
 			THEN
 				CREATE TYPE stake_status AS ENUM (
 					'ACTIVE',
- 					'ARC'
+ 					'UNSTAKED'
 		);
 		END IF;
 		CREATE TABLE IF NOT EXISTS stake (
@@ -54,7 +54,7 @@ func (*stakeInterface) InsertStake(walletId int64, amount float64) (insertIndex 
 	`,
 		walletId,
 		amount,
-		types.STAKE_ACTIVE,
+		types.STAKING_ACTIVE,
 		time.Now().UTC(),
 	).Scan(&insertIndex)
 	return insertIndex, errors.Wrap(err, "db/pg_stake/InsertStake")
@@ -91,16 +91,6 @@ func (*stakeInterface) GetActiveStake(walletId int64) (stakeProfile types.Stake,
 		&stakeProfile.StartStakeTime)
 	return stakeProfile, errors.Wrap(err, "db/pg_stake/GetActiveStake")
 
-}
-
-func (*stakeInterface) getStakeHistory(walletId int64, offset int64, limit int64) (stakeProfiles []types.Stake, err error) {
-	// Can be added later to have a separated history page for stakes and another one for stake revenues
-	return stakeProfiles, nil
-}
-
-func (*stakeInterface) getStakeHistoryCnt(walletId int64) (recCnt int64, err error) {
-	// Can be added later to have a separated history page for stakes and another one for stake revenues
-	return recCnt, nil
 }
 
 func (*stakeInterface) GetActiveStakes() (stakeProfiles []types.Stake, err error) {
