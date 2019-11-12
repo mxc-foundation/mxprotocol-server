@@ -211,10 +211,42 @@ func (*walletInterface) GetWalletIdSuperNode() (walletId int64, err error) {
 		WHERE
 			type = 'SUPER_ADMIN' 
 			ORDER BY id DESC 
-			LIMIT 1  -- altough only one super node exists
+			LIMIT 1  
 		;`).Scan(&walletId)
 
 	return walletId, errors.Wrap(err, "db/GetWalletIdSuperNode")
+}
+
+func (*walletInterface) GetWalletIdSuperNodeIncome() (walletId int64, err error) {
+
+	err = PgDB.QueryRow(
+		`SELECT
+			id
+		FROM
+			wallet 
+		WHERE
+			type = 'SUPER_NODE_INCOME' 
+			ORDER BY id DESC 
+			LIMIT 1 
+		;`).Scan(&walletId)
+
+	return walletId, errors.Wrap(err, "db/GetWalletIdSuperNodeIncome")
+}
+
+func (*walletInterface) GetWalletIdStakeStorage() (walletId int64, err error) {
+
+	err = PgDB.QueryRow(
+		`SELECT
+			id
+		FROM
+			wallet 
+		WHERE
+			type = 'STAKE_STORAGE' 
+			ORDER BY id DESC 
+			LIMIT 1 
+		;`).Scan(&walletId)
+
+	return walletId, errors.Wrap(err, "db/GetWalletIdSuperNodeIncome")
 }
 
 func (*walletInterface) updateBalanceByWalletId(walletId int64, newBalance float64) error {
