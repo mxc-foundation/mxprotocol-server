@@ -205,7 +205,7 @@ class SideNav extends Component {
             <ListItemText classes={selected('')} primary="Staking" />
           </ListItem>
 
-              <List className={this.props.classes.card}>
+          {/*<List className={this.props.classes.card}>*/}
               <Divider />
                 <ListItem button className={this.props.classes.static}>  
                   <ListItemIcon>
@@ -228,7 +228,7 @@ class SideNav extends Component {
                 <ListItem>
                   <ListItemText secondary={`Version ${this.state.version}`} />
                 </ListItem>
-              </List>
+          {/*</List>*/}
         </List>}
       </Drawer>
     );
