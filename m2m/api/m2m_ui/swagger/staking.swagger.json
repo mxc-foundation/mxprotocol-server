@@ -15,6 +15,31 @@
     "application/json"
   ],
   "paths": {
+    "/api/staking/{orgId}/activestakes": {
+      "get": {
+        "operationId": "GetActiveStakes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetActiveStakesResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "StakingService"
+        ]
+      }
+    },
     "/api/staking/{orgId}/history": {
       "get": {
         "operationId": "GetStakingHistory",
@@ -113,6 +138,43 @@
     }
   },
   "definitions": {
+    "apiActiveStake": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "FkWallet": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "StakeStatus": {
+          "type": "string"
+        },
+        "StartStakeTime": {
+          "type": "string"
+        },
+        "UnstakeTime": {
+          "type": "string"
+        }
+      }
+    },
+    "apiGetActiveStakesResponse": {
+      "type": "object",
+      "properties": {
+        "actStake": {
+          "$ref": "#/definitions/apiActiveStake"
+        },
+        "userProfile": {
+          "$ref": "#/definitions/apiProfileResponse"
+        }
+      }
+    },
     "apiGetStakingHistory": {
       "type": "object",
       "properties": {

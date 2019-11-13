@@ -14,6 +14,7 @@ type StakeRevenue struct {
 type StakeRevenueHist struct {
 	WalletId             int64
 	StakeAmount          float64
+	StakeStatus          StakeStatus
 	StartStakeTime       time.Time
 	UnstakeTime          time.Time
 	StakingPeriodStart   time.Time
