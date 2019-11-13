@@ -147,15 +147,15 @@ func (s *StakingServerAPI) GetActiveStakes(ctx context.Context, req *api.GetActi
 	case auth.OK:
 		log.WithFields(log.Fields{
 			"orgId": req.OrgId,
-		}).Debug("grpc_api/GetStakingHistory")
+		}).Debug("grpc_api/GetActiveStakes")
 		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
 		if err != nil {
-			log.WithError(err).Error("GetStakingHistory/Cannot get walletID from DB")
+			log.WithError(err).Error("GetActiveStakes/Cannot get walletID from DB")
 		}
 
 		stakeProf, err := db.Stake.GetActiveStake(walletId)
 		if err != nil {
-			log.WithError(err).Error("StakeAPI/Cannot get staking profile from DB")
+			log.WithError(err).Error("GetActiveStakes/Cannot get staking profile from DB")
 		}
 
 		actStake := &api.ActiveStake{}
