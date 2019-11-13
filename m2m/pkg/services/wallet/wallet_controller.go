@@ -73,7 +73,7 @@ func initControllingWallets() error {
 func userHasWallet(orgId int64) (int64, bool) {
 	walletId, err := db.Wallet.GetWalletIdFromOrgId(orgId)
 	if err != nil {
-		if strings.HasSuffix(err.Error(), db.DbError.NoRowQueryRes.Error()) {
+		if strings.HasSuffix(err.Error(), types.DbError.NoRowQueryRes.Error()) {
 			return 0, true
 		}
 
