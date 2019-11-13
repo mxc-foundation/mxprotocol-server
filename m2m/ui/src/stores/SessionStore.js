@@ -127,7 +127,7 @@ class SessionStore extends EventEmitter {
   }
 
   getUser() {
-    return this.user;
+    return JSON.parse(localStorage.getItem('user'));
   }
 
   getSettings() {
@@ -135,6 +135,7 @@ class SessionStore extends EventEmitter {
   }
 
   isAdmin() {
+    this.user = this.getUser()
     if (this.user === undefined || this.user === null) {
       return false;
     }
@@ -197,7 +198,7 @@ class SessionStore extends EventEmitter {
       })
         .then(checkStatus)
         .then(resp => {
-          this.user = resp.obj.userProfile.user;
+          localStorage.setItem("user", JSON.stringify(resp.obj.userProfile.user))
 
           if(resp.obj.organizations !== undefined) {
             this.organizations = resp.obj.organizations;
@@ -212,8 +213,6 @@ class SessionStore extends EventEmitter {
         })
         .catch(errorHandler);
     });
-
-    console.log("############### this.user", this.user)
   }
 
   globalSearch(search, limit, offset, callbackFunc) {

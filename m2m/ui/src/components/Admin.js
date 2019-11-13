@@ -34,7 +34,6 @@ class Admin extends Component {
       this.setState({
         admin: SessionStore.isAdmin(),
       });
-    console.log("#################",  SessionStore.isAdmin())
   }
 
   render() {
