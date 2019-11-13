@@ -26,6 +26,98 @@ func (*stakeRevenueInterface) CreateStakeRevenueTable() error {
 	return errors.Wrap(err, "db/pg_stake_revenue/CreateStakeRevenueTable")
 }
 
+func (*stakeRevenueInterface) CreateStakeRevenueFunctions() error {
+	_, err := PgDB.Exec(`
+
+	CREATE OR REPLACE FUNCTION stake_revenue_exec (
+
+
+		v_fk_stake_revenue_period INT,
+		v_fk_stake INT,		
+		v_revenue_amount NUMERIC(28,18),
+		v_time TIMESTAMP,
+		v_fk_wallet_supernode_income INT,
+		v_fk_wallet_user INT,
+		v_payment_cat PAYMENT_CATEGORY
+	) RETURNS  NUMERIC(28,18)
+	LANGUAGE plpgsql
+	AS $$
+
+	declare stake_rev_id INT;
+	declare updated_wlt_balance NUMERIC(28,18);
+
+	BEGIN
+
+	
+
+	UPDATE
+		wallet 
+	SET
+		balance = balance + v_revenue_amount,
+		tmp_balance = tmp_balance + v_revenue_amount
+		
+	WHERE
+		id = v_fk_wallet_user
+	RETURNING balance INTO updated_wlt_balance
+	;
+
+	UPDATE
+		wallet 
+	SET
+		balance = balance - v_revenue_amount,
+		tmp_balance = tmp_balance - v_revenue_amount
+		
+	WHERE
+		id = v_fk_wallet_supernode_income
+	;
+	 
+
+	INSERT INTO
+		stake_revenue (
+		fk_stake_revenue_period,
+		fk_stake ,
+		r_fk_wallet,
+		revenue_amount ,
+		updated_balance )
+	VALUES
+		(
+		v_fk_stake_revenue_period ,
+		v_fk_stake,
+		v_fk_wallet_user,		
+		v_revenue_amount,
+		updated_wlt_balance
+	)
+	RETURNING id INTO stake_rev_id;
+
+
+INSERT INTO internal_tx (
+		fk_wallet_sender,
+		fk_wallet_receiver,
+		payment_cat,
+		tx_internal_ref,
+		value,
+		time_tx )
+	VALUES (
+		v_fk_wallet_supernode_income,
+		v_fk_wallet_user,
+		v_payment_cat,
+		stake_rev_id,
+		v_revenue_amount,
+		v_time)
+		;
+
+
+
+	RETURN updated_wlt_balance;
+
+	END;
+	$$;
+
+	`)
+
+	return errors.Wrap(err, "db/CreateStakeRevenueFunctions")
+}
+
 func (*stakeRevenueInterface) InsertStakeRevenue(stakeId int64, stakeRevenuePeriodId int64, revenueAmount float64) (insertIndex int64, err error) {
 
 	/*
