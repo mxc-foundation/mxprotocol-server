@@ -2,6 +2,7 @@ package postgres_db
 
 import (
 	"strings"
+	"time"
 
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
@@ -327,4 +328,33 @@ func (*walletInterface) GetMaxWalletId() (maxWalletId int64, err error) {
 		;`).Scan(&maxWalletId)
 
 	return maxWalletId, errors.Wrap(err, "db/GetMaxWalletId")
+}
+func (*walletInterface) GetSupernodeIncomeAmount(since time.Time, until time.Time) (val float64, err error) {
+
+	snIncomeWlt, err := PgWallet.GetWalletIdSuperNodeIncome()
+	if err != nil {
+		return 0, errors.Wrap(err, "Impossible to get supernode walletId db/getSupernodeIncome/ ")
+	}
+
+	err = PgDB.QueryRow(
+		`SELECT 
+			COALESCE(SUM(value),0) as sum_income
+		FROM
+			internal_tx
+		WHERE
+			fk_wallet_receiver = $1
+		AND
+			time_tx 
+		BETWEEN  
+			$2
+		AND
+			$3
+		;`,
+		snIncomeWlt,
+		since,
+		until,
+	).Scan(&val)
+
+	return val, errors.Wrap(err, "db/getSupernodeIncome")
+
 }

@@ -1,6 +1,8 @@
 package db
 
 import (
+	"time"
+
 	pg "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db/postgres_db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
@@ -20,6 +22,7 @@ type walletDBInterface interface {
 	GetWalletIdStakeStorage() (walletId int64, err error)
 	TmpBalanceUpdatePktTx(dvWalletId, gwWalletId int64, amount float64) error
 	GetMaxWalletId() (maxWalletId int64, err error)
+	GetSupernodeIncomeAmount(since time.Time, until time.Time) (val float64, err error)
 }
 
 var Wallet = walletDBInterface(&pg.PgWallet)
