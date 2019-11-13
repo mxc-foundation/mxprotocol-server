@@ -11,10 +11,11 @@ import TitleBarTitle from "../../components/TitleBarTitle";
 import TitleBarButton from "../../components/TitleBarButton";
 import Typography from '@material-ui/core/Typography';
 import StakeForm from "./StakeForm";
+import StakeStore from "../../stores/StakeStore";
 import Button from "@material-ui/core/Button";
 //import Button from "@material-ui/core/Button";
 import Spinner from "../../components/ScaleLoader";
-import { YOUR_STAKE, STAKE_SET_SUCCESS, DISMISS, LEARN_MORE, MXC, UNSTAKE, STAKE, HISTORY } from "../../util/Messages"
+import { YOUR_STAKE, STAKE_SET_SUCCESS, DISMISS, LEARN_MORE, MXC, UNSTAKE, STAKE, HISTORY, WITHDRAW_STAKE } from "../../util/Messages"
 import { EXT_URL_STAKE } from "../../util/Data"
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter, Link  } from "react-router-dom";
@@ -26,6 +27,7 @@ class SetStake extends FormComponent {
   state = {
     amount: 0,
     revRate: 0,
+    isUnstake: false,
   }
 
   componentWillMount(){
@@ -33,7 +35,26 @@ class SetStake extends FormComponent {
       this.props.history.push(`/stake/${this.props.match.params.organizationID}`);
     }
   }
+
+  componentDidMount(){
+    this.loadData();
+  }
   
+  loadData = () => {
+    const resp = StakeStore.getStakingHistory(this.props.match.params.organizationID, 0, 1);
+    resp.then((res) => {
+      /* const amount = res.amount;
+      const isUnstake = res.length > 0 ? true: false; */
+      const amount = 200;
+      const isUnstake = true;
+
+      this.setState({
+        amount,
+        isUnstake
+      })
+    }) 
+  }
+
   onChange = (event) => {
     const { id, value } = event.target;
     
@@ -50,17 +71,11 @@ class SetStake extends FormComponent {
 
   confirmStake = (e, amount) => {
     e.preventDefault();
-    console.log(amount);
-    //const resp = SessionStore.getProfile();
-    /* resp.then((res) => {
-      let orgId = SessionStore.getOrganizationID();
-      const isBelongToOrg = res.body.organizations.some(e => e.organizationID === SessionStore.getOrganizationID());
-  
-      OrganizationStore.get(orgId, resp => {
-        openM2M(resp.organization, isBelongToOrg, '/withdraw');
-      });
-    }) */
-
+    
+    const resp = StakeStore.stake(this.props.match.params.organizationID, amount);
+    resp.then((res) => {
+      this.setState({ isUnstake: true});
+    }) 
   } 
 
   render() {
@@ -78,7 +93,7 @@ class SetStake extends FormComponent {
                     {/* <Divider light={true}/> */}
                     <div className={this.props.classes.between}>
                     <TitleBar>
-                        <TitleBarTitle title={STAKE} />
+                        <TitleBarTitle title={ this.state.isUnstake ? UNSTAKE: STAKE } />
                         {/* <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
                         <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
                         <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
@@ -89,7 +104,7 @@ class SetStake extends FormComponent {
                 </div>
             </Grid>
             <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pRight}>
-                <StakeForm label={UNSTAKE} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirmStake={this.confirmStake} />
+                <StakeForm label={this.state.isUnstake ? WITHDRAW_STAKE : STAKE} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirmStake={this.confirmStake} />
             </Grid>
             <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pLeft}>
                 <div className={clsx(this.props.classes.urStake, this.props.classes.between)}>
@@ -97,7 +112,7 @@ class SetStake extends FormComponent {
                         {YOUR_STAKE}
                     </Typography>
                     <Typography  /* className={this.props.classes.title} */ gutterBottom>
-                        200 {MXC}
+                        {this.state.amount} {MXC}
                     </Typography>
                 </div>
                 <div>

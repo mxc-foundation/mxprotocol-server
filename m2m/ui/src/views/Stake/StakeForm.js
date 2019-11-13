@@ -7,7 +7,7 @@ import TitleBarTitle from "../../components/TitleBarTitle";
 import Divider from '@material-ui/core/Divider';
 import Button from "@material-ui/core/Button";
 import Typography from '@material-ui/core/Typography';
-import { REVENUE_RATE, AMOUNT, CONFIRM_STAKE } from "../../util/Messages"
+import { REVENUE_RATE, AMOUNT, CONFIRM_STAKE, CONFIRM_UNSTAKE } from "../../util/Messages"
 import Spinner from "../../components/ScaleLoader"
 import { withRouter, Link  } from "react-router-dom";
 
@@ -41,14 +41,14 @@ class StakeForm extends FormComponent {
 
     return(
         <Form
-            submitLabel={CONFIRM_STAKE}
+            submitLabel={ this.props.isUnstake ? CONFIRM_UNSTAKE: CONFIRM_STAKE }
             extraButtons={extraButtons}
             onSubmit={(e) => this.props.confirmStake(e, {
             amount: parseFloat(this.props.amount),
             })}
         >
             <Typography  /* className={this.props.classes.title} */ gutterBottom>
-                Set Stake
+                {this.props.label}
             </Typography>
             <Divider light={true}/>
             <TextField

@@ -15,7 +15,9 @@ export const REVENUE_RATE = 'Revenue rate';
 export const YOUR_STAKE = 'Your Stake';
 export const STAKE_SET_SUCCESS = 'Congraturations! Your stake is set.';
 export const CONFIRM_STAKE = 'CONFIRM STAKE';
+export const CONFIRM_UNSTAKE = 'CONFIRM UNSTAKE';
 export const UNSTAKE = 'Unstake';
 export const STAKE = 'Set Stake';
 export const HISTORY = 'HISTORY';
+export const WITHDRAW_STAKE = 'Withdraw Stake';
 

@@ -7,54 +7,57 @@ import {checkStatus, errorHandler } from "./helpers";
 import dispatcher from "../dispatcher";
 
 
-class WalletStore extends EventEmitter {
+class StakeStore extends EventEmitter {
   constructor() {
     super();
-    this.swagger = new Swagger("/swagger/wallet.swagger.json", sessionStore.getClientOpts());
+    this.swagger = new Swagger("/swagger/staking.swagger.json", sessionStore.getClientOpts());
   }
 
-  getWalletBalance(orgId, callbackFunc) {
-    this.swagger.then(client => {
-      client.apis.WalletService.GetWalletBalance({
-        orgId,
-      })
-      .then(checkStatus)
-      //.then(updateOrganizations)
-      .then(resp => {
-        callbackFunc(resp.obj);
-      })
-      .catch(errorHandler);
-    });
+   async stake(orgId, amount) {
+    try {
+        const client = await this.swagger.then((client) => client);
+        let resp = await client.apis.StakingService.Stake({
+            "orgId": orgId,
+            body: {
+                amount
+            },
+        });
+    
+        resp = await checkStatus(resp);
+        return resp;
+      } catch (error) {
+        errorHandler(error);
+    }
+  } 
+
+  async unstake(orgId) {
+    try {
+        const client = await this.swagger.then((client) => client);
+        let resp = await client.apis.StakingService.Unstake({
+            orgId
+        });
+    
+        resp = await checkStatus(resp);
+        return resp;
+      } catch (error) {
+        errorHandler(error);
+    }
   }
 
-  getDlPrice(orgId, callbackFunc) {
-    this.swagger.then(client => {
-      client.apis.WalletService.GetDlPrice({
-        orgId,
-      })
-      .then(checkStatus)
-      //.then(updateOrganizations)
-      .then(resp => {
-        callbackFunc(resp.obj);
-      })
-      .catch(errorHandler);
-    });
-  }
-
-  getWalletUsageHist(orgId, offset, limit, callbackFunc) {
-    this.swagger.then(client => {
-      client.apis.WalletService.GetWalletUsageHist({
-        orgId,
-        offset,
-        limit
-      })
-      .then(checkStatus)
-      //.then(updateOrganizations)
-      .then(resp => {
-        callbackFunc(resp.body);
-      })
-      .catch(errorHandler);
-    });
+  async getStakingHistory(orgId, offset, limit) {
+    try {
+        const client = await this.swagger.then((client) => client);
+        let resp = await client.apis.StakingService.GetStakingHistory({
+            orgId,
+            offset,
+            limit
+        });
+    
+        resp = await checkStatus(resp);
+        return resp;
+      } catch (error) {
+        errorHandler(error);
+    }
   }
 
   notify(action) {
@@ -62,11 +65,11 @@ class WalletStore extends EventEmitter {
       type: "CREATE_NOTIFICATION",
       notification: {
         type: "success",
-        message: "Balance has been " + action,
+        message: "Stake has been " + action,
       },
     });
   }
 }
 
-const walletStore = new WalletStore();
-export default walletStore;
+const stakeStore = new StakeStore();
+export default stakeStore;
