@@ -10,6 +10,7 @@ type walletDBInterface interface {
 	CreateWalletFunctions() error
 	InsertWallet(orgId int64, walletType types.WalletType) (insertIndex int64, err error)
 	InsertNodeIncomeWallet() (insertIndex int64, err error)
+	InsertStakeStorageWallet() (insertIndex int64, err error)
 	GetWalletIdFromOrgId(orgIdLora int64) (int64, error)
 	GetWalletBalance(walletId int64) (float64, error)
 	SyncTmpBalance(walletId int64) (balance float64, err error)

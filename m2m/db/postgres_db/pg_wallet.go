@@ -118,7 +118,7 @@ func (*walletInterface) InsertNodeIncomeWallet() (insertIndex int64, err error) 
 	if err == nil {
 		return id, err
 	} else if strings.HasSuffix(err.Error(), types.DbError.NoRowQueryRes.Error()) {
-
+		//  there is no existing record for NodeIncome
 		w := wallet{
 			FkOrgLa:    -1,
 			TypeW:      string(types.SUPER_NODE_INCOME),
@@ -128,7 +128,28 @@ func (*walletInterface) InsertNodeIncomeWallet() (insertIndex int64, err error) 
 		return insertWallet(w)
 
 	} else {
-		return 0, err
+		return 0, errors.Wrap(err, "db/InsertNodeIncomeWallet")
+	}
+
+}
+
+func (*walletInterface) InsertStakeStorageWallet() (insertIndex int64, err error) {
+
+	id, err := PgWallet.GetWalletIdStakeStorage()
+	if err == nil {
+		return id, err
+	} else if strings.HasSuffix(err.Error(), types.DbError.NoRowQueryRes.Error()) {
+		//  there is no existing record for StakeStorage
+		w := wallet{
+			FkOrgLa:    -2,
+			TypeW:      string(types.STAKE_STORAGE),
+			Balance:    0.0,
+			TmpBalance: 0.0,
+		}
+		return insertWallet(w)
+
+	} else {
+		return 0, errors.Wrap(err, "db/InsertStakeStorageWallet")
 	}
 
 }
