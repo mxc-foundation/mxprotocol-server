@@ -128,7 +128,7 @@ class SideNav extends Component {
         classes={{paper: this.props.classes.drawerPaper}}
       >
         <Admin>
-          <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
+          <ListItem selected={active('/control-panel/modify-account')} button component={Link} to={`/control-panel/modify-account`}>
             <ListItemIcon>
               <CreditCard />
             </ListItemIcon>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 
 import Grid from '@material-ui/core/Grid';
@@ -13,79 +13,28 @@ import ModifyEthAccountForm from "./ModifyEthAccountForm";
 import NewEthAccountForm from "./NewEthAccountForm";
 import styles from "./EthAccountStyle";
 import { ETHER } from "../../util/Coin-type";
-import { SUPER_ADMIN } from "../../util/M2mUtil";
 
-
-
-
-function verifyUser (resp) {
-  const login = {};
-  login.username = resp.username;
-  login.password = resp.password;
-  
-  return new Promise((resolve, reject) => {
-    SessionStore.login(login, (resp) => {
-      if(resp){
-        resolve(resp);
-      } else {
-        alert("inccorect username or password.");
-        return false;
-      }
-    })
-  });
-}
-
-function modifyAccount (req, orgId) {
-  req.moneyAbbr = ETHER;
-  req.orgId = orgId;
-  return new Promise((resolve, reject) => {
-    MoneyStore.modifyMoneyAccount(req, resp => {
-      resolve(resp);
-    })
-  });
-}
-
-function createAccount (req, orgId) {
-  req.moneyAbbr = ETHER;
-  return new Promise((resolve, reject) => {
-    SupernodeStore.addSuperNodeMoneyAccount(req, orgId, resp => {
-      resolve(resp);
-    })
-  });
-}
 
 class ModifyEthAccount extends Component {
   constructor() {
       super();
-      this.state = {};
+      this.state = {
+        activeAccount: '0'
+      };
       this.loadData = this.loadData.bind(this);
-      
     }
-    isAdmin = false;
-
+    
     componentDidMount() {
       this.loadData();
     }
     
-    
     loadData() {
       const orgId = this.props.match.params.organizationID;
-
-      if (orgId === SUPER_ADMIN) {
-        this.isAdmin = true;
-        SupernodeStore.getSuperNodeActiveMoneyAccount(ETHER, orgId, resp => {
-          this.setState({
-            activeAccount: resp.supernodeActiveAccount,
-          });
+      MoneyStore.getActiveMoneyAccount(ETHER, orgId, resp => {
+        this.setState({
+          activeAccount: resp.activeAccount,
         });
-      }else{
-        this.isAdmin = false;
-        MoneyStore.getActiveMoneyAccount(ETHER, orgId, resp => {
-          this.setState({
-            activeAccount: resp.activeAccount,
-          });
-        });
-      }
+      });
     }
 
     componentDidUpdate(oldProps) {
@@ -96,6 +45,33 @@ class ModifyEthAccount extends Component {
       this.loadData();
     }
 
+    verifyUser(resp) {
+      const loginBody = {};
+      loginBody.username = resp.username;
+      loginBody.password = resp.password;
+
+      return new Promise((resolve, reject) => {
+        SessionStore.login(loginBody, (resp) => {
+          if(resp){
+            resolve(resp);
+          } else {
+            alert("inccorect username or password.");
+            return false;
+          }
+        })
+      });
+    }
+
+    modifyAccount(req, orgId) {
+      req.moneyAbbr = ETHER;
+      req.orgId = orgId;
+      return new Promise((resolve, reject) => {
+        MoneyStore.modifyMoneyAccount(req, resp => {
+          resolve(resp);
+        })
+      });
+    }
+
     onSubmit = async (resp) => {
       const orgId = this.props.match.params.organizationID;
       
@@ -104,15 +80,10 @@ class ModifyEthAccount extends Component {
           alert('inccorect username or password.');
           return false;
         }
-        const isOK = await verifyUser(resp);
+        const isOK = await this.verifyUser(resp);
         
-        if(orgId == 0 && isOK) {
-          const res = await createAccount(resp, orgId);
-          if(res.status){
-            window.location.reload();
-          }
-        }else{
-          const res = await modifyAccount(resp, orgId);
+        if(isOK) {
+          const res = await this.modifyAccount(resp, orgId);
           if(res.status){
             window.location.reload();
           }
@@ -124,17 +95,12 @@ class ModifyEthAccount extends Component {
     } 
 
   render() {
-    
-    const organizationID = this.props.match.params.organizationID;
-    
-    
     return(
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
-                  <TitleBarTitle title={this.isAdmin?'Super Node ETH Account':'ETH Account'} />
-                 
+                  <TitleBarTitle title="ETH Account" />
                 </TitleBar>
                 {/* <Divider light={true}/>
                 <div className={this.props.classes.breadcrumb}>
@@ -158,12 +124,10 @@ class ModifyEthAccount extends Component {
           <NewEthAccountForm
             submitLabel="Confirm"
             onSubmit={this.onSubmit}
-            //isAdmin={isAdmin}
           />
           }
         </Grid>
         <Grid item xs={6}>
-          
         </Grid>
       </Grid>
     );
