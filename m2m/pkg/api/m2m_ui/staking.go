@@ -129,6 +129,49 @@ func (s *StakingServerAPI) Unstake(ctx context.Context, req *api.UnstakeRequest)
 	return nil, status.Errorf(codes.Unknown, "Internal error")
 }
 
+func (s *StakingServerAPI) GetActiveStakes(ctx context.Context, req *api.GetActiveStakesRequest) (*api.GetActiveStakesResponse, error) {
+	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
+
+	switch res.Type {
+	case auth.AuthFailed:
+		fallthrough
+	case auth.JsonParseError:
+		fallthrough
+	case auth.OrganizationIdMisMatch:
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
+
+	case auth.OrganizationIdRearranged:
+		return &api.GetActiveStakesResponse{UserProfile: &userProfile},
+			status.Errorf(codes.NotFound, "This organization has been deleted from this user's profile.")
+
+	case auth.OK:
+		log.WithFields(log.Fields{
+			"orgId": req.OrgId,
+		}).Debug("grpc_api/GetStakingHistory")
+		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
+		if err != nil {
+			log.WithError(err).Error("GetStakingHistory/Cannot get walletID from DB")
+		}
+
+		stakeProf, err := db.Stake.GetActiveStake(walletId)
+		if err != nil {
+			log.WithError(err).Error("StakeAPI/Cannot get staking profile from DB")
+		}
+
+		actStake := &api.ActiveStake{}
+		actStake.Id = stakeProf.Id
+		actStake.FkWallet = stakeProf.FkWallet
+		actStake.Amount = stakeProf.Amount
+		actStake.StakeStatus = string(stakeProf.Status)
+		actStake.StartStakeTime = stakeProf.StartStakeTime.String()
+		actStake.UnstakeTime = stakeProf.UnstakeTime.String()
+
+		return &api.GetActiveStakesResponse{ActStake: actStake, UserProfile: &userProfile}, nil
+	}
+
+	return nil, status.Errorf(codes.Unknown, "Internal error")
+}
+
 func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.StakingHistoryRequest) (*api.StakingHistoryResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
