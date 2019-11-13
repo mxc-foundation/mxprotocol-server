@@ -1,6 +1,8 @@
 package postgres_db
 
 import (
+	"strings"
+
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
@@ -80,14 +82,7 @@ func (*walletInterface) CreateWalletFunctions() error {
 
 }
 
-func (*walletInterface) InsertWallet(orgId int64, walletType types.WalletType) (insertIndex int64, err error) {
-	w := wallet{
-		FkOrgLa:    orgId,
-		TypeW:      string(walletType),
-		Balance:    0.0,
-		TmpBalance: 0.0,
-	}
-
+func insertWallet(w wallet) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO wallet (
 			fk_org_la ,
@@ -103,8 +98,39 @@ func (*walletInterface) InsertWallet(orgId int64, walletType types.WalletType) (
 		w.Balance,
 		w.TmpBalance).Scan(&insertIndex)
 
-	// fmt.Println(val, err)
-	return insertIndex, errors.Wrap(err, "db/InsertWallet")
+	return insertIndex, errors.Wrap(err, "db/insertWallet")
+}
+
+func (*walletInterface) InsertWallet(orgId int64, walletType types.WalletType) (insertIndex int64, err error) {
+	w := wallet{
+		FkOrgLa:    orgId,
+		TypeW:      string(walletType),
+		Balance:    0.0,
+		TmpBalance: 0.0,
+	}
+
+	return insertWallet(w)
+}
+
+func (*walletInterface) InsertNodeIncomeWallet() (insertIndex int64, err error) {
+
+	id, err := PgWallet.GetWalletIdSuperNodeIncome()
+	if err == nil {
+		return id, err
+	} else if strings.HasSuffix(err.Error(), types.DbError.NoRowQueryRes.Error()) {
+
+		w := wallet{
+			FkOrgLa:    -1,
+			TypeW:      string(types.SUPER_NODE_INCOME),
+			Balance:    0.0,
+			TmpBalance: 0.0,
+		}
+		return insertWallet(w)
+
+	} else {
+		return 0, err
+	}
+
 }
 
 func (*walletInterface) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
