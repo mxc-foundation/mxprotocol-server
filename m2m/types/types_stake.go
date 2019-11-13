@@ -14,6 +14,6 @@ type Stake struct {
 type StakeStatus string
 
 const (
-	STAKE_ACTIVE StakeStatus = "ACTIVE"
-	STAKE_ARC    StakeStatus = "ARC"
+	STAKING_ACTIVE   StakeStatus = "ACTIVE"
+	STAKING_UNSTAKED StakeStatus = "UNSTAKED"
 )

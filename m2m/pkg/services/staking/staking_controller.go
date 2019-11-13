@@ -1,6 +1,7 @@
 package staking
 
 import (
+	"fmt"
 	"github.com/robfig/cron"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -14,10 +15,12 @@ func Setup(conf config.MxpConfig) error {
 	//first day of the month at 12:00 (24-hour)
 	err := c.AddFunc("0 0 12 1 * ?", func() {
 		log.Info("Start stakingRevenueExec")
-		err := stakingRevenueExec(conf)
-		if err != nil {
-			log.WithError(err).Error("StakingRevenue Error")
-		}
+		go func() {
+			err := stakingRevenueExec(conf)
+			if err != nil {
+				log.WithError(err).Error("StakingRevenue Error")
+			}
+		}()
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -31,7 +34,8 @@ func Setup(conf config.MxpConfig) error {
 func stakingRevenueExec(conf config.MxpConfig) error {
 	//get income from DB, since is one month ago.
 	//superNodeIncome (since time.Time, until time.Time)
-	income := 12345.1232
+	//Todo: edit this prat later
+	income := 10000.00
 
 	t := time.Now()
 	//first date of month 00:00:00
@@ -61,7 +65,7 @@ func stakingRevenueExec(conf config.MxpConfig) error {
 
 		var stakingTimePortion float64
 		//how many hours from startTime until now
-		stakingHours := time.Now().Sub(i.StartStakeTime).Hours() //i.StartStakeTime.Sub(time.Now()).Hours()
+		stakingHours := time.Now().Sub(i.StartStakeTime).Hours()
 		if (stakingHours / 24) >= stakingRevDays {
 			stakingTimePortion = 1
 		} else {
@@ -89,12 +93,23 @@ func stakingRevenueExec(conf config.MxpConfig) error {
 		if err != nil {
 			log.WithError(err).Error("stakingRevenueExec/Cannot update revenue to DB")
 		}
+
+		//Todo: only for the testing
+		fmt.Println("stakingDays: ", stakingHours/24)
+		fmt.Println("revenueAmount: ", revenueAmount)
 	}
 
 	//when all the process finished, give the time to DB.
 	if err := db.StakeRevenuePeriod.UpdateCompletedStakeReveneuPeriod(stakeRevPeriodId); err != nil {
 		log.WithError(err).Error("stakingRevenueExec/Cannot update revenueTime to DB")
 	}
+
+	//Todo: only for the testing
+	fmt.Println("startTime: ", startTime)
+	fmt.Println("endTime: ", endTime)
+	fmt.Println("lastDate: ", lastDate)
+	fmt.Println("stakingRevDays: ", stakingRevDays)
+	fmt.Println("TotalProtaion: ", totalPortion)
 
 	return nil
 }
