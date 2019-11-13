@@ -158,6 +158,11 @@ func (s *StakingServerAPI) GetActiveStakes(ctx context.Context, req *api.GetActi
 			log.WithError(err).Error("GetActiveStakes/Cannot get staking profile from DB")
 		}
 
+		//var nilStake = types.Stake{}
+		if stakeProf.Status == "" {
+			return &api.GetActiveStakesResponse{UserProfile: &userProfile}, nil
+		}
+
 		actStake := &api.ActiveStake{}
 		actStake.Id = stakeProf.Id
 		actStake.FkWallet = stakeProf.FkWallet
