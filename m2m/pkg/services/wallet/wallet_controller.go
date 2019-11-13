@@ -52,7 +52,7 @@ func initExtCurrencyTable() error {
 func initControllingWallets() error {
 
 	// SUPER_ADMIN wallet is separately initialized
-	if _, errIns := db.Wallet.InsertNodeIncomeWallet(); errIns != nil {
+	if _, errIns := db.Wallet.InsertSuperNodeIncomeWallet(); errIns != nil {
 		return errors.Wrap(errIns, "wallet_controller/initControllingWallets/ ")
 	}
 

@@ -112,7 +112,7 @@ func (*walletInterface) InsertWallet(orgId int64, walletType types.WalletType) (
 	return insertWallet(w)
 }
 
-func (*walletInterface) InsertNodeIncomeWallet() (insertIndex int64, err error) {
+func (*walletInterface) InsertSuperNodeIncomeWallet() (insertIndex int64, err error) {
 
 	id, err := PgWallet.GetWalletIdSuperNodeIncome()
 	if err == nil {
@@ -128,7 +128,7 @@ func (*walletInterface) InsertNodeIncomeWallet() (insertIndex int64, err error) 
 		return insertWallet(w)
 
 	} else {
-		return 0, errors.Wrap(err, "db/InsertNodeIncomeWallet")
+		return 0, errors.Wrap(err, "db/InsertSuperNodeIncomeWallet")
 	}
 
 }
