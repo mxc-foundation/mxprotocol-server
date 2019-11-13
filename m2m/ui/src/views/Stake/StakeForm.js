@@ -7,6 +7,7 @@ import TitleBarTitle from "../../components/TitleBarTitle";
 import Divider from '@material-ui/core/Divider';
 import Button from "@material-ui/core/Button";
 import Typography from '@material-ui/core/Typography';
+import StakeStore from "../../stores/StakeStore";
 import { REVENUE_RATE, AMOUNT, CONFIRM_STAKE, CONFIRM_UNSTAKE } from "../../util/Messages"
 import Spinner from "../../components/ScaleLoader"
 import { withRouter, Link  } from "react-router-dom";
@@ -15,6 +16,14 @@ class StakeForm extends FormComponent {
   
   state = {
     amount: ''
+  }
+
+  componentDidMount(){
+    this.loadData();
+  }
+  
+  loadData = () => {
+     
   }
 
   onChange = (event) => {

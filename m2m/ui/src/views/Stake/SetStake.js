@@ -41,18 +41,20 @@ class SetStake extends FormComponent {
   }
   
   loadData = () => {
-    const resp = StakeStore.getStakingHistory(this.props.match.params.organizationID, 0, 1);
+    const resp = StakeStore.getActiveStakes(this.props.match.params.organizationID);
     resp.then((res) => {
-      /* const amount = res.amount;
-      const isUnstake = res.length > 0 ? true: false; */
-      const amount = 200;
-      const isUnstake = true;
-
+      console.log(res);
+      let amount = 0;
+      let isUnstake = false;
+      if( true){
+        amount = res.actStake.Amount;
+        isUnstake = true;
+      }
       this.setState({
         amount,
         isUnstake
       })
-    }) 
+    })
   }
 
   onChange = (event) => {
@@ -104,7 +106,7 @@ class SetStake extends FormComponent {
                 </div>
             </Grid>
             <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pRight}>
-                <StakeForm label={this.state.isUnstake ? WITHDRAW_STAKE : STAKE} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirmStake={this.confirmStake} />
+                <StakeForm isUnstake={this.state.isUnstake} label={this.state.isUnstake ? WITHDRAW_STAKE : STAKE} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirmStake={this.confirmStake} />
             </Grid>
             <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pLeft}>
                 <div className={clsx(this.props.classes.urStake, this.props.classes.between)}>

@@ -44,6 +44,20 @@ class StakeStore extends EventEmitter {
     }
   }
 
+  async getActiveStakes(orgId) {
+    try {
+        const client = await this.swagger.then((client) => client);
+        let resp = await client.apis.StakingService.GetActiveStakes({
+            orgId
+        });
+    
+        resp = await checkStatus(resp);
+        return resp.body;
+      } catch (error) {
+        errorHandler(error);
+    }
+  }
+
   async getStakingHistory(orgId, offset, limit) {
     try {
         const client = await this.swagger.then((client) => client);
