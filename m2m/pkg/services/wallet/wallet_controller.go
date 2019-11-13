@@ -52,16 +52,12 @@ func initExtCurrencyTable() error {
 func initControllingWallets() error {
 
 	// SUPER_ADMIN wallet is separately initialized
-
-	_, err := db.Wallet.InsertWallet(-1, types.SUPER_NODE_INCOME)
-
-	if err != nil {
-		return errors.Wrap(err, "InitControllingWallets -> SUPER_NODE_INCOME")
+	if _, errIns := db.Wallet.InsertNodeIncomeWallet(); errIns != nil {
+		return errors.Wrap(errIns, "wallet_controller/initControllingWallets/ ")
 	}
-	_, err = db.Wallet.InsertWallet(-2, types.STAKE_STORAGE)
 
-	if err != nil {
-		return errors.Wrap(err, "InitControllingWallets -> STAKE_STORAGE")
+	if _, errIns := db.Wallet.InsertStakeStorageWallet(); errIns != nil {
+		return errors.Wrap(errIns, "wallet_controller/initControllingWallets/ ")
 	}
 
 	return nil
