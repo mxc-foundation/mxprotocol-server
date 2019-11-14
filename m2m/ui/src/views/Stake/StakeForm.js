@@ -45,7 +45,7 @@ class StakeForm extends FormComponent {
       return(<Spinner on={this.state.loading}/>);
     } */
     const extraButtons = <>
-      <Button color="primary.main" onClick={this.handleOpenAXS} type="button" disabled={false}>CANCEL</Button>
+      <Button  variant="outlined" color="inherit" onClick={this.handleOpenAXS} type="button" disabled={false}>CANCEL</Button>
     </>;
 
     return(

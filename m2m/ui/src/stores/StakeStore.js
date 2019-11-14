@@ -14,7 +14,6 @@ class StakeStore extends EventEmitter {
   }
 
    async stake(req) {
-     console.log(req);
     try {
         const client = await this.swagger.then((client) => client);
         let resp = await client.apis.StakingService.Stake({

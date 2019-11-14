@@ -44,18 +44,17 @@ class StakeLayout extends Component {
   }
 
   loadData = async () => {
-    const resp = StakeStore.getStakingHistory(this.props.match.params.organizationID, 0, 1);
-    resp.then((res) => {
+    StakeStore.getStakingHistory(this.props.match.params.organizationID, 0, 1, data => {
       let amount = 0;
       let isFirst = true;
-      if( res.stakingHist.length > 0){
+      if( data.stakingHist.length > 0){
         this.props.history.push(`/stake/${this.props.match.params.organizationID}/set-stake`);
       }
       this.setState({
         amount,
         isFirst
       })
-    })
+    }); 
   }
 
   componentWillMount(){
