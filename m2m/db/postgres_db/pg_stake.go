@@ -46,21 +46,24 @@ func (*stakeInterface) InsertStake(walletId int64, amount float64) (insertIndex 
 			fk_wallet ,
 			amount ,
 			status ,	
-			start_stake_time
+			start_stake_time , 
+			unstake_time
 			) 
 		VALUES 
-			($1,$2,$3,$4)
+			($1,$2,$3,$4,$5)
 		RETURNING id ;
 	`,
 		walletId,
 		amount,
 		types.STAKING_ACTIVE,
 		time.Now().UTC(),
+		time.Time{},
 	).Scan(&insertIndex)
 	return insertIndex, errors.Wrap(err, "db/pg_stake/InsertStake")
 }
 
 func (*stakeInterface) Unstake(stakeId int64) error {
+
 	// TODO
 	// in a single operation:
 	// UPDATE status, unstake_time
@@ -83,6 +86,33 @@ func (*stakeInterface) GetStakeWalletId(stakeId int64) (walletId int64, err erro
 		stakeId,
 	).Scan(&walletId)
 	return walletId, errors.Wrap(err, "db/pg_stake/GetStakeWalletId")
+}
+
+func (*stakeInterface) GetStakeProfile(stakeId int64) (stkPrf types.Stake, err error) {
+	err = PgDB.QueryRow(`
+		SELECT
+			id,
+			fk_wallet,
+			amount,
+			status,
+			start_stake_time,
+			unstake_time 
+		FROM 
+			stake
+		WHERE
+			id = $1
+	;
+	`,
+		stakeId,
+	).Scan(
+		&stkPrf.Id,
+		&stkPrf.FkWallet,
+		&stkPrf.Amount,
+		&stkPrf.Status,
+		&stkPrf.StartStakeTime,
+		&stkPrf.UnstakeTime)
+	return stkPrf, errors.Wrap(err, "db/pg_stake/GetStakeProfile")
+
 }
 
 func (*stakeInterface) GetActiveStake(walletId int64) (stakeProfile types.Stake, err error) {
