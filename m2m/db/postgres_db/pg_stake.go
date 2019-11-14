@@ -70,6 +70,21 @@ func (*stakeInterface) Unstake(stakeId int64) error {
 	return nil
 }
 
+func (*stakeInterface) GetStakeWalletId(stakeId int64) (walletId int64, err error) {
+	err = PgDB.QueryRow(`
+		SELECT
+			fk_wallet
+		FROM 
+			stake
+		WHERE
+			id = $1
+	;
+	`,
+		stakeId,
+	).Scan(&walletId)
+	return walletId, errors.Wrap(err, "db/pg_stake/GetStakeWalletId")
+}
+
 func (*stakeInterface) GetActiveStake(walletId int64) (stakeProfile types.Stake, err error) {
 
 	err = PgDB.QueryRow(
