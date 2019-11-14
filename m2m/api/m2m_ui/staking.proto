@@ -8,13 +8,21 @@ import "profile.proto";
 service StakingService {
     rpc Stake (StakeRequest) returns (StakeResponse) {
         option (google.api.http) = {
-            get: "/api/staking/{org_id}/stake"
+            post: "/api/staking/{org_id}/stake"
+            body: "*"
         };
     };
 
     rpc Unstake (UnstakeRequest) returns (UnstakeResponse) {
         option (google.api.http) = {
-            get: "/api/staking/{org_id}/unstake"
+            post: "/api/staking/{org_id}/unstake"
+            body: "*"
+        };
+    };
+
+    rpc GetActiveStakes (GetActiveStakesRequest) returns (GetActiveStakesResponse) {
+        option (google.api.http) = {
+            get: "/api/staking/{org_id}/activestakes"
         };
     };
 
@@ -41,6 +49,24 @@ message UnstakeRequest {
 
 message UnstakeResponse {
     string status = 1;
+    ProfileResponse user_profile = 2;
+}
+
+message GetActiveStakesRequest {
+    int64 org_id = 1;
+}
+
+message ActiveStake {
+    int64 Id = 1;
+    int64 FkWallet = 2;
+    double Amount = 3;
+    string StakeStatus = 4;
+    string StartStakeTime = 5;
+    string UnstakeTime = 6;
+}
+
+message GetActiveStakesResponse {
+    ActiveStake act_stake = 1;
     ProfileResponse user_profile = 2;
 }
 
