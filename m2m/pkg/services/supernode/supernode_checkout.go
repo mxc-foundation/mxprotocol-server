@@ -34,7 +34,7 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 
 	incurBlockNo := int(currentBlockNo)
 
-	transfers, err := ethScan.ERC20Transfers(&contractAddress, &address, &incurBlockNo, nil, 0, 0)
+	transfers, err := ethScan.ERC20Transfers(&contractAddress, &address, &incurBlockNo, nil, 0, 0, false)
 	if err != nil {
 		log.WithError(err).Warning("Etherscan: Cannot get reply from Etherscan")
 		return err
@@ -79,7 +79,7 @@ func checkTokenTx(contractAddress, address, currAbv string) error {
 
 	// Update the last block to db
 	if newBlockNo > currentBlockNo {
-		err = db.ExtAccount.UpdateLatestCheckedBlock(supernodeID, int64(newBlockNo))
+		err = db.ExtAccount.UpdateLatestCheckedBlock(supernodeID, newBlockNo)
 		if err != nil {
 			log.WithError(err).Warning("Storage: Cannot update lastBlockNo to DB")
 			return err
