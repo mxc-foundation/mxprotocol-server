@@ -24,7 +24,6 @@ import Wallet from "mdi-material-ui/WalletOutline";
 import styles from "./TopNavStyle";
 import DropdownMenuLanguage from "./DropdownMenuLanguage";
 
-
 function getWalletBalance() {
   if (SessionStore.getOrganizationID() === undefined) {
     
@@ -81,13 +80,13 @@ class TopNav extends Component {
   onLanguageChange(e) {
     const newLanguageID = e.target.label;
     const newLanguageName = e.target.value;
+    const newLanguageCode = e.target.code;
 
     const newLanguageState = {
       id: newLanguageID,
-      name: newLanguageName
+      name: newLanguageName,
+      code: newLanguageCode
     }
-
-    console.log("TopNav - changing to language: ", e.target);
 
     this.props.onChangeLanguage(newLanguageState);
   }

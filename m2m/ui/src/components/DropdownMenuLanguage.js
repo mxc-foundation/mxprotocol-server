@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import Select from "react-select";
 import SessionStore from "../stores/SessionStore";
 import { supportedLanguages } from "../i18n";
+import FlagIcon from "./FlagIcon";
 
 const customStyles = {
   control: (base, state) => ({
     ...base,
+    width: "100px",
     margin: 20,
     // match with the menu
     borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
@@ -25,8 +27,8 @@ const customStyles = {
     borderRadius: 0,
     // kill the gap
     marginTop: 0,
-    paddingLeft: 20,
-    paddingRight: 20,
+    // paddingLeft: 20,
+    // paddingRight: 20,
   }),
   menuList: base => ({
     ...base,
@@ -51,7 +53,7 @@ export default class WithPromises extends Component {
 
     this.state = {
       selectedOption: null,
-      options:[]
+      options: []
     };
   } 
 
@@ -60,11 +62,13 @@ export default class WithPromises extends Component {
 
     const storedLanguageID = SessionStore.getLanguage() && SessionStore.getLanguage().id;
     const storedLanguageName = SessionStore.getLanguage() && SessionStore.getLanguage().name;
+    const storedLanguageCode = SessionStore.getLanguage() && SessionStore.getLanguage().code;
 
-    if (storedLanguageID && storedLanguageName) {
+    if (storedLanguageID && storedLanguageName && storedLanguageCode) {
       selectedOption = {
         label: storedLanguageID,
-        value: storedLanguageName
+        value: storedLanguageName,
+        code: storedLanguageCode
       };
     }
 
@@ -75,7 +79,7 @@ export default class WithPromises extends Component {
   }
 
   onChange = (selectedOption) => {
-    if (selectedOption !== null && selectedOption.label !== null && selectedOption.value !== null) {
+    if (selectedOption !== null && selectedOption.label !== null && selectedOption.value !== null && selectedOption.code !== null) {
       this.setState({
         selectedOption
       });
@@ -84,6 +88,7 @@ export default class WithPromises extends Component {
         target: {
           label: selectedOption.label,
           value: selectedOption.value,
+          code: selectedOption.code
         },
       });
     }
@@ -93,20 +98,31 @@ export default class WithPromises extends Component {
     const { selectedOption } = this.state;
 
     return (
-      <Select
-        styles={customStyles}
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: 4,
-          colors: {
-            primary25: "#00FFD950",
-            primary: "#00FFD950",
-          },
-        })}
-        onChange={this.onChange}
-        options={supportedLanguages}
-        value={selectedOption}
-      />
+      <div>
+        {
+          selectedOption && selectedOption.code
+          ? (
+            <FlagIcon
+              code={selectedOption.code}
+              size='2x'
+            />
+          ) : null
+        }
+        <Select
+          styles={customStyles}
+          theme={(theme) => ({
+            ...theme,
+            borderRadius: 4,
+            colors: {
+              primary25: "#00FFD950",
+              primary: "#00FFD950",
+            },
+          })}
+          onChange={this.onChange}
+          options={supportedLanguages}
+          value={selectedOption}
+        />
+      </div>
     );
   }
 }

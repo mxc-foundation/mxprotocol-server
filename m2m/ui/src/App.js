@@ -117,7 +117,8 @@ class App extends Component {
         drawerOpen: SessionStore.getUser() != null,
         language: {
           id: SessionStore.getLanguage() && SessionStore.getLanguage().id,
-          name: SessionStore.getLanguage() && SessionStore.getLanguage().name
+          name: SessionStore.getLanguage() && SessionStore.getLanguage().name,
+          code: SessionStore.getLanguage() && SessionStore.getLanguage().code
         }
       });
     });

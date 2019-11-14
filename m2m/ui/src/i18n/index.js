@@ -5,28 +5,34 @@ import { initReactI18next } from "react-i18next";
 import { name } from "../../package.json";
 import Debug from "../util/debug";
 import SessionStore from "../stores/SessionStore";
-import { en, zhTW } from "./locales";
+import { en, ko, zhCN, zhTW } from "./locales";
+
+const defaultLanguage = {
+  label: "en",
+  value: "English",
+  code: "gb"
+};
 
 // Labels must match JSON filenames in locales directory
+// Code attribute value must is from react-flag-icon-css http://flag-icon-css.lip.is/
 const supportedLanguages = [
-  {
-    label: "en",
-    value: "English"
-  },
-  {
-    label: "zhTW",
-    value: "Chinese (Traditional)"
-  }
+  { label: "en", value: "English", code: "gb" },
+  { label: "ko", value: "Korean", code: "kr" },
+  { label: "zhCN", value: "Chinese (Simplified)", code: "cn" },
+  { label: "zhTW", value: "Chinese (Traditional)", code: "cn" }
 ];
 let resourceEnglishNS = {};
+let resourceKoreanNS = {};
+let resourceChineseSimplifiedNS = {};
 let resourceChineseTraditionalNS = {};
 resourceEnglishNS[name] = en;
+resourceKoreanNS[name] = ko;
+resourceChineseSimplifiedNS[name] = zhCN;
 resourceChineseTraditionalNS[name] = zhTW;
 const packageNS = Object.keys(resourceEnglishNS)[0].toString();
 const moduleNS = "i18n";
 const menuNS = `${packageNS}-${moduleNS}`;
 const debug = Debug(menuNS);
-console.log('resourceEnglishNS: ', resourceEnglishNS);
 
 const i18n = i18next;
 i18n
@@ -34,7 +40,7 @@ i18n
   .init({
     debug: true,
     defaultNS: packageNS,
-    fallbackLng: ["en-US", "en", "zhTW", "zhCN"],
+    fallbackLng: ["en-US", "en", "ko", "zhTW", "zhCN"],
     interpolation: {
       escapeValue: false
     },
@@ -49,14 +55,14 @@ i18n
     },
     resources: {
       en: resourceEnglishNS,
+      ko: resourceKoreanNS,
+      zhCN: resourceChineseSimplifiedNS,
       zhTW: resourceChineseTraditionalNS
     },
     saveMissing: true
   })
   .then(() => debug("success"))
   .catch(error => debug("failure", error));
-
-const storedLanguageID = SessionStore.getLanguage() && SessionStore.getLanguage().id;
 
 i18next.on("initialized", options => {
   debug("Detected initialisation of i18n");
@@ -90,4 +96,4 @@ i18next.on("languageChanged", lng => {
 
 export default i18n;
 
-export { supportedLanguages, packageNS };
+export { defaultLanguage, supportedLanguages, packageNS };
