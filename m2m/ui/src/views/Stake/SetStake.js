@@ -97,11 +97,13 @@ class SetStake extends FormComponent {
 
   unstake = (e, orgId) => {
     e.preventDefault();
-    /* const resp = StakeStore.unstake(orgId);
+    const resp = StakeStore.unstake(orgId);
     resp.then((res) => {
-      this.setState({ isUnstake: false});
+      this.setState({ 
+        isUnstake: false,
+        amount: 0
+      });
     })
-    this.setState({ isUnstake: false}); */
   }
 
   handleOnclick = () => {

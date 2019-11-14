@@ -6,7 +6,7 @@ import TableRow from "@material-ui/core/TableRow";
 import moment from 'moment';
 import mtz from 'moment-timezone';
 
-import WalletStore from "../../stores/WalletStore";
+import StakeStore from "../../stores/StakeStore";
 import TitleBar from "../../components/TitleBar";
 
 import TableCellExtLink from '../../components/TableCellExtLink';
@@ -40,10 +40,12 @@ class Stakes extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    WalletStore.getWalletUsageHist(this.props.organizationID, offset, limit, data => {
+    console.log(123);
+    StakeStore.getStakingHistory(this.props.organizationID, offset, limit, data => {
+        console.log(data);
         callbackFunc({
             totalCount: parseInt(data.count),
-            result: data.walletUsageHis
+            result: data.stakingHist
           });
       }); 
   }
@@ -53,13 +55,14 @@ class Stakes extends Component {
     
     return(
       <TableRow key={index}>
-        <TableCell align={'center'} className={this.props.classes.maxW140} >{obj.StartAt.substring(0,19)}</TableCell>
-        <TableCell align={'right'} className={this.props.classes.maxW140}>{obj.DlCntDv}</TableCell>
-        <TableCell align={'right'} className={this.props.classes.maxW140}>{obj.DlCntDvFree}</TableCell>
-        <TableCell align={'right'}>{parseInt(obj.DlCntGw - obj.DlCntGwFree)}</TableCell>
-        <TableCell align={'right'}>{obj.Income}</TableCell>
-        <TableCell align={'right'}>{obj.Spend}</TableCell>
-        <TableCell align={'right'}>{obj.UpdatedBalance}</TableCell>
+        <TableCell align={'left'} className={this.props.classes.maxW140} >{obj.stakeAmount}</TableCell>
+        <TableCell align={'left'} className={this.props.classes.maxW140}>{obj.start.substring(0,16)}</TableCell>
+        <TableCell align={'left'} className={this.props.classes.maxW140}>{obj.end.substring(0,16)}</TableCell>
+        <TableCell align={'left'}>{obj.revMonth}</TableCell>
+        <TableCell align={'left'}>{obj.networkIncome}</TableCell>
+        <TableCell align={'left'}>{obj.monthlyRate}</TableCell>
+        <TableCell align={'left'}>{obj.revenue}</TableCell>
+        <TableCell align={'left'}>{obj.balance}</TableCell>
       </TableRow>
     );
   }
@@ -82,14 +85,14 @@ class Stakes extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell align={'center'}>Stake Amount</TableCell>
-                <TableCell align={'right'}>Start</TableCell>
-                <TableCell align={'right'}>End</TableCell>
-                <TableCell align={'right'}>Revenue Month</TableCell>
-                <TableCell align={'right'}>Network Income</TableCell>
-                <TableCell align={'right'}>Monthly Rate</TableCell>
-                <TableCell align={'right'}>Revenue</TableCell>
-                <TableCell align={'right'}>Balance</TableCell>
+                <TableCell align={'left'}>Stake Amount</TableCell>
+                <TableCell align={'left'}>Start</TableCell>
+                <TableCell align={'left'}>End</TableCell>
+                <TableCell align={'left'}>Revenue Month</TableCell>
+                <TableCell align={'left'}>Network Income</TableCell>
+                <TableCell align={'left'}>Monthly Rate</TableCell>
+                <TableCell align={'left'}>Revenue</TableCell>
+                <TableCell align={'left'}>Balance</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
