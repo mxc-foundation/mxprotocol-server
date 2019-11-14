@@ -4,8 +4,8 @@ import { withRouter } from 'react-router-dom';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
-
 import Typography from '@material-ui/core/Typography';
+import i18n, { packageNS } from '../i18n';
 import SessionStore from "../stores/SessionStore";
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
@@ -20,7 +20,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Wallet from "mdi-material-ui/WalletOutline";
-import styles from "./TopNavStyle"
+
+import styles from "./TopNavStyle";
+import DropdownMenuLanguage from "./DropdownMenuLanguage";
 
 
 function getWalletBalance() {
@@ -46,6 +48,7 @@ class TopNav extends Component {
     };
 
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
+    this.onLanguageChange = this.onLanguageChange.bind(this);
     this.onMenuOpen = this.onMenuOpen.bind(this);
     this.onMenuClose = this.onMenuClose.bind(this);
     this.onLogout = this.onLogout.bind(this);
@@ -73,6 +76,20 @@ class TopNav extends Component {
       console.error(error);
       this.setState({ error });
     }
+  }
+
+  onLanguageChange(e) {
+    console.log("TopNav - changing to language: ", e.target);
+    SessionStore.setLanguageID(e.target.label);
+    SessionStore.setLanguageName(e.target.value);
+
+    i18n.changeLanguage(e.target.label);
+
+    // this.setState({
+    //   m2mLanguage: e.target.value
+    // })
+
+    window.location.reload();
   }
 
   onMenuOpen(e) {
@@ -109,6 +126,7 @@ class TopNav extends Component {
   }
 
   render() {
+    console.log('TopNav rendering with language: ', i18n.language);
     /* let drawerIcon;
     if (!this.props.drawerOpen) {
       drawerIcon = <MenuIcon />;
@@ -165,6 +183,14 @@ class TopNav extends Component {
               root: this.props.classes.chip,
             }}
           />
+
+          <div>
+            {i18n.t(`${packageNS}:top:m2mWallet`)}
+          </div>
+
+          <div>
+            <DropdownMenuLanguage onChange={this.onLanguageChange} />
+          </div>
 
           <a href="https://www.mxc.org/support" target="mxc-support">
             <IconButton className={this.props.classes.iconButton}>

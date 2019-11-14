@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 
 import history from "./history";
 import theme from "./theme";
+import i18n from "./i18n";
 
 import TopNav from "./components/TopNav";
 import TopBanner from "./components/TopBanner";
@@ -29,7 +30,6 @@ import HistoryLayout from "./views/history/HistoryLayout"
 import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
 import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
-
 
 const drawerWidth = 270;
 
@@ -116,6 +116,12 @@ class App extends Component {
         drawerOpen: SessionStore.getUser() != null,
       });
     });
+
+    const storedLanguage = SessionStore.getLanguageID();
+
+    if (storedLanguage && i18n.language !== storedLanguage) {
+      i18n.changeLanguage(storedLanguage);
+    }
 
     this.setState({
       drawerOpen: true
