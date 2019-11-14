@@ -31,16 +31,13 @@ func Setup(conf config.MxpConfig) error {
 }
 
 func stakingRevenueExec(conf config.MxpConfig) error {
-	//get income from DB, since is one month ago.
-	//superNodeIncome (since time.Time, until time.Time)
-
 	t := time.Now()
 	//first date of month 00:00:00
 	startTime := time.Date(t.Year(), t.Month(), 1, 0, 0, 0, 0, time.Local)
 	//last date of month 23:59:59
 	endTime := startTime.AddDate(0, 1, 0).Add(time.Second * -1)
 
-	income, err := db.Wallet.GetSupernodeIncomeAmount(t, endTime)
+	income, err := db.Wallet.GetSupernodeIncomeAmount(startTime, endTime)
 	if err != nil {
 		log.WithError(err).Error("stakingRevenueExec/Cannot get income from DB")
 	}
