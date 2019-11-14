@@ -126,7 +126,6 @@ class TopNav extends Component {
   }
 
   render() {
-    console.log('TopNav rendering with language: ', i18n.language);
     /* let drawerIcon;
     if (!this.props.drawerOpen) {
       drawerIcon = <MenuIcon />;

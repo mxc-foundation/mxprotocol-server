@@ -14,7 +14,7 @@ const supportedLanguages = [
     value: "English"
   },
   {
-    label: "zh-TW",
+    label: "zhTW",
     value: "Chinese (Traditional)"
   }
 ];
@@ -26,6 +26,7 @@ const packageNS = Object.keys(resourceEnglishNS)[0].toString();
 const moduleNS = "i18n";
 const menuNS = `${packageNS}-${moduleNS}`;
 const debug = Debug(menuNS);
+console.log('resourceEnglishNS: ', resourceEnglishNS);
 
 const i18n = i18next;
 i18n
@@ -33,7 +34,7 @@ i18n
   .init({
     debug: true,
     defaultNS: packageNS,
-    fallbackLng: ["en-US", "en", "zh-TW", "zh", "zh-CN", "zh"],
+    fallbackLng: ["en-US", "en", "zhTW", "zhCN"],
     interpolation: {
       escapeValue: false
     },
@@ -55,17 +56,7 @@ i18n
   .then(() => debug("success"))
   .catch(error => debug("failure", error));
 
-// FIXME i18n - convert all text below to i18n
-
 const storedLanguage = SessionStore.getLanguageID();
-
-// TODO - this call doesn't appear to be required.
-// https://www.i18next.com/overview/api#changelanguage
-// i18n.changeLanguage(storedLanguage, (err, t) => {
-//   if (err) {
-//     debug(`Error loading language ${storedLanguage}: `, err);
-//   }
-// });
 
 i18next.on("initialized", options => {
   debug("Detected initialisation of i18n");
