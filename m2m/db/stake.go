@@ -12,6 +12,7 @@ type stakeDBInterface interface {
 	GetActiveStake(walletId int64) (stakeProfile types.Stake, err error)
 	GetActiveStakes() (stakeProfiles []types.Stake, err error)
 	GetStakeWalletId(stakeId int64) (walletId int64, err error)
+	GetStakeProfile(stakeId int64) (stkPrf types.Stake, err error)
 }
 
 var Stake = stakeDBInterface(&pg.PgStake)
