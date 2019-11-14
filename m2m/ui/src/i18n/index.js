@@ -61,11 +61,11 @@ const storedLanguage = SessionStore.getLanguageID();
 
 // TODO - this call doesn't appear to be required.
 // https://www.i18next.com/overview/api#changelanguage
-i18n.changeLanguage(storedLanguage, (err, t) => {
-  if (err) {
-    debug(`Error loading language ${storedLanguage}: `, err);
-  }
-});
+// i18n.changeLanguage(storedLanguage, (err, t) => {
+//   if (err) {
+//     debug(`Error loading language ${storedLanguage}: `, err);
+//   }
+// });
 
 i18next.on("initialized", options => {
   debug("Detected initialisation of i18n");

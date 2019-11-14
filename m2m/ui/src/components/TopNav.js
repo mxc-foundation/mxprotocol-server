@@ -44,7 +44,7 @@ class TopNav extends Component {
     this.state = {
       menuAnchor: null,
       balance: null,
-      search: "",
+      search: ""
     };
 
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
@@ -79,17 +79,17 @@ class TopNav extends Component {
   }
 
   onLanguageChange(e) {
+    const newLanguageID = e.target.label;
+    const newLanguageName = e.target.value;
+
+    const newLanguageState = {
+      id: newLanguageID,
+      name: newLanguageName
+    }
+
     console.log("TopNav - changing to language: ", e.target);
-    SessionStore.setLanguageID(e.target.label);
-    SessionStore.setLanguageName(e.target.value);
 
-    i18n.changeLanguage(e.target.label);
-
-    // this.setState({
-    //   m2mLanguage: e.target.value
-    // })
-
-    window.location.reload();
+    this.props.onChangeLanguage(newLanguageState);
   }
 
   onMenuOpen(e) {
@@ -185,7 +185,7 @@ class TopNav extends Component {
           />
 
           <div>
-            {i18n.t(`${packageNS}:top:m2mWallet`)}
+            {i18n.t(`${packageNS}:top.m2m_wallet`)}
           </div>
 
           <div>

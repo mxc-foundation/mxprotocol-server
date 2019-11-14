@@ -106,6 +106,7 @@ class App extends Component {
       drawerOpen: true,
     };
 
+    this.onChangeLanguage = this.onChangeLanguage.bind(this);
     this.setDrawerOpen = this.setDrawerOpen.bind(this);
   }
 
@@ -114,18 +115,42 @@ class App extends Component {
       this.setState({
         user: SessionStore.getUser(),
         drawerOpen: SessionStore.getUser() != null,
+        m2mLanguage: {
+          id: SessionStore.getLanguageID(),
+          name: SessionStore.getLanguageName()
+        }
       });
     });
 
     const storedLanguage = SessionStore.getLanguageID();
 
     if (storedLanguage && i18n.language !== storedLanguage) {
-      i18n.changeLanguage(storedLanguage);
+      i18n.changeLanguage(storedLanguage, (err, t) => {
+        if (err) {
+          console.error(`Error loading language ${storedLanguage}: `, err);
+        }
+      });
     }
 
     this.setState({
       drawerOpen: true
     });
+  }
+
+  onChangeLanguage(newLanguage) {
+    SessionStore.setLanguageID(newLanguage.id);
+    SessionStore.setLanguageName(newLanguage.name);
+
+    i18n.changeLanguage(newLanguage.id, (err, t) => {
+      if (err) {
+        console.error(`Error loading language ${newLanguage.id}: `, err);
+      }
+    });
+    console.log('App - changing language to: ', newLanguage);
+    this.setState({
+      m2mLanguage: newLanguage
+    });
+    window.location.reload();
   }
 
   setDrawerOpen(state) {
@@ -144,7 +169,7 @@ class App extends Component {
     let topbanner = null;
 
     if (this.state.user !== null) {
-      topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} username={SessionStore.getUsername()} />;
+      topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} m2mLanguage={this.state.m2mLanguage} onChangeLanguage={this.onChangeLanguage} username={SessionStore.getUsername()} />;
       topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>;
       sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
     }
