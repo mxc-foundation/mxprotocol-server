@@ -25,6 +25,11 @@ func NewStakingServerAPI() *StakingServerAPI {
 	return &StakingServerAPI{serviceName: "staking"}
 }
 
+func (s *StakingServerAPI) GetStakingPercentage(ctx context.Context) (*api.StakingPercentageResponse, error) {
+	stakingPercentage := config.Cstruct.Staking.StakingPercentage
+	return &api.StakingPercentageResponse{StakingPercentage: stakingPercentage}, nil
+}
+
 func (s *StakingServerAPI) Stake(ctx context.Context, req *api.StakeRequest) (*api.StakeResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
