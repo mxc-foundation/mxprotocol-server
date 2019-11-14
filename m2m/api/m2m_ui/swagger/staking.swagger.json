@@ -112,6 +112,31 @@
         ]
       }
     },
+    "/api/staking/{orgId}/staking_percentage": {
+      "get": {
+        "operationId": "GetStakingPercentage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiStakingPercentageResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "StakingService"
+        ]
+      }
+    },
     "/api/staking/{orgId}/unstake": {
       "post": {
         "operationId": "Unstake",
@@ -317,6 +342,15 @@
         "count": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "apiStakingPercentageResponse": {
+      "type": "object",
+      "properties": {
+        "stakingPercentage": {
+          "type": "number",
+          "format": "double"
         }
       }
     },

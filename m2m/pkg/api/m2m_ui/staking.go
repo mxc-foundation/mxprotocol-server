@@ -3,7 +3,6 @@ package ui
 import (
 	"context"
 	"fmt"
-	"github.com/golang/protobuf/ptypes/empty"
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -26,7 +25,7 @@ func NewStakingServerAPI() *StakingServerAPI {
 	return &StakingServerAPI{serviceName: "staking"}
 }
 
-func (s *StakingServerAPI) GetStakingPercentage(ctx context.Context, empty *empty.Empty) (*api.StakingPercentageResponse, error) {
+func (s *StakingServerAPI) GetStakingPercentage(ctx context.Context, req *api.StakingPercentageRequest) (*api.StakingPercentageResponse, error) {
 	stakingPercentage := config.Cstruct.Staking.StakingPercentage
 	return &api.StakingPercentageResponse{StakingPercentage: stakingPercentage}, nil
 }
