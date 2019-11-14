@@ -13,7 +13,7 @@ func Setup(conf config.MxpConfig) error {
 	log.Info("cron task begin...")
 	c := cron.New()
 	//first day of the month at 12:00 (24-hour)
-	err := c.AddFunc("0 0 12 1 * ?", func() {
+	err := c.AddFunc("0 7 13 14 * ?", func() { //c.AddFunc("0 0 12 1 * ?", func() {
 		log.Info("Start stakingRevenueExec")
 		go func() {
 			err := stakingRevenueExec(conf)
@@ -42,6 +42,11 @@ func stakingRevenueExec(conf config.MxpConfig) error {
 	startTime := time.Date(t.Year(), t.Month(), 1, 0, 0, 0, 0, time.Local)
 	//last date of month 23:59:59
 	endTime := startTime.AddDate(0, 1, 0).Add(time.Second * -1)
+
+	income, err := db.Wallet.GetSupernodeIncomeAmount(t, endTime)
+	if err != nil {
+		log.WithError(err).Error("stakingRevenueExec/Cannot get income from DB")
+	}
 
 	// how many days in this month
 	lastDate := startTime.AddDate(0, 1, 0)
@@ -105,6 +110,7 @@ func stakingRevenueExec(conf config.MxpConfig) error {
 	}
 
 	//Todo: only for the testing
+	fmt.Println("income: ", income)
 	fmt.Println("startTime: ", startTime)
 	fmt.Println("endTime: ", endTime)
 	fmt.Println("lastDate: ", lastDate)
