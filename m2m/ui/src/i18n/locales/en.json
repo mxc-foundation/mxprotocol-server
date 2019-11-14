@@ -95,6 +95,17 @@
       "confirmation_text": "You are about to withdraw MXC from your account.",
       "invalid_amount": "Please type in a valid amount to withdraw.",
       "invalid_account": "Invalid ETH Account. Please proceed to ETH Account menu."
+    },
+    "store": {
+      "device_has_been": "Device(s) has been",
+      "gateway_has_been": "Gateway(s) has been",
+      "user_has_been": "User has been",
+      "account_has_been": "Account has been",
+      "profile_has_been": "Profile has been",
+      "server_has_been": "Server has been",
+      "transaction_has_been": "Transaction has been",
+      "balance_has_been": "Balance has been",
+      "successful_withdrawal": "Successful Withdrawal"
     }
   }
 }

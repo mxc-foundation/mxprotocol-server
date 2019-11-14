@@ -95,6 +95,17 @@
       "confirmation_text": "귀하의 계정에서 MXC를 인출하려고합니다",
       "invalid_amount": "출금하려면 유효한 금액을 입력하십시오",
       "invalid_account": "잘못된 ETH 계정. ETH 계정 메뉴로 진행하십시오"
+    },
+    "store": {
+      "device_has_been": "장치가",
+      "gateway_has_been": "게이트웨이가",
+      "user_has_been": "사용자는",
+      "account_has_been": "계정이되었습니다",
+      "profile_has_been": "프로필되었습니다",
+      "server_has_been": "서버는",
+      "transaction_has_been": "거래되었습니다",
+      "balance_has_been": "균형이 유지되었습니다",
+      "successful_withdrawal": "성공적인 철수"
     }
   }
 }

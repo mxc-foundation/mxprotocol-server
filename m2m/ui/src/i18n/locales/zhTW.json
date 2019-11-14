@@ -95,6 +95,17 @@
       "confirmation_text": "您即將從帳戶中提取 MXC",
       "invalid_amount": "請輸入有效金額以進行提款",
       "invalid_account": "無效的 ETH 帳戶. 請進入 ETH 帳戶菜單"
+    },
+    "store": {
+      "device_has_been": "設備已",
+      "gateway_has_been": "網關已",
+      "user_has_been": "用戶已",
+      "account_has_been": "帳戶已",
+      "profile_has_been": "個人資料已",
+      "server_has_been": "服務器已經",
+      "transaction_has_been": "交易已經",
+      "balance_has_been": "平衡已",
+      "successful_withdrawal": "提款成功"
     }
   }
 }
