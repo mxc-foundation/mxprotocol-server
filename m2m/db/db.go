@@ -63,6 +63,7 @@ func dbInit() {
 		Stake.CreateStakeTable,
 		StakeRevenuePeriod.CreateStakeRevenuePeriodTable,
 		StakeRevenue.CreateStakeRevenueTable,
+		StakeRevenue.CreateStakeRevenueFunctions,
 	}
 
 	for _, t := range InitDbTableTasks {
