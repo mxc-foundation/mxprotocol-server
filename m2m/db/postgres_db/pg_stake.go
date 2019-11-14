@@ -44,6 +44,88 @@ func (*stakeInterface) CreateStakeTable() error {
 func (*stakeInterface) CreateStakeFunctions() error {
 	_, err := PgDB.Exec(`
 
+
+	CREATE OR REPLACE FUNCTION stake_insert_exec (
+
+		v_fk_wallet_user INT,			
+		v_fk_wallet_stake_storage INT,	
+		v_stake_amount NUMERIC(28,18),	
+		v_stake_time TIMESTAMP,
+		v_unstake_time TIMESTAMP,
+		v_payment_cat PAYMENT_CATEGORY,
+		v_stake_status stake_status
+		) RETURNS INT
+		LANGUAGE plpgsql
+		AS $$
+		
+		declare updated_wlt_balance NUMERIC(28,18);
+		declare s_stake_id INT;
+		
+		BEGIN
+		
+		
+		UPDATE
+		wallet 
+		SET
+		balance = balance - v_stake_amount,
+		tmp_balance = tmp_balance - v_stake_amount
+		
+		WHERE
+		id = v_fk_wallet_user
+		RETURNING 
+		balance INTO updated_wlt_balance
+		;
+		
+		UPDATE
+		wallet 
+		SET
+		balance = balance + v_stake_amount,
+		tmp_balance = tmp_balance + v_stake_amount
+		
+		WHERE
+		id = v_fk_wallet_stake_storage
+		;
+		
+		
+		INSERT INTO stake (
+		fk_wallet ,
+		amount ,
+		status ,	
+		start_stake_time , 
+		unstake_time
+		)VALUES 
+		(v_fk_wallet_user,
+		v_stake_amount,
+		v_stake_status,
+		v_stake_time,
+		v_unstake_time)
+		RETURNING id INTO s_stake_id ;
+		
+		INSERT INTO internal_tx (
+		fk_wallet_sender,
+		fk_wallet_receiver,
+		payment_cat,
+		tx_internal_ref,
+		value,
+		time_tx )
+		VALUES (
+		v_fk_wallet_user,
+		v_fk_wallet_stake_storage,
+		v_payment_cat,
+		s_stake_id,
+		v_stake_amount,
+		v_stake_time)
+		;
+		
+		RETURN s_stake_id;
+		
+		END;
+		$$;
+
+
+
+
+
 		CREATE OR REPLACE FUNCTION unstake_exec (
 			v_fk_stake INT,
 			v_time TIMESTAMP,
@@ -126,25 +208,33 @@ func (*stakeInterface) CreateStakeFunctions() error {
 }
 
 func (*stakeInterface) InsertStake(walletId int64, amount float64) (insertIndex int64, err error) {
+
+	stakeStorageWltId, err := PgWallet.GetWalletIdStakeStorage()
+	if err != nil {
+		return 0, errors.Wrap(err, fmt.Sprintf("db/pg_stake/InsertStake  walletId: %d/ Unable to get WalletIdStakeStorage! ", walletId))
+	}
+
 	err = PgDB.QueryRow(`
-		INSERT INTO stake (
-			fk_wallet ,
-			amount ,
-			status ,	
-			start_stake_time , 
-			unstake_time
-			) 
-		VALUES 
-			($1,$2,$3,$4,$5)
-		RETURNING id ;
-	`,
-		walletId,
+
+
+	select stake_insert_exec (
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6,
+			$7
+		);`, walletId,
+		stakeStorageWltId,
 		amount,
-		types.STAKING_ACTIVE,
 		time.Now().UTC(),
 		time.Time{},
+		types.INSERT_STAKE,
+		types.STAKING_ACTIVE,
 	).Scan(&insertIndex)
-	return insertIndex, errors.Wrap(err, "db/pg_stake/InsertStake")
+
+	return insertIndex, errors.Wrap(err, fmt.Sprintf("db/pg_stake/InsertStake  walletId: %d ", walletId))
 }
 
 func (*stakeInterface) Unstake(stakeId int64) error {
@@ -159,7 +249,7 @@ func (*stakeInterface) Unstake(stakeId int64) error {
 		return errors.Wrap(err, fmt.Sprintf("db/pg_stake/Unstake  stakeId: %d/ Unable to get WalletIdStakeStorage! ", stakeId))
 	}
 
-	// first:  check if the status is not unstaked
+	//  check if the status is not unstaked (altough it is already done in the app layer)
 
 	_, err = PgDB.Exec(`
 	SELECT
