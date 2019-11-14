@@ -1,6 +1,7 @@
 package postgres_db
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/pkg/errors"
@@ -147,10 +148,39 @@ func (*stakeInterface) InsertStake(walletId int64, amount float64) (insertIndex 
 }
 
 func (*stakeInterface) Unstake(stakeId int64) error {
+
+	userWalletId, err := PgStake.GetStakeWalletId(stakeId)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("db/pg_stake/Unstake  stakeId: %d; Unable to get walletId! ", stakeId))
+	}
+
+	stakeStorageWltId, err := PgWallet.GetWalletIdStakeStorage()
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("db/pg_stake/Unstake  stakeId: %d/ Unable to get WalletIdStakeStorage! ", stakeId))
+	}
+
 	// first:  check if the status is not unstaked
 
-	// return errors.Wrap(err, fmt.Sprintf("db/pg_stake/Unstake  stakeId: %d ", stakeId))
-	return nil
+	_, err = PgDB.Exec(`
+	SELECT
+		unstake_exec (
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6
+		);`,
+
+		stakeId,
+		time.Now().UTC(),
+		stakeStorageWltId,
+		userWalletId,
+		types.UNSTAKE,
+		types.STAKING_UNSTAKED,
+	)
+
+	return errors.Wrap(err, fmt.Sprintf("db/pg_stake/Unstake  stakeId: %d ", stakeId))
 }
 
 func (*stakeInterface) GetStakeWalletId(stakeId int64) (walletId int64, err error) {
