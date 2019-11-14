@@ -209,25 +209,32 @@ func (*stakeInterface) CreateStakeFunctions() error {
 
 func (*stakeInterface) InsertStake(walletId int64, amount float64) (insertIndex int64, err error) {
 
+	stakeStorageWltId, err := PgWallet.GetWalletIdStakeStorage()
+	if err != nil {
+		return 0, errors.Wrap(err, fmt.Sprintf("db/pg_stake/InsertStake  walletId: %d/ Unable to get WalletIdStakeStorage! ", walletId))
+	}
+
 	err = PgDB.QueryRow(`
-		INSERT INTO stake (
-			fk_wallet ,
-			amount ,
-			status ,	
-			start_stake_time , 
-			unstake_time
-			) 
-		VALUES 
-			($1,$2,$3,$4,$5)
-		RETURNING id ;
-	`,
-		walletId,
+
+
+	select stake_insert_exec (
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6,
+			$7
+		);`, walletId,
+		stakeStorageWltId,
 		amount,
-		types.STAKING_ACTIVE,
 		time.Now().UTC(),
 		time.Time{},
+		types.INSERT_STAKE,
+		types.STAKING_ACTIVE,
 	).Scan(&insertIndex)
-	return insertIndex, errors.Wrap(err, "db/pg_stake/InsertStake")
+
+	return insertIndex, errors.Wrap(err, fmt.Sprintf("db/pg_stake/InsertStake  walletId: %d ", walletId))
 }
 
 func (*stakeInterface) Unstake(stakeId int64) error {
@@ -242,7 +249,7 @@ func (*stakeInterface) Unstake(stakeId int64) error {
 		return errors.Wrap(err, fmt.Sprintf("db/pg_stake/Unstake  stakeId: %d/ Unable to get WalletIdStakeStorage! ", stakeId))
 	}
 
-	// first:  check if the status is not unstaked
+	//  check if the status is not unstaked (altough it is already done in the app layer)
 
 	_, err = PgDB.Exec(`
 	SELECT
