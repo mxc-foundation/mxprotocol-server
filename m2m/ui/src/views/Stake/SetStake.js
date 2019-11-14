@@ -4,18 +4,17 @@ import TextField from '@material-ui/core/TextField';
 import { Redirect } from 'react-router-dom'
 import clsx from 'clsx'
 import FormComponent from "../../classes/FormComponent";
-import Form from "../../components/Form";
 import Grid from "@material-ui/core/Grid";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
-import TitleBarButton from "../../components/TitleBarButton";
+import ExtLink from "../../components/ExtLink";
 import Typography from '@material-ui/core/Typography';
 import StakeForm from "./StakeForm";
 import StakeStore from "../../stores/StakeStore";
 import Button from "@material-ui/core/Button";
 //import Button from "@material-ui/core/Button";
 import Spinner from "../../components/ScaleLoader";
-import { YOUR_STAKE, STAKE_SET_SUCCESS, DISMISS, LEARN_MORE, MXC, UNSTAKE, STAKE, HISTORY, WITHDRAW_STAKE } from "../../util/Messages"
+import { YOUR_STAKE, STAKE_SET_SUCCESS, UNSTAKE_SET_SUCCESS, DISMISS, LEARN_MORE, MXC, UNSTAKE, STAKE, HISTORY, WITHDRAW_STAKE, STAKE_WARNING_001, STAKE_DESCRIPTION } from "../../util/Messages"
 import { EXT_URL_STAKE } from "../../util/Data"
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter, Link  } from "react-router-dom";
@@ -28,11 +27,11 @@ class SetStake extends FormComponent {
     amount: 0,
     revRate: 0,
     isUnstake: false,
-  }
-
-  componentWillMount(){
-    if(false){
-      this.props.history.push(`/stake/${this.props.match.params.organizationID}`);
+    info: STAKE_DESCRIPTION,
+    notice: { 
+      succeed: STAKE_SET_SUCCESS,
+      unstakeSucceed : UNSTAKE_SET_SUCCESS,
+      warning: STAKE_WARNING_001
     }
   }
 
@@ -43,10 +42,9 @@ class SetStake extends FormComponent {
   loadData = () => {
     const resp = StakeStore.getActiveStakes(this.props.match.params.organizationID);
     resp.then((res) => {
-      console.log(res);
       let amount = 0;
       let isUnstake = false;
-      if( true){
+      if( res.actStake !== null ){
         amount = res.actStake.Amount;
         isUnstake = true;
       }
@@ -71,20 +69,51 @@ class SetStake extends FormComponent {
     })
   }
 
-  confirmStake = (e, amount) => {
-    e.preventDefault();
+  confirm = (e, amt) => {
+    const amount = parseFloat(amt.amount); 
+    const orgId = this.props.match.params.organizationID;
+    const req = {
+      orgId,
+      amount
+    }
     
-    const resp = StakeStore.stake(this.props.match.params.organizationID, amount);
-    resp.then((res) => {
-      this.setState({ isUnstake: true});
-    }) 
+    if(this.state.isUnstake){
+      this.unstake(e, orgId);
+    }else{
+      this.stake(e, req);
+    }
   } 
+
+  stake = (e, req) => {
+    e.preventDefault();
+    const resp = StakeStore.stake(req);
+    resp.then((res) => {
+      this.setState({ 
+        isUnstake: true,
+        info: STAKE_SET_SUCCESS
+      });
+    }) 
+  }
+
+  unstake = (e, orgId) => {
+    e.preventDefault();
+    /* const resp = StakeStore.unstake(orgId);
+    resp.then((res) => {
+      this.setState({ isUnstake: false});
+    })
+    this.setState({ isUnstake: false}); */
+  }
+
+  handleOnclick = () => {
+    //this.props.history.push(`/history/${this.props.match.params.organizationID}?prev=stake`);
+    this.props.history.push(`/history/${this.props.match.params.organizationID}/stake`);
+  }
 
   render() {
     /* if (this.props.txinfo === undefined) {
       return(<Spinner on={this.state.loading}/>);
     } */
-    
+    const info  = this.state.info;
     return(
         <Grid container spacing={24} className={this.props.classes.backgroundColor}>
             <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
@@ -101,18 +130,18 @@ class SetStake extends FormComponent {
                         <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
                     </TitleBar>
                     
-                    <Button variant="outlined" color="inherit" onClick={this.handleOpenAXS} type="button" disabled={false}>{HISTORY}</Button>
+                    <Button variant="outlined" color="inherit" onClick={this.handleOnclick} type="button" disabled={false}>{HISTORY}</Button>
                     </div>
                 </div>
             </Grid>
             <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pRight}>
-                <StakeForm isUnstake={this.state.isUnstake} label={this.state.isUnstake ? WITHDRAW_STAKE : STAKE} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirmStake={this.confirmStake} />
+                <StakeForm isUnstake={this.state.isUnstake} label={this.state.isUnstake ? WITHDRAW_STAKE : STAKE} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirm={this.confirm} />
             </Grid>
             <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pLeft}>
                 <div className={clsx(this.props.classes.urStake, this.props.classes.between)}>
                     <Typography  /* className={this.props.classes.title} */ gutterBottom>
                         {YOUR_STAKE}
-                    </Typography>
+                    </Typography>&nbsp;
                     <Typography  /* className={this.props.classes.title} */ gutterBottom>
                         {this.state.amount} {MXC}
                     </Typography>
@@ -120,13 +149,11 @@ class SetStake extends FormComponent {
                 <div>
                     <div className={this.props.classes.infoBox}>
                     <Typography  /* className={this.props.classes.title} */ gutterBottom>
-                        {STAKE_SET_SUCCESS}
+                        {this.state.info}
                     </Typography>
                     <div className={this.props.classes.between}>
-                        <Typography className={this.props.classes.title} gutterBottom>
-                        {DISMISS}
-                        </Typography>
-                        <TitleBarTitle component={Link} to={EXT_URL_STAKE} title={LEARN_MORE} />
+                        <ExtLink to={''} context={DISMISS} />&nbsp;&nbsp;&nbsp;
+                        <ExtLink to={EXT_URL_STAKE} context={LEARN_MORE} />
                     </div>
                     </div>
                 </div>

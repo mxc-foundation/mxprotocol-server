@@ -13,13 +13,14 @@ class StakeStore extends EventEmitter {
     this.swagger = new Swagger("/swagger/staking.swagger.json", sessionStore.getClientOpts());
   }
 
-   async stake(orgId, amount) {
+   async stake(req) {
     try {
         const client = await this.swagger.then((client) => client);
         let resp = await client.apis.StakingService.Stake({
-            "orgId": orgId,
+            "orgId": req.orgId,
             body: {
-                amount
+              orgId: req.orgId,
+              amount: req.amount
             },
         });
     
@@ -28,13 +29,33 @@ class StakeStore extends EventEmitter {
       } catch (error) {
         errorHandler(error);
     }
-  } 
+  }
+
+  /* stake(req, callbackFunc) {
+    this.swagger.then(client => {
+        client.apis.StakingService.Stake({
+          "orgId": req.orgId,
+          body: {
+            orgId: req.orgId,
+            amount: req.amount
+          },
+        })
+        .then(checkStatus)
+        .then(resp => {
+          callbackFunc(resp.body);
+        })
+        .catch(errorHandler);
+      });
+  } */
 
   async unstake(orgId) {
     try {
         const client = await this.swagger.then((client) => client);
         let resp = await client.apis.StakingService.Unstake({
+          "orgId": orgId,
+          body: {
             orgId
+          },
         });
     
         resp = await checkStatus(resp);
@@ -68,7 +89,7 @@ class StakeStore extends EventEmitter {
         });
     
         resp = await checkStatus(resp);
-        return resp;
+        return resp.body;
       } catch (error) {
         errorHandler(error);
     }

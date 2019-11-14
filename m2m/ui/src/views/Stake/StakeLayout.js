@@ -9,6 +9,7 @@ import WalletStore from "../../stores/WalletStore.js";
 import GatewayStore from "../../stores/GatewayStore.js";
 import TitleBarButton from "../../components/TitleBarButton";
 import Button from "@material-ui/core/Button";
+import StakeStore from "../../stores/StakeStore";
 import Typography from '@material-ui/core/Typography';
 //import WithdrawBalanceInfo from "./WithdrawBalanceInfo";
 import { withRouter } from "react-router-dom";
@@ -38,36 +39,30 @@ class StakeLayout extends Component {
     super(props);
     this.state = {
       loading: false,
+      isFirst: true
     };
   }
 
   loadData = async () => {
-    try {
-      const orgId = this.props.match.params.organizationID;
-      this.setState({loading: true})
-      let res = await doIHaveGateway(orgId);
-      let downlinkFee = await getDlPrice(orgId);
-      let haveGateway = (res > 0) ? true : false;
-
+    const resp = StakeStore.getStakingHistory(this.props.match.params.organizationID, 0, 1);
+    resp.then((res) => {
+      let amount = 0;
+      let isFirst = true;
+      if( res.stakingHist.length > 0){
+        this.props.history.push(`/stake/${this.props.match.params.organizationID}/set-stake`);
+      }
       this.setState({
-        downlinkFee,
-        haveGateway
-      });
-
-      this.setState({loading: false})
-    } catch (error) {
-      this.setState({loading: false})
-      console.error(error);
-      this.setState({ error });
-    }
+        amount,
+        isFirst
+      })
+    })
   }
 
-  
+  componentWillMount(){
+    this.loadData();
+  }
 
   componentDidMount() {
-    console.log('First this 123124');
-
-    
     //this.loadData();
   }
 

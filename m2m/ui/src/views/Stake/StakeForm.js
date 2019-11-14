@@ -52,8 +52,9 @@ class StakeForm extends FormComponent {
         <Form
             submitLabel={ this.props.isUnstake ? CONFIRM_UNSTAKE: CONFIRM_STAKE }
             extraButtons={extraButtons}
-            onSubmit={(e) => this.props.confirmStake(e, {
-            amount: parseFloat(this.props.amount),
+            onSubmit={(e) => this.props.confirm(e, {
+              amount: parseFloat(this.props.amount),
+              action: this.props.isUnstake
             })}
         >
             <Typography  /* className={this.props.classes.title} */ gutterBottom>
