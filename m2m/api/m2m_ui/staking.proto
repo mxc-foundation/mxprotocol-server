@@ -3,6 +3,7 @@ syntax = "proto3";
 package api;
 
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 import "profile.proto";
 
 service StakingService {
@@ -31,6 +32,12 @@ service StakingService {
             get: "/api/staking/{org_id}/history"
         };
     };
+
+    rpc GetStakingPercentage (google.protobuf.Empty) returns (StakingPercentageResponse) {
+        option (google.api.http) = {
+            get: "/api/staking/{org_id}/staking_percentage"
+        };
+    }
 }
 
 message StakeRequest {
@@ -91,4 +98,8 @@ message StakingHistoryResponse {
     ProfileResponse user_profile = 1;
     repeated GetStakingHistory staking_hist = 2;
     int64 count = 3;
+}
+
+message StakingPercentageResponse {
+    double staking_percentage = 1;
 }
