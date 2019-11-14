@@ -49,7 +49,7 @@ func (s *StakingServerAPI) Stake(ctx context.Context, req *api.StakeRequest) (*a
 			log.WithError(err).Error("StakeAPI/Cannot get walletId from DB")
 		}
 
-		// If this person has enough money
+		// check if person has enough balance for staking
 		personalBalance, err := db.Wallet.GetWalletBalance(walletId)
 		if req.Amount > personalBalance {
 			return &api.StakeResponse{Status: "You do not have enough money.", UserProfile: &userProfile}, nil
