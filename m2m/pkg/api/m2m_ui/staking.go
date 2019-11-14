@@ -49,12 +49,18 @@ func (s *StakingServerAPI) Stake(ctx context.Context, req *api.StakeRequest) (*a
 			log.WithError(err).Error("StakeAPI/Cannot get walletId from DB")
 		}
 
+		// If this person has enough money
+		personalBalance, err := db.Wallet.GetWalletBalance(walletId)
+		if req.Amount > personalBalance {
+			return &api.StakeResponse{Status: "You do not have enough money.", UserProfile: &userProfile}, nil
+		}
+
 		stakeProf, err := db.Stake.GetActiveStake(walletId)
 		if err != nil {
 			log.WithError(err).Error("StakeAPI/Cannot get staking profile from DB")
 		}
 
-		//If this person has one staking in DB already, return.
+		//If this person has one staking in DB already, return
 		var nilStake = types.Stake{}
 		if stakeProf != nilStake {
 			return &api.StakeResponse{Status: "There is already one active stake, you should do the unstake first.", UserProfile: &userProfile}, nil

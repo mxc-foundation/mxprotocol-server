@@ -13,7 +13,7 @@ func Setup(conf config.MxpConfig) error {
 	log.Info("cron task begin...")
 	c := cron.New()
 	//first day of the month at 12:00 (24-hour)
-	err := c.AddFunc("0 7 13 14 * ?", func() { //c.AddFunc("0 0 12 1 * ?", func() {
+	err := c.AddFunc("0 35 13 14 * ?", func() { //c.AddFunc("0 0 12 1 * ?", func() {
 		log.Info("Start stakingRevenueExec")
 		go func() {
 			err := stakingRevenueExec(conf)
@@ -34,8 +34,8 @@ func Setup(conf config.MxpConfig) error {
 func stakingRevenueExec(conf config.MxpConfig) error {
 	//get income from DB, since is one month ago.
 	//superNodeIncome (since time.Time, until time.Time)
-	//Todo: edit this prat later
-	income := 10000.00
+	//Todo: only for the test
+	income := 100.00
 
 	t := time.Now()
 	//first date of month 00:00:00
@@ -43,10 +43,10 @@ func stakingRevenueExec(conf config.MxpConfig) error {
 	//last date of month 23:59:59
 	endTime := startTime.AddDate(0, 1, 0).Add(time.Second * -1)
 
-	income, err := db.Wallet.GetSupernodeIncomeAmount(t, endTime)
+	/*income, err := db.Wallet.GetSupernodeIncomeAmount(t, endTime)
 	if err != nil {
 		log.WithError(err).Error("stakingRevenueExec/Cannot get income from DB")
-	}
+	}*/
 
 	// how many days in this month
 	lastDate := startTime.AddDate(0, 1, 0)
@@ -92,6 +92,10 @@ func stakingRevenueExec(conf config.MxpConfig) error {
 
 		//how much revenue this person should get.
 		revenueAmount := (income * conf.Staking.StakingPercentage) * (j.Amount * stakingTimePortion) / totalPortion
+		//Todo: only for the test
+		fmt.Println("j.Amount: ", j.Amount)
+		fmt.Println("stakingTimePortion: ", stakingTimePortion)
+		fmt.Println("StakingPercentage: ", conf.Staking.StakingPercentage)
 
 		//update revenue to DB.
 		_, err := db.StakeRevenue.InsertStakeRevenue(j.Id, stakeRevPeriodId, revenueAmount)
