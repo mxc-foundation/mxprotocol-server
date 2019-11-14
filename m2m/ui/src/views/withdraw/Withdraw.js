@@ -157,11 +157,8 @@ class Withdraw extends Component {
           <Modal title={CONFIRMATION} description={CONFIRMATION_TEXT} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
-              
-                <TitleBarTitle title="Withdraw" />
-              
+            <TitleBarTitle title="Withdraw" />
           </div>
-
         </Grid>
         <Grid item xs={6} className={this.props.classes.divider}></Grid>
         <Grid item xs={12} className={this.props.classes.divider}>

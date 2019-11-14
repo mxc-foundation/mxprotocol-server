@@ -161,6 +161,7 @@ class SessionStore extends EventEmitter {
     this.setUsername(username);
     this.setOrganizationID(orgId);
     this.setOrganizationName(orgName);
+    
   }
 
   login(login, callBackFunc) {

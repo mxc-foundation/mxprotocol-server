@@ -17,3 +17,5 @@ export const GW_MODE_OPTION = [
     { value: GW_INACTIVE, label: INACTIVE },
     { value: GW_FREE_GATEWAYS_LIMITED, label: PRIVATE },
     { value: GW_WHOLE_NETWORK, label: NETWORK }];   
+
+export const EXT_URL_STAKE = 'https://blog.mxc.org/mxc-staking-mechanism-explained/';
