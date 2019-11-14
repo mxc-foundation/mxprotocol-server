@@ -41,7 +41,7 @@ class EthAccount extends Component {
   render() {
     return(
       <Grid container spacing={24}>
-        <TitleBar
+          {/*<TitleBar
           buttons={
             <Admin organizationID={this.props.match.params.organizationID}>
               <TitleBarButton
@@ -51,7 +51,7 @@ class EthAccount extends Component {
             </Admin>
           }
         >
-        </TitleBar>
+        </TitleBar>*/}
         <Grid item xs={12}>
           <DataTable
             header={

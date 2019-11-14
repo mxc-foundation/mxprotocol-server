@@ -1,19 +1,21 @@
 import React, { Component } from "react";
 import { Route, Switch, Link, withRouter } from "react-router-dom";
-import {Card,Table,TableBody,TableRow,TableCell,Grid,Tabs,Tab,Divider} from '@material-ui/core';
+
 import { withStyles } from "@material-ui/core/styles";
+import Grid from '@material-ui/core/Grid';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
 import TitleBar from "../../../components/TitleBar";
 import TitleBarTitle from "../../../components/TitleBarTitle";
 import Spinner from "../../../components/ScaleLoader"
-//import SessionStore from "../../stores/SessionStore";
-
-//import Transactions from "./Transactions";
 import EthAccount from "../../history/EthAccount";
-import Transactions from "../../history/Transactions";
-import NetworkActivityHistory from "../../history/NetworkActivityHistory";
+import SuperNodeTransactions from "./Transactions";
+import SuperNodeNetworkActivityHistory from "./NetworkActivities";
 
 import topupStore from "../../../stores/TopupStore";
 import styles from "./HistoryStyle";
+import { SUPER_ADMIN } from "../../../util/M2mUtil";
 
 
 
@@ -72,32 +74,28 @@ class SupernodeHistory extends Component {
   }
 
   render() {
-    const organizationID = 0;
-    
+      
     return(
       <Grid container spacing={24}>
         <Spinner on={this.state.loading}/>
-        <Grid item container xs={6} direction="column" className={this.props.classes.divider} padding={12}>
-       
-                <TitleBar >
+        <Grid item xs={12} className={this.props.classes.divider}>
+          <div className={this.props.classes.TitleBar}>
+                <TitleBar className={this.props.classes.padding}>
                   <TitleBarTitle title="History" />
                 </TitleBar>
-                 <Divider light={true}/>
+                {/* <Divider light={true}/>
                 <div className={this.props.classes.breadcrumb}>
                 <TitleBar>
                   <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                  <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                  <TitleBarTitle component={Link} to="#" title="Control Panel" className={this.props.classes.link}/>
-                  <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
+                  <TitleBarTitle title="/" className={this.props.classes.navText}/>
                   <TitleBarTitle component={Link} to="#" title="History" className={this.props.classes.link}/>
                 </TitleBar>
-                </div> 
-          
+                </div> */}
+            </div>
         </Grid>
 
-
         <Grid item container xs={12} justify="space-between" className={this.props.classes.tabsBlock}>
-          <Tabs
+        <Tabs
             value={this.state.tab}
             onChange={this.onChangeTab}
             indicatorColor="primary"
@@ -120,9 +118,9 @@ class SupernodeHistory extends Component {
 
         <Grid item xs={12}>
           <Switch>
-            <Route exact path={`/control-panel/history/`} render={props => <Transactions organizationID={organizationID} {...props} />} />
-            <Route exact path={`/control-panel/history/eth-account`} render={props => <EthAccount organizationID={organizationID} {...props} />} />
-            <Route exact path={`/control-panel/history/network-activity`} render={props => <NetworkActivityHistory organizationID={organizationID} {...props} />} />
+            <Route exact path={`${this.props.match.path}/`} render={props => <SuperNodeTransactions organizationID={SUPER_ADMIN} {...props} />} />
+            <Route exact path={`${this.props.match.path}/eth-account`} render={props => <EthAccount organizationID={SUPER_ADMIN} {...props} />} />
+            <Route exact path={`${this.props.match.path}/network-activity`} render={props => <SuperNodeNetworkActivityHistory organizationID={SUPER_ADMIN} {...props} />} />
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}
           </Switch>
         </Grid>

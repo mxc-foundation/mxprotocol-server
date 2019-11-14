@@ -88,7 +88,7 @@ class WithdrawForm extends FormComponent {
           
           fullWidth
         />
-        <TitleBarTitle component={Link} to={`/modify-account/${this.props.orgId}`} title="CHANGE ETH ACCOUNT" />
+        <TitleBarTitle component={Link} to={`/modify-account/${this.props.match.params.organizationID}`} title="CHANGE ETH ACCOUNT" />
       </Form>
     );
   }

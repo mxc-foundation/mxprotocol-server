@@ -149,7 +149,7 @@ class SideNav extends Component {
             <ListItemText classes={selected('/control-panel/system-settings')} primary="System Settings" />
           </ListItem>
 
-          <ListItem selected={active('/withdraw')} button component={Link} to={`/withdraw/${organizationID}`}>
+          <ListItem selected={active('/withdraw')} button component={Link} to={`/control-panel/withdraw`}>
             <ListItemIcon className={this.props.classes.iconStyle}>
               <PagePreviousOutline />
             </ListItemIcon>

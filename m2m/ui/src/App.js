@@ -31,6 +31,7 @@ import SuperNodeEth from "./views/ControlPanel/superNodeEth/superNodeEth"
 import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
 
+import SuperAdminWithdraw from "./views/ControlPanel/withdraw/withdraw"
 import SupernodeHistory from "./views/ControlPanel/history/History"
 import SystemSettings from "./views/ControlPanel/settings/settings"
 
@@ -164,9 +165,11 @@ class App extends Component {
                     <Route path="/topup/:organizationID" component={Topup} />
                     <Route path="/history/:organizationID" component={HistoryLayout} />
                     <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
-                    <Route path="/control-panel/modify-account" component={SuperNodeEth} />
                     <Route path="/device/:organizationID" component={DeviceLayout} />
                     <Route path="/gateway/:organizationID" component={GatewayLayout} />
+
+                    <Route path="/control-panel/modify-account" component={SuperNodeEth} />
+                    <Route path="/control-panel/withdraw" component={SuperAdminWithdraw} />
                     <Route path="/control-panel/history" component={SupernodeHistory} />
                     <Route path="/control-panel/system-settings" component={SystemSettings} />
                     <Route render={BackToLora} />

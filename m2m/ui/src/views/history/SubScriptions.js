@@ -43,7 +43,7 @@ class SubScriptions extends Component {
   render() {
     return(
       <Grid container spacing={24}>
-        <TitleBar
+          {/*<TitleBar
           buttons={
             <Admin organizationID={this.props.match.params.organizationID}>
               <TitleBarButton
@@ -53,8 +53,7 @@ class SubScriptions extends Component {
             </Admin>
           }
         >
-        <TitleBarTitle title="WithDraw" />
-        </TitleBar>
+        </TitleBar>*/}
         <Grid item xs={12}>
           <DataTable
             header={

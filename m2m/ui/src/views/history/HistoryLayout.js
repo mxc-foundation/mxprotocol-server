@@ -87,7 +87,7 @@ class HistoryLayout extends Component {
             </div>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid item container xs={12} justify="space-between" className={this.props.classes.tabsBlock}>
           <Tabs
             value={this.state.tab}
             onChange={this.onChangeTab}
@@ -101,6 +101,10 @@ class HistoryLayout extends Component {
             <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth-account`} />
             <Tab label="Network Activity" component={Link} to={`/history/${organizationID}/network-activity`} />
           </Tabs>
+
+            <Grid container justify="space-between" alignItems="center" className={this.props.classes.card}>
+            </Grid>
+        
         </Grid>
 
         <Grid item xs={12}>
