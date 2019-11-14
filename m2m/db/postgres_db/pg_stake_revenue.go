@@ -107,8 +107,6 @@ INSERT INTO internal_tx (
 		v_time)
 		;
 
-
-
 	RETURN stake_rev_id;
 
 	END;

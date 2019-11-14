@@ -7,6 +7,7 @@ import (
 
 type stakeDBInterface interface {
 	CreateStakeTable() error
+	CreateStakeFunctions() error
 	InsertStake(walletId int64, amount float64) (insertIndex int64, err error)
 	Unstake(stakeId int64) error
 	GetActiveStake(walletId int64) (stakeProfile types.Stake, err error)
