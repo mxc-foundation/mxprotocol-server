@@ -80,7 +80,7 @@
       }
     },
     "/api/staking/{orgId}/stake": {
-      "get": {
+      "post": {
         "operationId": "Stake",
         "responses": {
           "200": {
@@ -99,11 +99,12 @@
             "format": "int64"
           },
           {
-            "name": "amount",
-            "in": "query",
-            "required": false,
-            "type": "number",
-            "format": "double"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiStakeRequest"
+            }
           }
         ],
         "tags": [
@@ -112,7 +113,7 @@
       }
     },
     "/api/staking/{orgId}/unstake": {
-      "get": {
+      "post": {
         "operationId": "Unstake",
         "responses": {
           "200": {
@@ -129,6 +130,14 @@
             "required": true,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiUnstakeRequest"
+            }
           }
         ],
         "tags": [
@@ -269,6 +278,19 @@
         }
       }
     },
+    "apiStakeRequest": {
+      "type": "object",
+      "properties": {
+        "orgId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "apiStakeResponse": {
       "type": "object",
       "properties": {
@@ -293,6 +315,15 @@
           }
         },
         "count": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiUnstakeRequest": {
+      "type": "object",
+      "properties": {
+        "orgId": {
           "type": "string",
           "format": "int64"
         }

@@ -8,13 +8,15 @@ import "profile.proto";
 service StakingService {
     rpc Stake (StakeRequest) returns (StakeResponse) {
         option (google.api.http) = {
-            get: "/api/staking/{org_id}/stake"
+            post: "/api/staking/{org_id}/stake"
+            body: "*"
         };
     };
 
     rpc Unstake (UnstakeRequest) returns (UnstakeResponse) {
         option (google.api.http) = {
-            get: "/api/staking/{org_id}/unstake"
+            post: "/api/staking/{org_id}/unstake"
+            body: "*"
         };
     };
 
