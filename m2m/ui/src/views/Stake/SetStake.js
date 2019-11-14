@@ -88,10 +88,16 @@ class SetStake extends FormComponent {
     e.preventDefault();
     const resp = StakeStore.stake(req);
     resp.then((res) => {
-      this.setState({ 
-        isUnstake: true,
-        info: STAKE_SET_SUCCESS
-      });
+      if(res.body.status === 'Stake successful.'){
+        this.setState({ 
+          isUnstake: true,
+          info: STAKE_SET_SUCCESS
+        });
+      }else{
+        this.setState({ 
+          info: res.body.status
+        });
+      }
     }) 
   }
 
