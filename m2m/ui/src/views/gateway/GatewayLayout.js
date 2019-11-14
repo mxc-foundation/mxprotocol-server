@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 
@@ -102,7 +103,7 @@ class GatewayLayout extends Component {
             <Grid item xs={12} className={this.props.classes.divider}>
             <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
-                    <TitleBarTitle title="Gateway" />
+                    <TitleBarTitle title={i18n.t(`${packageNS}:menu.gateways.gateways`)} />
                 </TitleBar>    
                 {/* <Divider light={true}/> */}
                 <div className={this.props.classes.between}>
@@ -117,7 +118,7 @@ class GatewayLayout extends Component {
         <Grid item xs={12} className={this.props.classes.divider}>
           <Grid item xs={6} className={this.props.classes.divider}>
             <GatewayForm
-              submitLabel="Gateway"
+              submitLabel={i18n.t(`${packageNS}:menu.gateways.gateways`)}
               downlinkFee={this.state.downlinkFee}
               onSelectChange={this.onSelectChange}
               onSubmit={this.onSubmit}

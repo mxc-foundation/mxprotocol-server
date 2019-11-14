@@ -6,6 +6,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from "@material-ui/core/CardContent";
 import TextField from '@material-ui/core/TextField';
 
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import UserStore from "../../stores/UserStore";
@@ -26,7 +27,7 @@ class PasswordForm  extends FormComponent {
       >
         <TextField
           id="password"
-          label="Password"
+          label={i18n.t(`${packageNS}:menu.eth_account.password`)}
           type="password"
           margin="normal"
           value={this.state.object.password || ""}
@@ -70,18 +71,18 @@ class ChangeUserPassword extends Component {
     return(
       <Grid container spacing={24}>
         <TitleBar>
-          <TitleBarTitle title="Users" />
+          <TitleBarTitle title={i18n.t(`${packageNS}:menu.eth_account.users`)} />
           <TitleBarTitle title="/" />
           <TitleBarTitle title={this.state.user.user.username} />
           <TitleBarTitle title="/" />
-          <TitleBarTitle title="Change password" />
+          <TitleBarTitle title={i18n.t(`${packageNS}:menu.eth_account.change_password`)} />
         </TitleBar>
 
         <Grid item xs={12}>
           <Card>
             <CardContent>
               <PasswordForm
-                submitLabel="Update password"
+                submitLabel={i18n.t(`${packageNS}:menu.eth_account.update_password`)}
                 onSubmit={this.onSubmit}
               />
             </CardContent>

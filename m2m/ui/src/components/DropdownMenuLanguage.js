@@ -7,6 +7,7 @@ import FlagIcon from "./FlagIcon";
 const customStyles = {
   control: (base, state) => ({
     ...base,
+    color: "#FFFFFF",
     width: "100px",
     margin: 20,
     // match with the menu

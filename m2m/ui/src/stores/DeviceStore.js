@@ -71,6 +71,7 @@ class DeviceStore extends EventEmitter {
         type: "CREATE_NOTIFICATION",
         notification: {
             type: "success",
+            // TODO - convert to i18n
             message: "Device(s) has been " + action,
         },
     });

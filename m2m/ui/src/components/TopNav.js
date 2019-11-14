@@ -5,7 +5,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
-import i18n, { packageNS } from '../i18n';
 import SessionStore from "../stores/SessionStore";
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
@@ -181,10 +180,6 @@ class TopNav extends Component {
               root: this.props.classes.chip,
             }}
           />
-
-          <div>
-            {i18n.t(`${packageNS}:top.m2m_wallet`)}
-          </div>
 
           <div>
             <DropdownMenuLanguage onChange={this.onLanguageChange} />

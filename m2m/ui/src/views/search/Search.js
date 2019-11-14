@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import DataTable from "../../components/DataTable";
@@ -29,9 +30,9 @@ class ApplicationResult extends Component {
   render() {
     return(
       <TableRow>
-        <TableCell className={this.props.classes.type}>application</TableCell>
+        <TableCell className={this.props.classes.type}>{i18n.t(`${packageNS}:menu.devices.application`)}</TableCell>
         <TableCell><Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}/applications/${this.props.result.applicationID}`}>{this.props.result.applicationName}</Link></TableCell>
-        <TableCell>organization: <Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}`}>{this.props.result.organizationName}</Link></TableCell>
+        <TableCell>{i18n.t(`${packageNS}:menu.devices.organization`)}: <Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}`}>{this.props.result.organizationName}</Link></TableCell>
         <TableCell>{this.props.result.applicationID}</TableCell>
       </TableRow>
     );
@@ -45,7 +46,7 @@ class OrganizationResult extends Component {
   render() {
     return(
       <TableRow>
-        <TableCell className={this.props.classes.type}>organization</TableCell>
+        <TableCell className={this.props.classes.type}>{i18n.t(`${packageNS}:menu.devices.organization`)}</TableCell>
         <TableCell><Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}`}>{this.props.result.organizationName}</Link></TableCell>
         <TableCell></TableCell>
         <TableCell>{this.props.result.organizationID}</TableCell>
@@ -60,9 +61,9 @@ class DeviceResult extends Component {
   render() {
     return(
       <TableRow>
-        <TableCell className={this.props.classes.type}>device</TableCell>
+        <TableCell className={this.props.classes.type}>{i18n.t(`${packageNS}:menu.devices.devices`)}</TableCell>
         <TableCell><Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}/applications/${this.props.result.applicationID}/devices/${this.props.result.deviceDevEUI}`}>{this.props.result.deviceName}</Link></TableCell>
-        <TableCell>organization: <Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}`}>{this.props.result.organizationName}</Link>, application: <Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}/applications/${this.props.result.applicationID}`}>{this.props.result.applicationName}</Link></TableCell>
+        <TableCell>{i18n.t(`${packageNS}:menu.devices.organization`)}: <Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}`}>{this.props.result.organizationName}</Link>, {i18n.t(`${packageNS}:menu.devices.application`)}: <Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}/applications/${this.props.result.applicationID}`}>{this.props.result.applicationName}</Link></TableCell>
         <TableCell>{this.props.result.deviceDevEUI}</TableCell>
       </TableRow>
     );
@@ -75,9 +76,9 @@ class GatewayResult extends Component {
   render() {
     return(
       <TableRow>
-        <TableCell className={this.props.classes.type}>gateway</TableCell>
+        <TableCell className={this.props.classes.type}>{i18n.t(`${packageNS}:menu.devices.gateway`)}</TableCell>
         <TableCell><Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}/gateways/${this.props.result.gatewayMAC}`}>{this.props.result.gatewayName}</Link></TableCell>
-        <TableCell>organization: <Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}`}>{this.props.result.organizationName}</Link></TableCell>
+        <TableCell>{i18n.t(`${packageNS}:menu.devices.organization`)}: <Link className={this.props.classes.link} to={`/organizations/${this.props.result.organizationID}`}>{this.props.result.organizationName}</Link></TableCell>
         <TableCell>{this.props.result.gatewayMAC}</TableCell>
       </TableRow>
     );
@@ -135,8 +136,8 @@ class Search extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell>Kind</TableCell>
-                <TableCell>Name</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.devices.kind`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.devices.name`)}</TableCell>
                 <TableCell></TableCell>
                 <TableCell>ID</TableCell>
               </TableRow>

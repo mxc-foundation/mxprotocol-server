@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import Spinner from "../../components/ScaleLoader"
@@ -74,7 +75,7 @@ class HistoryLayout extends Component {
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
-                  <TitleBarTitle title="History" />
+                  <TitleBarTitle title={i18n.t(`${packageNS}:menu.history.history`)} />
                 </TitleBar>
                 {/* <Divider light={true}/>
                 <div className={this.props.classes.breadcrumb}>
@@ -97,9 +98,9 @@ class HistoryLayout extends Component {
             scrollButtons="auto"
             textColor="primary"
           >
-            <Tab label="Transactions" component={Link} to={`/history/${organizationID}/`} />
-            <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth_account`} />
-            <Tab label="Network Activity" component={Link} to={`/history/${organizationID}/network-activity`} />
+            <Tab label={i18n.t(`${packageNS}:menu.history.transactions`)} component={Link} to={`/history/${organizationID}/`} />
+            <Tab label={i18n.t(`${packageNS}:menu.history.eth_account`)} component={Link} to={`/history/${organizationID}/eth_account`} />
+            <Tab label={i18n.t(`${packageNS}:menu.history.network_activity`)} component={Link} to={`/history/${organizationID}/network-activity`} />
           </Tabs>
         </Grid>
 

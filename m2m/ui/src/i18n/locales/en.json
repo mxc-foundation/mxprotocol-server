@@ -1,5 +1,100 @@
 {
-  "top": {
-    "m2m_wallet": "M2M Wallet"
+  "title": "M2M Wallet",
+  "menu": {
+    "withdraw": {
+      "withdraw": "Withdraw",
+      "amount": "Amount",
+      "transaction_fee": "Transaction Fee",
+      "to_eth_account": "To ETH Account",
+      "change_eth_account": "CHANGE ETH ACCOUNT",
+      "eth_account": "ETH Account",
+      "new_account": "New account",
+      "username": "User name",
+      "password": "Password",
+      "confirm": "CONFIRM",
+      "type_here": "Type here",
+      "incorrect_username_or_password": "Incorrect username or password.",
+      "cancel": "CANCEL",
+      "proceed": "PROCEED"
+    },
+    "topup": {
+      "topup": "Top up",
+      "send_tokens": "Send Tokens",
+      "from_eth_account": "From ETH Account",
+      "change_eth_account": "CHANGE ETH ACCOUNT",
+      "to_eth_account": "To ETH Account",
+      "use_axs_wallet": "USE AXS WALLET",
+      "no_data_to_display": "THERE IS NO DATA TO DISPLAY",
+      "can_not_find_any_account": "Can not find any account."
+    },
+    "history": {
+      "history": "History",
+      "transactions": "TRANSACTIONS",
+      "eth_account": "ETH ACCOUNT",
+      "network_activity": "NETWORK ACTIVITY",
+      "from": "From",
+      "to": "To",
+      "tx_hash": "TxHash",
+      "type": "Type",
+      "mxc_amount": "MXC Amount",
+      "update_date": "Update Date",
+      "status": "Status",
+      "withdraw": "Withdraw",
+      "topup": "Top up",
+      "successful": "SUCCESSFUL",
+      "rows_per_page": "Rows per page",
+      "of": "of",
+      "filter": "Filter",
+      "date": "Date"
+    },
+    "eth_account": {
+      "eth_account": "ETH Account",
+      "current_account": "Current account",
+      "new_account": "New account",
+      "username": "User name",
+      "password": "Password",
+      "confirm": "Confirm",
+      "users": "Users",
+      "change_password": "Change password",
+      "update_password": "Update password"
+    },
+    "devices": {
+      "device": "Device",
+      "devices": "Devices",
+      "downlink_fee_mxc": "Downlink fee",
+      "status": "Status",
+      "available": "Available",
+      "mode": "Mode",
+      "rows_per_page": "Rows per page",
+      "of": "of",
+      "application": "application",
+      "organization": "organization",
+      "gateway": "gateway",
+      "kind": "Kind",
+      "name": "Name",
+      "filter": "Filter"
+    },
+    "gateways": {
+      "gateway": "Gateway",
+      "gateways": "Gateways",
+      "status": "Status",
+      "downlink_price": "Downlink Price",
+      "mode": "Mode",
+      "filter": "Filter"
+    },
+    "staking": {
+      "staking": "Staking"
+    },
+    "nb_iot_server_gateway": "NB-IoT Server Gateway",
+    "lpwan_server_staking": "LPWAN Server Staking",
+    "powered_by": "Powered by",
+    "lora_server": "LoRa Server",
+    "version": "Version",
+    "messages": {
+      "confirmation": "CONFIRMATION",
+      "confirmation_text": "You are about to withdraw MXC from your account.",
+      "invalid_amount": "Please type in a valid amount to withdraw.",
+      "invalid_account": "Invalid ETH Account. Please proceed to ETH Account menu."
+    }
   }
 }

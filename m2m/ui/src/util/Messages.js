@@ -1,7 +1,9 @@
+import i18n, { packageNS } from '../i18n';
+
 //COMMON
-export const CONFIRMATION = 'CONFIRMATION';
+export const CONFIRMATION = i18n.t(`${packageNS}:menu.messages.confirmation`);
 
 //withdraw
-export const CONFIRMATION_TEXT = 'You are about to withdraw MXC from your account.';
-export const INVALID_AMOUNT = 'Please type in a valid amount to withdraw.';
-export const INVALID_ACCOUNT = 'Invalid ETH Account. Please proceed to ETH Account menu.';
+export const CONFIRMATION_TEXT = i18n.t(`${packageNS}:menu.messages.confirmation_text`);
+export const INVALID_AMOUNT = i18n.t(`${packageNS}:menu.messages.invalid_amount`);
+export const INVALID_ACCOUNT = i18n.t(`${packageNS}:menu.messages.invalid_account`);

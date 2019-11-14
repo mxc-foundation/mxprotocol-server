@@ -41,7 +41,7 @@ class LoginForm extends FormComponent {
       >
         <TextField
           id="username"
-          label="Username"
+          label={i18n.t(`${packageNS}:menu.eth_account.username`)}
           margin="normal"
           value={this.state.object.username || ""}
           onChange={this.onChange}
@@ -50,7 +50,7 @@ class LoginForm extends FormComponent {
         />
         <TextField
           id="password"
-          label="Password"
+          label={i18n.t(`${packageNS}:menu.eth_account.password`)}
           type="password"
           margin="normal"
           value={this.state.object.password || ""}
