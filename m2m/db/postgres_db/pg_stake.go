@@ -40,6 +40,90 @@ func (*stakeInterface) CreateStakeTable() error {
 
 }
 
+func (*stakeInterface) CreateStakeFunctions() error {
+	_, err := PgDB.Exec(`
+
+		CREATE OR REPLACE FUNCTION unstake_exec (
+			v_fk_stake INT,
+			v_time TIMESTAMP,
+			v_fk_wallet_stake_storage INT,
+			v_fk_wallet_user INT,
+			v_payment_cat PAYMENT_CATEGORY,
+			v_stake_status stake_status
+		) RETURNS  VOID
+		LANGUAGE plpgsql
+		AS $$
+
+		declare updated_wlt_balance NUMERIC(28,18);
+		declare s_stake_amount NUMERIC(28,18);
+
+		BEGIN
+
+
+		SELECT 
+			amount 
+		INTO
+			s_stake_amount 
+		FROM
+			stake
+		WHERE 
+			id = v_fk_stake 
+		;
+
+		UPDATE
+			wallet 
+		SET
+			balance = balance + s_stake_amount,
+			tmp_balance = tmp_balance + s_stake_amount
+			
+		WHERE
+			id = v_fk_wallet_user
+		RETURNING 
+			balance INTO updated_wlt_balance
+		;
+
+		UPDATE
+			wallet 
+		SET
+			balance = balance - s_stake_amount,
+			tmp_balance = tmp_balance - s_stake_amount
+			
+		WHERE
+			id = v_fk_wallet_stake_storage
+		;
+
+
+		UPDATE 
+			stake 
+		SET 
+			status= v_stake_status, 
+			unstake_time = v_time 
+		WHERE 
+			id = v_fk_stake
+		;
+
+		INSERT INTO internal_tx (
+			fk_wallet_sender,
+			fk_wallet_receiver,
+			payment_cat,
+			tx_internal_ref,
+			value,
+			time_tx )
+		VALUES (
+			v_fk_wallet_stake_storage,
+			v_fk_wallet_user,
+			v_payment_cat,
+			v_fk_stake,
+			s_stake_amount,
+			v_time)
+			;
+
+		END;
+		$$;
+		`)
+	return errors.Wrap(err, "db/pg_stake/CreateStakeFunctions")
+}
+
 func (*stakeInterface) InsertStake(walletId int64, amount float64) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO stake (
@@ -63,13 +147,9 @@ func (*stakeInterface) InsertStake(walletId int64, amount float64) (insertIndex 
 }
 
 func (*stakeInterface) Unstake(stakeId int64) error {
+	// first:  check if the status is not unstaked
 
-	// TODO
-	// in a single operation:
-	// UPDATE status, unstake_time
-	// update balance (user, stake)
-	// make internal_tx
-
+	// return errors.Wrap(err, fmt.Sprintf("db/pg_stake/Unstake  stakeId: %d ", stakeId))
 	return nil
 }
 
