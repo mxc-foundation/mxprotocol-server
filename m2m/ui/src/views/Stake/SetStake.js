@@ -101,13 +101,13 @@ class SetStake extends FormComponent {
     resp.then((res) => {
       this.setState({ 
         isUnstake: false,
-        amount: 0
+        amount: 0,
+        info: UNSTAKE_SET_SUCCESS
       });
     })
   }
 
   handleOnclick = () => {
-    //this.props.history.push(`/history/${this.props.match.params.organizationID}?prev=stake`);
     this.props.history.push(`/history/${this.props.match.params.organizationID}/stake`);
   }
 
