@@ -2,6 +2,7 @@ package postgres_db
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/pkg/errors"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
@@ -108,28 +109,48 @@ INSERT INTO internal_tx (
 
 
 
-	RETURN updated_wlt_balance;
+	RETURN stake_rev_id;
 
 	END;
 	$$;
 
 	`)
 
-	return errors.Wrap(err, "db/CreateStakeRevenueFunctions")
+	return errors.Wrap(err, "db/pg_stake_revenue/CreateStakeRevenueFunctions")
 }
 
 func (*stakeRevenueInterface) InsertStakeRevenue(stakeId int64, stakeRevenuePeriodId int64, revenueAmount float64) (insertIndex int64, err error) {
 
-	/*
-		TODO
+	userWalletId, err := PgStake.GetStakeWalletId(stakeId)
+	if err != nil {
+		return 0, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/InsertStakeRevenue  stakeId: %d, stakeRevenuePeriodId: %d;  Unable to get walletId! ", stakeId, stakeRevenuePeriodId))
+	}
 
-		by a single operation:
-			get fk_wallet
-			insert stake_revenue
-			change balance/tmp_balance wallet
-			change balance supernode
-			insert internal_tx row
-	*/
+	supernodeIncomeWltId, err := PgWallet.GetWalletIdSuperNodeIncome()
+	if err != nil {
+		return 0, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/InsertStakeRevenue  stakeId: %d, stakeRevenuePeriodId: %d;  Unable to get WalletIdSuperNodeIncome! ", stakeId, stakeRevenuePeriodId))
+	}
+
+	err = PgDB.QueryRow(`
+	SELECT
+		stake_revenue_exec (
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6,
+			$7
+		);`,
+
+		stakeRevenuePeriodId,
+		stakeId,
+		revenueAmount,
+		time.Now().UTC(),
+		supernodeIncomeWltId,
+		userWalletId,
+		types.STAKE_REVENUE,
+	).Scan(&insertIndex)
 
 	return insertIndex, errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue/InsertStakeRevenue  stakeId: %d, stakeRevenuePeriodId: %d", stakeId, stakeRevenuePeriodId))
 }
