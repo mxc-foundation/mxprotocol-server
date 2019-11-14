@@ -43,20 +43,20 @@ class SessionStore extends EventEmitter {
     return localStorage.getItem("jwt");
   }
 
-  setLanguageID(languageID) {
-    localStorage.setItem("language-id", languageID);
+  setSupportedLanguages(languages) {
+    localStorage.setItem("languages-supported", JSON.stringify(languages));
   }
 
-  getLanguageID() {
-    return localStorage.getItem("language-id");
+  getSupportedLanguages() {
+    return JSON.parse(localStorage.getItem("languages-supported"));
   }
 
-  setLanguageName(languageName) {
-    localStorage.setItem("language-name", languageName);
+  setLanguage(language) {
+    localStorage.setItem("language", JSON.stringify(language));
   }
 
-  getLanguageName() {
-    return localStorage.getItem("language-name");
+  getLanguage() {
+    return JSON.parse(localStorage.getItem("language"));
   }
 
   setUsername(username) {

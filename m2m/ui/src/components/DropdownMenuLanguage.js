@@ -58,10 +58,13 @@ export default class WithPromises extends Component {
   componentDidMount() {
     let selectedOption = null;
 
-    if (SessionStore.getLanguageID() && SessionStore.getLanguageName()) {
+    const storedLanguageID = SessionStore.getLanguage() && SessionStore.getLanguage().id;
+    const storedLanguageName = SessionStore.getLanguage() && SessionStore.getLanguage().name;
+
+    if (storedLanguageID && storedLanguageName) {
       selectedOption = {
-        label: SessionStore.getLanguageID(),
-        value: SessionStore.getLanguageName()
+        label: storedLanguageID,
+        value: storedLanguageName
       };
     }
 

@@ -116,18 +116,18 @@ class App extends Component {
         user: SessionStore.getUser(),
         drawerOpen: SessionStore.getUser() != null,
         language: {
-          id: SessionStore.getLanguageID(),
-          name: SessionStore.getLanguageName()
+          id: SessionStore.getLanguage() && SessionStore.getLanguage().id,
+          name: SessionStore.getLanguage() && SessionStore.getLanguage().name
         }
       });
     });
 
-    const storedLanguage = SessionStore.getLanguageID();
+    const storedLanguageID = SessionStore.getLanguage() && SessionStore.getLanguage().id;
 
-    if (storedLanguage && i18n.language !== storedLanguage) {
-      i18n.changeLanguage(storedLanguage, (err, t) => {
+    if (storedLanguageID && i18n.language !== storedLanguageID) {
+      i18n.changeLanguage(storedLanguageID, (err, t) => {
         if (err) {
-          console.error(`Error loading language ${storedLanguage}: `, err);
+          console.error(`Error loading language ${storedLanguageID}: `, err);
         }
       });
     }
@@ -138,8 +138,7 @@ class App extends Component {
   }
 
   onChangeLanguage(newLanguage) {
-    SessionStore.setLanguageID(newLanguage.id);
-    SessionStore.setLanguageName(newLanguage.name);
+    SessionStore.setLanguage(newLanguage);
 
     i18n.changeLanguage(newLanguage.id, (err, t) => {
       if (err) {

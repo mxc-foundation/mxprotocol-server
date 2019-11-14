@@ -38,7 +38,7 @@ i18n
     interpolation: {
       escapeValue: false
     },
-    lng: SessionStore.getLanguageID() || "en",
+    lng: SessionStore.getLanguage() && SessionStore.getLanguage().id || "en",
     ns: [packageNS],
     // https://react.i18next.com/misc/using-with-icu-format
     react: {
@@ -56,7 +56,7 @@ i18n
   .then(() => debug("success"))
   .catch(error => debug("failure", error));
 
-const storedLanguage = SessionStore.getLanguageID();
+const storedLanguageID = SessionStore.getLanguage() && SessionStore.getLanguage().id;
 
 i18next.on("initialized", options => {
   debug("Detected initialisation of i18n");
