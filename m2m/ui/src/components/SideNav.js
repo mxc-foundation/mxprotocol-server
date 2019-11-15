@@ -24,12 +24,11 @@ import SessionStore from "../stores/SessionStore"
 import PageNextOutline from "mdi-material-ui/PageNextOutline";
 import PagePreviousOutline from "mdi-material-ui/PagePreviousOutline";
 import { getLoraHost } from "../util/M2mUtil";
+import i18n, { packageNS } from '../i18n';
 import styles from "./SideNavStyle";
 import Admin from "./Admin"
 import WalletOutline from "@material-ui/core/SvgIcon/SvgIcon";
 import {MapOutline, WrenchOutline} from "mdi-material-ui";
-
-
 
 const LinkToLora = ({children, ...otherProps}) => 
 <a href={getLoraHost()} {...otherProps}>{children}</a>;
@@ -165,43 +164,43 @@ class SideNav extends Component {
             <ListItemIcon className={this.props.classes.iconStyle}>
               <PagePreviousOutline />
             </ListItemIcon>
-            <ListItemText classes={selected('/withdraw')} primary="Withdraw" />
+            <ListItemText classes={selected('/withdraw')} primary={i18n.t(`${packageNS}:menu.withdraw.withdraw`)} />
           </ListItem>
           <ListItem selected={active('/topup')} button component={Link} to={`/topup/${organizationID}`}>
             <ListItemIcon>
               <PageNextOutline />
             </ListItemIcon>
-            <ListItemText classes={selected('/topup')} primary="Top up" />
+            <ListItemText classes={selected('/topup')} primary={i18n.t(`${packageNS}:menu.topup.topup`)} />
           </ListItem>
           <ListItem selected={active('/history')} button component={Link} to={`/history/${organizationID}`}>
             <ListItemIcon>
               <CalendarCheckOutline />
             </ListItemIcon>
-            <ListItemText classes={selected('/history')} primary="History" />
+            <ListItemText classes={selected('/history')} primary={i18n.t(`${packageNS}:menu.history.history`)} />
           </ListItem>
           <ListItem selected={active('/modify-account')} button component={Link} to={`/modify-account/${organizationID}`}>
             <ListItemIcon>
               <CreditCard />
             </ListItemIcon>
-            <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
+            <ListItemText classes={selected('/modify-account')} primary={i18n.t(`${packageNS}:menu.eth_account.eth_account`)} />
           </ListItem>
           <ListItem selected={active('/device')} button component={Link} to={`/device/${organizationID}`}>
             <ListItemIcon>
               <Remote />
             </ListItemIcon>
-            <ListItemText classes={selected('/device')} primary="Device" />
+            <ListItemText classes={selected('/device')} primary={i18n.t(`${packageNS}:menu.devices.devices`)} />
           </ListItem>
           <ListItem selected={active('/gateway')} button component={Link} to={`/gateway/${organizationID}`}>
             <ListItemIcon>
               <VideoInputAntenna />
             </ListItemIcon>
-            <ListItemText classes={selected('/gateway')} primary="Gateway" />
+            <ListItemText classes={selected('/gateway')} primary={i18n.t(`${packageNS}:menu.gateways.gateways`)} />
           </ListItem>
-          <ListItem button component={Link} to={``}>
+          <ListItem selected={active('/stake')} button component={Link} to={`/stake/${organizationID}`}>
             <ListItemIcon>
               <Vote />
             </ListItemIcon>
-            <ListItemText classes={selected('')} primary="Staking" />
+            <ListItemText classes={selected('')} primary={i18n.t(`${packageNS}:menu.staking.staking`)} />
           </ListItem>
 
           {/*<List className={this.props.classes.card}>*/}
@@ -210,22 +209,22 @@ class SideNav extends Component {
                   <ListItemIcon>
                     <AccessPoint />
                   </ListItemIcon>
-                  <ListItemText primary="NB-IoT Server" />
+                  <ListItemText primary={i18n.t(`${packageNS}:menu.nb_iot_server`)} />
                 </ListItem>
                 <ListItem button component={LinkToLora} className={this.props.classes.static}>  
                   <ListItemIcon>
                     <AccessPoint />
                   </ListItemIcon>
-                  <ListItemText primary="LPWAN Server" />
+                  <ListItemText primary={i18n.t(`${packageNS}:menu.lpwan_server`)} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary="Powered by" />
+                  <ListItemText primary={i18n.t(`${packageNS}:menu.powered_by`)} />
                   <ListItemIcon>
-                    <img src="/logo/mxc_logo.png" className="iconStyle" alt="LoRa Server" onClick={this.handleMXC} />
+                    <img src="/logo/mxc_logo.png" className="iconStyle" alt={i18n.t(`${packageNS}:menu.lora_server`)} onClick={this.handleMXC} />
                   </ListItemIcon>
                 </ListItem>
                 <ListItem>
-                  <ListItemText secondary={`Version ${this.state.version}`} />
+                  <ListItemText secondary={`${i18n.t(`${packageNS}:menu.version`)} ${this.state.version}`} />
                 </ListItem>
           {/*</List>*/}
         </List>}

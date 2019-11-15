@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
+import i18n, { packageNS } from '../../i18n';
 import HistoryStore from "../../stores/HistoryStore";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
@@ -47,22 +48,24 @@ class SubScriptions extends Component {
           buttons={
             <Admin organizationID={this.props.match.params.organizationID}>
               <TitleBarButton
-                label="Filter"
+                label={i18n.t(`${packageNS}:menu.history.filter`)}
                 //icon={<Plus />}
               />
             </Admin>
           }
         >
         </TitleBar>*/}
+        <TitleBarTitle title={i18n.t(`${packageNS}:menu.history.withdraw`)} />
+        </TitleBar>
         <Grid item xs={12}>
           <DataTable
             header={
               <TableRow>
-                <TableCell>From</TableCell>
-                <TableCell>To</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.history.from`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.history.to`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.history.type`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.history.amount`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.history.date`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

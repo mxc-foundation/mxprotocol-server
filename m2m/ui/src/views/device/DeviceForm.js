@@ -11,6 +11,7 @@ import { DV_MODE_OPTION, DV_INACTIVE } from "../../util/Data"
 import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 
+import i18n, { packageNS } from '../../i18n';
 import DeviceStore from "../../stores/DeviceStore.js";
 import TitleBar from "../../components/TitleBar";
 import NativeSelects from "../../components/NativeSelects";
@@ -113,7 +114,7 @@ class DeviceForm extends Component {
           buttons={
             <Admin organizationID={this.props.match.params.organizationID}>
               <TitleBarButton
-                label="Filter"
+                label={i18n.t(`${packageNS}:menu.devices.filter`)}
                 //icon={<Plus />}
               />
             </Admin>
@@ -125,10 +126,10 @@ class DeviceForm extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell align={'left'}>Device</TableCell>
-                <TableCell align={'left'}>Status</TableCell>
-                <TableCell align={'left'}>Available</TableCell>
-                <TableCell className={this.props.classes.maxW} align={'left'}>Mode</TableCell>
+                <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.devices.device`)}</TableCell>
+                <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.devices.status`)}</TableCell>
+                <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.devices.available`)}</TableCell>
+                <TableCell className={this.props.classes.maxW} align={'left'}>{i18n.t(`${packageNS}:menu.devices.mode`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

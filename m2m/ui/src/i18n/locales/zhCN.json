@@ -1,0 +1,114 @@
+{
+  "title": "M2M 钱包",
+  "menu": {
+    "withdraw": {
+      "withdraw": "提款",
+      "amount": "数量",
+      "transaction_fee": "手续费",
+      "to_eth_account": "到 ETH 账户",
+      "change_eth_account": "更改 ETH 账户",
+      "eth_account": "ETH 账户",
+      "new_account": "新账户",
+      "username": "用户名称",
+      "password": "密码",
+      "confirm": "确认",
+      "type_here": "在此输入",
+      "incorrect_username_or_password": "用户名或密码错误",
+      "cancel": "取消",
+      "proceed": "继续"
+    },
+    "topup": {
+      "topup": "充值",
+      "send_tokens": "传送通证",
+      "from_eth_account": "从 ETH 账户",
+      "change_eth_account": "改变 ETH 账户",
+      "to_eth_account": "到 ETH 账户",
+      "use_axs_wallet": "使用 AXS 钱包",
+      "no_data_to_display": "没有数据可显示",
+      "can_not_find_any_account": "找不到任何帐户"
+    },
+    "history": {
+      "history": "历史记录",
+      "transactions": "交易",
+      "eth_account": "ETH 账户",
+      "network_activity": "网络活动",
+      "from": "从",
+      "to": "到",
+      "tx_hash": "TxHash",
+      "type": "类型",
+      "mxc_amount": "MXC 极域数量",
+      "update_date": "更新日期",
+      "status": "状态",
+      "withdraw": "提款",
+      "topup": "充值",
+      "successful": "成功",
+      "rows_per_page": "每行页数",
+      "of": "之",
+      "filter": "过滤",
+      "date": "日期"
+    },
+    "eth_account": {
+      "eth_account": "ETH 账户",
+      "current_account": "目前账户",
+      "new_account": "新账户",
+      "username": "用户名称",
+      "password": "密码",
+      "confirm": "确认",
+      "users": "用户数",
+      "change_password": "更改密码",
+      "update_password": "更新密码"
+    },
+    "devices": {
+      "device": "设备",
+      "devices": "设备",
+      "downlink_fee_mxc": "下行费用 极域",
+      "status": "状态",
+      "available": "可用",
+      "mode": "模式",
+      "rows_per_page": "每行页数",
+      "of": "之",
+      "application": "应用",
+      "organization": "组织",
+      "gateway": "网关",
+      "kind": "类",
+      "name": "名称",
+      "filter": "过滤"
+    },
+    "gateways": {
+      "gateway": "网关",
+      "gateways": "网关列表",
+      "status": "状态",
+      "downlink_price": "下行价格",
+      "mode": "模式",
+      "filter": "过滤"
+    },
+    "staking": {
+      "staking": "Staking"
+    },
+    "nb_iot_server": "NB-IoT 服务器",
+    "lpwan_server": "LPWAN 服务器",
+    "powered_by": "由 MXC 极域技术支持",
+    "lora_server": "LoRa 服务器",
+    "version": "版",
+    "messages": {
+      "confirmation": "确认",
+      "confirmation_text": "您即将从帐户中提取 MXC",
+      "invalid_amount": "请输入有效金额以进行提款",
+      "invalid_account": "无效的ETH帐户。请进入 ETH 帐户菜单"
+    },
+    "store": {
+      "device_has_been": "设备已",
+      "gateway_has_been": "网关已",
+      "user_has_been": "用户已",
+      "account_has_been": "帐户已",
+      "profile_has_been": "个人资料已",
+      "server_has_been": "服务器已经",
+      "transaction_has_been": "交易已经",
+      "balance_has_been": "平衡已",
+      "successful_withdrawal": "提款成功"
+    },
+    "banner": {
+      "demo_version": "这是演示版本"
+    }
+  }
+}

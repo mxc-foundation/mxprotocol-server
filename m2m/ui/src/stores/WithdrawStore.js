@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 
 import Swagger from "swagger-client";
 
+import i18n, { packageNS } from '../i18n';
 import sessionStore from "./SessionStore";
 import {checkStatus, errorHandler } from "./helpers";
 import dispatcher from "../dispatcher";
@@ -71,7 +72,7 @@ class WithdrawStore extends EventEmitter {
       type: "CREATE_NOTIFICATION",
       notification: {
         type: "success",
-        message: "Successful Withdraw"
+        message: `${i18n.t(`${packageNS}:menu.store.successful_withdrawal`)}`
       },
     });
   }

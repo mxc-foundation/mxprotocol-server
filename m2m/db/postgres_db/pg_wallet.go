@@ -1,6 +1,9 @@
 package postgres_db
 
 import (
+	"strings"
+	"time"
+
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
@@ -30,7 +33,9 @@ func (*walletInterface) CreateWalletTable() error {
 			THEN
 				CREATE TYPE WALLET_TYPE AS ENUM (
 					'SUPER_ADMIN',
- 					'USER'
+					'SUPER_NODE_INCOME',
+					 'STAKE_STORAGE',
+					 'USER'
 		);
 		END IF;
 			CREATE TABLE IF NOT EXISTS wallet (
@@ -78,14 +83,7 @@ func (*walletInterface) CreateWalletFunctions() error {
 
 }
 
-func (*walletInterface) InsertWallet(orgId int64, walletType types.WalletType) (insertIndex int64, err error) {
-	w := wallet{
-		FkOrgLa:    orgId,
-		TypeW:      string(walletType),
-		Balance:    0.0,
-		TmpBalance: 0.0,
-	}
-
+func insertWallet(w wallet) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO wallet (
 			fk_org_la ,
@@ -101,8 +99,60 @@ func (*walletInterface) InsertWallet(orgId int64, walletType types.WalletType) (
 		w.Balance,
 		w.TmpBalance).Scan(&insertIndex)
 
-	// fmt.Println(val, err)
-	return insertIndex, errors.Wrap(err, "db/InsertWallet")
+	return insertIndex, errors.Wrap(err, "db/insertWallet")
+}
+
+func (*walletInterface) InsertWallet(orgId int64, walletType types.WalletType) (insertIndex int64, err error) {
+	w := wallet{
+		FkOrgLa:    orgId,
+		TypeW:      string(walletType),
+		Balance:    0.0,
+		TmpBalance: 0.0,
+	}
+
+	return insertWallet(w)
+}
+
+func (*walletInterface) InsertSuperNodeIncomeWallet() (insertIndex int64, err error) {
+
+	id, err := PgWallet.GetWalletIdSuperNodeIncome()
+	if err == nil {
+		return id, err
+	} else if strings.HasSuffix(err.Error(), types.DbError.NoRowQueryRes.Error()) {
+		//  there is no existing record for NodeIncome
+		w := wallet{
+			FkOrgLa:    -1,
+			TypeW:      string(types.SUPER_NODE_INCOME),
+			Balance:    0.0,
+			TmpBalance: 0.0,
+		}
+		return insertWallet(w)
+
+	} else {
+		return 0, errors.Wrap(err, "db/InsertSuperNodeIncomeWallet")
+	}
+
+}
+
+func (*walletInterface) InsertStakeStorageWallet() (insertIndex int64, err error) {
+
+	id, err := PgWallet.GetWalletIdStakeStorage()
+	if err == nil {
+		return id, err
+	} else if strings.HasSuffix(err.Error(), types.DbError.NoRowQueryRes.Error()) {
+		//  there is no existing record for StakeStorage
+		w := wallet{
+			FkOrgLa:    -2,
+			TypeW:      string(types.STAKE_STORAGE),
+			Balance:    0.0,
+			TmpBalance: 0.0,
+		}
+		return insertWallet(w)
+
+	} else {
+		return 0, errors.Wrap(err, "db/InsertStakeStorageWallet")
+	}
+
 }
 
 func (*walletInterface) GetWalletIdFromOrgId(orgIdLora int64) (int64, error) {
@@ -209,10 +259,42 @@ func (*walletInterface) GetWalletIdSuperNode() (walletId int64, err error) {
 		WHERE
 			type = 'SUPER_ADMIN' 
 			ORDER BY id DESC 
-			LIMIT 1  -- altough only one super node exists
+			LIMIT 1  
 		;`).Scan(&walletId)
 
 	return walletId, errors.Wrap(err, "db/GetWalletIdSuperNode")
+}
+
+func (*walletInterface) GetWalletIdSuperNodeIncome() (walletId int64, err error) {
+
+	err = PgDB.QueryRow(
+		`SELECT
+			id
+		FROM
+			wallet 
+		WHERE
+			type = 'SUPER_NODE_INCOME' 
+			ORDER BY id DESC 
+			LIMIT 1 
+		;`).Scan(&walletId)
+
+	return walletId, errors.Wrap(err, "db/GetWalletIdSuperNodeIncome")
+}
+
+func (*walletInterface) GetWalletIdStakeStorage() (walletId int64, err error) {
+
+	err = PgDB.QueryRow(
+		`SELECT
+			id
+		FROM
+			wallet 
+		WHERE
+			type = 'STAKE_STORAGE' 
+			ORDER BY id DESC 
+			LIMIT 1 
+		;`).Scan(&walletId)
+
+	return walletId, errors.Wrap(err, "db/GetWalletIdSuperNodeIncome")
 }
 
 func (*walletInterface) updateBalanceByWalletId(walletId int64, newBalance float64) error {
@@ -246,4 +328,33 @@ func (*walletInterface) GetMaxWalletId() (maxWalletId int64, err error) {
 		;`).Scan(&maxWalletId)
 
 	return maxWalletId, errors.Wrap(err, "db/GetMaxWalletId")
+}
+func (*walletInterface) GetSupernodeIncomeAmount(since time.Time, until time.Time) (val float64, err error) {
+
+	snIncomeWlt, err := PgWallet.GetWalletIdSuperNodeIncome()
+	if err != nil {
+		return 0, errors.Wrap(err, "Impossible to get supernode walletId db/getSupernodeIncome/ ")
+	}
+
+	err = PgDB.QueryRow(
+		`SELECT 
+			COALESCE(SUM(value),0) as sum_income
+		FROM
+			internal_tx
+		WHERE
+			fk_wallet_receiver = $1
+		AND
+			time_tx 
+		BETWEEN  
+			$2
+		AND
+			$3
+		;`,
+		snIncomeWlt,
+		since,
+		until,
+	).Scan(&val)
+
+	return val, errors.Wrap(err, "db/getSupernodeIncome")
+
 }

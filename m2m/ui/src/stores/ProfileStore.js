@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 
 import Swagger from "swagger-client";
 
+import i18n, { packageNS } from '../i18n';
 import sessionStore from "./SessionStore";
 import {checkStatus, errorHandler } from "./helpers";
 import updateOrganizations from "./SetUserProfile";
@@ -33,7 +34,7 @@ class ProfileStore extends EventEmitter {
       type: "CREATE_NOTIFICATION",
       notification: {
         type: "success",
-        message: "Profile has been " + action,
+        message: `${i18n.t(`${packageNS}:menu.store.profile_has_been`)} ` + action,
       },
     });
   }

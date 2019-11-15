@@ -10,7 +10,7 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
+func performAccounting(aggDurationMinutes int64, dlPrice float64, superNodePktSentIncomeRatio float64) error {
 
 	log.WithFields(log.Fields{
 		"dl_price": dlPrice,
@@ -43,7 +43,7 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64) error {
 		return err
 	}
 
-	addPricesWltAgg(awuList, dlPrice)
+	addPricesWltAgg(awuList, dlPrice, superNodePktSentIncomeRatio)
 
 	addNonPriceFields(awuList, aggDurationMinutes, aggPeriodId)
 
@@ -119,7 +119,7 @@ func getWltAggFromDlPkts(startIndDlPkt int64, endIndDlPkt int64, awuList []types
 	return nil
 }
 
-func addPricesWltAgg(awuList []types.AggWltUsg, dlPrice float64) {
+func addPricesWltAgg(awuList []types.AggWltUsg, dlPrice float64, superNodePktSentIncomeRatio float64) {
 	for k, v := range awuList {
 
 		if v == (types.AggWltUsg{}) {
@@ -127,9 +127,9 @@ func addPricesWltAgg(awuList []types.AggWltUsg, dlPrice float64) {
 		}
 
 		awuList[k].Spend = float64(v.DlCntDv-v.DlCntDvFree) * dlPrice
-		awuList[k].Income = float64(v.DlCntGw-v.DlCntGwFree) * dlPrice
+		awuList[k].Income = (float64(v.DlCntGw-v.DlCntGwFree) * dlPrice) * (1 - superNodePktSentIncomeRatio)
 		awuList[k].BalanceDelta = awuList[k].Income - awuList[k].Spend
-
+		awuList[k].SuperNodeIncomeAmount = (float64(v.DlCntGw-v.DlCntGwFree) * dlPrice) * (superNodePktSentIncomeRatio)
 	}
 }
 
@@ -170,7 +170,7 @@ func putInDbAggWltUsg(awuList []types.AggWltUsg, walletIdSuperNode int64) error 
 					TxInternalRef:  insertedAggWltUsgId,
 					Value:          v.BalanceDelta,
 					TimeTx:         time.Now().UTC(),
-				})
+				}, v.SuperNodeIncomeAmount)
 			if err != nil {
 				log.WithFields(log.Fields{
 					"AggWltUsg": v,

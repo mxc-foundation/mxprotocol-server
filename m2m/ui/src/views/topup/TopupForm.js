@@ -1,6 +1,7 @@
 import React from "react";
 
 import TextField from '@material-ui/core/TextField';
+import i18n, { packageNS } from '../../i18n';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
 import TitleBarTitle from "../../components/TitleBarTitle";
@@ -15,7 +16,7 @@ class TopupForm extends FormComponent {
 
   render() {
     const extraButtons = <>
-      <Button color="primary.main" onClick={this.handleOpenAXS} type="button" disabled={false}>USE AXS WALLET</Button>
+      <Button color="primary.main" onClick={this.handleOpenAXS} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.topup.use_axs_wallet`)}</Button>
     </>;
     
     if (this.props.reps === undefined) {
@@ -25,7 +26,7 @@ class TopupForm extends FormComponent {
           extraButtons={extraButtons}
           onSubmit={this.onSubmit}
         >
-          <TitleBarTitle component={Link} to={'#'} title="THERE IS NO DATA TO DISPLAY." />
+          <TitleBarTitle component={Link} to={'#'} title={i18n.t(`${packageNS}:menu.topup.no_data_to_display`)} />
         </Form>
       );
     }
@@ -38,20 +39,20 @@ class TopupForm extends FormComponent {
       >
         <TextField
           id="to"
-          label="From ETH Account"
+          label={i18n.t(`${packageNS}:menu.topup.from_eth_account`)}
           margin="normal"
-          value={this.props.reps.account || "Can not find any account."}
+          value={this.props.reps.account || `${i18n.t(`${packageNS}:menu.topup.can_not_find_any_account`)}` }
           InputProps={{
             readOnly: true,
           }}
           fullWidth
         />
-        <TitleBarTitle component={Link} to={`/modify-account/${this.props.orgId}`} title="CHANGE ETH ACCOUNT" />
+        <TitleBarTitle component={Link} to={`/modify-account/${this.props.orgId}`} title={i18n.t(`${packageNS}:menu.topup.change_eth_account`)} />
         <TextField
           id="to"
-          label="To ETH Account"
+          label={i18n.t(`${packageNS}:menu.topup.to_eth_account`)}
           margin="normal"
-          value={this.props.reps.superNodeAccount || "Can not find any account."}
+          value={this.props.reps.superNodeAccount || `${i18n.t(`${packageNS}:menu.topup.can_not_find_any_account`)}` }
           InputProps={{
             readOnly: true,
           }}

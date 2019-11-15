@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 
 import history from "./history";
 import theme from "./theme";
+import i18n from "./i18n";
 
 import TopNav from "./components/TopNav";
 import TopBanner from "./components/TopBanner";
@@ -30,6 +31,8 @@ import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
 import SuperNodeEth from "./views/ControlPanel/superNodeEth/superNodeEth"
 import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
+import StakeLayout from "./views/Stake/StakeLayout";
+import SetStake from "./views/Stake/SetStake";
 
 import SuperAdminWithdraw from "./views/ControlPanel/withdraw/withdraw"
 import SupernodeHistory from "./views/ControlPanel/history/History"
@@ -110,6 +113,7 @@ class App extends Component {
       drawerOpen: true,
     };
 
+    this.onChangeLanguage = this.onChangeLanguage.bind(this);
     this.setDrawerOpen = this.setDrawerOpen.bind(this);
   }
 
@@ -118,11 +122,40 @@ class App extends Component {
       this.setState({
         user: SessionStore.getUser(),
         drawerOpen: SessionStore.getUser() != null,
+        language: {
+          id: SessionStore.getLanguage() && SessionStore.getLanguage().id,
+          name: SessionStore.getLanguage() && SessionStore.getLanguage().name,
+          code: SessionStore.getLanguage() && SessionStore.getLanguage().code
+        }
       });
     });
 
+    const storedLanguageID = SessionStore.getLanguage() && SessionStore.getLanguage().id;
+
+    if (storedLanguageID && i18n.language !== storedLanguageID) {
+      i18n.changeLanguage(storedLanguageID, (err, t) => {
+        if (err) {
+          console.error(`Error loading language ${storedLanguageID}: `, err);
+        }
+      });
+    }
+
     this.setState({
       drawerOpen: true
+    });
+  }
+
+  onChangeLanguage(newLanguage) {
+    SessionStore.setLanguage(newLanguage);
+
+    i18n.changeLanguage(newLanguage.id, (err, t) => {
+      if (err) {
+        console.error(`Error loading language ${newLanguage.id}: `, err);
+      }
+    });
+
+    this.setState({
+      language: newLanguage
     });
   }
 
@@ -142,7 +175,7 @@ class App extends Component {
     let topbanner = null;
 
     if (this.state.user !== null) {
-      topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} username={SessionStore.getUsername()} />;
+      topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} language={this.state.language} onChangeLanguage={this.onChangeLanguage} username={SessionStore.getUsername()} />;
       topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>;
       sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
     }
@@ -168,6 +201,9 @@ class App extends Component {
                     <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
                     <Route path="/device/:organizationID" component={DeviceLayout} />
                     <Route path="/gateway/:organizationID" component={GatewayLayout} />
+                    <Route exact path="/stake/:organizationID" component={StakeLayout} />
+                    <Route exact path="/stake/:organizationID/set-stake" component={SetStake} />
+P
 
                     <Route path="/control-panel/modify-account" component={SuperNodeEth} />
                     <Route path="/control-panel/withdraw" component={SuperAdminWithdraw} />

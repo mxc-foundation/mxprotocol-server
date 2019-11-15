@@ -62,8 +62,10 @@ func dbInit() {
 		AggDeviceUsage.CreateAggDvUsgTable,
 		AggGatewayUsage.CreateAggGwUsgTable,
 		Stake.CreateStakeTable,
+		Stake.CreateStakeFunctions,
 		StakeRevenuePeriod.CreateStakeRevenuePeriodTable,
 		StakeRevenue.CreateStakeRevenueTable,
+		StakeRevenue.CreateStakeRevenueFunctions,
 	}
 
 	for _, t := range InitDbTableTasks {

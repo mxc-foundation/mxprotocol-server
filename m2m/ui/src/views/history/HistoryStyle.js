@@ -10,7 +10,7 @@ const HistoryStyle = {
       },
       TitleBar: {
         height: 115,
-        width: '50%',
+        width: '100%',
         light: true,
         display: 'flex',
         flexDirection: 'column'
@@ -38,6 +38,14 @@ const HistoryStyle = {
             opacity: 1,
           }
       },
+      between: {
+        display: 'flex',
+        justifyContent:'spaceBetween'
+      },
+      alignCol: {
+        display: 'flex',
+        flexDirection:'column'
+      }
   };
   
 export default HistoryStyle;

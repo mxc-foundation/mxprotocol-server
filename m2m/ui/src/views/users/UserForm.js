@@ -23,7 +23,7 @@ class UserForm extends FormComponent {
       >
         <TextField
           id="username"
-          label="Username"
+          label={i18n.t(`${packageNS}:menu.eth_account.username`)}
           margin="normal"
           value={this.state.object.username || ""}
           onChange={this.onChange}
@@ -52,7 +52,7 @@ class UserForm extends FormComponent {
         />
         {this.state.object.id === undefined && <TextField
           id="password"
-          label="Password"
+          label={i18n.t(`${packageNS}:menu.eth_account.password`)}
           type="password"
           margin="normal"
           value={this.state.object.password || ""}

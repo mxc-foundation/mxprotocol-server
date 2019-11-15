@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
-
 import Typography from '@material-ui/core/Typography';
 import SessionStore from "../stores/SessionStore";
 import Avatar from '@material-ui/core/Avatar';
@@ -23,6 +22,7 @@ import Wallet from "mdi-material-ui/WalletOutline";
 import styles from "./TopNavStyle"
 import { SUPER_ADMIN } from "../util/M2mUtil";
 
+import DropdownMenuLanguage from "./DropdownMenuLanguage";
 
 function getWalletBalance() {
   var organizationId = SessionStore.getOrganizationID();
@@ -48,10 +48,11 @@ class TopNav extends Component {
     this.state = {
       menuAnchor: null,
       balance: null,
-      search: "",
+      search: ""
     };
 
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
+    this.onLanguageChange = this.onLanguageChange.bind(this);
     this.onMenuOpen = this.onMenuOpen.bind(this);
     this.onMenuClose = this.onMenuClose.bind(this);
     this.onLogout = this.onLogout.bind(this);
@@ -79,6 +80,20 @@ class TopNav extends Component {
       console.error(error);
       this.setState({ error });
     }
+  }
+
+  onLanguageChange(e) {
+    const newLanguageID = e.target.label;
+    const newLanguageName = e.target.value;
+    const newLanguageCode = e.target.code;
+
+    const newLanguageState = {
+      id: newLanguageID,
+      name: newLanguageName,
+      code: newLanguageCode
+    }
+
+    this.props.onChangeLanguage(newLanguageState);
   }
 
   onMenuOpen(e) {
@@ -171,6 +186,10 @@ class TopNav extends Component {
               root: this.props.classes.chip,
             }}
           />
+
+          <div>
+            <DropdownMenuLanguage onChange={this.onLanguageChange} />
+          </div>
 
           <a href="https://www.mxc.org/support" target="mxc-support">
             <IconButton className={this.props.classes.iconButton}>

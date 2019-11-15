@@ -25,6 +25,11 @@ func NewStakingServerAPI() *StakingServerAPI {
 	return &StakingServerAPI{serviceName: "staking"}
 }
 
+func (s *StakingServerAPI) GetStakingPercentage(ctx context.Context, req *api.StakingPercentageRequest) (*api.StakingPercentageResponse, error) {
+	stakingPercentage := config.Cstruct.Staking.StakingPercentage
+	return &api.StakingPercentageResponse{StakingPercentage: stakingPercentage}, nil
+}
+
 func (s *StakingServerAPI) Stake(ctx context.Context, req *api.StakeRequest) (*api.StakeResponse, error) {
 	userProfile, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
 
@@ -44,9 +49,19 @@ func (s *StakingServerAPI) Stake(ctx context.Context, req *api.StakeRequest) (*a
 		log.WithFields(log.Fields{
 			"orgId": req.OrgId,
 		}).Debug("grpc_api/Stake")
+		if req.Amount <= 0 {
+			return &api.StakeResponse{Status: "Staking amount must be more than 0.", UserProfile: &userProfile}, nil
+		}
+
 		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
 		if err != nil {
 			log.WithError(err).Error("StakeAPI/Cannot get walletId from DB")
+		}
+
+		// check if person has enough balance for staking
+		personalBalance, err := db.Wallet.GetWalletBalance(walletId)
+		if req.Amount > personalBalance {
+			return &api.StakeResponse{Status: "You do not have enough money.", UserProfile: &userProfile}, nil
 		}
 
 		stakeProf, err := db.Stake.GetActiveStake(walletId)
@@ -54,7 +69,7 @@ func (s *StakingServerAPI) Stake(ctx context.Context, req *api.StakeRequest) (*a
 			log.WithError(err).Error("StakeAPI/Cannot get staking profile from DB")
 		}
 
-		//If this person has one staking in DB already, return.
+		//If this person has one staking in DB already, return
 		var nilStake = types.Stake{}
 		if stakeProf != nilStake {
 			return &api.StakeResponse{Status: "There is already one active stake, you should do the unstake first.", UserProfile: &userProfile}, nil
@@ -201,15 +216,16 @@ func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.Staki
 			log.WithError(err).Error("GetStakingHistory/Cannot get walletID from DB")
 		}
 
-		stakingHists, err := db.StakeRevenue.GetStakeReveneuHistory(walletId, req.Offset, req.Limit)
+		stakingHists, err := db.StakeRevenue.GetStakeRevenueHistory(walletId, req.Offset, req.Limit)
 		if err != nil {
 			log.WithError(err).Error("GetStakingHistory/Cannot get histories from DB")
 		}
 
-		totalHists, err := db.StakeRevenue.GetStakeReveneuHistoryCnt(walletId)
+		totalHists, err := db.StakeRevenue.GetStakeRevenueHistoryCnt(walletId)
 		if err != nil {
 			log.WithError(err).Error("GetStakingHistory/Cannot get total numbers of histories from DB")
 		}
+
 
 		resp := &api.StakingHistoryResponse{}
 
@@ -217,8 +233,18 @@ func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.Staki
 			stakeHist := &api.GetStakingHistory{}
 			stakeHist.StakeAmount = v.StakeAmount
 			stakeHist.Start = v.StartStakeTime.String()
-			stakeHist.End = v.StakingPeriodEnd.String()
-			stakeHist.RevMonth = time.Now().Month().String()
+			stakeHist.End = v.UnstakeTime.String()
+
+			if v.StakingPeriodStart.Month() != v.StakingPeriodEnd.Month() {
+				log.WithError(err).Error("GetStakingHistory/StakingPeriodStart and End in different month.")
+			}
+
+			if v.StakingPeriodStart.String() == "0001-01-01 00:00:00 +0000 UTC" || v.StakingPeriodEnd.String() == "0001-01-01 00:00:00 +0000 UTC" {
+				stakeHist.RevMonth = v.StakingPeriodStart.String()
+			} else {
+				stakeHist.RevMonth = v.StakingPeriodStart.Month().String()
+			}
+
 			stakeHist.NetworkIncome = v.SuperNodeIncome
 			stakeHist.MonthlyRate = v.IncomeToStakePortion * 100
 			stakeHist.Revenue = v.RevenueAmount
