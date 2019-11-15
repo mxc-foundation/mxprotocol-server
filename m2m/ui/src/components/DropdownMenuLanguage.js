@@ -1,8 +1,20 @@
 import React, { Component } from "react";
 import Select from "react-select";
+import { withStyles } from "@material-ui/core/styles";
+import classNames from "classnames";
 import SessionStore from "../stores/SessionStore";
 import { supportedLanguages } from "../i18n";
 import FlagIcon from "./FlagIcon";
+
+const styles = {
+  languageIcon: {
+    display: "inline-block",
+    top: "5px"
+  },
+  languageSelection: {
+    display: "inline-block"
+  }
+};
 
 const customStyles = {
   control: (base, state) => ({
@@ -48,7 +60,7 @@ const customStyles = {
   }),
 };
 
-export default class WithPromises extends Component {
+class WithPromises extends Component {
   constructor() {
     super();
 
@@ -104,12 +116,14 @@ export default class WithPromises extends Component {
           selectedOption && selectedOption.code
           ? (
             <FlagIcon
+              className={classNames(this.props.classes.languageIcon)}
               code={selectedOption.code}
               size='2x'
             />
           ) : null
         }
         <Select
+          className={classNames(this.props.classes.languageSelection)}
           styles={customStyles}
           theme={(theme) => ({
             ...theme,
@@ -127,3 +141,5 @@ export default class WithPromises extends Component {
     );
   }
 }
+
+export default withStyles(styles)(WithPromises);
