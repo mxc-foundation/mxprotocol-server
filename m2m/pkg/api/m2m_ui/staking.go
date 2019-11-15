@@ -232,8 +232,10 @@ func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.Staki
 			stakeHist := &api.GetStakingHistory{}
 			stakeHist.StakeAmount = v.StakeAmount
 			stakeHist.Start = v.StartStakeTime.String()
-			stakeHist.End = v.StakingPeriodEnd.String()
-			stakeHist.RevMonth = time.Now().Month().String()
+			stakeHist.End = v.UnstakeTime.String()
+			//get the month from start time
+			stakingRevMonth := v.StartStakeTime.Month().String()
+			stakeHist.RevMonth = stakingRevMonth
 			stakeHist.NetworkIncome = v.SuperNodeIncome
 			stakeHist.MonthlyRate = v.IncomeToStakePortion * 100
 			stakeHist.Revenue = v.RevenueAmount
