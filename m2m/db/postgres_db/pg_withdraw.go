@@ -238,7 +238,7 @@ func (*withdrawInterface) CreateWithdrawFunctions() error {
 
 func initWithdrawReqApply(wdr withdraw, it types.InternalTx, withdrawFeeAmnt float64) (withdrawId int64, err error) {
 
-	superNodeIncomeWltId, err := PgWallet.GetWalletIdStakeStorage()
+	superNodeIncomeWltId, err := PgWallet.GetWalletIdSuperNodeIncome()
 	if err != nil {
 		return 0, errors.Wrap(err, "db/initWithdrawReqApply. Can not get superNodeIncomeWltId! ")
 	}
