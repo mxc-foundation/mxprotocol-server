@@ -78,21 +78,17 @@ class StakeForm extends FormComponent {
                 label={AMOUNT}
                 margin="normal"
                 value={this.props.amount}
-                placeholder="Type here" 
                 onChange={this.props.onChange}
-                autoComplete='off'
-                
                 required={!this.props.isUnstake}
-                fullWidth
-                type="number"
-                inputProps={{
-                    min: 0,
+                InputProps={{
+                  min: 0,
                     readOnly: this.props.isUnstake,
-                  endAdornment: <InputAdornment className={this.props.classes.mxc} position="end">MXC</InputAdornment>,
+                    endAdornment: <InputAdornment position="end">MXC</InputAdornment>,
                 }}
+                fullWidth
             />
             <TextField
-                id="txFee"
+                id="revRate"
                 label={REVENUE_RATE}
                 margin="normal"
                 
