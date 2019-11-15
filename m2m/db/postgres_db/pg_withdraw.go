@@ -142,8 +142,11 @@ func (*withdrawInterface) CreateWithdrawFunctions() error {
 		v_tx_stat tx_status,
 		v_fk_wallet_sender INT,
 		v_fk_wallet_receiver INT,
+		v_fk_wallet_supernode_income INT,
 		v_payment_cat PAYMENT_CATEGORY,
-		v_value_fee_included NUMERIC(28,18)
+		v_payment_cat_sn_income_fee PAYMENT_CATEGORY,
+		v_value_fee_included NUMERIC(28,18),
+		v_wdr_fee_amount NUMERIC(28,18)
 		) RETURNS INT
 	LANGUAGE plpgsql
 	AS $$
@@ -187,6 +190,23 @@ func (*withdrawInterface) CreateWithdrawFunctions() error {
 		;
 
 
+		INSERT INTO internal_tx (
+			fk_wallet_sender,
+			fk_wallet_receiver,
+			payment_cat,
+			tx_internal_ref,
+			value,
+			time_tx )
+		VALUES (
+			v_fk_wallet_receiver,
+			v_fk_wallet_supernode_income,
+			v_payment_cat_sn_income_fee,
+			wdr_id,
+			v_wdr_fee_amount,
+			v_tx_sent_time)
+		;
+
+
 		UPDATE
 			wallet 
 		SET
@@ -195,6 +215,16 @@ func (*withdrawInterface) CreateWithdrawFunctions() error {
 		WHERE
 			id = v_fk_wallet_sender
 		;
+
+		UPDATE
+			wallet 
+		SET
+			balance = balance + v_wdr_fee_amount,
+			tmp_balance = tmp_balance + v_wdr_fee_amount
+		WHERE
+			id = v_fk_wallet_supernode_income
+		;
+
 
 	RETURN wdr_id;
 
@@ -206,10 +236,15 @@ func (*withdrawInterface) CreateWithdrawFunctions() error {
 	return errors.Wrap(err, "db/CreateWithdrawFunctions")
 }
 
-func initWithdrawReqApply(wdr withdraw, it types.InternalTx) (withdrawId int64, err error) {
+func initWithdrawReqApply(wdr withdraw, it types.InternalTx, withdrawFeeAmnt float64) (withdrawId int64, err error) {
+
+	superNodeIncomeWltId, err := PgWallet.GetWalletIdSuperNodeIncome()
+	if err != nil {
+		return 0, errors.Wrap(err, "db/initWithdrawReqApply. Can not get superNodeIncomeWltId! ")
+	}
 
 	err = PgDB.QueryRow(`
-		SELECT withdraw_req_init($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);
+		SELECT withdraw_req_init($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14);
 		
 	`, wdr.FkExtAcntSender,
 		wdr.FkExtAcntRcvr,
@@ -220,8 +255,11 @@ func initWithdrawReqApply(wdr withdraw, it types.InternalTx) (withdrawId int64, 
 		wdr.TxStatus,
 		it.FkWalletSender,
 		it.FkWalletRcvr,
+		superNodeIncomeWltId,
 		it.PaymentCat,
-		it.Value).Scan(&withdrawId)
+		types.WITHDRAW_FEE_SN_INCOME,
+		it.Value,
+		withdrawFeeAmnt).Scan(&withdrawId)
 
 	return withdrawId, errors.Wrap(err, "db/InitWithdrawReqApply")
 
@@ -272,7 +310,7 @@ func (*withdrawInterface) InitWithdrawReq(walletId int64, value float64, extCurr
 		return withdrawId, errors.Wrap(err, "db/InitWithdrawReq")
 	}
 
-	return initWithdrawReqApply(wdr, it)
+	return initWithdrawReqApply(wdr, it, withdrawFeeAmnt)
 
 }
 
