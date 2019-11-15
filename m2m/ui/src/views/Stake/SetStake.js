@@ -33,7 +33,8 @@ class SetStake extends FormComponent {
       succeed: STAKE_SET_SUCCESS,
       unstakeSucceed : UNSTAKE_SET_SUCCESS,
       warning: STAKE_WARNING_001
-    }
+    },
+    dismissOn: true
   }
 
   componentDidMount(){
@@ -130,6 +131,12 @@ class SetStake extends FormComponent {
   handleOnclick = () => {
     this.props.history.push(`/history/${this.props.match.params.organizationID}/stake`);
   }
+  
+  dismissOn = () => {
+    this.setState({
+      dismissOn: false
+    });
+  }
 
   render() {
     /* if (this.props.txinfo === undefined) {
@@ -172,17 +179,17 @@ class SetStake extends FormComponent {
                         {this.state.amount} {MXC}
                     </Typography>
                 </div>
-                <div>
+                {this.state.dismissOn && <div>
                     <div className={infoBoxCss[this.state.infoStatus]}>
                     <Typography  /* className={this.props.classes.title} */ gutterBottom>
                         {this.state.info}
                     </Typography>
                     <div className={this.props.classes.between}>
-                        <ExtLink to={''} context={DISMISS} />&nbsp;&nbsp;&nbsp;
+                        <ExtLink dismissOn={this.dismissOn} for={'local'} context={DISMISS} />&nbsp;&nbsp;&nbsp;
                         <ExtLink to={EXT_URL_STAKE} context={LEARN_MORE} />
                     </div>
                     </div>
-                </div>
+                </div>}
             </Grid>
       </Grid>
     );
