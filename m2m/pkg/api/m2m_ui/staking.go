@@ -49,6 +49,10 @@ func (s *StakingServerAPI) Stake(ctx context.Context, req *api.StakeRequest) (*a
 		log.WithFields(log.Fields{
 			"orgId": req.OrgId,
 		}).Debug("grpc_api/Stake")
+		if req.Amount <= 0 {
+			return &api.StakeResponse{Status: "Staking amount must be more than 0.", UserProfile: &userProfile}, nil
+		}
+
 		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
 		if err != nil {
 			log.WithError(err).Error("StakeAPI/Cannot get walletId from DB")
