@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 
 import history from "./history";
 import theme from "./theme";
-import i18n, { packageNS } from "./i18n";
+import i18n from "./i18n";
 
 import TopNav from "./components/TopNav";
 import TopBanner from "./components/TopBanner";

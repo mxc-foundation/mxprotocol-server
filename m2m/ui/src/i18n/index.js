@@ -44,7 +44,7 @@ i18n
     interpolation: {
       escapeValue: false
     },
-    lng: SessionStore.getLanguage() && SessionStore.getLanguage().id || "en",
+    lng: (SessionStore.getLanguage() && SessionStore.getLanguage().id) || "en",
     ns: [packageNS],
     // https://react.i18next.com/misc/using-with-icu-format
     react: {
