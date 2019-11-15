@@ -22,7 +22,7 @@ func Setup(conf config.MxpConfig) error {
 			var dlPrice float64 = conf.SuperNode.DlPrice
 			var aggDurationMinutes int64 = conf.Accounting.IntervalMin
 
-			if err := performAccounting(aggDurationMinutes, dlPrice); err != nil {
+			if err := performAccounting(aggDurationMinutes, dlPrice, superNodePktSentIncomeRatio); err != nil {
 				log.WithError(err).Error(" Accounting Failed! ")
 			}
 
