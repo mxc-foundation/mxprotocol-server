@@ -36,7 +36,9 @@ func (*internalTxInterface) CreateInternalTxTable() error {
 			'PURCHASE_SUBSCRIPTION',
 			'BUY_SUBSCRIPTION',
 			'TOP_UP',
-			'WITHDRAW'
+			'WITHDRAW',
+			'WITHDRAW_FEE_SN_INCOME',
+			'DOWNLINK_AGG_SN_INCOME'
 		);
 		END IF;
 
