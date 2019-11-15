@@ -157,6 +157,7 @@ class App extends Component {
               {topNav}
               {topbanner}
               {sideNav}
+              {topNav}
               <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
                 <Grid container spacing={24}>
                   <Switch>
