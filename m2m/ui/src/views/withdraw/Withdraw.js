@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import MoneyStore from "../../stores/MoneyStore";
@@ -157,9 +158,7 @@ class Withdraw extends Component {
           <Modal title={CONFIRMATION} description={CONFIRMATION_TEXT} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
-              
-                <TitleBarTitle title="Withdraw" />
-              
+            <TitleBarTitle title={i18n.t(`${packageNS}:menu.withdraw.withdraw`)} />
           </div>
 
         </Grid>
@@ -169,7 +168,7 @@ class Withdraw extends Component {
         </Grid>
         <Grid item xs={6}>
           <WithdrawForm
-            submitLabel="Withdraw"
+            submitLabel={i18n.t(`${packageNS}:menu.withdraw.withdraw`)}
             txinfo={this.state.txinfo} {...this.props}
             onSubmit={this.onSubmit}
           />

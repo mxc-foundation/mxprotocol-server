@@ -1,6 +1,7 @@
 import React from "react";
 
 import TextField from '@material-ui/core/TextField';
+import i18n, { packageNS } from '../../i18n';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
 class NewEthAccountForm extends FormComponent {
@@ -47,7 +48,7 @@ class NewEthAccountForm extends FormComponent {
       >
         <TextField
           id="createAccount"//it is defined current account in swagger
-          label="New account"
+          label={i18n.t(`${packageNS}:menu.withdraw.new_account`)}
           margin="normal"
           value={this.state.createAccount}
           placeholder="0x0000000000000000000000000000000000000000" 
@@ -63,10 +64,10 @@ class NewEthAccountForm extends FormComponent {
 
         <TextField
           id="username"//it is defined current account in swagger
-          label="User name"
+          label={i18n.t(`${packageNS}:menu.withdraw.username`)}
           margin="normal"
           value={this.state.username}
-          placeholder="Type here" 
+          placeholder={i18n.t(`${packageNS}:menu.withdraw.type_here`)}
           onChange={this.onChange}
           autoComplete='off'
           required
@@ -75,12 +76,11 @@ class NewEthAccountForm extends FormComponent {
 
         <TextField
           id="password"//it is defined current account in swagger
-          label="Password"
+          label={i18n.t(`${packageNS}:menu.withdraw.password`)}
           margin="normal"
           value={this.state.password}
-          placeholder="Type here" 
+          placeholder={i18n.t(`${packageNS}:menu.withdraw.type_here`)}
           onChange={this.onChange}
-          
           type="password"
           autoComplete="off"
           required
