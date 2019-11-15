@@ -9,9 +9,7 @@ import Tab from '@material-ui/core/Tab';
 import TitleBar from "../../../components/TitleBar";
 import TitleBarTitle from "../../../components/TitleBarTitle";
 import Spinner from "../../../components/ScaleLoader"
-import EthAccount from "../../history/EthAccount";
-import SuperNodeTransactions from "./Transactions";
-import SuperNodeNetworkActivityHistory from "./NetworkActivities";
+import SuperNodeEthAccount from "./EthAccount";
 
 import topupStore from "../../../stores/TopupStore";
 import styles from "./HistoryStyle";
@@ -104,9 +102,7 @@ class SupernodeHistory extends Component {
             scrollButtons="auto"
             textColor="primary"
           >
-            <Tab label="Transactions" component={Link} to={`/control-panel/history/`} />
-            <Tab label="ETH Account" component={Link} to={`/control-panel/history/eth-account`} />
-            <Tab label="Network Activity" component={Link} to={`/control-panel/history/network-activity`} />
+            <Tab label="ETH Account" component={Link} to={`/control-panel/history/`} />
           </Tabs>
 
             <Grid container justify="space-between" alignItems="center" className={this.props.classes.card}>
@@ -118,9 +114,7 @@ class SupernodeHistory extends Component {
 
         <Grid item xs={12}>
           <Switch>
-            <Route exact path={`${this.props.match.path}/`} render={props => <SuperNodeTransactions organizationID={SUPER_ADMIN} {...props} />} />
-            <Route exact path={`${this.props.match.path}/eth-account`} render={props => <EthAccount organizationID={SUPER_ADMIN} {...props} />} />
-            <Route exact path={`${this.props.match.path}/network-activity`} render={props => <SuperNodeNetworkActivityHistory organizationID={SUPER_ADMIN} {...props} />} />
+            <Route exact path={`${this.props.match.path}/`} render={props => <SuperNodeEthAccount organizationID={SUPER_ADMIN} {...props} />} />
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}
           </Switch>
         </Grid>
