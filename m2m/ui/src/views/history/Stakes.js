@@ -48,8 +48,8 @@ class Stakes extends Component {
     return(
       <TableRow key={index}>
         <TableCell align={'right'} className={this.props.classes.maxW140} >{obj.stakeAmount}</TableCell>
-        <TableCell align={'center'} className={this.props.classes.maxW140}>{obj.start.substring(0,16)}</TableCell>
-        <TableCell align={'center'} className={this.props.classes.maxW140}>{obj.end.substring(0,16)}</TableCell>
+        <TableCell align={'center'} className={this.props.classes.maxW140}>{obj.start.substring(0,10)}</TableCell>
+        <TableCell align={'center'} className={this.props.classes.maxW140}>{obj.end.substring(0,10)}</TableCell>
         <TableCell align={'center'}>{obj.revMonth}</TableCell>
         <TableCell align={'right'}>{obj.networkIncome}</TableCell>
         <TableCell align={'right'}>{obj.monthlyRate}</TableCell>
