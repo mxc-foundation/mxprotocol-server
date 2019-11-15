@@ -88,10 +88,16 @@ class SetStake extends FormComponent {
     e.preventDefault();
     const resp = StakeStore.stake(req);
     resp.then((res) => {
-      this.setState({ 
-        isUnstake: true,
-        info: STAKE_SET_SUCCESS
-      });
+      if(res.body.status === 'Stake successful.'){
+        this.setState({ 
+          isUnstake: true,
+          info: STAKE_SET_SUCCESS
+        });
+      }else{
+        this.setState({ 
+          info: res.body.status
+        });
+      }
     }) 
   }
 
@@ -101,13 +107,13 @@ class SetStake extends FormComponent {
     resp.then((res) => {
       this.setState({ 
         isUnstake: false,
-        amount: 0
+        amount: 0,
+        info: UNSTAKE_SET_SUCCESS
       });
     })
   }
 
   handleOnclick = () => {
-    //this.props.history.push(`/history/${this.props.match.params.organizationID}?prev=stake`);
     this.props.history.push(`/history/${this.props.match.params.organizationID}/stake`);
   }
 

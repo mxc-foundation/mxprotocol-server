@@ -79,6 +79,9 @@ const DeviceStyles = {
     backgroundColor: '#142257',
     padding: 10,
     margin: 10
+  },
+  mxc: {
+    fontWeight: 'bolder'
   }       
 };
   

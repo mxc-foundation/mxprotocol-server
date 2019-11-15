@@ -3,19 +3,22 @@ import React from "react";
 import TextField from '@material-ui/core/TextField';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
-import TitleBarTitle from "../../components/TitleBarTitle";
 import Divider from '@material-ui/core/Divider';
 import Button from "@material-ui/core/Button";
 import Typography from '@material-ui/core/Typography';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import StakeStore from "../../stores/StakeStore";
 import { REVENUE_RATE, AMOUNT, CONFIRM_STAKE, CONFIRM_UNSTAKE } from "../../util/Messages"
-import Spinner from "../../components/ScaleLoader"
-import { withRouter, Link  } from "react-router-dom";
+//import Spinner from "../../components/ScaleLoader"
+import { withRouter } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
+import styles from "./StakeStyle"
 
 class StakeForm extends FormComponent {
   
   state = {
-    amount: ''
+    amount: '',
+    revenue_rate: 0
   }
 
   componentDidMount(){
@@ -23,7 +26,16 @@ class StakeForm extends FormComponent {
   }
   
   loadData = () => {
-     
+    const resp = StakeStore.getStakingPercentage(this.props.match.params.organizationID);
+    resp.then((res) => {
+      let revenue_rate = 0;
+      revenue_rate = res.stakingPercentage;
+      if(revenue_rate){
+        this.setState({
+          revenue_rate
+        })
+      }
+    })
   }
 
   onChange = (event) => {
@@ -45,7 +57,7 @@ class StakeForm extends FormComponent {
       return(<Spinner on={this.state.loading}/>);
     } */
     const extraButtons = <>
-      <Button color="primary.main" onClick={this.handleOpenAXS} type="button" disabled={false}>CANCEL</Button>
+      <Button  variant="outlined" color="inherit" onClick={this.handleOpenAXS} type="button" disabled={false}>CANCEL</Button>
     </>;
 
     return(
@@ -70,22 +82,24 @@ class StakeForm extends FormComponent {
                 onChange={this.props.onChange}
                 autoComplete='off'
                 
-                required
+                required={!this.props.isUnstake}
                 fullWidth
                 type="number"
                 inputProps={{
                     min: 0,
+                    readOnly: this.props.isUnstake,
+                  endAdornment: <InputAdornment className={this.props.classes.mxc} position="end">MXC</InputAdornment>,
                 }}
             />
-            
             <TextField
                 id="txFee"
                 label={REVENUE_RATE}
                 margin="normal"
                 
-                value={this.props.revRate}
+                value={this.state.revenue_rate}
                 InputProps={{
                     readOnly: true,
+                    endAdornment: <InputAdornment position="end">Monthly</InputAdornment>,
                 }}
                 fullWidth
             />
@@ -94,4 +108,4 @@ class StakeForm extends FormComponent {
   }
 }
 
-export default withRouter(StakeForm);
+export default withStyles(styles)(withRouter(StakeForm));
