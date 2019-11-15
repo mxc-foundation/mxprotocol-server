@@ -55,8 +55,6 @@ class SubScriptions extends Component {
           }
         >
         </TitleBar>*/}
-        <TitleBarTitle title={i18n.t(`${packageNS}:menu.history.withdraw`)} />
-        </TitleBar>
         <Grid item xs={12}>
           <DataTable
             header={
@@ -72,7 +70,6 @@ class SubScriptions extends Component {
             getRow={this.getRow}
           />
         </Grid>
-      </Grid>
     );
   }
 }

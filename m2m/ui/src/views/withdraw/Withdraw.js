@@ -19,6 +19,8 @@ import styles from "./WithdrawStyle"
 import { ETHER } from "../../util/Coin-type"
 import { SUPER_ADMIN } from "../../util/M2mUtil"
 import { CONFIRMATION, CONFIRMATION_TEXT, INVALID_ACCOUNT, INVALID_AMOUNT } from "../../util/Messages"
+import theme from "../../theme";
+import TableCell from "@material-ui/core/TableCell";
 
 function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -163,11 +165,29 @@ class Withdraw extends Component {
 
         </Grid>
         <Grid item xs={6}>
-          <WithdrawForm
+          <TableCell align={this.props.align}>
+                    <span style={
+                      {
+                        textDecoration: "none",
+                        color: theme.palette.primary.main,
+                        cursor: "pointer",
+                        padding: 0,
+                        fontWeight: "bold",
+                        fontSize: 20,
+                        opacity: 0.7,
+                        "&:hover": {
+                          opacity: 1,
+                        }
+                      }
+                    } className={this.props.classes.link} >
+                        Coming soon...
+                    </span>
+          </TableCell>
+          {/*<WithdrawForm
             submitLabel={i18n.t(`${packageNS}:menu.withdraw.withdraw`)}
             txinfo={this.state.txinfo} {...this.props}
             onSubmit={this.onSubmit}
-          />
+          />*/}
         </Grid>
       </Grid>
     );

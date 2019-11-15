@@ -6,16 +6,16 @@
       "amount": "금액",
       "transaction_fee": "수수료",
       "to_eth_account": "ETH 계좌로",
-      "change_eth_account": "ETH 계좌 변경",
+      "change_eth_account": "ETH 계좌변경",
       "eth_account": "ETH 계좌",
       "new_account": "새로운 계좌",
-      "username": "유저네임",
+      "username": "이름",
       "password": "비밀번호",
       "confirm": "확인",
-      "type_here": "여기에 입력",
-      "incorrect_username_or_password": "잘못된 사용자 이름 또는 비밀번호",
+      "type_here": "여기에 입력 하세요.",
+      "incorrect_username_or_password": "잘못된 사용자 이름 또는 비밀번호 입니다.",
       "cancel": "취소",
-      "proceed": "발하다"
+      "proceed": "계속"
     },
     "topup": {
       "topup": "충전",
@@ -37,26 +37,26 @@
       "tx_hash": "TX해쉬",
       "type": "타입",
       "mxc_amount": "MXC 수량",
-      "update_date": "업데이트 날짜",
+      "update_date": "갱신일",
       "status": "상태",
       "withdraw": "출금",
       "topup": "충전",
       "successful": "성공",
       "rows_per_page": "페이지 당 행",
-      "of": "총",
+      "of": "의",
       "filter": "필터",
-      "date": "데이트"
+      "date": "날짜"
     },
     "eth_account": {
       "eth_account": "ETH 계좌",
       "current_account": "현재 계좌",
       "new_account": "새로운 계좌",
-      "username": "유저네임",
+      "username": "이름",
       "password": "비밀번호",
       "confirm": "확인",
       "users": "사용자",
       "change_password": "비밀번호 변경",
-      "update_password": "비밀번호 업데이트"
+      "update_password": "비밀번호 갱신"
     },
     "devices": {
       "device": "기기",
@@ -64,11 +64,11 @@
       "downlink_fee_mxc": "다운링크 수수료",
       "status": "상태",
       "available": "사용가능",
-      "mode": "도느",
+      "mode": "노드",
       "rows_per_page": "페이지 당 행",
-      "of": "총",
+      "of": "의",
       "application": "신청",
-      "organization": "조직",
+      "organization": "기관",
       "gateway": "게이트웨이",
       "kind": "종류",
       "name": "이름",
@@ -77,9 +77,9 @@
     "gateways": {
       "gateway": "게이트웨이",
       "gateways": "게이트웨이",
-      "status": "지위",
+      "status": "상태",
       "downlink_price": "다운 링크 가격",
-      "mode": "방법",
+      "mode": "모드",
       "filter": "필터"
     },
     "staking": {
@@ -115,11 +115,11 @@
     "lpwan_server": "LPWAN 서버",
     "powered_by": "Powered by",
     "lora_server": "LoRa 서버",
-    "version": "번역",
+    "version": "버전",
     "messages": {
       "confirmation": "확인",
-      "confirmation_text": "귀하의 계정에서 MXC를 인출하려고합니다",
-      "invalid_amount": "출금하려면 유효한 금액을 입력하십시오",
+      "confirmation_text": "귀하의 계정에서 MXC를 인출하려고 합니다",
+      "invalid_amount": "출금하려면 유효한 금액을 입력 하십시오",
       "invalid_account": "잘못된 ETH 계정. ETH 계정 메뉴로 진행하십시오",
       "dismiss": "간단히 처리해 버리다",
       "learn_more": "더 알아보기",
@@ -140,13 +140,13 @@
     "store": {
       "device_has_been": "장치가",
       "gateway_has_been": "게이트웨이가",
-      "user_has_been": "사용자는",
-      "account_has_been": "계정이되었습니다",
-      "profile_has_been": "프로필되었습니다",
-      "server_has_been": "서버는",
-      "transaction_has_been": "거래되었습니다",
-      "balance_has_been": "균형이 유지되었습니다",
-      "successful_withdrawal": "성공적인 철수"
+      "user_has_been": "사용자가",
+      "account_has_been": "계정이",
+      "profile_has_been": "프로필이",
+      "server_has_been": "서버가",
+      "transaction_has_been": "거래가",
+      "balance_has_been": "잔액이",
+      "successful_withdrawal": "출금 되었습니다."
     },
     "banner": {
       "demo_version": "이것은 데모 버전입니다"

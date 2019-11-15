@@ -201,7 +201,7 @@ func (*dlPacketInterface) GetAggDlPktFreeWallet(startIndDlPkt, endIndDlPkt int64
 func (*dlPacketInterface) GetLastReceivedDlPktId() (latestId int64, err error) {
 	err = PgDB.QueryRow(`
 		SELECT
-			MAX (id)
+			COALESCE(MAX (id),0)  
 		FROM
 			dl_pkt
 		;
