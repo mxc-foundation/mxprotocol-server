@@ -127,3 +127,7 @@ down_link_price = 0.1
 [paymentserver]
 payment_service_address="payment"
 payment_service_port=":2333"
+
+[staking]
+staking_percentage=0.1
+staking_min_days=30

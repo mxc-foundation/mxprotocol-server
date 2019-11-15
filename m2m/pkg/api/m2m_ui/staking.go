@@ -226,6 +226,7 @@ func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.Staki
 			log.WithError(err).Error("GetStakingHistory/Cannot get total numbers of histories from DB")
 		}
 
+
 		resp := &api.StakingHistoryResponse{}
 
 		for _, v := range stakingHists {
@@ -233,9 +234,17 @@ func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.Staki
 			stakeHist.StakeAmount = v.StakeAmount
 			stakeHist.Start = v.StartStakeTime.String()
 			stakeHist.End = v.UnstakeTime.String()
-			//get the month from start time
-			stakingRevMonth := v.StartStakeTime.Month().String()
-			stakeHist.RevMonth = stakingRevMonth
+
+			if v.StakingPeriodStart.Month() != v.StakingPeriodEnd.Month() {
+				log.WithError(err).Error("GetStakingHistory/StakingPeriodStart and End in different month.")
+			}
+
+			if v.StakingPeriodStart.String() == "0001-01-01 00:00:00 +0000 UTC" || v.StakingPeriodEnd.String() == "0001-01-01 00:00:00 +0000 UTC" {
+				stakeHist.RevMonth = v.StakingPeriodStart.String()
+			} else {
+				stakeHist.RevMonth = v.StakingPeriodStart.Month().String()
+			}
+
 			stakeHist.NetworkIncome = v.SuperNodeIncome
 			stakeHist.MonthlyRate = v.IncomeToStakePortion * 100
 			stakeHist.Revenue = v.RevenueAmount
