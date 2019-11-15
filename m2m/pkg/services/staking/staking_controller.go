@@ -1,7 +1,6 @@
 package staking
 
 import (
-	"fmt"
 	"github.com/robfig/cron"
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -32,16 +31,16 @@ func Setup(conf config.MxpConfig) error {
 }
 
 func stakingRevenueExec(conf config.MxpConfig) error {
-	//get income from DB, since is one month ago.
-	//superNodeIncome (since time.Time, until time.Time)
-	//Todo: edit this prat later
-	income := 10000.00
-
 	t := time.Now()
 	//first date of month 00:00:00
 	startTime := time.Date(t.Year(), t.Month(), 1, 0, 0, 0, 0, time.Local)
 	//last date of month 23:59:59
 	endTime := startTime.AddDate(0, 1, 0).Add(time.Second * -1)
+
+	income, err := db.Wallet.GetSupernodeIncomeAmount(startTime, endTime)
+	if err != nil {
+		log.WithError(err).Error("stakingRevenueExec/Cannot get income from DB")
+	}
 
 	// how many days in this month
 	lastDate := startTime.AddDate(0, 1, 0)
@@ -93,23 +92,12 @@ func stakingRevenueExec(conf config.MxpConfig) error {
 		if err != nil {
 			log.WithError(err).Error("stakingRevenueExec/Cannot update revenue to DB")
 		}
-
-		//Todo: only for the testing
-		fmt.Println("stakingDays: ", stakingHours/24)
-		fmt.Println("revenueAmount: ", revenueAmount)
 	}
 
 	//when all the process finished, give the time to DB.
 	if err := db.StakeRevenuePeriod.UpdateCompletedStakeRevenuePeriod(stakeRevPeriodId); err != nil {
 		log.WithError(err).Error("stakingRevenueExec/Cannot update revenueTime to DB")
 	}
-
-	//Todo: only for the testing
-	fmt.Println("startTime: ", startTime)
-	fmt.Println("endTime: ", endTime)
-	fmt.Println("lastDate: ", lastDate)
-	fmt.Println("stakingRevDays: ", stakingRevDays)
-	fmt.Println("TotalProtaion: ", totalPortion)
 
 	return nil
 }

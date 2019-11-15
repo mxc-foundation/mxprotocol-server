@@ -38,7 +38,10 @@ func (*internalTxInterface) CreateInternalTxTable() error {
 			'TOP_UP',
 			'WITHDRAW',
 			'WITHDRAW_FEE_SN_INCOME',
-			'DOWNLINK_AGG_SN_INCOME'
+			'DOWNLINK_AGG_SN_INCOME',
+			'STAKE_REVENUE',
+			'INSERT_STAKE',        
+			'UNSTAKE'              
 		);
 		END IF;
 

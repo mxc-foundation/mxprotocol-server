@@ -20,5 +20,8 @@ const (
 	PURCHASE_SUBSCRIPTION  PaymentCategory = "PURCHASE_SUBSCRIPTION"
 	BUY_SUBSCRIPTION       PaymentCategory = "BUY_SUBSCRIPTION"
 	TOP_UP                 PaymentCategory = "TOP_UP"
-	WITHDRAW               PaymentCategory = "WITHDRAW"
+	WITHDRAW              PaymentCategory = "WITHDRAW"
+	STAKE_REVENUE         PaymentCategory = "STAKE_REVENUE"
+	INSERT_STAKE          PaymentCategory = "INSERT_STAKE"
+	UNSTAKE               PaymentCategory = "UNSTAKE"
 )

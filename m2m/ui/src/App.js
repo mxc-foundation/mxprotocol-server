@@ -30,6 +30,9 @@ import HistoryLayout from "./views/history/HistoryLayout"
 import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
 import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
+import StakeLayout from "./views/Stake/StakeLayout";
+import SetStake from "./views/Stake/SetStake";
+
 
 const drawerWidth = 270;
 
@@ -193,7 +196,9 @@ class App extends Component {
                     <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
                     <Route path="/device/:organizationID" component={DeviceLayout} />
                     <Route path="/gateway/:organizationID" component={GatewayLayout} />
-
+                    <Route exact path="/stake/:organizationID" component={StakeLayout} />
+                    <Route exact path="/stake/:organizationID/set-stake" component={SetStake} />
+P
                     <Route render={BackToLora} />
                   </Switch>
                 </Grid>

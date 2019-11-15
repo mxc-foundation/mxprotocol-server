@@ -199,21 +199,12 @@ const theme = createMuiTheme({
             color: white,
           },
         },
-/*         link: {
-          color: tealHighLight,
-          //padding: 30,
-          fontWeight: 900,
-          lineHeight: 1.5,
+        colorInherit: {
+          color: white,
           "&:hover": {
-            color: "#00CCAE",
+            borderColor: white,
+            color: white,
           },
-        }, */
-        label: {
-          color: blueMxcBrand
-        },
-        text: { 
-          color: white, 
-          padding: 6,
         },
       },
       MuiFormLabel: { 

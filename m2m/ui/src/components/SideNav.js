@@ -165,7 +165,7 @@ class SideNav extends Component {
             </ListItemIcon>
             <ListItemText classes={selected('/gateway')} primary={i18n.t(`${packageNS}:menu.gateways.gateways`)} />
           </ListItem>
-          <ListItem button component={Link} to={``}>
+          <ListItem selected={active('/stake')} button component={Link} to={`/stake/${organizationID}`}>
             <ListItemIcon>
               <Vote />
             </ListItemIcon>

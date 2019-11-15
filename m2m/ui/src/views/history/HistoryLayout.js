@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Button from "@material-ui/core/Button";
 
 import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
@@ -13,9 +14,11 @@ import Spinner from "../../components/ScaleLoader"
 //import SessionStore from "../../stores/SessionStore";
 
 //import Transactions from "./Transactions";
+import StakeStore from "../../stores/StakeStore";
 import EthAccount from "./EthAccount";
 import Transactions from "./Transactions";
 import NetworkActivityHistory from "./NetworkActivityHistory";
+import Stakes from "./Stakes";
 
 import styles from "./HistoryStyle";
 
@@ -34,8 +37,9 @@ class HistoryLayout extends Component {
   }
 
   componentDidMount() {
+    const prevLoc = this.props.location.search.split('=')[1];
     this.setState({loading:true});
-    this.locationToTab();
+    this.locationToTab(prevLoc);
     this.setState({loading:false});
   }
 
@@ -53,17 +57,26 @@ class HistoryLayout extends Component {
     });
   }
 
-  locationToTab() {
+  locationToTab(prevLoc) {
     let tab = 0;
     if (window.location.href.endsWith("/eth-account")) {
       tab = 1;
     } else if (window.location.href.endsWith("/network-activity")) {
       tab = 2;
-    }  
+    } else if (window.location.href.endsWith("/stake")) {
+      tab = 3;
+    }
     
     this.setState({
       tab,
     });
+  }
+
+  unstake = (e) => {
+    e.preventDefault();
+    const resp = StakeStore.unstake(this.props.match.params.organizationID);
+    resp.then((res) => {
+    })
   }
 
   render() {
@@ -85,6 +98,10 @@ class HistoryLayout extends Component {
                   <TitleBarTitle component={Link} to="#" title="History" className={this.props.classes.link}/>
                 </TitleBar>
                 </div> */}
+                  {this.state.tab === 3 && <div className={this.props.classes.alignCol}>
+                      <Button color="primary.main" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} /* onClick={this.handleOpenAXS} */ type="button" disabled={false}>GO TO STAKING</Button>
+                      {/* <Button variant="outlined" color="inherit" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} onClick={this.unstake} type="button" disabled={false}>UNSTAKE</Button> */}
+                  </div>}
             </div>
         </Grid>
 
@@ -101,6 +118,7 @@ class HistoryLayout extends Component {
             <Tab label={i18n.t(`${packageNS}:menu.history.transactions`)} component={Link} to={`/history/${organizationID}/`} />
             <Tab label={i18n.t(`${packageNS}:menu.history.eth_account`)} component={Link} to={`/history/${organizationID}/eth_account`} />
             <Tab label={i18n.t(`${packageNS}:menu.history.network_activity`)} component={Link} to={`/history/${organizationID}/network-activity`} />
+            <Tab label="Staking" component={Link} to={`/history/${organizationID}/stake`} />
           </Tabs>
         </Grid>
 
@@ -109,6 +127,7 @@ class HistoryLayout extends Component {
             <Route exact path={`${this.props.match.path}/`} render={props => <Transactions organizationID={organizationID} {...props} />} />
             <Route exact path={`${this.props.match.path}/eth_account`} render={props => <EthAccount {...props} />} />
             <Route exact path={`${this.props.match.path}/network-activity`} render={props => <NetworkActivityHistory organizationID={organizationID} {...props} />} />
+            <Route exact path={`${this.props.match.path}/stake`} render={props => <Stakes organizationID={organizationID} {...props} />} />
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}
           </Switch>
         </Grid>
