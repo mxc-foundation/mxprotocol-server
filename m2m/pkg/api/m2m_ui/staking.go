@@ -49,6 +49,10 @@ func (s *StakingServerAPI) Stake(ctx context.Context, req *api.StakeRequest) (*a
 		log.WithFields(log.Fields{
 			"orgId": req.OrgId,
 		}).Debug("grpc_api/Stake")
+		if req.Amount <= 0 {
+			return &api.StakeResponse{Status: "Staking amount must be more than 0.", UserProfile: &userProfile}, nil
+		}
+
 		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
 		if err != nil {
 			log.WithError(err).Error("StakeAPI/Cannot get walletId from DB")
@@ -228,8 +232,10 @@ func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.Staki
 			stakeHist := &api.GetStakingHistory{}
 			stakeHist.StakeAmount = v.StakeAmount
 			stakeHist.Start = v.StartStakeTime.String()
-			stakeHist.End = v.StakingPeriodEnd.String()
-			stakeHist.RevMonth = time.Now().Month().String()
+			stakeHist.End = v.UnstakeTime.String()
+			//get the month from start time
+			stakingRevMonth := v.StartStakeTime.Month().String()
+			stakeHist.RevMonth = stakingRevMonth
 			stakeHist.NetworkIncome = v.SuperNodeIncome
 			stakeHist.MonthlyRate = v.IncomeToStakePortion * 100
 			stakeHist.Revenue = v.RevenueAmount
