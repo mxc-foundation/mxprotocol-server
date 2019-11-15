@@ -106,6 +106,9 @@
       "transaction_has_been": "거래되었습니다",
       "balance_has_been": "균형이 유지되었습니다",
       "successful_withdrawal": "성공적인 철수"
+    },
+    "banner": {
+      "demo_version": "이것은 데모 버전입니다"
     }
   }
 }

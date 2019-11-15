@@ -106,6 +106,9 @@
       "transaction_has_been": "Transaction has been",
       "balance_has_been": "Balance has been",
       "successful_withdrawal": "Successful Withdrawal"
+    },
+    "banner": {
+      "demo_version": "THIS IS A DEMO VERSION."
     }
   }
 }

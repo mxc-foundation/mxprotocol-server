@@ -106,6 +106,9 @@
       "transaction_has_been": "交易已經",
       "balance_has_been": "平衡已",
       "successful_withdrawal": "提款成功"
+    },
+    "banner": {
+      "demo_version": "這是一個演示版本"
     }
   }
 }

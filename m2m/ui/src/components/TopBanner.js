@@ -14,6 +14,7 @@ import AccountCircle from "mdi-material-ui/AccountCircle";
 import Magnify from "mdi-material-ui/Magnify";
 import HelpCircle from "mdi-material-ui/HelpCircle";
 
+import i18n, { packageNS } from '../i18n';
 import SessionStore from "../stores/SessionStore";
 import theme from "../theme";
 
@@ -151,7 +152,7 @@ class TopBanner extends Component {
     return(
       <AppBar className={this.props.classes.appBar}>
             <div className={this.props.classes.flex}>
-                <span>THIS IS A DEMO VERSION.</span>
+                <span>{i18n.t(`${packageNS}:menu.banner.demo_version`)}</span>
             </div>
       </AppBar>
     );
