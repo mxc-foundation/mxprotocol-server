@@ -67,7 +67,7 @@ class Stakes extends Component {
           buttons={
             <Admin organizationID={this.props.match.params.organizationID}>
               <TitleBarButton
-                label="Filter"
+                label={i18n.t(`${packageNS}:menu.staking.filter`)}
                 //icon={<Plus />}
               />
             </Admin>

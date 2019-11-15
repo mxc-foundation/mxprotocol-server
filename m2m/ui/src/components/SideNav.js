@@ -130,14 +130,14 @@ class SideNav extends Component {
             <ListItemIcon>
               <CreditCard />
             </ListItemIcon>
-            <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
+            <ListItemText classes={selected('/modify-account')} primary={i18n.t(`${packageNS}:menu.eth_account.eth_account`)} />
           </ListItem>
 
           <ListItem selected={active('/control-panel/history')} button component={Link} to={`/control-panel/history`}>
             <ListItemIcon>
               <CalendarCheckOutline />
             </ListItemIcon>
-            <ListItemText classes={selected('/control-panel/history')} primary="History" />
+            <ListItemText classes={selected('/control-panel/history')} primary={i18n.t(`${packageNS}:menu.history.history`)} />
           </ListItem>
 
           <ListItem selected={active('/control-panel/system-settings')} button component={Link} to={`/control-panel/system-settings`}>
@@ -151,7 +151,7 @@ class SideNav extends Component {
             <ListItemIcon className={this.props.classes.iconStyle}>
               <PagePreviousOutline />
             </ListItemIcon>
-            <ListItemText classes={selected('/withdraw')} primary="Withdraw" />
+            <ListItemText classes={selected('/withdraw')} primary={i18n.t(`${packageNS}:menu.withdraw.withdraw`)} />
           </ListItem>
         </Admin>
         {organizationID && <List className={this.props.classes.static}>

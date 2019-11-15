@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
+import i18n, { packageNS } from '../../../i18n';
 import HistoryStore from "../../../stores/HistoryStore";
 import DataTable from "../../../components/DataTable";
 import { ETHER } from "../../../util/Coin-type"
@@ -53,9 +54,9 @@ class SuperNodeEthAccount extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell>Account</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.staking.account`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.staking.status`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.staking.date`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
