@@ -166,10 +166,13 @@ func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
 
 		v_agg_wlt_usg_id INT,
 		v_balance_delta NUMERIC(28,18),
+		v_amount_supernode_income NUMERIC(28,18),
 		v_time TIMESTAMP,
 		v_fk_wallet_sender INT,
 		v_fk_wallet_receiver INT,
-		v_payment_cat PAYMENT_CATEGORY
+		v_fk_wallet_supernode_income INT,
+		v_payment_cat PAYMENT_CATEGORY,
+		v_payment_cat_supernode_income PAYMENT_CATEGORY
 	) RETURNS  NUMERIC(28,18)
 	LANGUAGE plpgsql
 	AS $$
@@ -192,7 +195,25 @@ func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
 		v_agg_wlt_usg_id,
 		v_balance_delta,
 		v_time)
-		;
+	;
+
+
+	INSERT INTO internal_tx (
+		fk_wallet_sender,
+		fk_wallet_receiver,
+		payment_cat,
+		tx_internal_ref,
+		value,
+		time_tx )
+	VALUES (
+		v_fk_wallet_sender,
+		v_fk_wallet_supernode_income,
+		v_payment_cat_supernode_income,
+		v_agg_wlt_usg_id,
+		v_amount_supernode_income,
+		v_time)
+	;
+
 
 	UPDATE
 		wallet 
@@ -211,6 +232,17 @@ func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
 	WHERE
 		id = v_agg_wlt_usg_id	
 	;
+
+
+	UPDATE
+		wallet 
+	SET
+		balance = balance + v_amount_supernode_income,
+		tmp_balance = tmp_balance + v_amount_supernode_income
+	WHERE
+		id = v_fk_wallet_supernode_income
+	;
+
 	 
 	RETURN updated_wlt_balance;
 
@@ -222,8 +254,13 @@ func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
 	return errors.Wrap(err, "db/CreateAggWltUsgFunctions")
 }
 
-// add row to internal_tx table and modify the balances
-func (*aggWalletUsageInterface) ExecAggWltUsgPayments(internalTx types.InternalTx) (updatedBalance float64, err error) {
+// add rows to internal_tx table and modify the balances of user and super node income
+func (*aggWalletUsageInterface) ExecAggWltUsgPayments(internalTx types.InternalTx, superNodeIncomeVal float64) (updatedBalance float64, err error) {
+
+	superNodeIncomeWltId, err := PgWallet.GetWalletIdStakeStorage()
+	if err != nil {
+		return 0, errors.Wrap(err, "db/initWithdrawReqApply. Can not get superNodeIncomeWltId! ")
+	}
 
 	err = PgDB.QueryRow(`
 	SELECT 
@@ -233,15 +270,21 @@ func (*aggWalletUsageInterface) ExecAggWltUsgPayments(internalTx types.InternalT
 			$3,
 			$4,
 			$5,
-			$6
+			$6,
+			$7,
+			$8,
+			$9
 		);`,
 
 		internalTx.TxInternalRef,
 		internalTx.Value,
+		superNodeIncomeVal,
 		internalTx.TimeTx,
 		internalTx.FkWalletSender,
 		internalTx.FkWalletRcvr,
+		superNodeIncomeWltId,
 		internalTx.PaymentCat,
+		types.DOWNLINK_AGG_SN_INCOME,
 	).Scan(&updatedBalance)
 
 	if err != nil {
