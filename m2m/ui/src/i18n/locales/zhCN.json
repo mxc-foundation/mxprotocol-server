@@ -2,7 +2,7 @@
   "title": "M2M 钱包",
   "menu": {
     "withdraw": {
-      "withdraw": "撤回",
+      "withdraw": "提款",
       "amount": "数量",
       "transaction_fee": "手续费",
       "to_eth_account": "到 ETH 账户",
@@ -39,7 +39,7 @@
       "mxc_amount": "MXC 极域数量",
       "update_date": "更新日期",
       "status": "状态",
-      "withdraw": "撤回",
+      "withdraw": "提款",
       "topup": "充值",
       "successful": "成功",
       "rows_per_page": "每行页数",
