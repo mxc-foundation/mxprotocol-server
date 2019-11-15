@@ -105,7 +105,7 @@ class HistoryLayout extends Component {
             </div>
         </Grid>
 
-        <Grid item container xs={12} justify="space-between" className={this.props.classes.tabsBlock}>
+        <Grid item xs={12}>
           <Tabs
             value={this.state.tab}
             onChange={this.onChangeTab}
