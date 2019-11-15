@@ -85,8 +85,8 @@
     "staking": {
       "staking": "Staking"
     },
-    "nb_iot_server_gateway": "NB-IoT Server Gateway",
-    "lpwan_server_staking": "LPWAN Server Staking",
+    "nb_iot_server": "NB-IoT Server",
+    "lpwan_server": "LPWAN Server",
     "powered_by": "Powered by",
     "lora_server": "LoRa Server",
     "version": "Version",
