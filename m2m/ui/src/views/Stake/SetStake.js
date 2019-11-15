@@ -28,11 +28,13 @@ class SetStake extends FormComponent {
     revRate: 0,
     isUnstake: false,
     info: STAKE_DESCRIPTION,
+    infoStatus: 0,
     notice: { 
       succeed: STAKE_SET_SUCCESS,
       unstakeSucceed : UNSTAKE_SET_SUCCESS,
       warning: STAKE_WARNING_001
-    }
+    },
+    dismissOn: true
   }
 
   componentDidMount(){
@@ -91,12 +93,16 @@ class SetStake extends FormComponent {
       if(res.body.status === 'Stake successful.'){
         this.setState({ 
           isUnstake: true,
-          info: STAKE_SET_SUCCESS
+          info: STAKE_SET_SUCCESS,
+          infoStatus: 1,
         });
+        setInterval(()=>this.displayInfo(), 5000);
       }else{
         this.setState({ 
-          info: res.body.status
+          info: res.body.status,
+          infoStatus: 2,
         });
+        setInterval(()=>this.displayInfo(), 5000);
       }
     }) 
   }
@@ -108,13 +114,28 @@ class SetStake extends FormComponent {
       this.setState({ 
         isUnstake: false,
         amount: 0,
-        info: UNSTAKE_SET_SUCCESS
+        info: UNSTAKE_SET_SUCCESS,
+        infoStatus: 1,
       });
+      setInterval(()=>this.displayInfo(), 5000);
     })
+  }
+
+  displayInfo = () => {
+    this.setState({ 
+      info: STAKE_DESCRIPTION,
+      infoStatus: 0
+    });
   }
 
   handleOnclick = () => {
     this.props.history.push(`/history/${this.props.match.params.organizationID}/stake`);
+  }
+  
+  dismissOn = () => {
+    this.setState({
+      dismissOn: false
+    });
   }
 
   render() {
@@ -122,6 +143,10 @@ class SetStake extends FormComponent {
       return(<Spinner on={this.state.loading}/>);
     } */
     const info  = this.state.info;
+    const infoBoxCss = [this.props.classes.infoBox ,
+      this.props.classes.infoBoxSucceed,
+      this.props.classes.infoBoxError];
+    
     return(
         <Grid container spacing={24} className={this.props.classes.backgroundColor}>
             <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
@@ -154,17 +179,17 @@ class SetStake extends FormComponent {
                         {this.state.amount} {MXC}
                     </Typography>
                 </div>
-                <div>
-                    <div className={this.props.classes.infoBox}>
+                {this.state.dismissOn && <div>
+                    <div className={infoBoxCss[this.state.infoStatus]}>
                     <Typography  /* className={this.props.classes.title} */ gutterBottom>
                         {this.state.info}
                     </Typography>
                     <div className={this.props.classes.between}>
-                        <ExtLink to={''} context={DISMISS} />&nbsp;&nbsp;&nbsp;
+                        <ExtLink dismissOn={this.dismissOn} for={'local'} context={DISMISS} />&nbsp;&nbsp;&nbsp;
                         <ExtLink to={EXT_URL_STAKE} context={LEARN_MORE} />
                     </div>
                     </div>
-                </div>
+                </div>}
             </Grid>
       </Grid>
     );
