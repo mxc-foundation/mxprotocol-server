@@ -40,9 +40,9 @@ class SuperAdminWithdraw extends Component {
                                 opacity: 1,
                             }
                         }
-                    } className={this.props.classes.link} onClick={()=>{
-                        window.open("www.mxc.org", '_blank');
-                    }}>Coming soon, more information about withdraw, please click here</span>
+                    } className={this.props.classes.link} >
+                        Coming soon...
+                    </span>
                 </TableCell>
             </Grid>
 
