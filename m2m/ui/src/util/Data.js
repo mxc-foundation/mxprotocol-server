@@ -1,6 +1,8 @@
-export const INACTIVE = 'Inactive';
-export const PRIVATE = 'Private';
-export const NETWORK = 'Network';
+import i18n, { packageNS } from '../i18n';
+
+export const INACTIVE = i18n.t(`${packageNS}:menu.staking.inactive`);
+export const PRIVATE = i18n.t(`${packageNS}:menu.staking.private`);
+export const NETWORK = i18n.t(`${packageNS}:menu.staking.network`);
 export const DV_INACTIVE = 'DV_INACTIVE';
 export const DV_FREE_GATEWAYS_LIMITED = 'DV_FREE_GATEWAYS_LIMITED';
 export const DV_WHOLE_NETWORK = 'DV_WHOLE_NETWORK';

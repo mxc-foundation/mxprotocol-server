@@ -1,6 +1,7 @@
 import React from "react";
 
 import TextField from '@material-ui/core/TextField';
+import i18n, { packageNS } from '../../i18n';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
 import Divider from '@material-ui/core/Divider';
@@ -57,7 +58,7 @@ class StakeForm extends FormComponent {
       return(<Spinner on={this.state.loading}/>);
     } */
     const extraButtons = <>
-      <Button  variant="outlined" color="inherit" onClick={this.handleOpenAXS} type="button" disabled={false}>CANCEL</Button>
+      <Button  variant="outlined" color="inherit" onClick={this.handleOpenAXS} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.cancel`)}</Button>
     </>;
 
     return(
@@ -95,7 +96,7 @@ class StakeForm extends FormComponent {
                 value={this.state.revenue_rate}
                 InputProps={{
                     readOnly: true,
-                    endAdornment: <InputAdornment position="end">Monthly</InputAdornment>,
+                    endAdornment: <InputAdornment position="end">{i18n.t(`${packageNS}:menu.staking.monthly`)}</InputAdornment>,
                 }}
                 fullWidth
             />

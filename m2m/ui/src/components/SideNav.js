@@ -144,7 +144,7 @@ class SideNav extends Component {
             <ListItemIcon>
               <WrenchOutline />
             </ListItemIcon>
-            <ListItemText classes={selected('/control-panel/system-settings')} primary="System Settings" />
+            <ListItemText classes={selected('/control-panel/system-settings')} primary={i18n.t(`${packageNS}:menu.settings.system_settings`)} />
           </ListItem>
 
           <ListItem selected={active('/withdraw')} button component={Link} to={`/control-panel/withdraw`}>

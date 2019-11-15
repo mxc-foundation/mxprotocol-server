@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
+import i18n, { packageNS } from '../../i18n';
 import StakeStore from "../../stores/StakeStore";
 import TitleBar from "../../components/TitleBar";
 
@@ -77,14 +78,14 @@ class Stakes extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell align={'right'}>Stake Amount</TableCell>
-                <TableCell align={'center'}>Start</TableCell>
-                <TableCell align={'center'}>End</TableCell>
-                <TableCell align={'center'}>Revenue Month</TableCell>
-                <TableCell align={'right'}>Network Income</TableCell>
-                <TableCell align={'right'}>Monthly Rate</TableCell>
-                <TableCell align={'right'}>Revenue</TableCell>
-                <TableCell align={'right'}>Balance</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.stake_amount`)}</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.staking.start`)}</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.staking.end`)}</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.staking.revenue_month`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.network_income`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.monthly_rate`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.revenue`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.balance`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
