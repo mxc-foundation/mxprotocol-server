@@ -2,11 +2,11 @@
   "title": "M2M 錢包",
   "menu": {
     "withdraw": {
-      "withdraw": "撤回",
-      "amount": "數量",
+      "withdraw": "提款",
+      "amount": "金額",
       "transaction_fee": "手續費",
       "to_eth_account": "到 ETH 帳戶",
-      "change_eth_account": "更改 ETH 帳戶",
+      "change_eth_account": "更新 ETH 帳戶",
       "eth_account": "ETH 帳戶",
       "new_account": "新帳戶",
       "username": "用戶名稱",
@@ -19,7 +19,7 @@
     },
     "topup": {
       "topup": "充值",
-      "send_tokens": "傳送通證",
+      "send_tokens": "轉賬",
       "from_eth_account": "從 ETH 帳戶",
       "change_eth_account": "改變 ETH 帳戶",
       "to_eth_account": "到 ETH 帳戶",
@@ -36,14 +36,14 @@
       "to": "到",
       "tx_hash": "TxHash",
       "type": "類別",
-      "mxc_amount": "MXC 極域數量",
+      "mxc_amount": "MXC 數量",
       "update_date": "更新日期",
       "status": "狀態",
-      "withdraw": "撤回",
+      "withdraw": "提款",
       "topup": "充值",
       "successful": "成功",
-      "rows_per_page": "每行頁數",
-      "of": "之",
+      "rows_per_page": "每頁行數",
+      "of": "的",
       "filter": "過濾",
       "date": "日期"
     },
@@ -54,19 +54,19 @@
       "username": "用戶名稱",
       "password": "密碼",
       "confirm": "確認",
-      "users": "用戶數",
+      "users": "用戶",
       "change_password": "更改密碼",
       "update_password": "更新密碼"
     },
     "devices": {
       "device": "裝置",
       "devices": "裝置",
-      "downlink_fee_mxc": "下行費用 極域",
+      "downlink_fee_mxc": "下行鏈路費用 MXC",
       "status": "狀態",
-      "available": "可用的",
+      "available": "可用",
       "mode": "模式",
-      "rows_per_page": "每行頁數",
-      "of": "之",
+      "rows_per_page": "每頁行數",
+      "of": "的",
       "application": "應用",
       "organization": "組織",
       "gateway": "網關",
@@ -78,7 +78,7 @@
       "gateway": "게이트웨이",
       "gateways": "게이트웨이",
       "status": "狀態",
-      "downlink_price": "下行價格",
+      "downlink_price": "下行鏈路價格",
       "mode": "模式",
       "filter": "過濾"
     },
@@ -89,12 +89,12 @@
     "lpwan_server": "LPWAN 伺服器",
     "powered_by": "由 MXC 極域技術支持",
     "lora_server": "LoRa 伺服器",
-    "version": "版",
+    "version": "版本",
     "messages": {
       "confirmation": "確認",
       "confirmation_text": "您即將從帳戶中提取 MXC",
       "invalid_amount": "請輸入有效金額以進行提款",
-      "invalid_account": "無效的 ETH 帳戶. 請進入 ETH 帳戶菜單"
+      "invalid_account": "無效的 ETH 帳戶. 請進入 ETH 帳戶選單"
     },
     "store": {
       "device_has_been": "設備已",
@@ -104,11 +104,11 @@
       "profile_has_been": "個人資料已",
       "server_has_been": "服務器已經",
       "transaction_has_been": "交易已經",
-      "balance_has_been": "平衡已",
+      "balance_has_been": "金額已",
       "successful_withdrawal": "提款成功"
     },
     "banner": {
-      "demo_version": "這是一個演示版本"
+      "demo_version": "這是一個測試版本"
     }
   }
 }
