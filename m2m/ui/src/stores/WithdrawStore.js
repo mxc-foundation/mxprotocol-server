@@ -29,6 +29,22 @@ class WithdrawStore extends EventEmitter {
     });
   }
 
+  setWithdrawFee(moneyAbbr, orgId, body, callbackFunc) {
+    this.swagger.then(client => {
+      client.apis.WithdrawService.ModifyWithdrawFee({
+        moneyAbbr,
+        orgId,
+        body
+      })
+      .then(checkStatus)
+      //.then(updateOrganizations)
+      .then(resp => {
+        callbackFunc(resp.obj);
+      })
+      .catch(errorHandler);
+    });
+  }
+
   WithdrawReq(apiWithdrawReqRequest, callbackFunc) {
     this.swagger.then(client => {
       client.apis.WithdrawService.WithdrawReq({

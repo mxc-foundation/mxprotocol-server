@@ -19,17 +19,23 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Wallet from "mdi-material-ui/WalletOutline";
+import styles from "./TopNavStyle"
+import { SUPER_ADMIN } from "../util/M2mUtil";
 
-import styles from "./TopNavStyle";
 import DropdownMenuLanguage from "./DropdownMenuLanguage";
 
 function getWalletBalance() {
-  if (SessionStore.getOrganizationID() === undefined) {
-    
+  var organizationId = SessionStore.getOrganizationID();
+  if (organizationId === undefined) {
     return null;
   }
+
+  if (SessionStore.isAdmin()) {
+    organizationId = SUPER_ADMIN
+  }
+
   return new Promise((resolve, reject) => {
-    WalletStore.getWalletBalance(SessionStore.getOrganizationID(), resp => {
+    WalletStore.getWalletBalance(organizationId, resp => {
       return resolve(resp);
     });
   });

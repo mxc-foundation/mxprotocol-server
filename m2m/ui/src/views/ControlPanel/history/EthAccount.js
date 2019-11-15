@@ -4,15 +4,12 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
-import HistoryStore from "../../stores/HistoryStore";
-import TitleBar from "../../components/TitleBar";
-import TitleBarTitle from "../../components/TitleBarTitle";
-import TitleBarButton from "../../components/TitleBarButton";
-import DataTable from "../../components/DataTable";
-import Admin from "../../components/Admin";
-import { ETHER } from "../../util/Coin-type"
+import HistoryStore from "../../../stores/HistoryStore";
+import DataTable from "../../../components/DataTable";
+import { ETHER } from "../../../util/Coin-type"
+import { SUPER_ADMIN } from "../../../util/M2mUtil";
 
-class EthAccount extends Component {
+class SuperNodeEthAccount extends Component {
   constructor(props) {
     super(props);
     this.getPage = this.getPage.bind(this);
@@ -20,7 +17,7 @@ class EthAccount extends Component {
   }
 
   getPage(limit, offset, callbackFunc) {
-    HistoryStore.getChangeMoneyAccountHistory(ETHER, this.props.match.params.organizationID, limit, offset, (data) => {
+    HistoryStore.getChangeMoneyAccountHistory(ETHER, SUPER_ADMIN, limit, offset, (data) => {
       callbackFunc({
         totalCount: parseInt(data.count),
         result: data.changeHistory
@@ -70,4 +67,4 @@ class EthAccount extends Component {
   }
 }
 
-export default EthAccount;
+export default SuperNodeEthAccount;

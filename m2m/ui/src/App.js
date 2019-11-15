@@ -28,11 +28,15 @@ import Topup from "./views/topup/Topup"
 import Withdraw from "./views/withdraw/Withdraw"
 import HistoryLayout from "./views/history/HistoryLayout"
 import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
+import SuperNodeEth from "./views/ControlPanel/superNodeEth/superNodeEth"
 import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
 import StakeLayout from "./views/Stake/StakeLayout";
 import SetStake from "./views/Stake/SetStake";
 
+import SuperAdminWithdraw from "./views/ControlPanel/withdraw/withdraw"
+import SupernodeHistory from "./views/ControlPanel/history/History"
+import SystemSettings from "./views/ControlPanel/settings/settings"
 
 const drawerWidth = 270;
 
@@ -186,6 +190,7 @@ class App extends Component {
               {topNav}
               {topbanner}
               {sideNav}
+              {topNav}
               <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
                 <Grid container spacing={24}>
                   <Switch>
@@ -199,6 +204,11 @@ class App extends Component {
                     <Route exact path="/stake/:organizationID" component={StakeLayout} />
                     <Route exact path="/stake/:organizationID/set-stake" component={SetStake} />
 P
+
+                    <Route path="/control-panel/modify-account" component={SuperNodeEth} />
+                    <Route path="/control-panel/withdraw" component={SuperAdminWithdraw} />
+                    <Route path="/control-panel/history" component={SupernodeHistory} />
+                    <Route path="/control-panel/system-settings" component={SystemSettings} />
                     <Route render={BackToLora} />
                   </Switch>
                 </Grid>

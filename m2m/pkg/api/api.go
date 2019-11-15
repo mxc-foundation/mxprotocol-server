@@ -51,6 +51,7 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 
 	// register all servers here
 	m2m_grpc.RegisterWithdrawServiceServer(server, m2m_api.NewWithdrawServerAPI())
+	m2m_grpc.RegisterSettingsServiceServer(server, m2m_api.NewSettingsServerAPI())
 	m2m_grpc.RegisterMoneyServiceServer(server, m2m_api.NewMoneyServerAPI())
 	m2m_grpc.RegisterTopUpServiceServer(server, m2m_api.NewTopUpServerAPI())
 	m2m_grpc.RegisterWalletServiceServer(server, m2m_api.NewWalletServerAPI())
@@ -214,6 +215,9 @@ func getJSONGateway(ctx context.Context) (http.Handler, error) {
 	}
 	if err := m2m_grpc.RegisterServerInfoServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register server info handler error")
+	}
+	if err := m2m_grpc.RegisterSettingsServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
+		return nil, errors.Wrap(err, "register settings handler error")
 	}
 	if err := m2m_grpc.RegisterStakingServiceHandlerFromEndpoint(ctx, mux, apiEndpoint, grpcDialOpts); err != nil {
 		return nil, errors.Wrap(err, "register staking server info handler error")

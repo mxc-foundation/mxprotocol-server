@@ -116,16 +116,17 @@ class HistoryLayout extends Component {
             textColor="primary"
           >
             <Tab label={i18n.t(`${packageNS}:menu.history.transactions`)} component={Link} to={`/history/${organizationID}/`} />
-            <Tab label={i18n.t(`${packageNS}:menu.history.eth_account`)} component={Link} to={`/history/${organizationID}/eth_account`} />
+            <Tab label={i18n.t(`${packageNS}:menu.history.eth_account`)} component={Link} to={`/history/${organizationID}/eth-account`} />
             <Tab label={i18n.t(`${packageNS}:menu.history.network_activity`)} component={Link} to={`/history/${organizationID}/network-activity`} />
             <Tab label="Staking" component={Link} to={`/history/${organizationID}/stake`} />
           </Tabs>
+
         </Grid>
 
         <Grid item xs={12}>
           <Switch>
             <Route exact path={`${this.props.match.path}/`} render={props => <Transactions organizationID={organizationID} {...props} />} />
-            <Route exact path={`${this.props.match.path}/eth_account`} render={props => <EthAccount {...props} />} />
+            <Route exact path={`${this.props.match.path}/eth-account`} render={props => <EthAccount organizationID={organizationID} {...props} />} />
             <Route exact path={`${this.props.match.path}/network-activity`} render={props => <NetworkActivityHistory organizationID={organizationID} {...props} />} />
             <Route exact path={`${this.props.match.path}/stake`} render={props => <Stakes organizationID={organizationID} {...props} />} />
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}

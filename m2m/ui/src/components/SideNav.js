@@ -26,6 +26,9 @@ import PagePreviousOutline from "mdi-material-ui/PagePreviousOutline";
 import { getLoraHost } from "../util/M2mUtil";
 import i18n, { packageNS } from '../i18n';
 import styles from "./SideNavStyle";
+import Admin from "./Admin"
+import WalletOutline from "@material-ui/core/SvgIcon/SvgIcon";
+import {MapOutline, WrenchOutline} from "mdi-material-ui";
 
 const LinkToLora = ({children, ...otherProps}) => 
 <a href={getLoraHost()} {...otherProps}>{children}</a>;
@@ -94,9 +97,8 @@ class SideNav extends Component {
     this.setState({
       organizationID: e.target.value
     })
-    
-    const currentLocation = this.props.history.location.pathname.split('/')[1];
-    this.props.history.push(`/${currentLocation}/${e.target.value}`);
+
+    this.props.history.push(`/withdraw/${e.target.value}`);
   }
 
   selectClicked = async () => {
@@ -123,6 +125,35 @@ class SideNav extends Component {
         open={this.props.open}
         classes={{paper: this.props.classes.drawerPaper}}
       >
+        <Admin>
+          <ListItem selected={active('/control-panel/modify-account')} button component={Link} to={`/control-panel/modify-account`}>
+            <ListItemIcon>
+              <CreditCard />
+            </ListItemIcon>
+            <ListItemText classes={selected('/modify-account')} primary="ETH Account" />
+          </ListItem>
+
+          <ListItem selected={active('/control-panel/history')} button component={Link} to={`/control-panel/history`}>
+            <ListItemIcon>
+              <CalendarCheckOutline />
+            </ListItemIcon>
+            <ListItemText classes={selected('/control-panel/history')} primary="History" />
+          </ListItem>
+
+          <ListItem selected={active('/control-panel/system-settings')} button component={Link} to={`/control-panel/system-settings`}>
+            <ListItemIcon>
+              <WrenchOutline />
+            </ListItemIcon>
+            <ListItemText classes={selected('/control-panel/system-settings')} primary="System Settings" />
+          </ListItem>
+
+          <ListItem selected={active('/withdraw')} button component={Link} to={`/control-panel/withdraw`}>
+            <ListItemIcon className={this.props.classes.iconStyle}>
+              <PagePreviousOutline />
+            </ListItemIcon>
+            <ListItemText classes={selected('/withdraw')} primary="Withdraw" />
+          </ListItem>
+        </Admin>
         {organizationID && <List className={this.props.classes.static}>
           {/* <ListItem button component={Link} to={`/withdraw/${this.state.organization.id}`}> */}
           <div>
@@ -172,7 +203,7 @@ class SideNav extends Component {
             <ListItemText classes={selected('')} primary={i18n.t(`${packageNS}:menu.staking.staking`)} />
           </ListItem>
 
-              <List className={this.props.classes.card}>
+          {/*<List className={this.props.classes.card}>*/}
               <Divider />
                 <ListItem button className={this.props.classes.static}>  
                   <ListItemIcon>
@@ -195,7 +226,7 @@ class SideNav extends Component {
                 <ListItem>
                   <ListItemText secondary={`${i18n.t(`${packageNS}:menu.version`)} ${this.state.version}`} />
                 </ListItem>
-              </List>
+          {/*</List>*/}
         </List>}
       </Drawer>
     );

@@ -162,18 +162,12 @@ class Withdraw extends Component {
           </div>
 
         </Grid>
-        <Grid item xs={6} className={this.props.classes.divider}></Grid>
-        <Grid item xs={12} className={this.props.classes.divider}>
-
-        </Grid>
         <Grid item xs={6}>
           <WithdrawForm
             submitLabel={i18n.t(`${packageNS}:menu.withdraw.withdraw`)}
             txinfo={this.state.txinfo} {...this.props}
             onSubmit={this.onSubmit}
           />
-        </Grid>
-        <Grid item xs={2}>
         </Grid>
       </Grid>
     );

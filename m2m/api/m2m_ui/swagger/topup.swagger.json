@@ -126,9 +126,43 @@
           "TopUpService"
         ]
       }
+    },
+    "/api/transactions/{orgId}/income": {
+      "get": {
+        "operationId": "GetIncome",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetIncomeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TopUpService"
+        ]
+      }
     }
   },
   "definitions": {
+    "apiGetIncomeResponse": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "apiGetTopUpDestinationResponse": {
       "type": "object",
       "properties": {

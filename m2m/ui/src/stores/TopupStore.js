@@ -59,6 +59,23 @@ class TopupStore extends EventEmitter {
       .catch(errorHandler);
     });
   }
+
+
+    getIncome(orgId, callbackFunc) {
+    this.swagger.then(client => {
+      client.apis.TopUpService.GetIncome({
+        orgId
+       
+      })
+      .then(checkStatus)
+      //.then(updateOrganizations)
+      .then(resp => {
+        callbackFunc(resp.body);
+      })
+      .catch(errorHandler);
+    });
+  }
+
   
   notify(action) {
     dispatcher.dispatch({

@@ -12,6 +12,7 @@ protoc -I. -I${GRPC_GW_PATH} --go_out=plugins=grpc:. \
     withdraw.proto \
     device.proto \
     gateway.proto \
+    settings.proto \
     server.proto \
     staking.proto
 
@@ -26,7 +27,8 @@ protoc -I. -I${GRPC_GW_PATH} --grpc-gateway_out=logtostderr=true:. \
     device.proto \
     gateway.proto \
     server.proto \
-    staking.proto
+    staking.proto \
+    settings.proto
 
 # generate the swagger definitions
 protoc -I. -I${GRPC_GW_PATH} --swagger_out=json_names_for_fields=true:./swagger \
@@ -38,5 +40,6 @@ protoc -I. -I${GRPC_GW_PATH} --swagger_out=json_names_for_fields=true:./swagger 
     withdraw.proto \
     device.proto \
     gateway.proto \
+    settings.proto \
     server.proto \
     staking.proto

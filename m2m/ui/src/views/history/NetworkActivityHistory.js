@@ -3,16 +3,12 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import moment from 'moment';
-import mtz from 'moment-timezone';
 
 import WalletStore from "../../stores/WalletStore";
 import TitleBar from "../../components/TitleBar";
 
-import TableCellExtLink from '../../components/TableCellExtLink';
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
-import LinkVariant from "mdi-material-ui/LinkVariant";
 import Admin from "../../components/Admin";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
@@ -68,7 +64,7 @@ class NetworkActivityHistory extends Component {
   render() {
     return(
       <Grid container spacing={24}>
-        <TitleBar
+{/*        <TitleBar
           buttons={
             <Admin organizationID={this.props.match.params.organizationID}>
               <TitleBarButton
@@ -78,7 +74,7 @@ class NetworkActivityHistory extends Component {
             </Admin>
           }
         >
-        </TitleBar>
+        </TitleBar>*/}
         <Grid item xs={12}>
           <DataTable
             header={
