@@ -1,21 +1,19 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Divider from '@material-ui/core/Divider';
 import Grid from "@material-ui/core/Grid";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
-import DeviceStore from "../../stores/DeviceStore.js";
 import WalletStore from "../../stores/WalletStore.js";
 import GatewayStore from "../../stores/GatewayStore.js";
-import TitleBarButton from "../../components/TitleBarButton";
 import Button from "@material-ui/core/Button";
 import StakeStore from "../../stores/StakeStore";
+import ExtLink from "../../components/ExtLink";
 import Typography from '@material-ui/core/Typography';
 //import WithdrawBalanceInfo from "./WithdrawBalanceInfo";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import styles from "./StakeStyle"
-import { CONFIRMATION, CONFIRMATION_TEXT, INVALID_ACCOUNT, INVALID_AMOUNT } from "../../util/Messages"
+import { DISMISS, STAKE_DESCRIPTION, LEARN_MORE } from "../../util/Messages"
 import { EXT_URL_STAKE } from "../../util/Data"
 
 function doIHaveGateway(orgId) {
@@ -39,7 +37,8 @@ class StakeLayout extends Component {
     super(props);
     this.state = {
       loading: false,
-      isFirst: true
+      isFirst: true,
+      dismissOn: true
     };
   }
 
@@ -62,7 +61,6 @@ class StakeLayout extends Component {
   }
 
   componentDidMount() {
-    //this.loadData();
   }
 
   componentDidUpdate(oldProps) {
@@ -70,6 +68,12 @@ class StakeLayout extends Component {
       return;
     }
     this.loadData();
+  }
+  
+  dismissOn = () => {
+    this.setState({
+      dismissOn: false
+    });
   }
   
   onSubmit = (e, apiWithdrawReqRequest) => {
@@ -104,16 +108,13 @@ class StakeLayout extends Component {
         </Grid>
         <Grid item xs={12} className={this.props.classes.divider}>
           <Grid item xs={6}>
-                <div className={this.props.classes.infoBox}>
-                  <p>Staking enhances data trade by giving all 
-                  holders a fair way to take part in the network.</p>
+          {this.state.dismissOn && <div className={this.props.classes.infoBox}>
+                  <p>{STAKE_DESCRIPTION}</p>
                   <div className={this.props.classes.between}>
-                    <Typography className={this.props.classes.title} gutterBottom>
-                      DISMISS
-                    </Typography>
-                    <TitleBarTitle component={Link} to={EXT_URL_STAKE} title="LEARN MORE" />
+                    <ExtLink dismissOn={this.dismissOn} for={'local'} context={DISMISS} />&nbsp;&nbsp;&nbsp;
+                    <ExtLink to={EXT_URL_STAKE} context={LEARN_MORE} />
                   </div>
-                </div>
+                </div>}
           </Grid>
         </Grid>
       </Grid>
