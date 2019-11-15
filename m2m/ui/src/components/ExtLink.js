@@ -24,6 +24,8 @@ class ExtLink extends Component {
     const url = this.props.to;
     if(this.props.for === 'lora'){
       window.location.replace(url)
+    }else if(this.props.for === 'local'){
+      this.props.dismissOn();
     }else{
       window.open(url, '_blank');
     } 
