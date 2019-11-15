@@ -257,7 +257,7 @@ func (*aggWalletUsageInterface) CreateAggWltUsgFunctions() error {
 // add rows to internal_tx table and modify the balances of user and super node income
 func (*aggWalletUsageInterface) ExecAggWltUsgPayments(internalTx types.InternalTx, superNodeIncomeVal float64) (updatedBalance float64, err error) {
 
-	superNodeIncomeWltId, err := PgWallet.GetWalletIdStakeStorage()
+	superNodeIncomeWltId, err := PgWallet.GetWalletIdSuperNodeIncome()
 	if err != nil {
 		return 0, errors.Wrap(err, "db/initWithdrawReqApply. Can not get superNodeIncomeWltId! ")
 	}
