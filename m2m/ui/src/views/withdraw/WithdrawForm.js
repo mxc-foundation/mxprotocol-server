@@ -1,12 +1,13 @@
 import React from "react";
+import { withRouter, Link  } from "react-router-dom";
 
 import TextField from '@material-ui/core/TextField';
+import i18n, { packageNS } from '../../i18n';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
 import TitleBarTitle from "../../components/TitleBarTitle";
 //import Button from "@material-ui/core/Button";
 import Spinner from "../../components/ScaleLoader"
-import { withRouter, Link  } from "react-router-dom";
 
 class WithdrawForm extends FormComponent {
   
@@ -46,10 +47,10 @@ class WithdrawForm extends FormComponent {
       >
         <TextField
           id="amount"
-          label="Amount"
+          label={i18n.t(`${packageNS}:menu.withdraw.amount`)}
           margin="normal"
           value={this.state.amount}
-          placeholder="Type here" 
+          placeholder={i18n.t(`${packageNS}:menu.withdraw.type_here`)}
           onChange={this.onChange}
           autoComplete='off'
           
@@ -64,7 +65,7 @@ class WithdrawForm extends FormComponent {
         
         <TextField
           id="txFee"
-          label="Transaction fee"
+          label={i18n.t(`${packageNS}:menu.withdraw.transaction_fee`)}
           margin="normal"
           
           value={this.props.txinfo.withdrawFee || "0"}
@@ -76,7 +77,7 @@ class WithdrawForm extends FormComponent {
         
         <TextField
           id="destination"
-          label="To ETH Account"
+          label={i18n.t(`${packageNS}:menu.withdraw.to_eth_account`)}
           helperText=""
           margin="normal"
           value={this.props.txinfo.account || ""}
@@ -88,7 +89,7 @@ class WithdrawForm extends FormComponent {
           
           fullWidth
         />
-        <TitleBarTitle component={Link} to={`/modify-account/${this.props.orgId}`} title="CHANGE ETH ACCOUNT" />
+        <TitleBarTitle component={Link} to={`/modify-account/${this.props.orgId}`} title={i18n.t(`${packageNS}:menu.withdraw.change_eth_account`)} />
       </Form>
     );
   }

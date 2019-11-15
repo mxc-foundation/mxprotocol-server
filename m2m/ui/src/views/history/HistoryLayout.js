@@ -7,6 +7,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from "@material-ui/core/Button";
 
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import Spinner from "../../components/ScaleLoader"
@@ -64,7 +65,7 @@ class HistoryLayout extends Component {
       tab = 2;
     } else if (window.location.href.endsWith("/stake")) {
       tab = 3;
-    }  
+    }
     
     this.setState({
       tab,
@@ -86,29 +87,22 @@ class HistoryLayout extends Component {
         <Spinner on={this.state.loading}/>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
-              {/* <TitleBar className={this.props.classes.padding}>
-                <TitleBarTitle title="Stake" />
-              </TitleBar> */}    
-              {/* <Divider light={true}/> */}
-              <div className={this.props.classes.between}>
-              <TitleBar>
-                <TitleBarTitle title="History" />
-                {/* <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
-              </TitleBar>
-              {this.state.tab === 3 && <div className={this.props.classes.alignCol}>
-                <Button color="primary.main" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} /* onClick={this.handleOpenAXS} */ type="button" disabled={false}>GO TO STAKING</Button>
-                {/* <Button variant="outlined" color="inherit" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} onClick={this.unstake} type="button" disabled={false}>UNSTAKE</Button> */}
-              </div>}
-              {/* <TitleBarButton
-                label="SET STAKE"
-                color="primary"
-                to={`/stake/${this.props.match.params.organizationID}/set-stake`}
-                classes={this.props.classes}
-              /> */}
-              </div>
-          </div>
+                <TitleBar className={this.props.classes.padding}>
+                  <TitleBarTitle title={i18n.t(`${packageNS}:menu.history.history`)} />
+                </TitleBar>
+                {/* <Divider light={true}/>
+                <div className={this.props.classes.breadcrumb}>
+                <TitleBar>
+                  <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
+                  <TitleBarTitle title="/" className={this.props.classes.navText}/>
+                  <TitleBarTitle component={Link} to="#" title="History" className={this.props.classes.link}/>
+                </TitleBar>
+                </div> */}
+                  {this.state.tab === 3 && <div className={this.props.classes.alignCol}>
+                      <Button color="primary.main" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} /* onClick={this.handleOpenAXS} */ type="button" disabled={false}>GO TO STAKING</Button>
+                      {/* <Button variant="outlined" color="inherit" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} onClick={this.unstake} type="button" disabled={false}>UNSTAKE</Button> */}
+                  </div>}
+            </div>
         </Grid>
 
         <Grid item xs={12}>
@@ -121,9 +115,9 @@ class HistoryLayout extends Component {
             scrollButtons="auto"
             textColor="primary"
           >
-            <Tab label="Transactions" component={Link} to={`/history/${organizationID}/`} />
-            <Tab label="ETH Account" component={Link} to={`/history/${organizationID}/eth_account`} />
-            <Tab label="Network Activity" component={Link} to={`/history/${organizationID}/network-activity`} />
+            <Tab label={i18n.t(`${packageNS}:menu.history.transactions`)} component={Link} to={`/history/${organizationID}/`} />
+            <Tab label={i18n.t(`${packageNS}:menu.history.eth_account`)} component={Link} to={`/history/${organizationID}/eth_account`} />
+            <Tab label={i18n.t(`${packageNS}:menu.history.network_activity`)} component={Link} to={`/history/${organizationID}/network-activity`} />
             <Tab label="Staking" component={Link} to={`/history/${organizationID}/stake`} />
           </Tabs>
         </Grid>
