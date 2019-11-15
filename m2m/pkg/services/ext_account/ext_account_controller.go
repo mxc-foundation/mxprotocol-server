@@ -1,10 +1,12 @@
 package ext_account
 
 import (
+	"strings"
+
 	log "github.com/sirupsen/logrus"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
-	"strings"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
 func Setup() error {
@@ -43,7 +45,7 @@ func GetActiveExtAccount(orgId int64, currencyAbbr string) (string, error) {
 	}
 
 	if err != nil {
-		if strings.HasSuffix(err.Error(), db.DbError.NoRowQueryRes.Error()) {
+		if strings.HasSuffix(err.Error(), types.DbError.NoRowQueryRes.Error()) {
 			log.Warnf("service/GetActiveExtAccount: get account with walletId=%d, currency=%s", walletId, currencyAbbr)
 			return "", nil
 		}

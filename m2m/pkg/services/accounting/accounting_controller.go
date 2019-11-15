@@ -14,6 +14,7 @@ func Setup(conf config.MxpConfig) error {
 		now := time.Now().UTC()
 		nextTickTimeDiff := now.Truncate(time.Hour).Add(time.Hour).Sub(now)
 		t := time.NewTicker(nextTickTimeDiff)
+		superNodePktSentIncomeRatio := 0.08 // TODO: should be received from configs
 		for {
 			// Wait for tick from the ticker
 			<-t.C
@@ -21,7 +22,7 @@ func Setup(conf config.MxpConfig) error {
 			var dlPrice float64 = conf.SuperNode.DlPrice
 			var aggDurationMinutes int64 = conf.Accounting.IntervalMin
 
-			if err := performAccounting(aggDurationMinutes, dlPrice); err != nil {
+			if err := performAccounting(aggDurationMinutes, dlPrice, superNodePktSentIncomeRatio); err != nil {
 				log.WithError(err).Error(" Accounting Failed! ")
 			}
 

@@ -1,11 +1,11 @@
 package db
 
-import "database/sql"
+import (
+	"database/sql"
 
-var DbError struct {
-	NoRowQueryRes error
-}
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+)
 
 func dbErrorInit() {
-	DbError.NoRowQueryRes = sql.ErrNoRows
+	types.DbError.NoRowQueryRes = sql.ErrNoRows
 }

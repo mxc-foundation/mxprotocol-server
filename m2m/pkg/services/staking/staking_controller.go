@@ -100,7 +100,7 @@ func stakingRevenueExec(conf config.MxpConfig) error {
 	}
 
 	//when all the process finished, give the time to DB.
-	if err := db.StakeRevenuePeriod.UpdateCompletedStakeReveneuPeriod(stakeRevPeriodId); err != nil {
+	if err := db.StakeRevenuePeriod.UpdateCompletedStakeRevenuePeriod(stakeRevPeriodId); err != nil {
 		log.WithError(err).Error("stakingRevenueExec/Cannot update revenueTime to DB")
 	}
 

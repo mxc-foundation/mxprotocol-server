@@ -67,7 +67,7 @@ func (*stakeRevenuePeriodInterface) InsertStakeRevenuePeriod(StakingPeriodStart 
 	return insertIndex, errors.Wrap(err, "db/pg_stake_revenue_period/InsertStakeRevenuePeriod")
 }
 
-func (*stakeRevenuePeriodInterface) UpdateCompletedStakeReveneuPeriod(stakeReveneuPeriodId int64) error {
+func (*stakeRevenuePeriodInterface) UpdateCompletedStakeRevenuePeriod(stakeRevenuePeriodId int64) error {
 	_, err := PgDB.Exec(` 
 	UPDATE 
 		stake_revenue_period
@@ -78,6 +78,6 @@ func (*stakeRevenuePeriodInterface) UpdateCompletedStakeReveneuPeriod(stakeReven
 		id = $3
 	;`, types.STAKE_REVENUE_COMPLETED,
 		time.Now().UTC(),
-		stakeReveneuPeriodId)
-	return errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue_period/UpdateCompletedStakeReveneuPeriod   stakeReveneuPeriodId: %d", stakeReveneuPeriodId))
+		stakeRevenuePeriodId)
+	return errors.Wrap(err, fmt.Sprintf("db/pg_stake_revenue_period/UpdateCompletedStakeRevenuePeriod   stakeRevenuePeriodId: %d", stakeRevenuePeriodId))
 }
