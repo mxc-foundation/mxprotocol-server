@@ -75,8 +75,8 @@
       "filter": "过滤"
     },
     "gateways": {
-      "gateway": "게이트웨이",
-      "gateways": "게이트웨이",
+      "gateway": "网关",
+      "gateways": "网关列表",
       "status": "状态",
       "downlink_price": "下行价格",
       "mode": "模式",

@@ -75,8 +75,8 @@
       "filter": "過濾"
     },
     "gateways": {
-      "gateway": "게이트웨이",
-      "gateways": "게이트웨이",
+      "gateway": "網關",
+      "gateways": "網關列表",
       "status": "狀態",
       "downlink_price": "下行鏈路價格",
       "mode": "模式",
