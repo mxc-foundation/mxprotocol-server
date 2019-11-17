@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 
 import history from "./history";
 import theme from "./theme";
-import i18n from "./i18n";
+import i18n, { packageNS, DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "./i18n";
 
 import TopNav from "./components/TopNav";
 import TopBanner from "./components/TopBanner";
@@ -111,9 +111,9 @@ class App extends Component {
     this.state = {
       user: true,
       drawerOpen: true,
+      language: null
     };
 
-    this.onChangeLanguage = this.onChangeLanguage.bind(this);
     this.setDrawerOpen = this.setDrawerOpen.bind(this);
   }
 
@@ -122,35 +122,48 @@ class App extends Component {
       this.setState({
         user: SessionStore.getUser(),
         drawerOpen: SessionStore.getUser() != null,
-        language: {
-          id: SessionStore.getLanguage() && SessionStore.getLanguage().id,
-          name: SessionStore.getLanguage() && SessionStore.getLanguage().name,
-          code: SessionStore.getLanguage() && SessionStore.getLanguage().code
-        }
+        language: SessionStore.getLanguage()
       });
     });
 
-    const storedLanguageID = SessionStore.getLanguage() && SessionStore.getLanguage().id;
+    const storedLanguageLabel = SessionStore.getLanguage() && SessionStore.getLanguage().label;
 
-    if (storedLanguageID && i18n.language !== storedLanguageID) {
-      i18n.changeLanguage(storedLanguageID, (err, t) => {
+    if (!storedLanguageLabel && !i18n.language) {
+      i18n.changeLanguage(DEFAULT_LANGUAGE.label, (err, t) => {
         if (err) {
-          console.error(`Error loading language ${storedLanguageID}: `, err);
+          console.error(`Error setting default language to English: `, err);
+        }
+      });
+    }
+
+    const i18nLanguage = SUPPORTED_LANGUAGES.find(el => el.label === i18n.language);
+
+    // Add the saved i18n language back into Local Storage if it is lost after a page refresh on Login component
+    if (!storedLanguageLabel && i18n.language) {
+      SessionStore.setLanguage(i18nLanguage);
+    }
+
+    // Language stored in Local Storage persists and takes precedence over i18n language
+    if (storedLanguageLabel && i18n.language !== storedLanguageLabel) {
+      i18n.changeLanguage(storedLanguageLabel, (err, t) => {
+        if (err) {
+          console.error(`Error loading language ${storedLanguageLabel}: `, err);
         }
       });
     }
 
     this.setState({
-      drawerOpen: true
+      drawerOpen: true,
+      language: storedLanguageLabel ? SessionStore.getLanguage() : i18nLanguage
     });
   }
 
-  onChangeLanguage(newLanguage) {
+  onChangeLanguage = (newLanguage) => {
     SessionStore.setLanguage(newLanguage);
 
-    i18n.changeLanguage(newLanguage.id, (err, t) => {
+    i18n.changeLanguage(newLanguage.label, (err, t) => {
       if (err) {
-        console.error(`Error loading language ${newLanguage.id}: `, err);
+        console.error(`Error loading language ${newLanguage.label}: `, err);
       }
     });
 
@@ -170,12 +183,22 @@ class App extends Component {
   }
 
   render() {
+    const { language } = this.state;
+
     let topNav = null;
     let sideNav = null;
     let topbanner = null;
 
     if (this.state.user !== null) {
-      topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} language={this.state.language} onChangeLanguage={this.onChangeLanguage} username={SessionStore.getUsername()} />;
+      topNav = (
+        <TopNav
+          drawerOpen={this.state.drawerOpen}
+          language={language}
+          onChangeLanguage={this.onChangeLanguage}
+          setDrawerOpen={this.setDrawerOpen}
+          username={SessionStore.getUsername()}
+        />
+      );
       topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>;
       sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
     }
@@ -203,8 +226,6 @@ class App extends Component {
                     <Route path="/gateway/:organizationID" component={GatewayLayout} />
                     <Route exact path="/stake/:organizationID" component={StakeLayout} />
                     <Route exact path="/stake/:organizationID/set-stake" component={SetStake} />
-P
-
                     <Route path="/control-panel/modify-account" component={SuperNodeEth} />
                     <Route path="/control-panel/withdraw" component={SuperAdminWithdraw} />
                     <Route path="/control-panel/history" component={SupernodeHistory} />

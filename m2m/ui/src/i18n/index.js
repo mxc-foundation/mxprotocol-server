@@ -7,7 +7,7 @@ import Debug from "../util/debug";
 import SessionStore from "../stores/SessionStore";
 import { en, ko, zhCN, zhTW } from "./locales";
 
-const defaultLanguage = {
+const DEFAULT_LANGUAGE = {
   label: "en",
   value: "English",
   code: "gb"
@@ -15,7 +15,7 @@ const defaultLanguage = {
 
 // Labels must match JSON filenames in locales directory
 // Code attribute value must is from react-flag-icon-css http://flag-icon-css.lip.is/
-const supportedLanguages = [
+const SUPPORTED_LANGUAGES = [
   { label: "en", value: "English", code: "gb" },
   { label: "ko", value: "Korean", code: "kr" },
   { label: "zhCN", value: "Chinese (Simplified)", code: "cn" },
@@ -44,7 +44,7 @@ i18n
     interpolation: {
       escapeValue: false
     },
-    lng: (SessionStore.getLanguage() && SessionStore.getLanguage().id) || "en",
+    lng: SessionStore.getLanguage() && SessionStore.getLanguage().label || "en",
     ns: [packageNS],
     // https://react.i18next.com/misc/using-with-icu-format
     react: {
@@ -96,4 +96,4 @@ i18next.on("languageChanged", lng => {
 
 export default i18n;
 
-export { defaultLanguage, supportedLanguages, packageNS };
+export { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES, packageNS };
