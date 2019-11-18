@@ -41,7 +41,7 @@ func (*walletInterface) CreateWalletTable() error {
 			CREATE TABLE IF NOT EXISTS wallet (
 	
 			id SERIAL PRIMARY KEY,
-			fk_org_la INT UNIQUE NOT NULL, -- foreign_key LoRa app server DB
+			fk_org_la INT UNIQUE NOT NULL, -- foreign_key LPWAN App Server DB
 			type WALLET_TYPE NOT NULL,
 			balance NUMERIC(28,18) NOT NULL DEFAULT 0,
 			tmp_balance NUMERIC(28,18) NOT NULL DEFAULT 0

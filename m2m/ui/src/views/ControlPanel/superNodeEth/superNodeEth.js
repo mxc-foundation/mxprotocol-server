@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withRouter, Link } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
+import i18n, { packageNS } from '../../../i18n';
 import TitleBar from "../../../components/TitleBar";
 import TitleBarTitle from "../../../components/TitleBarTitle";
 import MoneyStore from "../../../stores/MoneyStore";
@@ -58,7 +59,7 @@ class SuperNodeEth extends Component {
                 if(resp){
                     resolve(resp);
                 } else {
-                    alert("inccorect username or password.");
+                    alert(`${i18n.t(`${packageNS}:menu.withdraw.incorrect_username_or_password`)}`);
                     return false;
                 }
             })
@@ -78,7 +79,7 @@ class SuperNodeEth extends Component {
       
       try {
         if(resp.username !== SessionStore.getUsername() ){
-          alert('inccorect username or password.');
+          alert(`${i18n.t(`${packageNS}:menu.withdraw.incorrect_username_or_password`)}`);
           return false;
         }
         const isOK = await this.verifyUser(resp);
@@ -101,7 +102,7 @@ class SuperNodeEth extends Component {
             <Grid item xs={12} className={this.props.classes.divider}>
               <div className={this.props.classes.TitleBar}>
                     <TitleBar className={this.props.classes.padding}>
-                      <TitleBarTitle title="Control Panel" />
+                      <TitleBarTitle title={i18n.t(`${packageNS}:menu.settings.system_settings`)} />
                     </TitleBar>
 
                 </div>
@@ -109,14 +110,14 @@ class SuperNodeEth extends Component {
             <Grid item xs={6} className={this.props.classes.column}>
           {this.state.activeAccount &&
             <ModifyEthAccountForm
-              submitLabel="Confirm"
+              submitLabel={i18n.t(`${packageNS}:menu.withdraw.confirm`)}
               onSubmit={this.onSubmit}
               activeAccount={this.state.activeAccount}
             />
           }
           {!this.state.activeAccount &&  
           <NewEthAccountForm
-            submitLabel="Confirm"
+            submitLabel={i18n.t(`${packageNS}:menu.withdraw.confirm`)}
             onSubmit={this.onSubmit}
           />
           }

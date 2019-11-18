@@ -20,7 +20,7 @@ const SideNavStyle = {
     selected: {
       color: theme.palette.common.white,
     },
-    card: { // lora server options
+    card: { // LPWAN Server options
       width: '100%',
       height: 250,
       position: 'absolute',
