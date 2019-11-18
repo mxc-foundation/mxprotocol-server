@@ -157,7 +157,7 @@ class TopNav extends Component {
           </IconButton> */}
 
           <div className={this.props.classes.flex}>
-            <img src="/logo/m2m_logo.png" className={this.props.classes.logo} alt="LoRa Server" />
+            <img src="/logo/m2m_logo.png" className={this.props.classes.logo} alt="LPWAN Server" />
           </div>
 
           {/* <div className={this.props.classes.flex}>
