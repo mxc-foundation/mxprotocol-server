@@ -3,6 +3,7 @@ import React from "react";
 import TextField from '@material-ui/core/TextField';
 import { Redirect } from 'react-router-dom'
 import clsx from 'clsx'
+import i18n, { packageNS } from '../../i18n';
 import FormComponent from "../../classes/FormComponent";
 import Grid from "@material-ui/core/Grid";
 import TitleBar from "../../components/TitleBar";
@@ -90,7 +91,7 @@ class SetStake extends FormComponent {
     e.preventDefault();
     const resp = StakeStore.stake(req);
     resp.then((res) => {
-      if(res.body.status === 'Stake successful.'){
+      if(res.body.status === i18n.t(`${packageNS}:menu.staking.stake_success`)){
         this.setState({ 
           isUnstake: true,
           info: STAKE_SET_SUCCESS,
