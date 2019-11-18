@@ -12,6 +12,7 @@ import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
+import i18n, { packageNS } from '../../i18n';
 
 const styles = {
   maxW140: {
@@ -79,13 +80,13 @@ class NetworkActivityHistory extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell align={'center'}>Time</TableCell>
-                <TableCell align={'right'}>Packets Sent</TableCell>
-                <TableCell align={'right'}>Free Packets</TableCell>
-                <TableCell align={'right'}>Packets Received</TableCell>
-                <TableCell align={'right'}>Earned</TableCell>
-                <TableCell align={'right'}>Spent</TableCell>
-                <TableCell align={'right'}>Balance</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.staking.time`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.packets_sent`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.free_packets`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.packets_received`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.earned`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.spent`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.balance`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

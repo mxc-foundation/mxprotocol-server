@@ -15,6 +15,7 @@ import { withStyles } from "@material-ui/core/styles";
 import styles from "./StakeStyle"
 import { DISMISS, STAKE_DESCRIPTION, LEARN_MORE } from "../../util/Messages"
 import { EXT_URL_STAKE } from "../../util/Data"
+import i18n, { packageNS } from '../../i18n';
 
 function doIHaveGateway(orgId) {
   return new Promise((resolve, reject) => {
@@ -96,7 +97,7 @@ class StakeLayout extends Component {
                 <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
                 <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
               </TitleBar>
-              <Button color="primary.main" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} /* onClick={this.handleOpenAXS} */ type="button" disabled={false}>SET STAKE</Button>
+              <Button color="primary.main" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} /* onClick={this.handleOpenAXS} */ type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.set_stake_caps`)}</Button>
               {/* <TitleBarButton
                 label="SET STAKE"
                 color="primary"

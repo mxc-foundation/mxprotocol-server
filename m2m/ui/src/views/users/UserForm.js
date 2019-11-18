@@ -8,6 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormComponent from "../../classes/FormComponent";
 import FormControl from "../../components/FormControl";
 import Form from "../../components/Form";
+import i18n, { packageNS } from '../../i18n';
 
 
 class UserForm extends FormComponent {
@@ -32,7 +33,7 @@ class UserForm extends FormComponent {
         />
         <TextField
           id="email"
-          label="E-mail address"
+          label={i18n.t(`${packageNS}:menu.login.email_address`)}
           margin="normal"
           value={this.state.object.email || ""}
           onChange={this.onChange}
@@ -41,8 +42,8 @@ class UserForm extends FormComponent {
         />
         <TextField
           id="note"
-          label="Optional note"
-          helperText="Optional note, e.g. a phone number, address, comment..."
+          label={i18n.t(`${packageNS}:menu.login.optional_note`)}
+          helperText={i18n.t(`${packageNS}:menu.login.optional_note_details`)}
           margin="normal"
           value={this.state.object.note || ""}
           onChange={this.onChange}
@@ -60,10 +61,10 @@ class UserForm extends FormComponent {
           required
           fullWidth
         />}
-        <FormControl label="Permissions">
+        <FormControl label={i18n.t(`${packageNS}:menu.login.permissions`)}>
           <FormGroup>
             <FormControlLabel
-              label="Is active"
+              label={i18n.t(`${packageNS}:menu.login.is_active`)}
               control={
                 <Checkbox
                   id="isActive"
@@ -74,7 +75,7 @@ class UserForm extends FormComponent {
               }
             />
             <FormControlLabel
-              label="Is global admin"
+              label={i18n.t(`${packageNS}:menu.login.is_global_admin`)}
               control={
                 <Checkbox
                   id="isAdmin"

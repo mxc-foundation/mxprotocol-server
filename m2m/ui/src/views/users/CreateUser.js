@@ -10,6 +10,7 @@ import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import UserForm from "./UserForm";
 import UserStore from "../../stores/UserStore";
+import i18n, { packageNS } from '../../i18n';
 
 
 class CreateUser extends Component {
@@ -28,15 +29,15 @@ class CreateUser extends Component {
     return(
       <Grid container spacing={24}>
         <TitleBar>
-          <TitleBarTitle title="Users" to="/Users" />
+          <TitleBarTitle title={i18n.t(`${packageNS}:menu.login.users`)} to="/Users" />
           <TitleBarTitle title="/" />
-          <TitleBarTitle title="Create" />
+          <TitleBarTitle title={i18n.t(`${packageNS}:menu.login.create`)} />
         </TitleBar>
         <Grid item xs={12}>
           <Card>
             <CardContent>
               <UserForm
-                submitLabel="Create user"
+                submitLabel={i18n.t(`${packageNS}:menu.login.create_user`)}
                 onSubmit={this.onSubmit}
               />
             </CardContent>

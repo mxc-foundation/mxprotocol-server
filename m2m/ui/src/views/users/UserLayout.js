@@ -31,7 +31,7 @@ class UserLayout extends Component {
   }
 
   deleteUser() {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+    if (window.confirm(i18n.t(`${packageNS}:menu.login.check_delete`))) {
       UserStore.delete(this.props.match.params.userID, () => {
         this.props.history.push("/users");
       });
@@ -49,20 +49,20 @@ class UserLayout extends Component {
           buttons={[
             <TitleBarButton
               key={1}
-              label="Change password"
+              label={i18n.t(`${packageNS}:menu.login.change_password`)}
               icon={<KeyVariant />}
               to={`/users/${this.props.match.params.userID}/password`}
             />,
             <TitleBarButton
               key={2}
-              label="Delete"
+              label={i18n.t(`${packageNS}:menu.login.delete`)}
               icon={<Delete />}
               color="secondary"
               onClick={this.deleteUser}
             />,
           ]}
         >
-          <TitleBarTitle to="/users" title="Users" />
+          <TitleBarTitle to="/users" title={i18n.t(`${packageNS}:menu.login.users`)} />
           <TitleBarTitle title="/" />
           <TitleBarTitle title={this.state.user.user.username} />
         </TitleBar>

@@ -12,6 +12,7 @@ import NewEthAccountForm from "../../ethAccount/NewEthAccountForm";
 import styles from "./superNodeEthStyle"
 import { ETHER } from "../../../util/Coin-type";
 import { SUPER_ADMIN } from "../../../util/M2mUtil";
+import i18n, { packageNS } from '../../../i18n';
 
 
 class SuperNodeEth extends Component {
@@ -101,7 +102,7 @@ class SuperNodeEth extends Component {
             <Grid item xs={12} className={this.props.classes.divider}>
               <div className={this.props.classes.TitleBar}>
                     <TitleBar className={this.props.classes.padding}>
-                      <TitleBarTitle title="Control Panel" />
+                      <TitleBarTitle title={i18n.t(`${packageNS}:menu.common.control_panel`)} />
                     </TitleBar>
 
                 </div>
@@ -109,14 +110,14 @@ class SuperNodeEth extends Component {
             <Grid item xs={6} className={this.props.classes.column}>
           {this.state.activeAccount &&
             <ModifyEthAccountForm
-              submitLabel="Confirm"
+              submitLabel={i18n.t(`${packageNS}:menu.common.confirm`)}
               onSubmit={this.onSubmit}
               activeAccount={this.state.activeAccount}
             />
           }
           {!this.state.activeAccount &&  
           <NewEthAccountForm
-            submitLabel="Confirm"
+            submitLabel={i18n.t(`${packageNS}:menu.common.confirm`)}
             onSubmit={this.onSubmit}
           />
           }

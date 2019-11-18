@@ -45,7 +45,9 @@
       "rows_per_page": "페이지 당 행",
       "of": "의",
       "filter": "필터",
-      "date": "날짜"
+      "date": "날짜",
+      "account": "계정",
+      "last_income": "지난 24 시간 소득"
     },
     "eth_account": {
       "eth_account": "ETH 계좌",
@@ -83,7 +85,38 @@
       "filter": "필터"
     },
     "staking": {
-      "staking": "스테이킹"
+      "staking": "스테이킹",
+      "revenue_rate": "수익률",
+      "your_stake": "스테이크는",
+      "confirm_stake": "스테이크 확인",
+      "confirm_unstake": "실패를 확인",
+      "unstake": "스테이크",
+      "set_stake": "스테이크 설정",
+      "history": "역사",
+      "withdraw_stake": "스테이크 철수",
+      "set_stake_success": "축하합니다! 스테이크가 설정되었습니다",
+      "unstake_set_success": "성공하지 못한 스테이크. MXC 가 M2M Wallet 저울에 추가되었습니다",
+      "stake_description": "스태킹은 모든 소지자에게 공정한 네트워크 참여 방법을 제공함으로써 데이터 거래를 향상시킵니다.",
+      "stake_warning_001": "귀하는 월별 수입을 거의 얻었습니다. 당신이 지금 스테이크를 놓치면 놓치게됩니다",
+      "stake_successful": "스테이크 성공.",
+      "monthly": "월간 간행물",
+      "stake_amount": "스테이크 금액",
+      "start": "스타트",
+      "end": "종료",
+      "revenue_month": "수익의 달",
+      "network_income": "네트워크 소득",
+      "monthly_rate": "월간 요율",
+      "revenue": "수익",
+      "balance": "균형",
+      "set_stake_caps": "스테이크 설정",
+      "go_to_staking": "추적으로 이동",
+      "filter": "필터",
+      "time": "시각",
+      "packets_sent": "보낸 패킷",
+      "free_packets": "무료 패킷",
+      "packets_received": "받은 패킷",
+      "earned": "획득",
+      "spent": "사용 잔액"
     },
     "nb_iot_server": "NB-IoT 서버",
     "lpwan_server": "LPWAN 서버",
@@ -109,6 +142,55 @@
     },
     "banner": {
       "demo_version": "이것은 데모 버전입니다"
+    },
+    "common": {
+      "dismiss": "간단히 처리해 버리다",
+      "learn_more": "더 알아보기",
+      "amount": "양",
+      "confirm": "확인",
+      "control_panel": "제어판"
+    },
+    "system_settings": {
+      "system_settings": "환경 설정",
+      "withdraw_fee": "인출 수수료",
+      "downlink_price": "다운 링크 가격",
+      "percentage_share": "거래 당 비율 점유율",
+      "low_balance": "잔액 부족 경고",
+      "save_changes": "변경 사항을 저장하다",
+      "cancel": "취소",
+      "welcome": "어서 오십시오",
+      "organization": "조직",
+      "timestamp": "타임 스탬프",
+      "value": "값",
+      "type": "유형",
+      "income": "수입",
+      "today_income": "오늘의 소득",
+      "monthly_balance": "월별 잔액",
+      "set_alert": "경고를 설정",
+      "general_settings": "일반 설정",
+      "monthly_downtime": "월간 다운 타임",
+      "tickets_opened": "티켓 개설",
+      "tickets_closed": "티켓 마감",
+      "hours": "시간"
+    },
+    "login": {
+      "login": "로그인",
+      "users": "사용자",
+      "create": "창조하다",
+      "create_user": "사용자 만들기",
+      "update_user": "사용자 업데이트",
+      "email_address": "이메일 주소",
+      "optional_note": "선택적 메모",
+      "optional_note_details": "선택적 메모 (예 : 전화 번호, 주소, 의견 ...",
+      "permissions": "권한",
+      "check_delete": "이 사용자를 삭제 하시겠습니까?",
+      "change_password": "비밀번호 변경",
+      "delete": "지우다",
+      "username": "사용자 이름",
+      "active": "유효한",
+      "admin": "관리자",
+      "is_active": "활성",
+      "is_global_admin": "글로벌 관리자입니까"
     }
   }
 }

@@ -45,7 +45,9 @@
       "rows_per_page": "每行页数",
       "of": "之",
       "filter": "过滤",
-      "date": "日期"
+      "date": "日期",
+      "account": "帐户",
+      "last_income": "最近 24 小时的收入"
     },
     "eth_account": {
       "eth_account": "ETH 账户",
@@ -83,7 +85,38 @@
       "filter": "过滤"
     },
     "staking": {
-      "staking": "Staking"
+      "staking": "Staking",
+      "revenue_rate": "收益率",
+      "your_stake": "你的 Stake 数额是 ",
+      "confirm_stake": "确认 Stake ",
+      "confirm_unstake": "确认解除 Stake",
+      "unstake": "解除 Stake",
+      "set_stake": "设定 Stake 数额",
+      "history": "历史",
+      "withdraw_stake": "提款",
+      "set_stake_success": "恭喜你！您的 Stake 已确认.",
+      "unstake_set_success": "解除 Stake 成功. MXC 已添加到您的 M2M Wallet 余额中.",
+      "stake_description": "Staking 通过鼓励持有者公平地参与网络来保障数据交易流程",
+      "stake_warning_001": "您即将获得每月收入. 如果现在放弃，您将错过它.",
+      "stake_successful": "Stake 成功.",
+      "monthly": "每个月",
+      "stake_amount": "Stake 数额",
+      "start": "开始",
+      "end": "结束",
+      "revenue_month": "收入月份",
+      "network_income": "网络收入",
+      "monthly_rate": "月费率",
+      "revenue": "收入",
+      "balance": "余额",
+      "set_stake_caps": "设定质押",
+      "go_to_staking": "进行质押",
+      "filter": "过滤",
+      "time": "时间",
+      "packets_sent": "发送的数据包",
+      "free_packets": "免费数据包",
+      "packets_received": "收到数据包",
+      "earned": "获得",
+      "spent": "剩余余额"
     },
     "nb_iot_server": "NB-IoT 服务器",
     "lpwan_server": "LPWAN 服务器",
@@ -109,6 +142,55 @@
     },
     "banner": {
       "demo_version": "这是演示版本"
+    },
+    "common": {
+      "dismiss": "取消",
+      "learn_more": "更多信息",
+      "amount": "量",
+      "confirm": "确认",
+      "control_panel": "控制面板"
+    },
+    "system_settings": {
+      "system_settings": "系统设置",
+      "withdraw_fee": "提款费",
+      "downlink_price": "下行价格",
+      "percentage_share": "每笔交易所收费用百分比",
+      "low_balance": "余额不足警告",
+      "save_changes": "保存更改",
+      "cancel": "取消",
+      "welcome": "欢迎",
+      "organization": "组织",
+      "timestamp": "时间戳记",
+      "value": "值",
+      "type": "类型",
+      "income": "收入",
+      "today_income": "今天的收入",
+      "monthly_balance": "月结余",
+      "set_alert": "设定警报",
+      "general_settings": "通用设置",
+      "monthly_downtime": "每月停机时间",
+      "tickets_opened": "未解决问题",
+      "tickets_closed": "已解决问题",
+      "hours": "小时"
+    },
+    "login": {
+      "login": "登录",
+      "users": "用户数",
+      "create": "创造",
+      "create_user": "创建用户",
+      "update_user": "更新用户",
+      "email_address": "电子邮件地址",
+      "optional_note": "可选说明",
+      "optional_note_details": "可选注释，例如电话号码，地址，评论...",
+      "permissions": "权限",
+      "check_delete": "您确定要删除该用户吗？",
+      "change_password": "更改密码",
+      "delete": "删除",
+      "username": "用户名",
+      "active": "活性",
+      "admin": "管理员",
+      "is_active": "活跃",
+      "is_global_admin": "是全球管理员"
     }
   }
 }

@@ -13,6 +13,7 @@ import { REVENUE_RATE, AMOUNT, CONFIRM_STAKE, CONFIRM_UNSTAKE } from "../../util
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import styles from "./StakeStyle"
+import i18n, { packageNS } from '../../i18n';
 
 class StakeForm extends FormComponent {
   
@@ -57,7 +58,7 @@ class StakeForm extends FormComponent {
       return(<Spinner on={this.state.loading}/>);
     } */
     const extraButtons = <>
-      <Button  variant="outlined" color="inherit" onClick={this.handleOpenAXS} type="button" disabled={false}>CANCEL</Button>
+      <Button  variant="outlined" color="inherit" onClick={this.handleOpenAXS} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.system_settings.cancel`)}</Button>
     </>;
 
     return(
@@ -95,7 +96,7 @@ class StakeForm extends FormComponent {
                 value={this.state.revenue_rate}
                 InputProps={{
                     readOnly: true,
-                    endAdornment: <InputAdornment position="end">Monthly</InputAdornment>,
+                    endAdornment: <InputAdornment position="end">{i18n.t(`${packageNS}:menu.staking.monthly`)}</InputAdornment>,
                 }}
                 fullWidth
             />

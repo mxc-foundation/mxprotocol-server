@@ -12,6 +12,7 @@ import SessionStore from "../stores/SessionStore";
 import NetworkServerStore from "../stores/NetworkServerStore";
 import ServiceProfileStore from "../stores/ServiceProfileStore";
 import DeviceProfileStore from "../stores/DeviceProfileStore";
+import i18n, { packageNS } from '../i18n';
 
 
 class SetupHelper extends Component {
@@ -159,7 +160,7 @@ class SetupHelper extends Component {
           </DialogContent>
           <DialogActions>
             <Button color="primary" component={Link} to="/network-servers/create" onClick={this.toggleDialog.bind(this, "nsDialog")}>Add network-server</Button>
-            <Button color="primary" onClick={this.toggleDialog.bind(this, "nsDialog")}>Dismiss</Button>
+            <Button color="primary" onClick={this.toggleDialog.bind(this, "nsDialog")}>{i18n.t(`${packageNS}:menu.common.dismiss`)}</Button>
           </DialogActions>
         </Dialog>
 
@@ -179,7 +180,7 @@ class SetupHelper extends Component {
           </DialogContent>
           <DialogActions>
             <Button color="primary" component={Link} to={`/organizations/${orgID}/service-profiles/create`} onClick={this.toggleDialog.bind(this, "spDialog")}>Create service-profile</Button>
-            <Button color="primary" onClick={this.toggleDialog.bind(this, "spDialog")}>Dismiss</Button>
+            <Button color="primary" onClick={this.toggleDialog.bind(this, "spDialog")}>{i18n.t(`${packageNS}:menu.common.dismiss`)}</Button>
           </DialogActions>
         </Dialog>
 
@@ -199,7 +200,7 @@ class SetupHelper extends Component {
           </DialogContent>
           <DialogActions>
             <Button color="primary" component={Link} to={`/organizations/${orgID}/device-profiles/create`} onClick={this.toggleDialog.bind(this, "dpDialog")}>Create device-profile</Button>
-            <Button color="primary" onClick={this.toggleDialog.bind(this, "dpDialog")}>Dismiss</Button>
+            <Button color="primary" onClick={this.toggleDialog.bind(this, "dpDialog")}>{i18n.t(`${packageNS}:menu.common.dismiss`)}</Button>
           </DialogActions>
         </Dialog>
       </div>

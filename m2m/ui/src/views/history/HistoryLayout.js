@@ -99,7 +99,7 @@ class HistoryLayout extends Component {
                 </TitleBar>
                 </div> */}
                   {this.state.tab === 3 && <div className={this.props.classes.alignCol}>
-                      <Button color="primary.main" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} /* onClick={this.handleOpenAXS} */ type="button" disabled={false}>GO TO STAKING</Button>
+                      <Button color="primary.main" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} /* onClick={this.handleOpenAXS} */ type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.go_to_staking`)}</Button>
                       {/* <Button variant="outlined" color="inherit" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} onClick={this.unstake} type="button" disabled={false}>UNSTAKE</Button> */}
                   </div>}
             </div>

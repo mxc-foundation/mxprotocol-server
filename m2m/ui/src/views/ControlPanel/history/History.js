@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import i18n, { packageNS } from '../../../i18n';
 import TitleBar from "../../../components/TitleBar";
 import TitleBarTitle from "../../../components/TitleBarTitle";
 import Spinner from "../../../components/ScaleLoader"
@@ -79,7 +80,7 @@ class SupernodeHistory extends Component {
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
-                  <TitleBarTitle title="History" />
+                  <TitleBarTitle title={i18n.t(`${packageNS}:menu.history.history`)} />
                 </TitleBar>
                 {/* <Divider light={true}/>
                 <div className={this.props.classes.breadcrumb}>
@@ -102,11 +103,11 @@ class SupernodeHistory extends Component {
             scrollButtons="auto"
             textColor="primary"
           >
-            <Tab label="ETH Account" component={Link} to={`/control-panel/history/`} />
+            <Tab label={i18n.t(`${packageNS}:menu.withdraw.eth_account`)} component={Link} to={`/control-panel/history/`} />
           </Tabs>
 
             <Grid container justify="space-between" alignItems="center" className={this.props.classes.card}>
-               <Grid item>Last 24h income</Grid>
+               <Grid item>{i18n.t(`${packageNS}:menu.history.last_income`)}</Grid>
               <Grid item align="right"><b>{this.state.income}MXC</b></Grid>
             </Grid>
         

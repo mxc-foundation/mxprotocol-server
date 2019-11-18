@@ -3,9 +3,9 @@ import i18n, { packageNS } from '../i18n';
 //COMMON
 export const CONFIRMATION = i18n.t(`${packageNS}:menu.messages.confirmation`);
 export const MXC = 'MXC';
-export const DISMISS = 'DISMISS';
-export const LEARN_MORE = 'LEARN MORE';
-export const AMOUNT = 'Amount';
+export const DISMISS = i18n.t(`${packageNS}:menu.common.dismiss`);
+export const LEARN_MORE = i18n.t(`${packageNS}:menu.common.learn_more`);
+export const AMOUNT = i18n.t(`${packageNS}:menu.common.amount`);
 
 //withdraw
 export const CONFIRMATION_TEXT = i18n.t(`${packageNS}:menu.messages.confirmation_text`);
@@ -13,18 +13,18 @@ export const INVALID_AMOUNT = i18n.t(`${packageNS}:menu.messages.invalid_amount`
 export const INVALID_ACCOUNT = i18n.t(`${packageNS}:menu.messages.invalid_account`);
 
 //staking
-export const REVENUE_RATE = 'Revenue rate';
-export const YOUR_STAKE = 'Your Stake is ';
-export const CONFIRM_STAKE = 'CONFIRM STAKE';
-export const CONFIRM_UNSTAKE = 'CONFIRM UNSTAKE';
-export const UNSTAKE = 'Unstake';
-export const STAKE = 'Set Stake';
-export const HISTORY = 'HISTORY';
-export const WITHDRAW_STAKE = 'Withdraw Stake';
+export const REVENUE_RATE = i18n.t(`${packageNS}:menu.staking.revenue_rate`);
+export const YOUR_STAKE = i18n.t(`${packageNS}:menu.staking.your_stake`);
+export const CONFIRM_STAKE = i18n.t(`${packageNS}:menu.staking.confirm_stake`);
+export const CONFIRM_UNSTAKE = i18n.t(`${packageNS}:menu.staking.confirm_unstake`);
+export const UNSTAKE = i18n.t(`${packageNS}:menu.staking.unstake`);
+export const STAKE = i18n.t(`${packageNS}:menu.staking.set_stake`);
+export const HISTORY = i18n.t(`${packageNS}:menu.staking.history`);
+export const WITHDRAW_STAKE = i18n.t(`${packageNS}:menu.staking.withdraw_stake`);
 //staking:info
-export const STAKE_SET_SUCCESS = 'Congraturations! Your stake is set.';
-export const UNSTAKE_SET_SUCCESS = 'Unstake succesfull. MXC has been added to your M2MWallet balance.';
-export const STAKE_DESCRIPTION = 'Staking enhances data trade by giving all holders a fair way to take part in the network.';
-//staing:warning
-export const STAKE_WARNING_001 = 'You are close to acquiring your monthly revenue. If you unstake now, you will miss it.';
+export const STAKE_SET_SUCCESS = i18n.t(`${packageNS}:menu.staking.set_stake_success`);
+export const UNSTAKE_SET_SUCCESS = i18n.t(`${packageNS}:menu.staking.unstake_set_success`);
+export const STAKE_DESCRIPTION = i18n.t(`${packageNS}:menu.staking.stake_description`);
+//staking:warning
+export const STAKE_WARNING_001 = i18n.t(`${packageNS}:menu.staking.stake_warning_001`);
 
