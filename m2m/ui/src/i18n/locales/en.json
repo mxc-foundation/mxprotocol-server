@@ -114,7 +114,7 @@
     "nb_iot_server": "NB-IoT Server",
     "lpwan_server": "LPWAN Server",
     "powered_by": "Powered by",
-    "lora_server": "LoRa Server",
+    "lora_server": "LPWAN Server",
     "version": "Version",
     "messages": {
       "confirmation": "CONFIRMATION",
