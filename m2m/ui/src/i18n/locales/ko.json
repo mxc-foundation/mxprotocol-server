@@ -114,7 +114,7 @@
     "nb_iot_server": "NB-IoT 서버",
     "lpwan_server": "LPWAN 서버",
     "powered_by": "Powered by",
-    "lora_server": "LoRa 서버",
+    "lora_server": "LPWAN서버",
     "version": "버전",
     "messages": {
       "confirmation": "확인",
