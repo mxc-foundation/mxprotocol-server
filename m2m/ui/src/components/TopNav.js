@@ -157,7 +157,8 @@ class TopNav extends Component {
           </IconButton> */}
 
           <div className={this.props.classes.flex}>
-            <img src="/logo/logo_wallet.png" className={this.props.classes.logo} alt="LoRa Server" />
+            <img src="/logo/logo_wallet.png" className={this.props.classes.logo} alt="Mxprotocol Server" />
+            <img src="/logo/branding.png" className={this.props.classes.brandLogo} alt="Mxprotocol Server" />
           </div>
 
           {/* <div className={this.props.classes.flex}>
