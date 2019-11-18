@@ -150,10 +150,7 @@ class TopBanner extends Component {
                         ?true
                         :false;
     return(
-      <AppBar className={this.props.classes.appBar}>
-            <div className={this.props.classes.flex}>
-                <span>{i18n.t(`${packageNS}:menu.banner.demo_version`)}</span>
-            </div>
+      <AppBar>
       </AppBar>
     );
   }
