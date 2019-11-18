@@ -215,7 +215,7 @@ func getTokenFromContext(ctx context.Context) (string, error) {
 	return match[1], nil
 }
 
-//send get request to lora app server
+//send get request to LPWAN App Server
 func getRequest(url, jwtToken string) (*[]byte, error) {
 	req, _ := http.NewRequest("GET", url, nil)
 	authStr := "Bearer " + jwtToken

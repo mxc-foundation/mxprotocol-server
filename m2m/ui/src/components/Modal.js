@@ -5,6 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import i18n, { packageNS } from '../i18n';
 
 export default function ConfirmDialog(props) {
   const { open, onClose, title, description } = props
@@ -32,10 +33,10 @@ export default function ConfirmDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary25" autoFocus>
-            CANCEL
+            {i18n.t(`${packageNS}:menu.staking.cancel`)}
           </Button>
           <Button onClick={agree} color="primary25">
-            PROCEED
+            {i18n.t(`${packageNS}:menu.settings.proceed`)}
           </Button>
         </DialogActions>
       </Dialog>

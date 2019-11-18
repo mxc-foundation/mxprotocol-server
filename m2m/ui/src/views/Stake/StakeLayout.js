@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import WalletStore from "../../stores/WalletStore.js";
@@ -96,7 +97,7 @@ class StakeLayout extends Component {
                 <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
                 <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
               </TitleBar>
-              <Button color="primary.main" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} /* onClick={this.handleOpenAXS} */ type="button" disabled={false}>SET STAKE</Button>
+              <Button color="primary.main" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} /* onClick={this.handleOpenAXS} */ type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.set_stake`)}</Button>
               {/* <TitleBarButton
                 label="SET STAKE"
                 color="primary"
