@@ -21,7 +21,7 @@ const customStyles = {
     ...base,
     color: "#FFFFFF",
     width: "100px",
-    margin: 20,
+    margin: 10,
     // match with the menu
     borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
     // Overwrittes the different states of border
