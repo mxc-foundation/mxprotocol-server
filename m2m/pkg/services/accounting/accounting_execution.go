@@ -57,7 +57,7 @@ func performAccounting(aggDurationMinutes int64, dlPrice float64, superNodePktSe
 	}).Info("Accounting calculations is done; writing in the DB started!")
 
 	if err := putInDbAggWltUsg(awuList, walletIdSuperNode); err != nil {
-		return errors.Wrap(errWltId, "accounting/performAccounting")
+		return errors.Wrap(err, "accounting/performAccounting")
 	}
 
 	err = db.AggPeriod.UpdateSuccessfulExecutedAggPeriod(aggPeriodId, latestReceivedDlPktId)
