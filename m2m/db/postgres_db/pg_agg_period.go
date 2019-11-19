@@ -65,7 +65,22 @@ func (*aggPeriodInterface) InsertAggPeriod(durationMinutes int64) (insertInd int
 }
 
 func (*aggPeriodInterface) UpdateSuccessfulExecutedAggPeriod(aggPeriodId int64, latestIdAccountedDlPkt int64) (err error) {
-	_, err = PgDB.Exec(`
+	if latestIdAccountedDlPkt == 0 {
+		_, err = PgDB.Exec(`
+		UPDATE agg_period 
+			SET 
+				execution_end_at = $1, 
+				status = $2
+			WHERE
+				id = $3
+			;
+		`,
+			time.Now().UTC(),
+			types.AGG_COMPLETED,
+			aggPeriodId,
+		)
+	} else {
+		_, err = PgDB.Exec(`
 		UPDATE agg_period 
 			SET 
 				fk_dl_pkt_latest_id_accounted = $1,
@@ -75,11 +90,12 @@ func (*aggPeriodInterface) UpdateSuccessfulExecutedAggPeriod(aggPeriodId int64, 
 				id = $4
 			;
 		`,
-		latestIdAccountedDlPkt,
-		time.Now().UTC(),
-		types.AGG_COMPLETED,
-		aggPeriodId,
-	)
+			latestIdAccountedDlPkt,
+			time.Now().UTC(),
+			types.AGG_COMPLETED,
+			aggPeriodId,
+		)
+	}
 	return errors.Wrap(err, fmt.Sprintf("db/pg_agg_period/UpdateExecutedAggPeriod aggPeriodId: %d", aggPeriodId))
 }
 
@@ -103,7 +119,7 @@ func getLatestAccountedDlPktId() (latestAccountedDlPktId int64, err error) {
 		var status string
 		err = PgDB.QueryRow(`
 		SELECT
-			fk_dl_pkt_latest_id_accounted, 
+			COALESCE(fk_dl_pkt_latest_id_accounted, 0), 
 			status
 		FROM 
 			agg_period 
