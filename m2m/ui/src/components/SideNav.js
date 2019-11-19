@@ -137,14 +137,14 @@ class SideNav extends Component {
             <ListItemIcon>
               <CalendarCheckOutline />
             </ListItemIcon>
-            <ListItemText classes={selected('/control-panel/history')} primary="History" />
+            <ListItemText classes={selected('/control-panel/history')} primary={i18n.t(`${packageNS}:menu.history.history`)} />
           </ListItem>
 
           <ListItem selected={active('/control-panel/system-settings')} button component={Link} to={`/control-panel/system-settings`}>
             <ListItemIcon>
               <WrenchOutline />
             </ListItemIcon>
-            <ListItemText classes={selected('/control-panel/system-settings')} primary={i18n.t(`${packageNS}:menu.system_settings.system_settings`)} />
+            <ListItemText classes={selected('/control-panel/system-settings')} primary={i18n.t(`${packageNS}:menu.settings.system_settings`)} />
           </ListItem>
 
           <ListItem selected={active('/withdraw')} button component={Link} to={`/control-panel/withdraw`}>

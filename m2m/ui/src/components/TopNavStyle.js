@@ -4,7 +4,8 @@ import theme from "../theme";
 const TopNavStyle = {
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
-        backgroundColor: '#09006E',
+        /*backgroundColor: '#09006E',*/
+        backgroundColor: theme.palette.secondary.main
     },
     menuButton: {
         marginLeft: -12,
@@ -15,9 +16,15 @@ const TopNavStyle = {
     },
     flex: {
         flex: 1,
+        paddingLeft: 40,
+    },
+    brandLogo: {
+        height: 32,
+        marginLeft: 20
     },
     logo: {
-        height: 48,
+        height: 32,
+        marginLeft: -45,
     },
     search: {
         marginRight: 3 * theme.spacing.unit,

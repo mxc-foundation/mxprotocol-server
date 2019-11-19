@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import WalletStore from "../../stores/WalletStore.js";
@@ -15,7 +16,6 @@ import { withStyles } from "@material-ui/core/styles";
 import styles from "./StakeStyle"
 import { DISMISS, STAKE_DESCRIPTION, LEARN_MORE } from "../../util/Messages"
 import { EXT_URL_STAKE } from "../../util/Data"
-import i18n, { packageNS } from '../../i18n';
 
 function doIHaveGateway(orgId) {
   return new Promise((resolve, reject) => {

@@ -33,10 +33,10 @@ export default function ConfirmDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary25" autoFocus>
-            {i18n.t(`${packageNS}:menu.system_settings.cancel`)}
+            {i18n.t(`${packageNS}:menu.staking.cancel`)}
           </Button>
           <Button onClick={agree} color="primary25">
-            {i18n.t(`${packageNS}:menu.withdraw.proceed`)}
+            {i18n.t(`${packageNS}:menu.settings.proceed`)}
           </Button>
         </DialogActions>
       </Dialog>

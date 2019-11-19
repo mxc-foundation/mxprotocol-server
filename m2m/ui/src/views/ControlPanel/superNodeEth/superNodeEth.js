@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withRouter, Link } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
+import i18n, { packageNS } from '../../../i18n';
 import TitleBar from "../../../components/TitleBar";
 import TitleBarTitle from "../../../components/TitleBarTitle";
 import MoneyStore from "../../../stores/MoneyStore";
@@ -12,7 +13,6 @@ import NewEthAccountForm from "../../ethAccount/NewEthAccountForm";
 import styles from "./superNodeEthStyle"
 import { ETHER } from "../../../util/Coin-type";
 import { SUPER_ADMIN } from "../../../util/M2mUtil";
-import i18n, { packageNS } from '../../../i18n';
 
 
 class SuperNodeEth extends Component {
@@ -59,7 +59,7 @@ class SuperNodeEth extends Component {
                 if(resp){
                     resolve(resp);
                 } else {
-                    alert("inccorect username or password.");
+                    alert(`${i18n.t(`${packageNS}:menu.withdraw.incorrect_username_or_password`)}`);
                     return false;
                 }
             })
@@ -79,7 +79,7 @@ class SuperNodeEth extends Component {
       
       try {
         if(resp.username !== SessionStore.getUsername() ){
-          alert('inccorect username or password.');
+          alert(`${i18n.t(`${packageNS}:menu.withdraw.incorrect_username_or_password`)}`);
           return false;
         }
         const isOK = await this.verifyUser(resp);
@@ -102,7 +102,7 @@ class SuperNodeEth extends Component {
             <Grid item xs={12} className={this.props.classes.divider}>
               <div className={this.props.classes.TitleBar}>
                     <TitleBar className={this.props.classes.padding}>
-                      <TitleBarTitle title={i18n.t(`${packageNS}:menu.common.control_panel`)} />
+                      <TitleBarTitle title={i18n.t(`${packageNS}:menu.settings.system_settings`)} />
                     </TitleBar>
 
                 </div>

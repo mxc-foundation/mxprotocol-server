@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
+import i18n, { packageNS } from '../../i18n';
 import HistoryStore from "../../stores/HistoryStore";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
@@ -11,7 +12,6 @@ import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 import Admin from "../../components/Admin";
 import { ETHER } from "../../util/Coin-type"
-import i18n, { packageNS } from '../../i18n';
 
 class EthAccount extends Component {
   constructor(props) {
@@ -57,9 +57,9 @@ class EthAccount extends Component {
           <DataTable
             header={
               <TableRow>
-                <TableCell>{i18n.t(`${packageNS}:menu.history.account`)}</TableCell>
-                <TableCell>{i18n.t(`${packageNS}:menu.history.status`)}</TableCell>
-                <TableCell>{i18n.t(`${packageNS}:menu.history.date`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.staking.account`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.staking.status`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.staking.date`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

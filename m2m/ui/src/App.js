@@ -116,7 +116,7 @@ class App extends Component {
 
     this.setDrawerOpen = this.setDrawerOpen.bind(this);
   }
-
+k
   componentDidMount() {
     SessionStore.on("change", () => {
       this.setState({

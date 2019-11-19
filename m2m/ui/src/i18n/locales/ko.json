@@ -99,6 +99,11 @@
       "stake_description": "스태킹은 모든 소지자에게 공정한 네트워크 참여 방법을 제공함으로써 데이터 거래를 향상시킵니다.",
       "stake_warning_001": "귀하는 월별 수입을 거의 얻었습니다. 당신이 지금 스테이크를 놓치면 놓치게됩니다",
       "stake_successful": "스테이크 성공.",
+      "inactive": "비활성",
+      "private": "개인",
+      "network": "네트워크",
+      "stake_success": "스테이크 성공.",
+      "cancel": "취소",
       "monthly": "월간 간행물",
       "stake_amount": "스테이크 금액",
       "start": "스타트",
@@ -116,7 +121,10 @@
       "free_packets": "무료 패킷",
       "packets_received": "받은 패킷",
       "earned": "획득",
-      "spent": "사용 잔액"
+      "spent": "보냈다",
+      "account": "계정",
+      "status": "상태",
+      "date": "데이트"
     },
     "nb_iot_server": "NB-IoT 서버",
     "lpwan_server": "LPWAN 서버",
@@ -127,7 +135,22 @@
       "confirmation": "확인",
       "confirmation_text": "귀하의 계정에서 MXC를 인출하려고 합니다",
       "invalid_amount": "출금하려면 유효한 금액을 입력 하십시오",
-      "invalid_account": "잘못된 ETH 계정. ETH 계정 메뉴로 진행하십시오"
+      "invalid_account": "잘못된 ETH 계정. ETH 계정 메뉴로 진행하십시오",
+      "dismiss": "간단히 처리해 버리다",
+      "learn_more": "더 알아보기",
+      "amount": "양",
+      "revenue_rate": "수익률",
+      "your_stake_is": "스테이크는",
+      "confirm_stake": "스테이크 확인",
+      "confirm_unstake": "실패를 확인",
+      "unstake": "스테이크",
+      "set_stake": "스테이크 설정",
+      "history": "역사",
+      "withdraw_stake": "스테이크 철수",
+      "congratulations_stake_set": "축하합니다! 스테이크가 설정되었습니다",
+      "unstake_successful": "성공하지 못한 스테이크. MXC 가 M2M Wallet 저울에 추가되었습니다",
+      "staking_enhances": "스태킹은 모든 소지자에게 공정한 네트워크 참여 방법을 제공함으로써 데이터 거래를 향상시킵니다.",
+      "close_to_acquiring": "귀하는 월별 수입을 거의 얻었습니다. 당신이 지금 스테이크를 놓치면 놓치게됩니다"
     },
     "store": {
       "device_has_been": "장치가",
@@ -151,12 +174,17 @@
       "control_panel": "제어판"
     },
     "system_settings": {
+      "system_settings": "환경 설정"
+    },
+    "settings": {
+      "save_changes": "변경 사항을 저장하다",
+      "proceed": "발하다",
       "system_settings": "환경 설정",
+      "control_panel": "제어판",
       "withdraw_fee": "인출 수수료",
       "downlink_price": "다운 링크 가격",
       "percentage_share": "거래 당 비율 점유율",
       "low_balance": "잔액 부족 경고",
-      "save_changes": "변경 사항을 저장하다",
       "cancel": "취소",
       "welcome": "어서 오십시오",
       "organization": "조직",

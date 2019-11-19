@@ -119,7 +119,7 @@ class SystemSettings extends Component {
 				<Grid item xs={12}>
 					<Grid item container xs={6} direction="column">
 						<TitleBar>
-							<TitleBarTitle title={i18n.t(`${packageNS}:menu.system_settings.system_settings`)} />
+							<TitleBarTitle title={i18n.t(`${packageNS}:menu.settings.system_settings`)} />
 						</TitleBar>
 						<Divider light={true} />
 						<div className={this.props.classes.breadcrumb}>
@@ -134,14 +134,14 @@ class SystemSettings extends Component {
 								<TitleBarTitle
 									component={Link}
 									to="#"
-									title={i18n.t(`${packageNS}:menu.common.control_panel`)}
+									title={i18n.t(`${packageNS}:menu.settings.control_panel`)}
 									className={this.props.classes.link}
 								/>
 								<TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link} />
 								<TitleBarTitle
 									component={Link}
 									to="#"
-									title={i18n.t(`${packageNS}:menu.system_settings.system_settings`)}
+									title={i18n.t(`${packageNS}:menu.settings.system_settings`)}
 									className={this.props.classes.link}
 								/>
 							</TitleBar>
@@ -151,7 +151,7 @@ class SystemSettings extends Component {
 					<Grid item container direction="column" xs={6} className={this.props.classes.settingsForm}>
 						<TextField
 							id="withdrawFee"
-							label={i18n.t(`${packageNS}:menu.system_settings.withdraw_fee`)}
+							label={i18n.t(`${packageNS}:menu.settings.withdraw_fee`)}
 							className={this.props.classes.TextField}
 							variant="filled"
 							InputLabelProps={{
@@ -167,7 +167,7 @@ class SystemSettings extends Component {
 
 						<TextField
 							id="downlinkPrice"
-							label={i18n.t(`${packageNS}:menu.system_settings.downlink_price`)}
+							label={i18n.t(`${packageNS}:menu.settings.downlink_price`)}
 							className={this.props.classes.TextField}
 							variant="filled"
 							InputLabelProps={{
@@ -183,7 +183,7 @@ class SystemSettings extends Component {
 
 						<TextField
 							id="percentageShare"
-							label={i18n.t(`${packageNS}:menu.system_settings.percentage_share`)}
+							label={i18n.t(`${packageNS}:menu.settings.percentage_share`)}
 							className={this.props.classes.TextField}
 							variant="filled"
 							InputLabelProps={{
@@ -199,7 +199,7 @@ class SystemSettings extends Component {
 
 						<TextField
 							id="lbWarning"
-							label={i18n.t(`${packageNS}:menu.system_settings.low_balance`)}
+							label={i18n.t(`${packageNS}:menu.settings.low_balance`)}
 							className={this.props.classes.TextField}
 							variant="filled"
 							InputLabelProps={{
@@ -215,11 +215,11 @@ class SystemSettings extends Component {
 					</Grid>
 					<Grid container item xs={6} direction="row" justify="flex-end" spacing={2}>
 						<Button variant="contained" className={this.props.classes.Button} onClick={this.loadSettings}>
-							{i18n.t(`${packageNS}:menu.system_settings.cancel`)}
+							{i18n.t(`${packageNS}:menu.settings.cancel`)}
 						</Button>
 
 						<Button className={this.props.classes.Button} onClick={this.saveSettings}>
-							{i18n.t(`${packageNS}:menu.system_settings.save_changes`)}
+							{i18n.t(`${packageNS}:menu.settings.save_changes`)}
 						</Button>
 					</Grid>
 				</Grid>
