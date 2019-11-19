@@ -328,7 +328,7 @@ func (*walletInterface) TmpBalanceUpdatePktTx(dvWalletId, gwWalletId int64, amou
 func (*walletInterface) GetMaxWalletId() (maxWalletId int64, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
-			MAX (id)
+			COALESCE(MAX (id),0)
 		FROM
 			wallet 
 		;`).Scan(&maxWalletId)
