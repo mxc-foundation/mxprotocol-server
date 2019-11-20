@@ -3,9 +3,9 @@ import i18n, { packageNS } from '../i18n';
 //COMMON
 export const CONFIRMATION = i18n.t(`${packageNS}:menu.messages.confirmation`);
 export const MXC = 'MXC';
-export const DISMISS = i18n.t(`${packageNS}:menu.messages.dismiss`);
-export const LEARN_MORE = i18n.t(`${packageNS}:menu.messages.learn_more`);
-export const AMOUNT = i18n.t(`${packageNS}:menu.messages.amount`);
+export const DISMISS = i18n.t(`${packageNS}:menu.common.dismiss`);
+export const LEARN_MORE = i18n.t(`${packageNS}:menu.common.learn_more`);
+export const AMOUNT = i18n.t(`${packageNS}:menu.common.amount`);
 
 //withdraw
 export const CONFIRMATION_TEXT = i18n.t(`${packageNS}:menu.messages.confirmation_text`);

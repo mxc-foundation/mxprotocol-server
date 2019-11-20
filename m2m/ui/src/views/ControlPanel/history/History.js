@@ -107,7 +107,7 @@ class SupernodeHistory extends Component {
           </Tabs>
 
             <Grid container justify="space-between" alignItems="center" className={this.props.classes.card}>
-               <Grid item>Last 24h income</Grid>
+               <Grid item>{i18n.t(`${packageNS}:menu.history.last_income`)}</Grid>
               <Grid item align="right"><b>{this.state.income}MXC</b></Grid>
             </Grid>
         

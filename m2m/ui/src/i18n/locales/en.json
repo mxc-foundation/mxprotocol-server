@@ -45,7 +45,9 @@
       "rows_per_page": "Rows per page",
       "of": "of",
       "filter": "Filter",
-      "date": "Date"
+      "date": "Date",
+      "account": "Account",
+      "last_income": "Last 24h income"
     },
     "eth_account": {
       "eth_account": "ETH Account",
@@ -84,6 +86,19 @@
     },
     "staking": {
       "staking": "Staking",
+      "revenue_rate": "Revenue rate",
+      "your_stake": "Your Stake is",
+      "confirm_stake": "CONFIRM STAKE",
+      "confirm_unstake": "CONFIRM UNSTAKE",
+      "unstake": "Unstake",
+      "set_stake": "Set Stake",
+      "history": "HISTORY",
+      "withdraw_stake": "Withdraw Stake",
+      "set_stake_success": "Congratulations! Your stake is set.",
+      "unstake_set_success": "Unstake successful. MXC has been added to your M2M Wallet balance.",
+      "stake_description": "Staking enhances data trading by giving all holders a fair way to take part in the network.",
+      "stake_warning_001": "You are close to acquiring your monthly revenue. If you unstake now, you will miss it.",
+      "stake_successful": "Stake successful.",
       "inactive": "Inactive",
       "private": "Private",
       "network": "Network",
@@ -98,9 +113,9 @@
       "monthly_rate": "Monthly Rate",
       "revenue": "Revenue",
       "balance": "Balance",
-      "set_stake": "SET STAKE",
+      "set_stake_caps": "SET STAKE",
       "go_to_staking": "GO TO STAKING",
-      "filter": "Filter",
+      "filter": "FILTER",
       "time": "Time",
       "packets_sent": "Packets Sent",
       "free_packets": "Free Packets",
@@ -151,6 +166,16 @@
     "banner": {
       "demo_version": "THIS IS A DEMO VERSION."
     },
+    "common": {
+      "dismiss": "DISMISS",
+      "learn_more": "LEARN MORE",
+      "amount": "Amount",
+      "confirm": "CONFIRM",
+      "control_panel": "Control Panel"
+    },
+    "system_settings": {
+      "system_settings": "System Settings"
+    },
     "settings": {
       "save_changes": "SAVE CHANGES",
       "proceed": "PROCEED",
@@ -160,6 +185,7 @@
       "downlink_price": "Downlink Price",
       "percentage_share": "Percentage Share per transaction",
       "low_balance": "Low Balance warning",
+      "cancel": "CANCEL",
       "welcome": "Welcome",
       "organization": "Organization",
       "timestamp": "Timestamp",
@@ -174,6 +200,25 @@
       "tickets_opened": "Tickets opened",
       "tickets_closed": "Tickets closed",
       "hours": "hours"
+    },
+    "login": {
+      "login": "Login",
+      "users": "Users",
+      "create": "Create",
+      "create_user": "Create user",
+      "update_user": "Update user",
+      "email_address": "E-mail address",
+      "optional_note": "Optional note",
+      "optional_note_details": "Optional note, e.g. a phone number, address, comment...",
+      "permissions": "Permissions",
+      "check_delete": "Are you sure you want to delete this user?",
+      "change_password": "Change password",
+      "delete": "Delete",
+      "username": "Username",
+      "active": "Active",
+      "admin": "Admin",
+      "is_active": "Is active",
+      "is_global_admin": "Is global admin"
     }
   }
 }

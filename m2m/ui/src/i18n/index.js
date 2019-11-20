@@ -7,19 +7,20 @@ import Debug from "../util/debug";
 import SessionStore from "../stores/SessionStore";
 import { en, ko, zhCN, zhTW } from "./locales";
 
-const defaultLanguage = {
-  label: "en",
+const DEFAULT_LANGUAGE = {
+  id: "en",
+  label: "English",
   value: "English",
   code: "gb"
 };
 
 // Labels must match JSON filenames in locales directory
 // Code attribute value must is from react-flag-icon-css http://flag-icon-css.lip.is/
-const supportedLanguages = [
-  { label: "en", value: "English", code: "gb" },
-  { label: "ko", value: "Korean", code: "kr" },
-  { label: "zhCN", value: "Chinese (Simplified)", code: "cn" },
-  { label: "zhTW", value: "Chinese (Traditional)", code: "cn" }
+const SUPPORTED_LANGUAGES = [
+  { id: "en", label: "English", value: "English", code: "gb" },
+  { id: "ko", label: "한국어", value: "Korean", code: "kr" },
+  { id: "zhCN", label: "简中", value: "Chinese (Simplified)", code: "cn" },
+  { id: "zhTW", label: "繁中", value: "Chinese (Traditional)", code: "cn" }
 ];
 let resourceEnglishNS = {};
 let resourceKoreanNS = {};
@@ -44,7 +45,7 @@ i18n
     interpolation: {
       escapeValue: false
     },
-    lng: (SessionStore.getLanguage() && SessionStore.getLanguage().id) || "en",
+    lng: SessionStore.getLanguage() && SessionStore.getLanguage().id || "en",
     ns: [packageNS],
     // https://react.i18next.com/misc/using-with-icu-format
     react: {
@@ -96,4 +97,4 @@ i18next.on("languageChanged", lng => {
 
 export default i18n;
 
-export { defaultLanguage, supportedLanguages, packageNS };
+export { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES, packageNS };

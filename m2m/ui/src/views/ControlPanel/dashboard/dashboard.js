@@ -11,6 +11,7 @@ import TitleBar from "../../../components/TitleBar";
 import TitleBarTitle from "../../../components/TitleBarTitle";
 import TitleBarButton from "../../../components/TitleBarButton";
 import DataTable from "../../../components/DataTable";
+import i18n, { packageNS } from '../i18n';
 import styles from "./dashboardStyle"
 
 class Dashboard extends Component {

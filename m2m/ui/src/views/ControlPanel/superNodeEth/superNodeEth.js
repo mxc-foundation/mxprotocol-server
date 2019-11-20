@@ -110,14 +110,14 @@ class SuperNodeEth extends Component {
             <Grid item xs={6} className={this.props.classes.column}>
           {this.state.activeAccount &&
             <ModifyEthAccountForm
-              submitLabel={i18n.t(`${packageNS}:menu.withdraw.confirm`)}
+              submitLabel={i18n.t(`${packageNS}:menu.common.confirm`)}
               onSubmit={this.onSubmit}
               activeAccount={this.state.activeAccount}
             />
           }
           {!this.state.activeAccount &&  
           <NewEthAccountForm
-            submitLabel={i18n.t(`${packageNS}:menu.withdraw.confirm`)}
+            submitLabel={i18n.t(`${packageNS}:menu.common.confirm`)}
             onSubmit={this.onSubmit}
           />
           }
