@@ -15,7 +15,7 @@ import StakeStore from "../../stores/StakeStore";
 import Button from "@material-ui/core/Button";
 //import Button from "@material-ui/core/Button";
 import Spinner from "../../components/ScaleLoader";
-import { YOUR_STAKE, STAKE_SET_SUCCESS, UNSTAKE_SET_SUCCESS, DISMISS, LEARN_MORE, MXC, UNSTAKE, STAKE, HISTORY, WITHDRAW_STAKE, STAKE_WARNING_001, STAKE_DESCRIPTION } from "../../util/Messages"
+import { MXC } from "../../util/Messages"
 import { EXT_URL_STAKE } from "../../util/Data"
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter, Link  } from "react-router-dom";
@@ -28,12 +28,12 @@ class SetStake extends FormComponent {
     amount: 0,
     revRate: 0,
     isUnstake: false,
-    info: STAKE_DESCRIPTION,
+    info: '',
     infoStatus: 0,
     notice: { 
-      succeed: STAKE_SET_SUCCESS,
-      unstakeSucceed : UNSTAKE_SET_SUCCESS,
-      warning: STAKE_WARNING_001
+      succeed: i18n.t(`${packageNS}:menu.messages.congratulations_stake_set`),
+      unstakeSucceed : i18n.t(`${packageNS}:menu.messages.unstake_successful`),
+      warning: i18n.t(`${packageNS}:menu.messages.close_to_acquiring`)
     },
     dismissOn: true
   }
@@ -42,6 +42,10 @@ class SetStake extends FormComponent {
     this.loadData();
   }
   
+  componentWillReceiveProps(){
+    this.loadStakeTextTranslation();
+  }
+
   loadData = () => {
     const resp = StakeStore.getActiveStakes(this.props.match.params.organizationID);
     resp.then((res) => {
@@ -53,8 +57,15 @@ class SetStake extends FormComponent {
       }
       this.setState({
         amount,
-        isUnstake
+        isUnstake,
+        info: i18n.t(`${packageNS}:menu.messages.staking_enhances`)
       })
+    })
+  }
+
+  loadStakeTextTranslation = () => {
+    this.setState({
+      info: i18n.t(`${packageNS}:menu.messages.staking_enhances`)
     })
   }
 
@@ -94,7 +105,7 @@ class SetStake extends FormComponent {
       if(res.body.status === i18n.t(`${packageNS}:menu.staking.stake_success`)){
         this.setState({ 
           isUnstake: true,
-          info: STAKE_SET_SUCCESS,
+          info: i18n.t(`${packageNS}:menu.messages.congratulations_stake_set`),
           infoStatus: 1,
         });
         setInterval(()=>this.displayInfo(), 5000);
@@ -115,7 +126,7 @@ class SetStake extends FormComponent {
       this.setState({ 
         isUnstake: false,
         amount: 0,
-        info: UNSTAKE_SET_SUCCESS,
+        info: i18n.t(`${packageNS}:menu.messages.unstake_successful`),
         infoStatus: 1,
       });
       setInterval(()=>this.displayInfo(), 5000);
@@ -124,7 +135,7 @@ class SetStake extends FormComponent {
 
   displayInfo = () => {
     this.setState({ 
-      info: STAKE_DESCRIPTION,
+      info: i18n.t(`${packageNS}:menu.messages.staking_enhances`),
       infoStatus: 0
     });
   }
@@ -158,23 +169,23 @@ class SetStake extends FormComponent {
                     {/* <Divider light={true}/> */}
                     <div className={this.props.classes.between}>
                     <TitleBar>
-                        <TitleBarTitle title={ this.state.isUnstake ? UNSTAKE: STAKE } />
+                        <TitleBarTitle title={ this.state.isUnstake ? i18n.t(`${packageNS}:menu.messages.unstake`) : i18n.t(`${packageNS}:menu.messages.set_stake`) } />
                         {/* <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
                         <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
                         <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
                     </TitleBar>
                     
-                    <Button variant="outlined" color="inherit" onClick={this.handleOnclick} type="button" disabled={false}>{HISTORY}</Button>
+                    <Button variant="outlined" color="inherit" onClick={this.handleOnclick} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.messages.history`)}</Button>
                     </div>
                 </div>
             </Grid>
             <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pRight}>
-                <StakeForm isUnstake={this.state.isUnstake} label={this.state.isUnstake ? WITHDRAW_STAKE : STAKE} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirm={this.confirm} />
+                <StakeForm isUnstake={this.state.isUnstake} label={this.state.isUnstake ? i18n.t(`${packageNS}:menu.messages.withdraw_stake`) : i18n.t(`${packageNS}:menu.messages.set_stake`)} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirm={this.confirm} />
             </Grid>
             <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pLeft}>
                 <div className={clsx(this.props.classes.urStake, this.props.classes.between)}>
                     <Typography  /* className={this.props.classes.title} */ gutterBottom>
-                        {YOUR_STAKE}
+                        {i18n.t(`${packageNS}:menu.messages.your_stake_is`)}
                     </Typography>&nbsp;
                     <Typography  /* className={this.props.classes.title} */ gutterBottom>
                         {this.state.amount} {MXC}
@@ -186,8 +197,8 @@ class SetStake extends FormComponent {
                         {this.state.info}
                     </Typography>
                     <div className={this.props.classes.between}>
-                        <ExtLink dismissOn={this.dismissOn} for={'local'} context={DISMISS} />&nbsp;&nbsp;&nbsp;
-                        <ExtLink to={EXT_URL_STAKE} context={LEARN_MORE} />
+                        <ExtLink dismissOn={this.dismissOn} for={'local'} context={i18n.t(`${packageNS}:menu.common.dismiss`)} />&nbsp;&nbsp;&nbsp;
+                        <ExtLink to={EXT_URL_STAKE} context={i18n.t(`${packageNS}:menu.common.learn_more`)} />
                     </div>
                     </div>
                 </div>}

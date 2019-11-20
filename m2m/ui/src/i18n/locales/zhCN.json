@@ -190,6 +190,7 @@
       "downlink_price": "下行价格",
       "percentage_share": "每笔交易所占百分比",
       "low_balance": "余额不足警告",
+      "cancel": "取消",
       "welcome": "欢迎",
       "organization": "组织",
       "timestamp": "时间戳记",

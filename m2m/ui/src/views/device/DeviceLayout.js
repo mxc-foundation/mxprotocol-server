@@ -17,7 +17,6 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import styles from "./DeviceStyle"
 import { DV_INACTIVE, DV_FREE_GATEWAYS_LIMITED, DV_WHOLE_NETWORK } from "../../util/Data"
-import { CONFIRMATION, CONFIRMATION_TEXT, INVALID_ACCOUNT, INVALID_AMOUNT } from "../../util/Messages"
 
 function doIHaveGateway(orgId) {
   return new Promise((resolve, reject) => {
