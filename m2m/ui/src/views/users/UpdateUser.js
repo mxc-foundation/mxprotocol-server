@@ -7,6 +7,7 @@ import { CardContent } from "@material-ui/core";
 
 import UserStore from "../../stores/UserStore";
 import UserForm from "./UserForm";
+import i18n, { packageNS } from '../../i18n';
 
 class UpdateUser extends Component {
   constructor() {
@@ -27,7 +28,7 @@ class UpdateUser extends Component {
           <Card>
             <CardContent>
               <UserForm
-                submitLabel="Update user"
+                submitLabel={i18n.t(`${packageNS}:menu.login.update_user`)}
                 object={this.props.user}
                 onSubmit={this.onSubmit}
               />

@@ -2,14 +2,16 @@ import React, { Component } from "react";
 import Select from "react-select";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
+import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "../i18n";
 import SessionStore from "../stores/SessionStore";
-import { supportedLanguages } from "../i18n";
 import FlagIcon from "./FlagIcon";
 
 const styles = {
+  languageWrapper: {
+    display: "inline-flex"
+  },
   languageIcon: {
-    display: "inline-block",
-    top: "5px"
+    display: "inline-block"
   },
   languageSelection: {
     display: "inline-block"
@@ -20,8 +22,8 @@ const customStyles = {
   control: (base, state) => ({
     ...base,
     color: "#FFFFFF",
-    width: "100px",
-    margin: 10,
+    width: "180px",
+    margin: 20,
     // match with the menu
     borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
     // Overwrittes the different states of border
@@ -73,36 +75,39 @@ class WithPromises extends Component {
   componentDidMount() {
     let selectedOption = null;
 
-    const storedLanguageID = SessionStore.getLanguage() && SessionStore.getLanguage().id;
-    const storedLanguageName = SessionStore.getLanguage() && SessionStore.getLanguage().name;
-    const storedLanguageCode = SessionStore.getLanguage() && SessionStore.getLanguage().code;
+    const language = SessionStore.getLanguage();
 
-    if (storedLanguageID && storedLanguageName && storedLanguageCode) {
+    if (!language || !language.id) {
+      selectedOption = DEFAULT_LANGUAGE;
+    } else if (language.label && language.label && language.value && language.code) {
       selectedOption = {
-        label: storedLanguageID,
-        value: storedLanguageName,
-        code: storedLanguageCode
+        id: language.id,
+        label: language.label,
+        value: language.value,
+        code: language.code
       };
     }
 
     this.setState({
       selectedOption,
-      options: supportedLanguages
-    })
+      options: SUPPORTED_LANGUAGES
+    });
   }
 
-  onChange = (selectedOption) => {
-    if (selectedOption !== null && selectedOption.label !== null && selectedOption.value !== null && selectedOption.code !== null) {
+  onChangeLanguage = selectedOption => {
+    if (
+      selectedOption !== null && selectedOption.id !== null && selectedOption.label !== null &&
+      selectedOption.value !== null && selectedOption.code !== null
+    ) {
       this.setState({
         selectedOption
       });
   
-      this.props.onChange({
-        target: {
-          label: selectedOption.label,
-          value: selectedOption.value,
-          code: selectedOption.code
-        },
+      this.props.onChangeLanguage({
+        id: selectedOption.id,
+        label: selectedOption.label,
+        value: selectedOption.value,
+        code: selectedOption.code
       });
     }
   }
@@ -111,7 +116,7 @@ class WithPromises extends Component {
     const { selectedOption } = this.state;
 
     return (
-      <div>
+      <div className={classNames(this.props.classes.languageWrapper)}>
         {
           selectedOption && selectedOption.code
           ? (
@@ -133,8 +138,9 @@ class WithPromises extends Component {
               primary: "#00FFD950",
             },
           })}
-          onChange={this.onChange}
-          options={supportedLanguages}
+          placeholder="Select Language"
+          onChange={this.onChangeLanguage}
+          options={SUPPORTED_LANGUAGES}
           value={selectedOption}
         />
       </div>

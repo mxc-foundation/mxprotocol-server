@@ -6,7 +6,6 @@ import TableRow from '@material-ui/core/TableRow';
 import { withRouter, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
-import i18n, { packageNS } from '../../../i18n';
 import TitleBar from '../../../components/TitleBar';
 import TitleBarTitle from '../../../components/TitleBarTitle';
 import TitleBarButton from '../../../components/TitleBarButton';
@@ -16,6 +15,7 @@ import Divider from '@material-ui/core/Divider';
 import WithdrawStore from '../../../stores/WithdrawStore';
 import SettingsStore from '../../../stores/SettingsStore';
 import { ETHER } from '../../../util/Coin-type';
+import i18n, { packageNS } from '../../../i18n';
 import NumberFormat from 'react-number-format';
 import PropTypes from 'prop-types';
 
@@ -215,7 +215,7 @@ class SystemSettings extends Component {
 					</Grid>
 					<Grid container item xs={6} direction="row" justify="flex-end" spacing={2}>
 						<Button variant="contained" className={this.props.classes.Button} onClick={this.loadSettings}>
-							{i18n.t(`${packageNS}:menu.staking.cancel`)}
+							{i18n.t(`${packageNS}:menu.settings.cancel`)}
 						</Button>
 
 						<Button className={this.props.classes.Button} onClick={this.saveSettings}>

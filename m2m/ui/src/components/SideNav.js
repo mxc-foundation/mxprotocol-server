@@ -130,7 +130,7 @@ class SideNav extends Component {
             <ListItemIcon>
               <CreditCard />
             </ListItemIcon>
-            <ListItemText classes={selected('/modify-account')} primary={i18n.t(`${packageNS}:menu.eth_account.eth_account`)} />
+            <ListItemText classes={selected('/modify-account')} primary={i18n.t(`${packageNS}:menu.history.eth_account`)} />
           </ListItem>
 
           <ListItem selected={active('/control-panel/history')} button component={Link} to={`/control-panel/history`}>
