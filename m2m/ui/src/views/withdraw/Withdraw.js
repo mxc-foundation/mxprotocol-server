@@ -18,7 +18,6 @@ import Divider from '@material-ui/core/Divider';
 import styles from "./WithdrawStyle"
 import { ETHER } from "../../util/Coin-type"
 import { SUPER_ADMIN } from "../../util/M2mUtil"
-import { CONFIRMATION, CONFIRMATION_TEXT, INVALID_ACCOUNT, INVALID_AMOUNT } from "../../util/Messages"
 import theme from "../../theme";
 import TableCell from "@material-ui/core/TableCell";
 
@@ -137,12 +136,12 @@ class Withdraw extends Component {
     data.moneyAbbr = ETHER;
     data.orgId = this.props.match.params.organizationID;
     if(data.amount === 0){
-      alert(INVALID_AMOUNT);
+      alert(i18n.t(`${packageNS}:menu.messages.invalid_amount`));
       return false;
     } 
 
     if(data.destination){
-      alert(INVALID_ACCOUNT);
+      alert(i18n.t(`${packageNS}:menu.messages.invalid_account`));
       return false;
     }
     
@@ -157,7 +156,7 @@ class Withdraw extends Component {
     return (
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
         {this.state.modal && 
-          <Modal title={CONFIRMATION} description={CONFIRMATION_TEXT} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
+          <Modal title={i18n.t(`${packageNS}:menu.messages.confirmation`)} description={i18n.t(`${packageNS}:menu.messages.confirmation_text`)} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
             <TitleBarTitle title={i18n.t(`${packageNS}:menu.withdraw.withdraw`)} />
