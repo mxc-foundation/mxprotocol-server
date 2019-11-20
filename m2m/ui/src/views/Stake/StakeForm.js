@@ -9,7 +9,6 @@ import Button from "@material-ui/core/Button";
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import StakeStore from "../../stores/StakeStore";
-import { REVENUE_RATE, AMOUNT, CONFIRM_STAKE, CONFIRM_UNSTAKE } from "../../util/Messages"
 //import Spinner from "../../components/ScaleLoader"
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
@@ -63,7 +62,7 @@ class StakeForm extends FormComponent {
 
     return(
         <Form
-            submitLabel={ this.props.isUnstake ? CONFIRM_UNSTAKE: CONFIRM_STAKE }
+            submitLabel={ this.props.isUnstake ? i18n.t(`${packageNS}:menu.messages.confirm_unstake`) : i18n.t(`${packageNS}:menu.messages.confirm_stake`) }
             extraButtons={extraButtons}
             onSubmit={(e) => this.props.confirm(e, {
               amount: parseFloat(this.props.amount),
@@ -76,7 +75,7 @@ class StakeForm extends FormComponent {
             <Divider light={true}/>
             <TextField
                 id="amount"
-                label={AMOUNT}
+                label={i18n.t(`${packageNS}:menu.common.amount`)}
                 margin="normal"
                 value={this.props.amount}
                 onChange={this.props.onChange}
@@ -90,7 +89,7 @@ class StakeForm extends FormComponent {
             />
             <TextField
                 id="revRate"
-                label={REVENUE_RATE}
+                label={i18n.t(`${packageNS}:menu.messages.revenue_rate`)}
                 margin="normal"
                 
                 value={this.state.revenue_rate}

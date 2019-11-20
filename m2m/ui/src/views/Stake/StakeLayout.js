@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import WalletStore from "../../stores/WalletStore.js";
@@ -14,8 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import styles from "./StakeStyle"
-import { DISMISS, STAKE_DESCRIPTION, LEARN_MORE } from "../../util/Messages"
 import { EXT_URL_STAKE } from "../../util/Data"
+import i18n, { packageNS } from '../../i18n';
 
 function doIHaveGateway(orgId) {
   return new Promise((resolve, reject) => {
@@ -59,9 +58,6 @@ class StakeLayout extends Component {
 
   componentWillMount(){
     this.loadData();
-  }
-
-  componentDidMount() {
   }
 
   componentDidUpdate(oldProps) {
@@ -110,10 +106,10 @@ class StakeLayout extends Component {
         <Grid item xs={12} className={this.props.classes.divider}>
           <Grid item xs={6}>
           {this.state.dismissOn && <div className={this.props.classes.infoBox}>
-                  <p>{STAKE_DESCRIPTION}</p>
+                  <p>{i18n.t(`${packageNS}:menu.messages.staking_enhances`)}</p>
                   <div className={this.props.classes.between}>
-                    <ExtLink dismissOn={this.dismissOn} for={'local'} context={DISMISS} />&nbsp;&nbsp;&nbsp;
-                    <ExtLink to={EXT_URL_STAKE} context={LEARN_MORE} />
+                    <ExtLink dismissOn={this.dismissOn} for={'local'} context={i18n.t(`${packageNS}:menu.common.dismiss`)} />&nbsp;&nbsp;&nbsp;
+                    <ExtLink to={EXT_URL_STAKE} context={i18n.t(`${packageNS}:menu.common.learn_more`)} />
                   </div>
                 </div>}
           </Grid>
