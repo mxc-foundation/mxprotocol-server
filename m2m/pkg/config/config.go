@@ -64,13 +64,14 @@ type MxpConfig struct {
 	} `mapstructure:"paymentserver"`
 
 	SuperNode struct {
-		ContractAddress     string  `mapstructure:"contract_address"`
-		SuperNodeAddress    string  `mapstructure:"supernode_address"`
-		APIKey              string  `mapstructure:"api_key"`
-		CheckAccountSeconds int     `mapstructure:"check_account_seconds"`
-		ExtCurrAbv          string  `mapstructure:"external_currency_abv"`
-		TestNet             bool    `mapstructure:"ether_test_net"`
-		DlPrice             float64 `mapstructure:"down_link_price"`
+		ContractAddress      string  `mapstructure:"contract_address"`
+		SuperNodeAddress     string  `mapstructure:"supernode_address"`
+		APIKey               string  `mapstructure:"api_key"`
+		CheckAccountSeconds  int     `mapstructure:"check_account_seconds"`
+		ExtCurrAbv           string  `mapstructure:"external_currency_abv"`
+		TestNet              bool    `mapstructure:"ether_test_net"`
+		DlPrice              float64 `mapstructure:"down_link_price"`
+		DlPktTxSnIncomeRatio float64 `mapstructure:"dl_pkt_tx_sn_income_ratio"`
 	} `mapstructure:"supernode"`
 
 	Withdraw struct {

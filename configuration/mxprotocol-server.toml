@@ -125,6 +125,7 @@ external_currency_abv="Ether"
 ether_test_net=true
 
 down_link_price = 0.1
+dl_pkt_tx_sn_income_ratio = 0.008
 
 [paymentserver]
 payment_service_address="payment"
