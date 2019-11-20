@@ -31,7 +31,6 @@ low_balance_threshold={{ .UserNotification.LowBalanceThreshold }}
 low_balance_threshold={{ .SysNotification.LowBalanceThreshold }}
 
 [pricing]
-downlink_package_price={{ .Pricing.DownLinkPkgPrice }}
 
 [accounting]
 interval_min="{{ .Accounting.IntervalMin }}"

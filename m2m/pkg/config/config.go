@@ -23,7 +23,6 @@ type MxpConfig struct {
 	} `mapstructure:"system_notification"`
 
 	Pricing struct {
-		DownLinkPkgPrice float64 `mapstructure:"downlink_package_price"`
 	} `mapstructure:"pricing"`
 
 	Accounting struct {

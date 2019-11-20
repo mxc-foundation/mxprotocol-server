@@ -22,7 +22,6 @@ low_balance_threshold=20
 
 # pricing management related settings
 [pricing]
-downlink_package_price=10
 
 [accounting]
 interval_min = 60
