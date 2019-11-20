@@ -5,7 +5,8 @@ const TopNavStyle = {
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
         /*backgroundColor: '#09006E',*/
-        backgroundColor: theme.palette.secondary.main
+        backgroundColor: theme.palette.secondary.main,
+        height: 84
     },
     menuButton: {
         marginLeft: -12,
