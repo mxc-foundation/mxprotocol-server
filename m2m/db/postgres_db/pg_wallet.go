@@ -14,14 +14,20 @@ type walletInterface struct{}
 var PgWallet walletInterface
 
 type wallet struct {
-	Id      int64  `db:"id"`
+	Id int64 `db:"id"`
+
+	// FkOrgLa: foreign_key of the organization in the LPWAN App Server DB
 	FkOrgLa int64  `db:"fk_org_la"`
 	TypeW   string `db:"type"`
-	// Balance is updated during the aggregations (containing internal_tx reference)
+
+	// balance is updated during the aggregations (always references with a row in the internal_tx table)
 	Balance float64 `db:"balance"`
-	// Tmp balance is updated per transactions and is uesd while the balanc is not updated.
-	// During the aggregation, TmpBalance will get updated to value of Balance
+
+	// tmp_balance is updated per packet transmission (downlink) and is used to check the balance as the balance is not updated.
 	TmpBalance float64 `db:"tmp_balance"`
+
+	// During the aggregation, balance will be updated and tmp_balance will get sync with the value of balance.
+	// When a topup, withdraw, stake triggers, both tmp_balance and balance will get updated!
 }
 
 func (*walletInterface) CreateWalletTable() error {
@@ -41,7 +47,7 @@ func (*walletInterface) CreateWalletTable() error {
 			CREATE TABLE IF NOT EXISTS wallet (
 	
 			id SERIAL PRIMARY KEY,
-			fk_org_la INT UNIQUE NOT NULL, -- foreign_key LPWAN App Server DB
+			fk_org_la INT UNIQUE NOT NULL, 
 			type WALLET_TYPE NOT NULL,
 			balance NUMERIC(28,18) NOT NULL DEFAULT 0,
 			tmp_balance NUMERIC(28,18) NOT NULL DEFAULT 0
@@ -322,7 +328,7 @@ func (*walletInterface) TmpBalanceUpdatePktTx(dvWalletId, gwWalletId int64, amou
 func (*walletInterface) GetMaxWalletId() (maxWalletId int64, err error) {
 	err = PgDB.QueryRow(
 		`SELECT
-			MAX (id)
+			COALESCE(MAX (id),0)
 		FROM
 			wallet 
 		;`).Scan(&maxWalletId)

@@ -43,7 +43,7 @@ func (*stakeRevenuePeriodInterface) CreateStakeRevenuePeriodTable() error {
 
 }
 
-func (*stakeRevenuePeriodInterface) InsertStakeRevenuePeriod(StakingPeriodStart time.Time, StakingPeriodEnd time.Time, SuperNodeIncome float64, IncomeToStakePortion float64) (insertIndex int64, err error) {
+func (*stakeRevenuePeriodInterface) InsertStakeRevenuePeriod(stakingPeriodStart time.Time, stakingPeriodEnd time.Time, superNodeIncome float64, incomeToStakePortion float64) (insertIndex int64, err error) {
 	err = PgDB.QueryRow(`
 		INSERT INTO stake_revenue_period (
 			staking_period_start ,
@@ -57,10 +57,10 @@ func (*stakeRevenuePeriodInterface) InsertStakeRevenuePeriod(StakingPeriodStart 
 			($1,$2,$3,$4,$5,$6)
 		RETURNING id ;
 	`,
-		StakingPeriodStart,
-		StakingPeriodEnd,
-		SuperNodeIncome,
-		IncomeToStakePortion,
+		stakingPeriodStart,
+		stakingPeriodEnd,
+		superNodeIncome,
+		incomeToStakePortion,
 		time.Now().UTC(),
 		types.STAKE_REVENUE_IN_PROCESS,
 	).Scan(&insertIndex)
