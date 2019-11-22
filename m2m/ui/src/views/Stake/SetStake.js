@@ -77,9 +77,15 @@ class SetStake extends FormComponent {
     });
   }
 
-  clear() {
+  clear = () => {
     this.setState({
       amount: ''
+    })
+  }
+
+  reset = () => {
+    this.setState({
+      amount: 0
     })
   }
 
@@ -180,7 +186,7 @@ class SetStake extends FormComponent {
                 </div>
             </Grid>
             <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pRight}>
-                <StakeForm isUnstake={this.state.isUnstake} label={this.state.isUnstake ? i18n.t(`${packageNS}:menu.messages.withdraw_stake`) : i18n.t(`${packageNS}:menu.messages.set_stake`)} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirm={this.confirm} />
+                <StakeForm isUnstake={this.state.isUnstake} reset={this.reset} clear={this.clear} label={this.state.isUnstake ? i18n.t(`${packageNS}:menu.messages.withdraw_stake`) : i18n.t(`${packageNS}:menu.messages.set_stake`)} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirm={this.confirm} />
             </Grid>
             <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pLeft}>
                 <div className={clsx(this.props.classes.urStake, this.props.classes.between)}>
