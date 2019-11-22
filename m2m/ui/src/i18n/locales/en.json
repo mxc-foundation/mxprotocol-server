@@ -104,6 +104,7 @@
       "network": "Network",
       "stake_success": "Stake successful",
       "cancel": "CANCEL",
+      "reset": "RESET",
       "monthly": "Monthly",
       "stake_amount": "Stake Amount",
       "start": "Start",
