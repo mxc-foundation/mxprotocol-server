@@ -129,7 +129,7 @@
     "nb_iot_server": "NB-IoT 服务器",
     "lpwan_server": "LPWAN 服务器",
     "powered_by": "由 MXC 极域技术支持",
-    "lora_server": "LoRa 服务器",
+    "lora_server": "LPWAN服务器",
     "version": "版",
     "messages": {
       "confirmation": "确认",

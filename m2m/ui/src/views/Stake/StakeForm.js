@@ -46,12 +46,18 @@ class StakeForm extends FormComponent {
     });
   }
 
+  clear() {
+    this.setState({
+      amount: ''
+    })
+  }
+
   render() {
     /* if (this.props.txinfo === undefined) {
       return(<Spinner on={this.state.loading}/>);
     } */
     const extraButtons = <>
-      <Button  variant="outlined" color="inherit" onClick={this.props.reset} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.reset`)}</Button>
+      <Button  variant="outlined" color="inherit" onClick={this.handleOpenAXS} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.cancel`)}</Button>
     </>;
 
     return(
@@ -74,9 +80,6 @@ class StakeForm extends FormComponent {
                 value={this.props.amount}
                 onChange={this.props.onChange}
                 required={!this.props.isUnstake}
-                onClick={this.props.clear}
-                autoComplete='off'
-                InputLabelProps={{ shrink: true }}
                 InputProps={{
                   min: 0,
                     readOnly: this.props.isUnstake,
