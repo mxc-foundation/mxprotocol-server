@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import MoneyStore from "../../stores/MoneyStore";
@@ -17,7 +18,8 @@ import Divider from '@material-ui/core/Divider';
 import styles from "./WithdrawStyle"
 import { ETHER } from "../../util/Coin-type"
 import { SUPER_ADMIN } from "../../util/M2mUtil"
-import { CONFIRMATION, CONFIRMATION_TEXT, INVALID_ACCOUNT, INVALID_AMOUNT } from "../../util/Messages"
+import theme from "../../theme";
+import TableCell from "@material-ui/core/TableCell";
 
 function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -134,12 +136,12 @@ class Withdraw extends Component {
     data.moneyAbbr = ETHER;
     data.orgId = this.props.match.params.organizationID;
     if(data.amount === 0){
-      alert(INVALID_AMOUNT);
+      alert(i18n.t(`${packageNS}:menu.messages.invalid_amount`));
       return false;
     } 
 
     if(data.destination){
-      alert(INVALID_ACCOUNT);
+      alert(i18n.t(`${packageNS}:menu.messages.invalid_account`));
       return false;
     }
     
@@ -154,27 +156,37 @@ class Withdraw extends Component {
     return (
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
         {this.state.modal && 
-          <Modal title={CONFIRMATION} description={CONFIRMATION_TEXT} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
+          <Modal title={i18n.t(`${packageNS}:menu.messages.confirmation`)} description={i18n.t(`${packageNS}:menu.messages.confirmation_text`)} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
-              
-                <TitleBarTitle title="Withdraw" />
-              
+            <TitleBarTitle title={i18n.t(`${packageNS}:menu.withdraw.withdraw`)} />
           </div>
 
         </Grid>
-        <Grid item xs={6} className={this.props.classes.divider}></Grid>
-        <Grid item xs={12} className={this.props.classes.divider}>
-
-        </Grid>
         <Grid item xs={6}>
-          <WithdrawForm
-            submitLabel="Withdraw"
+          <TableCell align={this.props.align}>
+                    <span style={
+                      {
+                        textDecoration: "none",
+                        color: theme.palette.primary.main,
+                        cursor: "pointer",
+                        padding: 0,
+                        fontWeight: "bold",
+                        fontSize: 20,
+                        opacity: 0.7,
+                        "&:hover": {
+                          opacity: 1,
+                        }
+                      }
+                    } className={this.props.classes.link} >
+                        Coming soon...
+                    </span>
+          </TableCell>
+          {/*<WithdrawForm
+            submitLabel={i18n.t(`${packageNS}:menu.withdraw.withdraw`)}
             txinfo={this.state.txinfo} {...this.props}
             onSubmit={this.onSubmit}
-          />
-        </Grid>
-        <Grid item xs={2}>
+          />*/}
         </Grid>
       </Grid>
     );

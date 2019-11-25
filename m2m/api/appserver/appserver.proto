@@ -11,6 +11,8 @@ service M2MServerService {
 
     rpc AddGatewayInM2MServer (AddGatewayInM2MServerRequest) returns (AddGatewayInM2MServerResponse);
     rpc DeleteGatewayInM2MServer (DeleteGatewayInM2MServerRequest) returns (DeleteGatewayInM2MServerResponse);
+
+    rpc GetWalletBalance(GetWalletBalanceRequest) returns (GetWalletBalanceResponse);
 }
 
 service AppServerService {
@@ -93,4 +95,13 @@ message GetDeviceDevEuiListResponse {
 
 message GetGatewayMacListResponse {
     repeated string gateway_mac = 1;
+}
+
+
+message GetWalletBalanceRequest {
+    int64 org_id = 1;
+}
+
+message GetWalletBalanceResponse {
+    double balance = 1;
 }

@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 
 import Swagger from "swagger-client";
 
+import i18n, { packageNS } from '../i18n';
 import sessionStore from "./SessionStore";
 import {checkStatus, errorHandler } from "./helpers";
 import dispatcher from "../dispatcher";
@@ -18,6 +19,22 @@ class WithdrawStore extends EventEmitter {
       client.apis.WithdrawService.GetWithdrawFee({
         moneyAbbr,
         orgId
+      })
+      .then(checkStatus)
+      //.then(updateOrganizations)
+      .then(resp => {
+        callbackFunc(resp.obj);
+      })
+      .catch(errorHandler);
+    });
+  }
+
+  setWithdrawFee(moneyAbbr, orgId, body, callbackFunc) {
+    this.swagger.then(client => {
+      client.apis.WithdrawService.ModifyWithdrawFee({
+        moneyAbbr,
+        orgId,
+        body
       })
       .then(checkStatus)
       //.then(updateOrganizations)
@@ -55,7 +72,7 @@ class WithdrawStore extends EventEmitter {
       type: "CREATE_NOTIFICATION",
       notification: {
         type: "success",
-        message: "Withdrawal succeeded"
+        message: `${i18n.t(`${packageNS}:menu.store.successful_withdrawal`)}`
       },
     });
   }

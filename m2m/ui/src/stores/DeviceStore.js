@@ -3,6 +3,7 @@ import { EventEmitter } from "events";
 import Swagger from "swagger-client";
 
 import sessionStore from "./SessionStore";
+import i18n, { packageNS } from '../i18n';
 import {checkStatus, errorHandler } from "./helpers";
 import dispatcher from "../dispatcher";
 
@@ -71,7 +72,8 @@ class DeviceStore extends EventEmitter {
         type: "CREATE_NOTIFICATION",
         notification: {
             type: "success",
-            message: "Device(s) has been " + action,
+            // TODO - convert to i18n
+            message: `${i18n.t(`${packageNS}:menu.store.devices_has_been`)} ` + action,
         },
     });
   }

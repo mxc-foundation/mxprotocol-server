@@ -1,9 +1,9 @@
 package wallet
 
 import (
-	"errors"
 	"strings"
 
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
@@ -16,6 +16,10 @@ func Setup(conf config.MxpConfig) error {
 	log.Info("initialize supported extCurrency")
 
 	if err := initExtCurrencyTable(); err != nil {
+		return err
+	}
+
+	if err := initControllingWallets(); err != nil {
 		return err
 	}
 
@@ -45,13 +49,27 @@ func initExtCurrencyTable() error {
 	return nil
 }
 
+func initControllingWallets() error {
+
+	// SUPER_ADMIN wallet is separately initialized
+	if _, errIns := db.Wallet.InsertSuperNodeIncomeWallet(); errIns != nil {
+		return errors.Wrap(errIns, "wallet_controller/initControllingWallets/ ")
+	}
+
+	if _, errIns := db.Wallet.InsertStakeStorageWallet(); errIns != nil {
+		return errors.Wrap(errIns, "wallet_controller/initControllingWallets/ ")
+	}
+
+	return nil
+}
+
 //  return option 1: 0, true        --> no wallet created yet
 //  return option 2: 0, false       --> sql error
 //  return option 3: walletId, true --> get walletId successfully
 func userHasWallet(orgId int64) (int64, bool) {
 	walletId, err := db.Wallet.GetWalletIdFromOrgId(orgId)
 	if err != nil {
-		if strings.HasSuffix(err.Error(), db.DbError.NoRowQueryRes.Error()) {
+		if strings.HasSuffix(err.Error(), types.DbError.NoRowQueryRes.Error()) {
 			return 0, true
 		}
 
@@ -62,6 +80,7 @@ func userHasWallet(orgId int64) (int64, bool) {
 }
 
 func createWallet(orgId int64) (walletId int64, err error) {
+
 	if 0 == orgId {
 		walletId, err = db.Wallet.InsertWallet(orgId, types.SUPER_ADMIN)
 	} else {

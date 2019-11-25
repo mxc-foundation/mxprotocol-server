@@ -20,6 +20,12 @@ service InternalService {
 			get: "/api/internal/{org_id}/organizations"
 		};
 	}
+
+	rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse) {
+		option(google.api.http) = {
+			get: "/api/internal/user-profile"
+		};
+	}
 }
 
 message ProfileResponse {
@@ -100,4 +106,12 @@ message GetUserOrganizationListRequest {
 
 message GetUserOrganizationListResponse {
 	repeated OrganizationLink organizations = 1;
+}
+
+message GetUserProfileRequest {
+	int64 org_id = 1;
+}
+
+message GetUserProfileResponse {
+	ProfileResponse user_profile = 1;
 }

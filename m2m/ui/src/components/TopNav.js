@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
-
 import Typography from '@material-ui/core/Typography';
 import SessionStore from "../stores/SessionStore";
 import Avatar from '@material-ui/core/Avatar';
@@ -20,16 +19,24 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Wallet from "mdi-material-ui/WalletOutline";
+import i18n, { packageNS } from '../i18n';
 import styles from "./TopNavStyle"
+import { SUPER_ADMIN } from "../util/M2mUtil";
 
+import DropdownMenuLanguage from "./DropdownMenuLanguage";
 
 function getWalletBalance() {
-  if (SessionStore.getOrganizationID() === undefined) {
-    
+  var organizationId = SessionStore.getOrganizationID();
+  if (organizationId === undefined) {
     return null;
   }
+
+  if (SessionStore.isAdmin()) {
+    organizationId = SUPER_ADMIN
+  }
+
   return new Promise((resolve, reject) => {
-    WalletStore.getWalletBalance(SessionStore.getOrganizationID(), resp => {
+    WalletStore.getWalletBalance(organizationId, resp => {
       return resolve(resp);
     });
   });
@@ -42,7 +49,7 @@ class TopNav extends Component {
     this.state = {
       menuAnchor: null,
       balance: null,
-      search: "",
+      search: ""
     };
 
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
@@ -73,6 +80,10 @@ class TopNav extends Component {
       console.error(error);
       this.setState({ error });
     }
+  }
+
+  onChangeLanguage = (newLanguageState) => {
+    this.props.onChangeLanguage(newLanguageState);
   }
 
   onMenuOpen(e) {
@@ -136,7 +147,7 @@ class TopNav extends Component {
           </IconButton> */}
 
           <div className={this.props.classes.flex}>
-            <img src="/logo/logo_wallet.png" className={this.props.classes.logo} alt="LoRa Server" />
+            <img src="/logo/m2m_logo.png" className={this.props.classes.logo} alt="LPWAN Server" />
           </div>
 
           {/* <div className={this.props.classes.flex}>
@@ -165,6 +176,8 @@ class TopNav extends Component {
               root: this.props.classes.chip,
             }}
           />
+
+          <DropdownMenuLanguage onChangeLanguage={this.onChangeLanguage} />
 
           <a href="https://www.mxc.org/support" target="mxc-support">
             <IconButton className={this.props.classes.iconButton}>

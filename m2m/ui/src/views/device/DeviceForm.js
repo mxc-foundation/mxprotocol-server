@@ -11,6 +11,7 @@ import { DV_MODE_OPTION, DV_INACTIVE } from "../../util/Data"
 import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 
+import i18n, { packageNS } from '../../i18n';
 import DeviceStore from "../../stores/DeviceStore.js";
 import TitleBar from "../../components/TitleBar";
 import NativeSelects from "../../components/NativeSelects";
@@ -74,9 +75,9 @@ class DeviceForm extends Component {
   }
 
   getRow(obj, index) {
-    const url = `${getLoraHost()}/#/organizations/${this.props.match.params.organizationID}/applications/${obj.application_id}/devices/${obj.devEui}`;
+    const url = `${getLoraHost()}/#/organizations/${this.props.match.params.organizationID}/applications/${obj.applicationId}/devices/${obj.devEui}`;
     
-    let dValue = null;
+    /* let dValue = null;
     const options = DV_MODE_OPTION;
     
     switch(obj.mode) {
@@ -89,16 +90,19 @@ class DeviceForm extends Component {
         default:
         dValue = options[0];
         break;
-    }  
+    }   */
+    const options = DV_MODE_OPTION;
+    const dValue = options[1];
     
     let on = (obj.mode !== DV_INACTIVE) ? true : false;
+    const isDisabled = on ? false : true;
     
     return(
       <TableRow key={ index }>
         <TableCellExtLink align={'left'} for={'lora'} to={url}>{obj.name}</TableCellExtLink>
         <TableCell align={'left'}>{obj.lastSeenAt.substring(0, 19)}</TableCell>
         <TableCell><span className={this.props.classes.flex}><SwitchLabels on={ on } dvId={obj.id} onSwitchChange={ this.onSwitchChange } /></span></TableCell>
-        <TableCell><span><NativeSelects options={options} defaultValue={dValue} haveGateway={this.props.haveGateway} mode={ obj.mode } dvId={obj.id} onSelectChange={ this.onSelectChange } /></span></TableCell>
+        <TableCell><span><NativeSelects options={options} isDisabled={isDisabled} defaultValue={dValue} haveGateway={this.props.haveGateway} mode={ obj.mode } dvId={obj.id} onSelectChange={ this.onSelectChange } /></span></TableCell>
       </TableRow>
     );
   }
@@ -106,26 +110,26 @@ class DeviceForm extends Component {
   render() {
     return(
       <Grid container spacing={24}>
-        <TitleBar
+{/*        <TitleBar
           buttons={
             <Admin organizationID={this.props.match.params.organizationID}>
               <TitleBarButton
-                label="Filter"
+                label={i18n.t(`${packageNS}:menu.devices.filter`)}
                 //icon={<Plus />}
               />
             </Admin>
           }
         >
         
-        </TitleBar>
+        </TitleBar>*/}
         <Grid item xs={12}>
           <DataTable
             header={
               <TableRow>
-                <TableCell align={'left'}>Device</TableCell>
-                <TableCell align={'left'}>Status</TableCell>
-                <TableCell align={'left'}>Available</TableCell>
-                <TableCell className={this.props.classes.maxW} align={'left'}>Mode</TableCell>
+                <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.devices.device`)}</TableCell>
+                <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.devices.status`)}</TableCell>
+                <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.devices.available`)}</TableCell>
+                <TableCell className={this.props.classes.maxW} align={'left'}>{i18n.t(`${packageNS}:menu.devices.mode`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

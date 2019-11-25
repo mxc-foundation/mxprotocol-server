@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
+import i18n, { packageNS } from '../../i18n';
 import TopupStore from "../../stores/TopupStore";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
@@ -65,28 +66,28 @@ class Transactions extends Component {
   render() {
     return(
       <Grid container spacing={24}>
-        <TitleBar
+          {/*<TitleBar
           buttons={
             <Admin organizationID={this.props.match.params.organizationID}>
               <TitleBarButton
-                label="Filter"
+                label={i18n.t(`${packageNS}:menu.history.filter`)}
                 //icon={<Plus />}
               />
             </Admin>
           }
         >
-        </TitleBar>
+        </TitleBar>*/}
         <Grid item xs={12}>
           <DataTable
             header={
               <TableRow>
-                <TableCell align={'center'}>From</TableCell>
-                <TableCell align={'center'}>To</TableCell>
-                <TableCell align={'center'}>TxHash</TableCell>
-                <TableCell align={'center'}>Type</TableCell>
-                <TableCell align={'center'}>MXC Amount</TableCell>
-                <TableCell align={'center'}>Update Date</TableCell>
-                <TableCell align={'center'}>Status</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.history.from`)}</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.history.to`)}</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.history.tx_hash`)}</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.history.type`)}</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.history.mxc_amount`)}</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.history.update_date`)}</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.history.status`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
