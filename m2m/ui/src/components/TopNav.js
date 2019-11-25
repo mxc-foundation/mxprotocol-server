@@ -148,6 +148,7 @@ class TopNav extends Component {
 
           <div className={this.props.classes.flex}>
             <img src="/logo/m2m_logo.png" className={this.props.classes.logo} alt="LPWAN Server" />
+            <img src="/logo/branding.png" className={this.props.classes.brandLogo} alt="Mxprotocol Server" />
           </div>
 
           {/* <div className={this.props.classes.flex}>
