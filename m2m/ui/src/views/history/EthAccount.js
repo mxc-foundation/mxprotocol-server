@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
+import i18n, { packageNS } from '../../i18n';
 import HistoryStore from "../../stores/HistoryStore";
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
@@ -41,7 +42,7 @@ class EthAccount extends Component {
   render() {
     return(
       <Grid container spacing={24}>
-        <TitleBar
+          {/*<TitleBar
           buttons={
             <Admin organizationID={this.props.match.params.organizationID}>
               <TitleBarButton
@@ -51,14 +52,14 @@ class EthAccount extends Component {
             </Admin>
           }
         >
-        </TitleBar>
+        </TitleBar>*/}
         <Grid item xs={12}>
           <DataTable
             header={
               <TableRow>
-                <TableCell>Account</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.staking.account`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.staking.status`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.staking.date`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

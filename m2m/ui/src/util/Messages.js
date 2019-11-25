@@ -1,7 +1,5 @@
-//COMMON
-export const CONFIRMATION = 'CONFIRMATION';
+// IMPORTANT: TEXT REQUIRING TRANSLATION MUST BE INCLUDED
+// DIRECTLY IN REACT COMPONENT FILES.
 
-//withdraw
-export const CONFIRMATION_TEXT = 'You are about to withdraw MXC from your account.';
-export const INVALID_AMOUNT = 'Please type in a valid amount to withdraw.';
-export const INVALID_ACCOUNT = 'Invalid ETH Account. Please proceed to ETH Account menu.';
+export const MXC = 'MXC';
+

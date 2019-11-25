@@ -20,6 +20,7 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/gobuffalo/packr v1.30.1 // indirect
 	github.com/golang/protobuf v1.3.2
+	github.com/google/uuid v1.1.1 // indirect
 	github.com/gorilla/mux v1.7.3
 	github.com/gorilla/websocket v1.4.1 // indirect
 	github.com/graph-gophers/graphql-go v0.0.0-20190902214650-641ae197eec7 // indirect
@@ -38,7 +39,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/mattn/go-sqlite3 v1.11.0 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
-	github.com/nanmu42/etherscan-api v1.0.4
+	github.com/nanmu42/etherscan-api v1.1.0
 	github.com/olekukonko/tablewriter v0.0.1 // indirect
 	github.com/onsi/ginkgo v1.10.1 // indirect
 	github.com/onsi/gomega v1.7.0 // indirect
@@ -48,6 +49,7 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/prometheus/tsdb v0.10.0 // indirect
 	github.com/rjeczalik/notify v0.9.2 // indirect
+	github.com/robfig/cron v1.2.0
 	github.com/rogpeppe/go-internal v1.3.2 // indirect
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20190902133344-8926f37f0bc1

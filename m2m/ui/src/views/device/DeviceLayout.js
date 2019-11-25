@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Divider from '@material-ui/core/Divider';
 import Grid from "@material-ui/core/Grid";
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import Typography from '@material-ui/core/Typography';
@@ -16,7 +17,6 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import styles from "./DeviceStyle"
 import { DV_INACTIVE, DV_FREE_GATEWAYS_LIMITED, DV_WHOLE_NETWORK } from "../../util/Data"
-import { CONFIRMATION, CONFIRMATION_TEXT, INVALID_ACCOUNT, INVALID_AMOUNT } from "../../util/Messages"
 
 function doIHaveGateway(orgId) {
   return new Promise((resolve, reject) => {
@@ -117,7 +117,7 @@ class DeviceLayout extends Component {
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
-                <TitleBarTitle title="Devices" />
+                <TitleBarTitle title={i18n.t(`${packageNS}:menu.devices.devices`)} />
               </TitleBar>    
               {/* <Divider light={true}/> */}
               <div className={this.props.classes.between}>
@@ -126,8 +126,8 @@ class DeviceLayout extends Component {
                 <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
                 <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
               </TitleBar>
-              <div className={this.props.classes.subTitle2}>
-                Downlink fee {this.state.downlinkFee}MXC
+              <div className={this.props.classes.subTitle}>
+                {i18n.t(`${packageNS}:menu.devices.downlink_fee_mxc`)} {this.state.downlinkFee} MXC
               </div>
               </div>
           </div>
@@ -135,7 +135,7 @@ class DeviceLayout extends Component {
         <Grid item xs={12} className={this.props.classes.divider}>
         <Grid item xs={6}>
           <DeviceForm
-            submitLabel="Devices"
+            submitLabel={i18n.t(`${packageNS}:menu.devices.devices`)}
             onSubmit={this.onSubmit}
             downlinkFee={this.state.downlinkFee}
             haveGateway={this.state.haveGateway}

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AsyncSelect from 'react-select/async';
 import ProfileStore from '../stores/ProfileStore'
 import SessionStore from "../stores/SessionStore";
+import { SUPER_ADMIN } from "../util/M2mUtil";
 
 const customStyles = {
     control: (base, state) => ({
@@ -48,7 +49,12 @@ const customStyles = {
 const getOrgList = (organizations) => {
     let organizationList = null;
     if(organizations){
-        organizationList = organizations.map((o, i) => {
+        organizationList = organizations.filter(function (org) {
+            if(org.organizationID === SUPER_ADMIN){
+                return false
+            }
+            return true
+        }).map((o, i) => {
             return {label: o.organizationName, value: o.organizationID};
         });
     }

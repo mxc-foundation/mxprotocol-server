@@ -62,7 +62,7 @@ type MxpConfig struct {
 	PaymentServer struct {
 		PaymentServiceAddress string `mapstructure:"payment_service_address"`
 		PaymentServicePort    string `mapstructure:"payment_service_port"`
-	}
+	} `mapstructure:"paymentserver"`
 
 	SuperNode struct {
 		ContractAddress     string  `mapstructure:"contract_address"`
@@ -72,12 +72,17 @@ type MxpConfig struct {
 		ExtCurrAbv          string  `mapstructure:"external_currency_abv"`
 		TestNet             bool    `mapstructure:"ether_test_net"`
 		DlPrice             float64 `mapstructure:"down_link_price"`
-	}
+	} `mapstructure:"supernode"`
 
 	Withdraw struct {
 		ResendToPS  int `mapstructure:"resend_ps_time_second"`
 		RecheckStat int `mapstructure:"recheck_status_time_second"`
-	}
+	} `mapstructure:"withdraw"`
+
+	Staking struct {
+		StakingPercentage float64 `mapstructure:"staking_percentage"`
+		StakingMinDays    int     `mapstructure:"staking_min_days"`
+	} `mapstructure:"staking"`
 
 	Version string
 }

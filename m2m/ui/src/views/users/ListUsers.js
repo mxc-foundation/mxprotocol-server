@@ -15,6 +15,7 @@ import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
 
 import UserStore from "../../stores/UserStore";
+import i18n, { packageNS } from '../../i18n';
 
 
 class ListUsers extends Component {
@@ -51,25 +52,25 @@ class ListUsers extends Component {
     return(
       <Grid container spacing={24}>
         <TitleBar
-          title="Users"
+          title={i18n.t(`${packageNS}:menu.login.users`)}
           buttons={[
             <TitleBarButton
               key={1}
-              label="Create"
+              label={i18n.t(`${packageNS}:menu.login.create`)}
               icon={<Plus />}
               to={`/users/create`}
             />,
           ]}
         >
-          <TitleBarTitle title="Users" />
+          <TitleBarTitle title={i18n.t(`${packageNS}:menu.login.users`)} />
         </TitleBar>
         <Grid item xs={12}>
           <DataTable
             header={
               <TableRow>
-                <TableCell>Username</TableCell>
-                <TableCell>Active</TableCell>
-                <TableCell>Admin</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.login.username`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.login.active`)}</TableCell>
+                <TableCell>{i18n.t(`${packageNS}:menu.login.admin`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

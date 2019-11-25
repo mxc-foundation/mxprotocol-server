@@ -6,8 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableCellExtLink from "../../components/TableCellExtLink";
 import TableRow from "@material-ui/core/TableRow";
+import i18n, { packageNS } from '../../i18n';
 import { GW_MODE_OPTION, GW_INACTIVE } from "../../util/Data"
-
 import GatewayStore from "../../stores/GatewayStore.js";
 import TitleBar from "../../components/TitleBar";
 import NativeSelects from "../../components/NativeSelects";
@@ -90,26 +90,26 @@ class GatewayForm extends Component {
   render() {
     return(
       <Grid container spacing={24}>
-        <TitleBar
+{/*        <TitleBar
           buttons={
             <Admin organizationID={this.props.match.params.organizationID}>
               <TitleBarButton
-                label="Filter"
+                label={i18n.t(`${packageNS}:menu.gateways.filter`)}
                 //icon={<Plus />}
               />
             </Admin>
           }
         >
         
-        </TitleBar>
+        </TitleBar>*/}
         <Grid item xs={12}>
           <DataTable
             header={
               <TableRow>
-                <TableCell align={'left'}>Gateway</TableCell>
-                <TableCell align={'left'}>Status</TableCell>
-                <TableCell align={'right'}>Downlink Price</TableCell>
-                <TableCell align={'left'}>Mode</TableCell>
+                <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.gateways.gateway`)}</TableCell>
+                <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.gateways.status`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.gateways.downlink_price`)}</TableCell>
+                <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.gateways.mode`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}

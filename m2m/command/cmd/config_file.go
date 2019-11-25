@@ -72,7 +72,7 @@ dsn="{{ .PostgreSQL.DSN }}"
 #
 # It is possible to apply the database-migrations by hand
 # (see https://github.com/brocaar/lora-app-server/tree/master/migrations)
-# or let LoRa App Server migrate to the latest state automatically, by using
+# or let LPWAN App Server migrate to the latest state automatically, by using
 # this setting. Make sure that you always make a backup when upgrading Lora
 # App Server and / or applying migrations.
 automigrate={{ .PostgreSQL.Automigrate }}
@@ -91,7 +91,7 @@ idle_timeout="{{ .Redis.IdleTimeout }}"
 #
 # It is possible to apply the database-migrations by hand
 # (see https://github.com/brocaar/lora-app-server/tree/master/migrations)
-# or let LoRa App Server migrate to the latest state automatically, by using
+# or let LPWAN App Server migrate to the latest state automatically, by using
 # this setting. Make sure that you always make a backup when upgrading Lora
 # App Server and / or applying migrations.
 automigrate=true
@@ -142,8 +142,8 @@ payment_service_address={{ .PaymentServer.PaymentServiceAddress }}
 payment_service_port={{ .PaymentServer.PaymentServicePort }}
 
 [withdraw]
-resend_ps_time={{ .Withdraw.ResendToPS }}
-recheck_status_time={{ .Withdraw.RecheckStat }}
+resend_ps_time_second={{ .Withdraw.ResendToPS }}
+recheck_status_time_second={{ .Withdraw.RecheckStat }}
 `
 
 var cmdConfig = &cobra.Command{

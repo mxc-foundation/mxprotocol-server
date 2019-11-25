@@ -15,6 +15,12 @@ service TopUpService {
 		};
     }
 
+    rpc GetIncome(GetIncomeRequest) returns (GetIncomeResponse){
+        option(google.api.http) = {
+			get: "/api/transactions/{org_id}/income"
+		};
+    }
+
     rpc GetTopUpHistory(GetTopUpHistoryRequest) returns (GetTopUpHistoryResponse){
         option(google.api.http) = {
 			get: "/api/top-up/{org_id}/history"
@@ -38,6 +44,14 @@ message GetTransactionsHistoryResponse {
     int64 count = 1;
     repeated TransactionsHistory transaction_history = 2;
     ProfileResponse user_profile = 3;
+}
+
+message GetIncomeRequest {
+    int64 org_id = 1;
+}
+
+message GetIncomeResponse {
+    double amount = 1;    
 }
 
 message TransactionsHistory {

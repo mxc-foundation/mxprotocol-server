@@ -3,6 +3,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 
 import Grid from '@material-ui/core/Grid';
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import Divider from '@material-ui/core/Divider';
@@ -80,7 +81,7 @@ class Topup extends Component {
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
-                  <TitleBarTitle title="Top up" />
+                  <TitleBarTitle title={i18n.t(`${packageNS}:menu.topup.topup`)} />
                 </TitleBar>
                 {/* <Divider light={true}/>
                 <div className={this.props.classes.breadcrumb}>
@@ -93,7 +94,7 @@ class Topup extends Component {
             </div>
         </Grid>
         <Grid item xs={6} className={this.props.classes.column}>
-          <TitleBarTitle title="Send Tokens" />
+          <TitleBarTitle title={i18n.t(`${packageNS}:menu.topup.send_tokens`)} />
           <Divider light={true}/>
           <TopupForm
             reps={this.state.accounts} {...this.props}

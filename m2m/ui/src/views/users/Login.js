@@ -13,6 +13,7 @@ import Form from "../../components/Form";
 import FormComponent from "../../classes/FormComponent";
 import SessionStore from "../../stores/SessionStore";
 import theme from "../../theme";
+import i18n, { packageNS } from '../../i18n';
 
 
 const styles = {
@@ -41,7 +42,7 @@ class LoginForm extends FormComponent {
       >
         <TextField
           id="username"
-          label="Username"
+          label={i18n.t(`${packageNS}:menu.eth_account.username`)}
           margin="normal"
           value={this.state.object.username || ""}
           onChange={this.onChange}
@@ -50,7 +51,7 @@ class LoginForm extends FormComponent {
         />
         <TextField
           id="password"
-          label="Password"
+          label={i18n.t(`${packageNS}:menu.eth_account.password`)}
           type="password"
           margin="normal"
           value={this.state.object.password || ""}
@@ -99,11 +100,11 @@ class Login extends Component {
         <Grid item xs={6} lg={4}>
           <Card>
             <CardHeader
-              title="Login"
+              title={i18n.t(`${packageNS}:menu.login.login`)}
             />
             <CardContent>
               <LoginForm
-                submitLabel="Login"
+                submitLabel={i18n.t(`${packageNS}:menu.login.login`)}
                 onSubmit={this.onSubmit}
               />
             </CardContent>

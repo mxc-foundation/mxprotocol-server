@@ -2,6 +2,7 @@ package ui
 
 import (
 	"context"
+
 	"github.com/golang/protobuf/ptypes"
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
@@ -228,4 +229,20 @@ func (s *TopUpServerAPI) GetTopUpDestination(ctx context.Context, req *api.GetTo
 	}
 
 	return nil, status.Errorf(codes.Unknown, "")
+}
+
+func (s *TopUpServerAPI) GetIncome(ctx context.Context, req *api.GetIncomeRequest) (*api.GetIncomeResponse, error) {
+	_, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, req.OrgId)
+
+	switch res.Type {
+	case auth.AuthFailed, auth.JsonParseError, auth.OrganizationIdMisMatch, auth.OrganizationIdRearranged:
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
+	case auth.OK:
+	default:
+		return nil, status.Error(codes.Unknown, "")
+	}
+
+	return &api.GetIncomeResponse{
+		Amount: 2380,
+	}, nil
 }

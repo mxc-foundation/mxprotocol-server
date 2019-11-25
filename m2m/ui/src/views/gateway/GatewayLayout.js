@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
+import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 
@@ -15,7 +16,6 @@ import { withStyles } from "@material-ui/core/styles";
 import styles from "./GatewayStyle"
 import { ETHER } from "../../util/Coin-type"
 import { SUPER_ADMIN } from "../../util/M2mUtil"
-import { CONFIRMATION, CONFIRMATION_TEXT, INVALID_ACCOUNT, INVALID_AMOUNT } from "../../util/Messages"
 
 function getDlPrice(orgId) {
     return new Promise((resolve, reject) => {
@@ -98,11 +98,11 @@ class GatewayLayout extends Component {
     return (
         <Grid container spacing={24} className={this.props.classes.backgroundColor}>
             {this.state.modal && 
-            <Modal title={CONFIRMATION} description={CONFIRMATION_TEXT} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
+            <Modal title={i18n.t(`${packageNS}:menu.messages.confirmation`)} description={i18n.t(`${packageNS}:menu.messages.confirmation_text`)} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
             <Grid item xs={12} className={this.props.classes.divider}>
             <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
-                    <TitleBarTitle title="Gateway" />
+                    <TitleBarTitle title={i18n.t(`${packageNS}:menu.gateways.gateways`)} />
                 </TitleBar>    
                 {/* <Divider light={true}/> */}
                 <div className={this.props.classes.between}>
@@ -117,7 +117,7 @@ class GatewayLayout extends Component {
         <Grid item xs={12} className={this.props.classes.divider}>
           <Grid item xs={6} className={this.props.classes.divider}>
             <GatewayForm
-              submitLabel="Gateway"
+              submitLabel={i18n.t(`${packageNS}:menu.gateways.gateways`)}
               downlinkFee={this.state.downlinkFee}
               onSelectChange={this.onSelectChange}
               onSubmit={this.onSubmit}

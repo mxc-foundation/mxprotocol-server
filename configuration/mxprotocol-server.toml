@@ -19,10 +19,13 @@ low_balance_threshold=20
 # settings for notify events targeting system
 [system_notification]
 low_balance_threshold=20
+low_balance_warning=1000
 
 # pricing management related settings
 [pricing]
 downlink_package_price=10
+downlink_fee=10
+transaction_percentage_share=1
 
 [accounting]
 interval_min = 60
@@ -75,7 +78,7 @@ idle_timeout="5m0s"
 #
 # It is possible to apply the database-migrations by hand
 # (see https://github.com/brocaar/lora-app-server/tree/master/migrations)
-# or let LoRa App Server migrate to the latest state automatically, by using
+# or let LPWAN App Server migrate to the latest state automatically, by using
 # this setting. Make sure that you always make a backup when upgrading Lora
 # App Server and / or applying migrations.
 automigrate=true
@@ -93,7 +96,7 @@ tls_key=""
 
 # JWT secret used for api authentication / authorization
 # You could generate this by executing 'openssl rand -base64 32' for example
-jwt_secret="DOE1KiNzpQ82elRQ9HMWyxmADQ5f2B2TBAgOjL7ZZWA="
+jwt_secret="zPWZAeRHJ8aCzrJDr4VuY/isoVnLZ0nNQIgHBbE7nMA="
 
 # Allow origin header (CORS).
 #
@@ -109,15 +112,11 @@ disable_assign_existing_users=false
 appserver="appserver:8002"
 
 [supernode]
-## For official Eth network
-#contract_address="0x5Ca381bBfb58f0092df149bD3D243b08B9a8386e"
-#supernode_address="0x8a96E17d85Bd897a88B547718865de990D2Fcb80"
-
 ## For Ether testnetwork (Ropsten)
-contract_address="0xd0B0e864959d4625577939fC4d45b77aeB04F1d0"
-supernode_address="0x63dF6a06D4a9e20199C6Be3eE9cac591b7d5D01F"
+contract_address=""
+supernode_address=""
 
-api_key="W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4"
+api_key=""
 check_account_seconds=30
 external_currency_abv="Ether"
 ether_test_net=true
@@ -125,5 +124,9 @@ ether_test_net=true
 down_link_price = 0.1
 
 [paymentserver]
-payment_service_address="payment"
-payment_service_port=":2333"
+payment_service_address=""
+payment_service_port=""
+
+[staking]
+staking_percentage=0.1
+staking_min_days=30

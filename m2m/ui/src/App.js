@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 
 import history from "./history";
 import theme from "./theme";
+import i18n, { packageNS, DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "./i18n";
 
 import TopNav from "./components/TopNav";
 import TopBanner from "./components/TopBanner";
@@ -27,9 +28,15 @@ import Topup from "./views/topup/Topup"
 import Withdraw from "./views/withdraw/Withdraw"
 import HistoryLayout from "./views/history/HistoryLayout"
 import ModifyEthAccount from "./views/ethAccount/ModifyEthAccount"
+import SuperNodeEth from "./views/ControlPanel/superNodeEth/superNodeEth"
 import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
+import StakeLayout from "./views/Stake/StakeLayout";
+import SetStake from "./views/Stake/SetStake";
 
+import SuperAdminWithdraw from "./views/ControlPanel/withdraw/withdraw"
+import SupernodeHistory from "./views/ControlPanel/history/History"
+import SystemSettings from "./views/ControlPanel/settings/settings"
 
 const drawerWidth = 270;
 
@@ -104,21 +111,64 @@ class App extends Component {
     this.state = {
       user: true,
       drawerOpen: true,
+      language: null
     };
 
     this.setDrawerOpen = this.setDrawerOpen.bind(this);
   }
-
+k
   componentDidMount() {
     SessionStore.on("change", () => {
       this.setState({
         user: SessionStore.getUser(),
         drawerOpen: SessionStore.getUser() != null,
+        language: SessionStore.getLanguage()
       });
     });
 
+    const storedLanguageID = SessionStore.getLanguage() && SessionStore.getLanguage().id;
+
+    if (!storedLanguageID && !i18n.language) {
+      i18n.changeLanguage(DEFAULT_LANGUAGE.id, (err, t) => {
+        if (err) {
+          console.error(`Error setting default language to English: `, err);
+        }
+      });
+    }
+
+    const i18nLanguage = SUPPORTED_LANGUAGES.find(el => el.id === i18n.language);
+
+    // Add the saved i18n language back into Local Storage if it is lost after a page refresh on Login component
+    if (!storedLanguageID && i18n.language) {
+      SessionStore.setLanguage(i18nLanguage);
+    }
+
+    // Language stored in Local Storage persists and takes precedence over i18n language
+    if (storedLanguageID && i18n.language !== storedLanguageID) {
+      i18n.changeLanguage(storedLanguageID, (err, t) => {
+        if (err) {
+          console.error(`Error loading language ${storedLanguageID}: `, err);
+        }
+      });
+    }
+
     this.setState({
-      drawerOpen: true
+      drawerOpen: true,
+      language: storedLanguageID ? SessionStore.getLanguage() : i18nLanguage
+    });
+  }
+
+  onChangeLanguage = (newLanguage) => {
+    SessionStore.setLanguage(newLanguage);
+
+    i18n.changeLanguage(newLanguage.id, (err, t) => {
+      if (err) {
+        console.error(`Error loading language ${newLanguage.id}: `, err);
+      }
+    });
+
+    this.setState({
+      language: newLanguage
     });
   }
 
@@ -133,12 +183,22 @@ class App extends Component {
   }
 
   render() {
+    const { language } = this.state;
+
     let topNav = null;
     let sideNav = null;
     let topbanner = null;
 
     if (this.state.user !== null) {
-      topNav = <TopNav setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} username={SessionStore.getUsername()} />;
+      topNav = (
+        <TopNav
+          drawerOpen={this.state.drawerOpen}
+          language={language}
+          onChangeLanguage={this.onChangeLanguage}
+          setDrawerOpen={this.setDrawerOpen}
+          username={SessionStore.getUsername()}
+        />
+      );
       topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>;
       sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
     }
@@ -153,6 +213,7 @@ class App extends Component {
               {topNav}
               {topbanner}
               {sideNav}
+              {topNav}
               <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
                 <Grid container spacing={24}>
                   <Switch>
@@ -163,7 +224,12 @@ class App extends Component {
                     <Route path="/modify-account/:organizationID" component={ModifyEthAccount} />
                     <Route path="/device/:organizationID" component={DeviceLayout} />
                     <Route path="/gateway/:organizationID" component={GatewayLayout} />
-
+                    <Route exact path="/stake/:organizationID" component={StakeLayout} />
+                    <Route exact path="/stake/:organizationID/set-stake" component={SetStake} />
+                    <Route path="/control-panel/modify-account" component={SuperNodeEth} />
+                    <Route path="/control-panel/withdraw" component={SuperAdminWithdraw} />
+                    <Route path="/control-panel/history" component={SupernodeHistory} />
+                    <Route path="/control-panel/system-settings" component={SystemSettings} />
                     <Route render={BackToLora} />
                   </Switch>
                 </Grid>

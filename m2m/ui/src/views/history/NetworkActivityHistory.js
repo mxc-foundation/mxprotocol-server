@@ -3,16 +3,13 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import moment from 'moment';
-import mtz from 'moment-timezone';
 
+import i18n, { packageNS } from '../../i18n';
 import WalletStore from "../../stores/WalletStore";
 import TitleBar from "../../components/TitleBar";
 
-import TableCellExtLink from '../../components/TableCellExtLink';
 import TitleBarButton from "../../components/TitleBarButton";
 import DataTable from "../../components/DataTable";
-import LinkVariant from "mdi-material-ui/LinkVariant";
 import Admin from "../../components/Admin";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
@@ -68,7 +65,7 @@ class NetworkActivityHistory extends Component {
   render() {
     return(
       <Grid container spacing={24}>
-        <TitleBar
+{/*        <TitleBar
           buttons={
             <Admin organizationID={this.props.match.params.organizationID}>
               <TitleBarButton
@@ -78,18 +75,18 @@ class NetworkActivityHistory extends Component {
             </Admin>
           }
         >
-        </TitleBar>
+        </TitleBar>*/}
         <Grid item xs={12}>
           <DataTable
             header={
               <TableRow>
-                <TableCell align={'center'}>Time</TableCell>
-                <TableCell align={'right'}>Pkts Sent</TableCell>
-                <TableCell align={'right'}>Free Pkts</TableCell>
-                <TableCell align={'right'}>Received</TableCell>
-                <TableCell align={'right'}>Income</TableCell>
-                <TableCell align={'right'}>Cost</TableCell>
-                <TableCell align={'right'}>Balance</TableCell>
+                <TableCell align={'center'}>{i18n.t(`${packageNS}:menu.staking.time`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.packets_sent`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.free_packets`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.packets_received`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.earned`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.spent`)}</TableCell>
+                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.staking.balance`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
