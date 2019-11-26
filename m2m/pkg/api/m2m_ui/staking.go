@@ -233,7 +233,12 @@ func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.Staki
 			stakeHist := &api.GetStakingHistory{}
 			stakeHist.StakeAmount = v.StakeAmount
 			stakeHist.Start = v.StartStakeTime.String()
-			stakeHist.End = v.UnstakeTime.String()
+
+			if v.UnstakeTime.String() == "0001-01-01" {
+				stakeHist.End = "--:--"
+			} else {
+				stakeHist.End = v.UnstakeTime.String()
+			}
 
 			if v.StakingPeriodStart.Month() != v.StakingPeriodEnd.Month() {
 				log.WithError(err).Error("GetStakingHistory/StakingPeriodStart and End in different month.")
