@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import {Router} from "react-router-dom";
 import { Route, Switch, Redirect } from 'react-router-dom';
 import classNames from "classnames";
@@ -14,7 +14,9 @@ import i18n, { packageNS, DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "./i18n";
 
 import TopNav from "./components/TopNav";
 import TopBanner from "./components/TopBanner";
-import SideNav from "./components/SideNav";
+//import SideNav from "./components/SideNav"; [edit]
+import Sidebar from "./components/Sidebar";
+import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
@@ -182,6 +184,21 @@ k
     this.forceUpdate();
   }
 
+    /**
+     * toggle Menu
+     */
+    toggleMenu = (e) => {
+        e.preventDefault();
+        this.setState({ isCondensed: !this.state.isCondensed });
+    }
+
+    /**
+     * Toggle right side bar
+     */
+    toggleRightSidebar = () => {
+        document.body.classList.toggle("right-bar-enabled");
+    }
+
   render() {
     const { language } = this.state;
 
@@ -199,8 +216,10 @@ k
           username={SessionStore.getUsername()}
         />
       );
-      topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>;
-      sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
+      //topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>; [edit]
+      //sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>; [edit]
+      topbanner = <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} />;
+      sideNav = <Sidebar isCondensed={this.state.isCondensed} {...this.props} />;
     }
     
     return (
@@ -208,8 +227,10 @@ k
         <React.Fragment>
           <CssBaseline />
           <MuiThemeProvider theme={theme}>
-            <div className={this.props.classes.outerRoot}>
-            <div className={this.props.classes.root}>
+            {/* <div className={this.props.classes.outerRoot}>
+            <div className={this.props.classes.root}> [edit]*/}
+            <div className="app">
+                <div id="wrapper">
               {topNav}
               {topbanner}
               {sideNav}
