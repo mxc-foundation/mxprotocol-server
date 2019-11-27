@@ -234,12 +234,6 @@ func (s *StakingServerAPI) GetStakingHistory(ctx context.Context, req *api.Staki
 			stakeHist.StakeAmount = v.StakeAmount
 			stakeHist.Start = v.StartStakeTime.String()
 
-			fmt.Println("Staking Amount: ", v.StakeAmount)
-			fmt.Println("Unstake time: ", v.UnstakeTime.String())
-			fmt.Println("stakingperiodstart: ", v.StakingPeriodStart.String())
-			fmt.Println("stakingperiodEnd: ", v.StakingPeriodEnd.String())
-			fmt.Println()
-
 			if v.UnstakeTime.String() == "0001-01-01 00:00:00 +0000 +0000" {
 				stakeHist.End = "--:--"
 			} else {
