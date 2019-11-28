@@ -5,18 +5,20 @@ import { border } from "@material-ui/system";
 const tealHighLight = '#00FFD9';
 const tealHighLight20 = '#00FFD920';
 const blueMxcBrand = '#09006E';
+const blueMxcBrand20 = '#09006E20';
 const blueBG = '#070033';
 const overlayBG = '#0C027060';
 const white = '#323a46';
 const linkTextColor = '#BBE9E8';
 
+
 const theme = createMuiTheme({
     palette: {
-      primary: { main: tealHighLight, secondary: tealHighLight20 }, 
+      primary: { main: blueMxcBrand, secondary: blueMxcBrand20 }, 
       secondary: { main: blueMxcBrand, secondary: overlayBG }, 
       darkBG: { main: blueBG }, 
       textPrimary: {main: white}, 
-      textSecondary: {main: linkTextColor} 
+      textSecondary: {main: blueMxcBrand} 
     },
     MuiListItemIcon: {
       root: {
@@ -162,7 +164,7 @@ const theme = createMuiTheme({
       },
       MuiPaper: {
         root: {
-          backgroundColor: overlayBG,
+          backgroundColor: white,
           padding: 10,
         }
       },

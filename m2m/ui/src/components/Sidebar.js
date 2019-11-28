@@ -50,12 +50,12 @@ const SideNavContent = (props) => {
                     <DropdownMenu2 />
                 </li> 
 
-                <li>
+                {/* <li>
                     <Link to="/dashboard" className="waves-effect side-nav-link-ref">
                         <i className="mdi mdi-view-dashboard"></i>
                         <span> Dashboard </span>
                     </Link>
-                </li>
+                </li> */}
                
                 <li>
                     <Link to={`/withdraw/${props.orgId}`} className="waves-effect side-nav-link-ref">

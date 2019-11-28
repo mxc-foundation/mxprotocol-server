@@ -40,7 +40,7 @@ import SuperAdminWithdraw from "./views/ControlPanel/withdraw/withdraw"
 import SupernodeHistory from "./views/ControlPanel/history/History"
 import SystemSettings from "./views/ControlPanel/settings/settings"
 
-const drawerWidth = 270;
+const drawerWidth = 220;
 
 const styles = {
   outerRoot: {
@@ -69,7 +69,7 @@ const styles = {
   main: {
     width: "100%",
     padding: 2 * 24,
-    paddingTop: 115,
+    paddingTop: 95,
     flex: 1,
   },
 

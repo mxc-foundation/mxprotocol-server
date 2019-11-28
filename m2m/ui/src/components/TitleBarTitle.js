@@ -11,7 +11,7 @@ import theme from "../theme";
 const styles = {
   title: {
     marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
+    //marginBottom: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     fontSize: '1.3125rem',
     float: "left",
