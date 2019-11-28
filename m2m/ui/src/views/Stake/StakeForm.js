@@ -12,94 +12,131 @@ import StakeStore from "../../stores/StakeStore";
 //import Spinner from "../../components/ScaleLoader"
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
+import {  NumberFormatPerc } from '../../util/M2mUtil';
+import NumberFormat from 'react-number-format';
 import styles from "./StakeStyle"
 
+const NumberFormatMXC=(props)=> {
+	const { inputRef, onChange, ...other } = props;
+
+	return (
+		<NumberFormat
+			{...other}
+			getInputRef={inputRef}
+			onValueChange={(values) => {
+				onChange({
+					target: {
+						value: values.value
+					}
+				});
+			}}
+			suffix=" MXC"
+		/>
+	);
+}
+
 class StakeForm extends FormComponent {
-  
+
   state = {
-    amount: '',
+    amount: 0,
     revenue_rate: 0
   }
 
-  componentDidMount(){
+  componentDidMount() {
+    if(this.props.amount > 0){
+      this.state.amount = this.props.amount;
+    }
     this.loadData();
   }
-  
+
   loadData = () => {
     const resp = StakeStore.getStakingPercentage(this.props.match.params.organizationID);
     resp.then((res) => {
       let revenue_rate = 0;
       revenue_rate = res.stakingPercentage;
-      if(revenue_rate){
+      if (revenue_rate) {
         this.setState({
           revenue_rate
         })
       }
     })
   }
-
+  
   onChange = (event) => {
     const { id, value } = event.target;
-    
+
     this.setState({
       [id]: value
     });
   }
 
-  clear() {
+  handleChange = (name, event) => {
+		this.setState({
+			[name]: event.target.value
+		});
+  };
+  
+  clear = () => {
     this.setState({
       amount: ''
     })
   }
-
+  
   render() {
     /* if (this.props.txinfo === undefined) {
       return(<Spinner on={this.state.loading}/>);
     } */
     const extraButtons = <>
-      <Button  variant="outlined" color="inherit" onClick={this.handleOpenAXS} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.cancel`)}</Button>
+      <Button variant="outlined" color="inherit" onClick={this.handleOpenAXS} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.cancel`)}</Button>
     </>;
 
-    return(
-        <Form
-            submitLabel={ this.props.isUnstake ? i18n.t(`${packageNS}:menu.messages.confirm_unstake`) : i18n.t(`${packageNS}:menu.messages.confirm_stake`) }
-            extraButtons={extraButtons}
-            onSubmit={(e) => this.props.confirm(e, {
-              amount: parseFloat(this.props.amount),
-              action: this.props.isUnstake
-            })}
-        >
-            <Typography  /* className={this.props.classes.title} */ gutterBottom>
-                {this.props.label}
-            </Typography>
-            <Divider light={true}/>
-            <TextField
-                id="amount"
-                label={i18n.t(`${packageNS}:menu.common.amount`)}
-                margin="normal"
-                value={this.props.amount}
-                onChange={this.props.onChange}
-                required={!this.props.isUnstake}
-                InputProps={{
-                  min: 0,
-                    readOnly: this.props.isUnstake,
-                    endAdornment: <InputAdornment position="end">MXC</InputAdornment>,
-                }}
-                fullWidth
-            />
-            <TextField
-                id="revRate"
-                label={i18n.t(`${packageNS}:menu.messages.revenue_rate`)}
-                margin="normal"
-                
-                value={this.state.revenue_rate}
-                InputProps={{
-                    readOnly: true,
-                    endAdornment: <InputAdornment position="end">{i18n.t(`${packageNS}:menu.staking.monthly`)}</InputAdornment>,
-                }}
-                fullWidth
-            />
-        </Form>
+    return (
+      <Form
+        submitLabel={this.props.isUnstake ? i18n.t(`${packageNS}:menu.messages.confirm_unstake`) : i18n.t(`${packageNS}:menu.messages.confirm_stake`)}
+        extraButtons={extraButtons}
+        onSubmit={(e) => this.props.confirm(e, {
+          amount: parseFloat(this.state.amount),
+          action: this.props.isUnstake
+        })}
+      >
+        <Typography  /* className={this.props.classes.title} */ gutterBottom>
+          {this.props.label}
+        </Typography>
+        <Divider light={true} />
+        <TextField
+          id="amount"
+          label={i18n.t(`${packageNS}:menu.common.amount`)}
+          margin="normal"
+          required={!this.props.isUnstake}
+          variant="filled"
+          
+          //value={this.props.amount}
+          //onChange={this.props.onChange}
+          autoComplete='off'
+          value={this.state.amount}
+          onChange={(e) => this.handleChange('amount', e)}
+
+          InputProps={{
+            inputComponent: NumberFormatMXC,
+            min: 0,
+            readOnly: this.props.isUnstake
+          }}
+          fullWidth
+        />
+        <TextField
+          id="revRate"
+          label={i18n.t(`${packageNS}:menu.messages.revenue_rate`)}
+          margin="normal"
+
+          value={this.state.revenue_rate}
+          InputProps={{
+            inputComponent: NumberFormatPerc,
+            readOnly: true,
+            append: 'Monthly'
+          }}
+          fullWidth
+        />
+      </Form>
     );
   }
 }
