@@ -1,14 +1,44 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
-
+import { getLoraHost } from "../util/M2mUtil";
+import DropdownMenu2 from "./DropdownMenu";
+import ProfileDropdown from './ProfileDropdown';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import MetisMenu from 'metismenujs/dist/metismenujs';
 import profilePic from '../assets/images/users/user-1.jpg';
+import Divider from '@material-ui/core/Divider';
+import SessionStore from '../stores/SessionStore';
+import i18n, { packageNS } from '../i18n';
 
+const ProfileMenus = [{
+    label: 'My Account',
+    icon: 'fe-user',
+    redirectTo: "/",
+  },
+  {
+    label: 'Settings',
+    icon: 'fe-settings',
+    redirectTo: "/"
+  },
+  {
+    label: 'Lock Screen',
+    icon: 'fe-lock',
+    redirectTo: "/"
+  },
+  {
+    label: 'Logout',
+    icon: 'fe-log-out',
+    redirectTo: "/logout",
+    hasDivider: true
+  }]
 
-const SideNavContent = () => {
+const LinkToLPWAN = ({children, ...otherProps}) => 
+  <a href={getLoraHost()} {...otherProps}>{children}</a>;
+
+const SideNavContent = (props) => {
+    
     return <React.Fragment>
 
         <div id="sidebar-menu">
@@ -16,38 +46,94 @@ const SideNavContent = () => {
                 <li className="menu-title">Navigation</li>
 
                 <li>
+                    {/* <DropdownMenu default={ this.state.default } onChange={this.onChange} /> [edit] */}
+                    <DropdownMenu2 />
+                </li> 
+
+                <li>
                     <Link to="/dashboard" className="waves-effect side-nav-link-ref">
                         <i className="mdi mdi-view-dashboard"></i>
                         <span> Dashboard </span>
                     </Link>
                 </li>
+               
+                <li>
+                    <Link to={`/withdraw/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        {/* <i className="mdi mdi-cloud-print-outline"></i> */}
+                        <i className="ti-cloud-down"></i>
+                        <span> {i18n.t(`${packageNS}:menu.withdraw.withdraw`)} </span>
+                    </Link>
+                </li>
 
                 <li>
-                    <Link to="/" className="waves-effect" aria-expanded="false">
-                        <i className="mdi mdi-share-variant"></i>
-                        <span> Multi Level </span>
-                        <span className="menu-arrow"></span>
+                    <Link to={`/topup/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        {/* <i className="mdi mdi-inbox-arrow-down"></i>
+                        <i className="mdi mdi-basket-fill"></i> */}
+                        <i className="ti-cloud-up"></i>
+                        <span> {i18n.t(`${packageNS}:menu.topup.topup`)} </span>
                     </Link>
-
-                    <ul className="nav-second-level nav" aria-expanded="false">
-                        <li>
-                            <Link to="/" className="side-nav-link-ref">Level 1.1</Link>
-                        </li>
-                        <li>
-                            <Link to="/" className="has-dropdown">Level 1.2
-                                <span className="menu-arrow"></span>
-                            </Link>
-                            <ul className="nav-third-level nav" aria-expanded="false">
-                                <li>
-                                    <Link to="/" className="side-nav-link-ref">Level 2.1</Link>
-                                </li>
-                                <li>
-                                    <Link to="/" className="side-nav-link-ref">Level 2.2</Link>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
                 </li>
+
+                <li>
+                    <Link to={`/history/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        <i className="mdi mdi-history"></i>
+                        <span> {i18n.t(`${packageNS}:menu.history.history`)} </span>
+                    </Link>
+                </li>
+
+                <li>
+                    <Link to={`/modify-account/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        <i className="mdi mdi-ethereum"></i>
+                        <span> {i18n.t(`${packageNS}:menu.eth_account.eth_account`)} </span>
+                    </Link>
+                </li>
+
+                <li>
+                    <Link to={`/device/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        <i className="mdi mdi-network-outline"></i>
+                        <span> {i18n.t(`${packageNS}:menu.devices.devices`)} </span>
+                    </Link>
+                </li>
+
+                <li>
+                    <Link to={`/gateway/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        <i className="mdi mdi-remote"></i>
+                        <span> {i18n.t(`${packageNS}:menu.gateways.gateways`)} </span>
+                    </Link>
+                </li>
+
+                <li>
+                    <Link to={`/stake/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        <i className="mdi mdi-vote"></i>
+                        <span> {i18n.t(`${packageNS}:menu.staking.staking`)} </span>
+                    </Link>
+                </li>
+
+                <li>
+                    <Divider />
+                </li>
+
+                <li>
+                    <Link to={`/stake/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        <i className="mdi mdi-view-dashboard"></i>
+                        <span> {i18n.t(`${packageNS}:menu.nb_iot_server`)} </span>
+                    </Link>
+                </li>
+
+                <li>
+                    <Link to={'/ext'} className="waves-effect side-nav-link-ref">
+                        <i className="mdi mdi-view-dashboard"></i>
+                        <span> {i18n.t(`${packageNS}:menu.lpwan_server`)} </span>
+                    </Link>
+                </li>
+
+                <li>
+                    <Link to={`/stake/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        <i className="mdi mdi-view-dashboard"></i>
+                        <span> {i18n.t(`${packageNS}:menu.powered_by`)} </span>
+                    </Link>
+                </li>
+                
             </ul>
         </div>
         <div className="clearfix"></div>
@@ -84,14 +170,14 @@ const UserProfile = () => {
 
             <p className="text-muted">Admin Head</p>
             <ul className="list-inline">
-                <li className="list-inline-item">
+                {/* <li className="list-inline-item">
                     <Link to="/" className="text-muted">
                         <i className="mdi mdi-settings"></i>
                     </Link>
-                </li>
+                </li> [edit]*/}
 
                 <li className="list-inline-item">
-                    <Link to="/" className="text-custom">
+                    <Link to="/logout" className="text-custom">
                         <i className="mdi mdi-power"></i>
                     </Link>
                 </li>
@@ -211,11 +297,11 @@ class Sidebar extends Component {
 
     render() {
         const isCondensed = this.props.isCondensed || false;
-
+        const orgId = SessionStore.getOrganizationID();
         return (
             <React.Fragment>
                 <div className='left-side-menu' ref={node => this.menuNodeRef = node}>
-                    {!isCondensed && <PerfectScrollbar><UserProfile /><SideNavContent /></PerfectScrollbar>}
+                    {!isCondensed && <PerfectScrollbar><UserProfile /><SideNavContent orgId={orgId} /></PerfectScrollbar>}
                     {isCondensed && <UserProfile /> && <SideNavContent />}
                 </div>
             </React.Fragment>

@@ -7,7 +7,7 @@ const tealHighLight20 = '#00FFD920';
 const blueMxcBrand = '#09006E';
 const blueBG = '#070033';
 const overlayBG = '#0C027060';
-const white = '#F9FAFC';
+const white = '#323a46';
 const linkTextColor = '#BBE9E8';
 
 const theme = createMuiTheme({

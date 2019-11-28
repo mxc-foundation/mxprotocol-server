@@ -21,7 +21,7 @@ import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
 //import ProfileStore from "./stores/ProfileStore";
-
+import './assets/scss/DefaultTheme.scss';
 // search
 //import Search from "./views/search/Search";
 
@@ -35,7 +35,7 @@ import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
 import StakeLayout from "./views/Stake/StakeLayout";
 import SetStake from "./views/Stake/SetStake";
-
+import { getLoraHost } from "./util/M2mUtil";
 import SuperAdminWithdraw from "./views/ControlPanel/withdraw/withdraw"
 import SupernodeHistory from "./views/ControlPanel/history/History"
 import SystemSettings from "./views/ControlPanel/settings/settings"
@@ -231,10 +231,9 @@ k
             <div className={this.props.classes.root}> [edit]*/}
             <div className="app">
                 <div id="wrapper">
-              {topNav}
+              {/* {topNav} */}
               {topbanner}
               {sideNav}
-              {topNav}
               <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
                 <Grid container spacing={24}>
                   <Switch>
@@ -252,6 +251,14 @@ k
                     <Route path="/control-panel/history" component={SupernodeHistory} />
                     <Route path="/control-panel/system-settings" component={SystemSettings} />
                     <Route render={BackToLora} />
+                    <Route path='/ext' component={() => { 
+                            window.location.href = getLoraHost(); 
+                            return null;
+                        }}/>
+                    <Route path='/logout' component={() => { 
+                            window.location.href = getLoraHost(); 
+                            return null;
+                        }}/>    
                   </Switch>
                 </Grid>
               </div>

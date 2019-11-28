@@ -2,12 +2,17 @@ import React, { Component } from "react";
 //import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 
+import WithdrawStore from "../stores/WithdrawStore";
+import WalletStore from "../stores/WalletStore";
+import i18n, { packageNS } from '../i18n';
+import { SUPER_ADMIN } from "../util/M2mUtil";
+import SessionStore from "../stores/SessionStore";
+
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import logoSm from '../assets/images/logo-sm.png';
-import logo from '../assets/images/logo-dark.png';
+import logo from '../assets/images/logo_wallet_dark.png';
 import profilePic from '../assets/images/users/user-1.jpg';
-
 
 const Notifications = [{
   id: 1,
@@ -66,7 +71,7 @@ const Notifications = [{
   bgColor: 'danger'
 }];
 
-const ProfileMenus = [{
+/* const ProfileMenus = [{
   label: 'My Account',
   icon: 'fe-user',
   redirectTo: "/",
@@ -86,24 +91,85 @@ const ProfileMenus = [{
   icon: 'fe-log-out',
   redirectTo: "/logout",
   hasDivider: true
+}] [edit] 191126 */
+
+const ProfileMenus = [/* {
+  label: 'Change Password',
+  icon: 'mdi mdi-key-change',
+  redirectTo: "/",
+}, */
+{
+  label: 'Logout',
+  icon: 'fe-log-out',
+  redirectTo: "/logout",
+  hasDivider: true
 }]
 
+function getWalletBalance() {
+  var organizationId = SessionStore.getOrganizationID();
+  if (organizationId === undefined) {
+    return null;
+  }
+
+  if (SessionStore.isAdmin()) {
+    organizationId = SUPER_ADMIN
+  }
+
+  return new Promise((resolve, reject) => {
+    WalletStore.getWalletBalance(organizationId, resp => {
+      return resolve(resp);
+    });
+  });
+}
 
 class Topbar extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      balance: 0,
+    };
   }
 
+  componentDidMount() {
+    this.loadData();
+
+    SessionStore.on("organization.change", () => {
+      this.loadData();
+    });
+    WithdrawStore.on("withdraw", () => {
+      this.loadData();
+    });
+  }
+
+  loadData = async () => {
+    try {
+      var result = await getWalletBalance();
+      this.setState({ balance: result.balance });
+
+    } catch (error) {
+      console.error(error);
+      this.setState({ error });
+    }
+  }
+
+  onChangeLanguage = (newLanguageState) => {
+    this.props.onChangeLanguage(newLanguageState);
+  }
 
   render() {
+    const { balance } = this.state;
+
+    const balanceEl = balance === null ? 
+      <span className="color-gray">(no org selected)</span> : 
+      balance + " MXC";
+
     return (
       <React.Fragment>
         <div className="navbar-custom">
           <ul className="list-unstyled topnav-menu float-right mb-0">
 
             <li className="d-none d-sm-block">
-              <form className="app-search">
+              {/* <form className="app-search">
                 <div className="app-search-box">
                   <div className="input-group">
                     <input type="text" className="form-control" placeholder="Search..." />
@@ -114,21 +180,27 @@ class Topbar extends Component {
                     </div>
                   </div>
                 </div>
-              </form>
+              </form> */}
             </li>
 
             <li>
-              <NotificationDropdown notifications={Notifications} />
+              {/* <NotificationDropdown notifications={Notifications} /> */}
             </li>
 
+            <li className="dropdown notification-list">
+              <button className="btn btn-link nav-link right-bar-toggle waves-effect waves-light" onClick={this.props.rightSidebarToggle}>
+                <i className="mdi mdi-wallet-outline"></i>
+                <span> {balanceEl}</span>
+              </button>
+            </li>
+            
             <li>
               <ProfileDropdown profilePic={profilePic} menuItems={ProfileMenus} username={'Nik Patel'} />
             </li>
 
-
             <li className="dropdown notification-list">
               <button className="btn btn-link nav-link right-bar-toggle waves-effect waves-light" onClick={this.props.rightSidebarToggle}>
-                <i className="fe-settings noti-icon"></i>
+                <i className="mdi mdi-help-circle-outline"></i>
               </button>
             </li>
           </ul>
