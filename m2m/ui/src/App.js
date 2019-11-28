@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import {Router} from "react-router-dom";
 import { Route, Switch, Redirect } from 'react-router-dom';
 import classNames from "classnames";
@@ -14,12 +14,14 @@ import i18n, { packageNS, DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "./i18n";
 
 import TopNav from "./components/TopNav";
 import TopBanner from "./components/TopBanner";
-import SideNav from "./components/SideNav";
+//import SideNav from "./components/SideNav"; [edit]
+import Sidebar from "./components/Sidebar";
+import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
 //import ProfileStore from "./stores/ProfileStore";
-
+import './assets/scss/DefaultTheme.scss';
 // search
 //import Search from "./views/search/Search";
 
@@ -33,7 +35,7 @@ import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
 import StakeLayout from "./views/Stake/StakeLayout";
 import SetStake from "./views/Stake/SetStake";
-
+import { getLoraHost } from "./util/M2mUtil";
 import SuperAdminWithdraw from "./views/ControlPanel/withdraw/withdraw"
 import SupernodeHistory from "./views/ControlPanel/history/History"
 import SystemSettings from "./views/ControlPanel/settings/settings"
@@ -182,6 +184,21 @@ k
     this.forceUpdate();
   }
 
+    /**
+     * toggle Menu
+     */
+    toggleMenu = (e) => {
+        e.preventDefault();
+        this.setState({ isCondensed: !this.state.isCondensed });
+    }
+
+    /**
+     * Toggle right side bar
+     */
+    toggleRightSidebar = () => {
+        document.body.classList.toggle("right-bar-enabled");
+    }
+
   render() {
     const { language } = this.state;
 
@@ -199,8 +216,10 @@ k
           username={SessionStore.getUsername()}
         />
       );
-      topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>;
-      sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
+      //topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>; [edit]
+      //sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>; [edit]
+      topbanner = <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} />;
+      sideNav = <Sidebar isCondensed={this.state.isCondensed} {...this.props} />;
     }
     
     return (
@@ -208,12 +227,13 @@ k
         <React.Fragment>
           <CssBaseline />
           <MuiThemeProvider theme={theme}>
-            <div className={this.props.classes.outerRoot}>
-            <div className={this.props.classes.root}>
-              {topNav}
+            {/* <div className={this.props.classes.outerRoot}>
+            <div className={this.props.classes.root}> [edit]*/}
+            <div className="app">
+                <div id="wrapper">
+              {/* {topNav} */}
               {topbanner}
               {sideNav}
-              {topNav}
               <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
                 <Grid container spacing={24}>
                   <Switch>
@@ -231,6 +251,14 @@ k
                     <Route path="/control-panel/history" component={SupernodeHistory} />
                     <Route path="/control-panel/system-settings" component={SystemSettings} />
                     <Route render={BackToLora} />
+                    <Route path='/ext' component={() => { 
+                            window.location.href = getLoraHost(); 
+                            return null;
+                        }}/>
+                    <Route path='/logout' component={() => { 
+                            window.location.href = getLoraHost(); 
+                            return null;
+                        }}/>    
                   </Switch>
                 </Grid>
               </div>
