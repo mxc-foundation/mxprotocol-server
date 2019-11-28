@@ -8,45 +8,45 @@ const blueMxcBrand = '#09006E';
 const blueMxcBrand20 = '#09006E20';
 const blueBG = '#070033';
 const overlayBG = '#0C027060';
-const white = '#323a46';
+const white = 'white';
+const dark = '#323a46';
 const linkTextColor = '#BBE9E8';
-
 
 const theme = createMuiTheme({
     palette: {
       primary: { main: blueMxcBrand, secondary: blueMxcBrand20 }, 
       secondary: { main: blueMxcBrand, secondary: overlayBG }, 
       darkBG: { main: blueBG }, 
-      textPrimary: {main: white}, 
+      textPrimary: {main: dark}, 
       textSecondary: {main: blueMxcBrand} 
     },
     MuiListItemIcon: {
       root: {
-        color: white
+        color: dark
       }
     },
     //tab 
     MuiTypography: {
       root: {
-        color: white,
+        color: dark,
       },
       body1: {
-        color: white,
+        color: dark,
       },
       colorTextSecondary: {
-        color: white,
+        color: dark,
       },
     },
     typography: {
       //useNextVariants: true,
       subheading: {
-        color: white,
+        color: dark,
         "&:hover": {
-          color: 'white',
+          color: 'dark',
         },
       },
       title: {
-        color: white
+        color: dark
       },
       fontFamily: [
         'Montserrat',
@@ -55,29 +55,29 @@ const theme = createMuiTheme({
     overrides: {
       MuiTypography: {
         root: {
-          color: white,
+          color: dark,
         },
         body1: {
-          color: white,
+          color: dark,
           fontSize: '0.8rem'
         },
         body2: {
-          color: white,
+          color: dark,
           fontSize: '0.7rem'
         },
         colorTextSecondary: {
-          color: white,
+          color: dark,
         },
         headline: {
-          color: white
+          color: dark
         },
         caption: {
-          color: white
+          color: dark
         },
       },
       MuiInput: {
         root: {
-          color: white
+          color: dark
         },
         underline: {
           "&:before": {
@@ -91,7 +91,7 @@ const theme = createMuiTheme({
       MuiAppBar: {
         root: {
           //width: '1024px',
-          color: white
+          color: dark
         },
         positionFixed: {
           left: 'inherit',
@@ -100,7 +100,7 @@ const theme = createMuiTheme({
       },
       MuiSelect: {
         icon: {
-          color: white,
+          color: dark,
           right: 0,
           position: 'absolute',
           pointerEvents: 'none',
@@ -108,7 +108,7 @@ const theme = createMuiTheme({
       },
       MuiIconButton: {
         root: {
-          color: white,
+          color: dark,
         }
       },
 /*       MuiInputBase: {
@@ -137,14 +137,14 @@ const theme = createMuiTheme({
       },
       MuiTableCell: {
         head: {
-          color: white,
+          color: dark,
           fontWeight: '800',
           fontSize: '1em',
           padding: 10, 
         },
         body: {
           background: 'none',
-          color: white,
+          color: dark,
           //maxWidth: 140,
           whiteSpace: 'nowrap', 
           //overflow: 'hidden',
@@ -170,7 +170,7 @@ const theme = createMuiTheme({
       },
       MuiTablePagination: {
         root: {
-          color: white,
+          color: dark,
           background: 'none',
         }
       },
@@ -198,25 +198,25 @@ const theme = createMuiTheme({
           "&:hover": {
             backgroundColor: tealHighLight20,
             borderColor: "#00CCAE",
-            color: white,
+            color: dark,
           },
         },
         colorInherit: {
-          color: white,
+          color: dark,
           "&:hover": {
             borderColor: white,
-            color: white,
+            color: dark,
           },
         },
       },
       MuiFormLabel: { 
         root: { 
-          color: white, 
+          color: dark, 
         },
       },
       MuiFormHelperText: { 
         root: { 
-          color: white, 
+          color: dark, 
         },
       },
       MuiPrivateTabScrollButton:{
@@ -226,10 +226,10 @@ const theme = createMuiTheme({
       },
       MuiTab: {
         root: {
-          color: white,
+          color: dark,
         },
         textColorPrimary: {
-          color: white
+          color: dark
         },
       },
       MuiSvgIcon: {
@@ -238,9 +238,9 @@ const theme = createMuiTheme({
         },
       },
       MuiDialog: {
-        color: white,
+        color: dark,
         root: {
-          color: white,
+          color: dark,
           boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
         },
       },
@@ -248,7 +248,7 @@ const theme = createMuiTheme({
         paper: {
           backgroundColor: blueBG,
           marginTop: '50px',
-          color: white
+          color: dark
         }
       }
     },
