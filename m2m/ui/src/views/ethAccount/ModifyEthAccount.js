@@ -6,10 +6,10 @@ import Grid from '@material-ui/core/Grid';
 import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
-import Divider from '@material-ui/core/Divider';
 import MoneyStore from "../../stores/MoneyStore";
 import SessionStore from "../../stores/SessionStore";
-import SupernodeStore from "../../stores/SupernodeStore";
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import ModifyEthAccountForm from "./ModifyEthAccountForm";
 import NewEthAccountForm from "./NewEthAccountForm";
 import styles from "./EthAccountStyle";
@@ -101,33 +101,38 @@ class ModifyEthAccount extends Component {
       <Grid container spacing={24}>
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
-                <TitleBar className={this.props.classes.padding}>
-                  <TitleBarTitle title={i18n.t(`${packageNS}:menu.withdraw.eth_account`)}  />
-                </TitleBar>
-                {/* <Divider light={true}/>
-                <div className={this.props.classes.breadcrumb}>
-                <TitleBar>
-                  <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                  <TitleBarTitle title="/" className={this.props.classes.navText}/>
-                  <TitleBarTitle component={Link} to="#" title="ETH Account" className={this.props.classes.link}/>
-                </TitleBar>
-                </div> */}
-            </div>
+              <TitleBar className={this.props.classes.padding}>
+                <TitleBarTitle title={i18n.t(`${packageNS}:menu.withdraw.eth_account`)} />
+              </TitleBar>    
+              {/* <Divider light={true}/> */}
+              <div className={this.props.classes.between}>
+              <TitleBar>
+                <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
+                <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
+                <TitleBarTitle component={Link} to="#" title={i18n.t(`${packageNS}:menu.withdraw.eth_account`)} className={this.props.classes.link}/>
+              </TitleBar>
+              </div>
+          </div>
         </Grid>
         <Grid item xs={6} className={this.props.classes.column}>
-          {this.state.activeAccount &&
-            <ModifyEthAccountForm
-              submitLabel={i18n.t(`${packageNS}:menu.withdraw.confirm`)}
-              onSubmit={this.onSubmit}
-              activeAccount={this.state.activeAccount}
-            />
-          }
-          {!this.state.activeAccount &&  
-          <NewEthAccountForm
-            submitLabel={i18n.t(`${packageNS}:menu.withdraw.confirm`)}
-            onSubmit={this.onSubmit}
-          />
-          }
+          <Card className={this.props.classes.card}>
+            <CardContent>
+              {this.state.activeAccount &&
+                <ModifyEthAccountForm
+                  submitLabel={i18n.t(`${packageNS}:menu.withdraw.confirm`)}
+                  onSubmit={this.onSubmit}
+                  activeAccount={this.state.activeAccount}
+                />
+              }
+              {!this.state.activeAccount &&  
+                <NewEthAccountForm
+                  submitLabel={i18n.t(`${packageNS}:menu.withdraw.confirm`)}
+                  onSubmit={this.onSubmit}
+                />
+              }
+            </CardContent>
+          </Card>
+          
         </Grid>
         <Grid item xs={6}>
         </Grid>

@@ -1,6 +1,7 @@
 import React from "react";
 
 import TextField from '@material-ui/core/TextField';
+import Button from "@material-ui/core/Button";
 import i18n, { packageNS } from '../../i18n';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
@@ -20,11 +21,11 @@ class NewEthAccountForm extends FormComponent {
     });
   }
 
-  clear() {
+  clear = () => {
     this.setState({
         username: '',
         password: '',
-        newaccount: ''
+        createAccount: ''
       })
   }
 
@@ -37,13 +38,17 @@ class NewEthAccountForm extends FormComponent {
       password: this.state.password
     });
 
-    this.clear();
   }
 
   render() {
+    const extraButtons = <>
+      <Button  variant="outlined" color="inherit" onClick={this.clear} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.reset`)}</Button>
+    </>;
+
     return(
       <Form
         submitLabel={this.props.submitLabel}
+        extraButtons={extraButtons}
         onSubmit={this.onSubmit}
       >
         <TextField
@@ -51,6 +56,10 @@ class NewEthAccountForm extends FormComponent {
           label={i18n.t(`${packageNS}:menu.withdraw.new_account`)}
           margin="normal"
           value={this.state.createAccount}
+          variant="filled"
+          InputLabelProps={{
+            shrink: true
+          }}
           placeholder="0x0000000000000000000000000000000000000000" 
           onChange={this.onChange}
           inputProps={{
@@ -67,6 +76,10 @@ class NewEthAccountForm extends FormComponent {
           label={i18n.t(`${packageNS}:menu.withdraw.username`)}
           margin="normal"
           value={this.state.username}
+          variant="filled"
+          InputLabelProps={{
+            shrink: true
+          }}
           placeholder={i18n.t(`${packageNS}:menu.withdraw.type_here`)}
           onChange={this.onChange}
           autoComplete='off'
@@ -79,6 +92,10 @@ class NewEthAccountForm extends FormComponent {
           label={i18n.t(`${packageNS}:menu.withdraw.password`)}
           margin="normal"
           value={this.state.password}
+          variant="filled"
+          InputLabelProps={{
+            shrink: true
+          }}
           placeholder={i18n.t(`${packageNS}:menu.withdraw.type_here`)}
           onChange={this.onChange}
           type="password"
