@@ -21,7 +21,7 @@ const styles = {
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    color: "#FFFFFF",
+    //color: "#FFFFFF",
     width: "180px",
     margin: 20,
     // match with the menu
@@ -37,7 +37,7 @@ const customStyles = {
   }),
   menu: base => ({
     ...base,
-    background:"#101c4a",
+    background:'white',
     // override border radius to match the box
     borderRadius: 0,
     // kill the gap
@@ -47,7 +47,7 @@ const customStyles = {
   }),
   menuList: base => ({
     ...base,
-    background: "#1a2d6e",
+    background: 'white',
     // kill the white space on first and last option
     paddingTop: 0,
   }),

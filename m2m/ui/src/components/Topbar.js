@@ -7,6 +7,7 @@ import WalletStore from "../stores/WalletStore";
 import i18n, { packageNS } from '../i18n';
 import { SUPER_ADMIN } from "../util/M2mUtil";
 import SessionStore from "../stores/SessionStore";
+import DropdownMenuLanguage from "./DropdownMenuLanguage";
 
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
@@ -193,7 +194,11 @@ class Topbar extends Component {
                 <span> {balanceEl}</span>
               </button>
             </li>
-            
+
+            <li>
+              <DropdownMenuLanguage onChangeLanguage={this.onChangeLanguage} />
+            </li>
+
             <li>
               <ProfileDropdown profilePic={profilePic} menuItems={ProfileMenus} username={'Nik Patel'} />
             </li>
