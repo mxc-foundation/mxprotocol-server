@@ -301,8 +301,8 @@ class Sidebar extends Component {
         return (
             <React.Fragment>
                 <div className='left-side-menu' ref={node => this.menuNodeRef = node}>
-                    {!isCondensed && <PerfectScrollbar><UserProfile /><SideNavContent orgId={orgId} /></PerfectScrollbar>}
-                    {isCondensed && <UserProfile /> && <SideNavContent />}
+                    {!isCondensed && <PerfectScrollbar><SideNavContent orgId={orgId} /></PerfectScrollbar>}
+                    {isCondensed && <PerfectScrollbar><SideNavContent orgId={orgId} /></PerfectScrollbar>}
                 </div>
             </React.Fragment>
         );

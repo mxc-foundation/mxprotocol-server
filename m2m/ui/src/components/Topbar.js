@@ -11,7 +11,7 @@ import SessionStore from "../stores/SessionStore";
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import logoSm from '../assets/images/logo-sm.png';
-import logo from '../assets/images/logo_wallet_dark.png';
+import logo from '../assets/images/logos_wallet_light.png';
 import profilePic from '../assets/images/users/user-1.jpg';
 
 const Notifications = [{
