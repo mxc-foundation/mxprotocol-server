@@ -102,18 +102,18 @@ class GatewayLayout extends Component {
             <Grid item xs={12} className={this.props.classes.divider}>
             <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
-                    <TitleBarTitle title={i18n.t(`${packageNS}:menu.gateways.gateways`)} />
+                  <TitleBarTitle title={i18n.t(`${packageNS}:menu.gateways.gateways`)} />
                 </TitleBar>    
                 {/* <Divider light={true}/> */}
                 <div className={this.props.classes.between}>
                 <TitleBar>
-                    {/* <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                    <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                    <TitleBarTitle component={Link} to="#" title="Gateway" className={this.props.classes.link}/> */}
+                  <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
+                  <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
+                  <TitleBarTitle component={Link} to="#" title={i18n.t(`${packageNS}:menu.gateways.gateways`)} className={this.props.classes.link}/>
                 </TitleBar>
                 </div>
             </div>
-            </Grid>
+          </Grid>
         <Grid item xs={12} className={this.props.classes.divider}>
           <Grid item xs={6} className={this.props.classes.divider}>
             <GatewayForm

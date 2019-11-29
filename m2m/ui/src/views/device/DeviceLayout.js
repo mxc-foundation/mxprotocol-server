@@ -122,9 +122,9 @@ class DeviceLayout extends Component {
               {/* <Divider light={true}/> */}
               <div className={this.props.classes.between}>
               <TitleBar>
-                {/* <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
+                <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
                 <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
+                <TitleBarTitle component={Link} to="#" title={i18n.t(`${packageNS}:menu.devices.devices`)} className={this.props.classes.link}/>
               </TitleBar>
               <div className={this.props.classes.subTitle}>
                 {i18n.t(`${packageNS}:menu.devices.downlink_fee_mxc`)} {this.state.downlinkFee} MXC
