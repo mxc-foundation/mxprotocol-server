@@ -113,12 +113,27 @@ class App extends Component {
     this.state = {
       user: true,
       drawerOpen: true,
-      language: null
+      language: null,
+      width: window.innerWidth,
     };
 
     this.setDrawerOpen = this.setDrawerOpen.bind(this);
   }
-k
+
+  componentWillMount() {
+    window.addEventListener('resize', this.handleWindowSizeChange);
+  }
+  
+  // make sure to remove the listener
+  // when the component is not mounted anymore
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowSizeChange);
+  }
+
+  handleWindowSizeChange = () => {
+    this.setState({ width: window.innerWidth });
+  };
+
   componentDidMount() {
     SessionStore.on("change", () => {
       this.setState({
@@ -206,6 +221,9 @@ k
     let sideNav = null;
     let topbanner = null;
 
+    const { width } = this.state;
+    const isMobile = width <= 500;
+
     if (this.state.user !== null) {
       topNav = (
         <TopNav
@@ -234,7 +252,7 @@ k
               {/* {topNav} */}
               {topbanner}
               {sideNav}
-              <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
+              <div className={classNames(this.props.classes.main, !isMobile && this.props.classes.mainDrawerOpen )}>
                 <Grid container spacing={24}>
                   <Switch>
                     <Route path="/j/:data" component={RedirectedFromLora} />

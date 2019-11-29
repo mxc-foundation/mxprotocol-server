@@ -38,7 +38,6 @@ const LinkToLPWAN = ({children, ...otherProps}) =>
   <a href={getLoraHost()} {...otherProps}>{children}</a>;
 
 const SideNavContent = (props) => {
-    
     return <React.Fragment>
 
         <div id="sidebar-menu">
@@ -47,7 +46,7 @@ const SideNavContent = (props) => {
 
                 <li>
                     {/* <DropdownMenu default={ this.state.default } onChange={this.onChange} /> [edit] */}
-                    <DropdownMenu2 />
+                    <DropdownMenu2 default={ props.default } onChange={ props.onChange } />
                 </li> 
 
                 {/* <li>
@@ -190,10 +189,28 @@ const UserProfile = () => {
 class Sidebar extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            open: true,
+            //organization: {},
+            organizationID: '',
+            cacheCounter: 0,
+            version: '1.0.0'
+        };
+
         this.handleOtherClick = this.handleOtherClick.bind(this);
         this.initMenu = this.initMenu.bind(this);
     }
 
+    onChange = (e) => {
+        SessionStore.setOrganizationID(e.target.value);
+        
+        this.setState({
+          organizationID: e.target.value
+        })
+    
+        this.props.history.push(`/withdraw/${e.target.value}`);
+    }
     /**
      * Bind event
      */
@@ -254,8 +271,6 @@ class Sidebar extends Component {
         new MetisMenu("#side-menu");
         var links = document.getElementsByClassName('side-nav-link-ref');
         var matchingMenuItem = null;
-        console.log('links: ', links);
-        console.log('pathname: ', this.props);
         
         for (var i = 0; i < links.length; i++) {
             if (this.props.location.pathname === links[i].pathname) {
@@ -301,8 +316,8 @@ class Sidebar extends Component {
         return (
             <React.Fragment>
                 <div className='left-side-menu' ref={node => this.menuNodeRef = node}>
-                    {!isCondensed && <PerfectScrollbar><SideNavContent orgId={orgId} /></PerfectScrollbar>}
-                    {isCondensed && <PerfectScrollbar><SideNavContent orgId={orgId} /></PerfectScrollbar>}
+                    {!isCondensed && <PerfectScrollbar><SideNavContent orgId={orgId} onChange={this.onChange} /></PerfectScrollbar>}
+                    {isCondensed && <PerfectScrollbar><SideNavContent orgId={orgId} onChange={this.onChange} /></PerfectScrollbar>}
                 </div>
             </React.Fragment>
         );
