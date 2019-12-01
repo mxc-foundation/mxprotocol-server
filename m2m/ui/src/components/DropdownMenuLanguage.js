@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Select from "react-select";
+import Select, {components} from "react-select";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "../i18n";
@@ -60,6 +60,20 @@ const customStyles = {
     overflow: "hidden",
     textOverflow: "ellipsis"
   }),
+};
+
+
+const customSelectComponents = {
+  SingleValue: ({ children, ...props }) => {
+    console.log(props, props.getValue(), props.data);
+    const {code} = props.data || {};
+    return (<components.SingleValue {...props}>
+      {<FlagIcon
+              code={code}
+              size='1x'
+            />}
+    </components.SingleValue>);
+  }
 };
 
 class WithPromises extends Component {
@@ -142,6 +156,7 @@ class WithPromises extends Component {
           onChange={this.onChangeLanguage}
           options={SUPPORTED_LANGUAGES}
           value={selectedOption}
+          components={customSelectComponents}
         />
       </div>
     );

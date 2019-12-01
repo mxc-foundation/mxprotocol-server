@@ -125,3 +125,5 @@ class SupernodeHistory extends Component {
 }
 
 export default withStyles(styles)(withRouter(SupernodeHistory));
+/* const _ExportedHistory = withStyles(styles)(withRouter(SupernodeHistory));
+export default _ExportedHistory; */
