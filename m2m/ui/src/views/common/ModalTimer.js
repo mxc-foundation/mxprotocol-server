@@ -9,36 +9,33 @@ import LinearDeterminate from '../../components/LinearDeterminate';
 import i18n, { packageNS } from '../../i18n';
 
 export default function ConfirmDialog(props) {
-  const { open, onClose, title, description, onProgress } = props
+  const { open, onCancelProgress, title, description, onProgress } = props
 
   const agree = () => {
-    const { data, onSubmit } = props;
+    const { data, onConfirm } = props;
 
-    onSubmit(data);
+    onConfirm(data);
 
-    if (onClose) onClose();
+    if (onCancelProgress) onCancelProgress();
   }
 
   return (
       <Dialog
         open={open}
-        onClose={onClose}
+        onCancelProgress={onCancelProgress}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
-        {/* <LinearDeterminate onProgress={props.onProgress}/> */}
+        <LinearDeterminate onProgress={onProgress}/>
           <DialogContentText id="alert-dialog-description">
             {description}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} color="primary.main" autoFocus>
+          <Button onClick={onCancelProgress} color="primary.main" autoFocus>
             {i18n.t(`${packageNS}:menu.withdraw.cancel`)}
-          </Button>
-          <Button onClick={agree} color="primary.main">
-            {i18n.t(`${packageNS}:menu.withdraw.proceed`)}
           </Button>
         </DialogActions>
       </Dialog>
