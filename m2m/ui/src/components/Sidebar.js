@@ -10,6 +10,8 @@ import MetisMenu from 'metismenujs/dist/metismenujs';
 import profilePic from '../assets/images/users/user-1.jpg';
 import Divider from '@material-ui/core/Divider';
 import SessionStore from '../stores/SessionStore';
+import Admin from '../components/Admin';
+import NonAdmin from '../components/NonAdmin';
 import i18n, { packageNS } from '../i18n';
 
 const ProfileMenus = [{
@@ -55,7 +57,38 @@ const SideNavContent = (props) => {
                         <span> Dashboard </span>
                     </Link>
                 </li> */}
-               
+                <Admin>
+                    <li className="menu-title">Control Panel</li>
+
+                    <li>
+                        <Link to={`/control-panel/modify-account/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                            <i className="mdi mdi-ethereum"></i>
+                            <span> {i18n.t(`${packageNS}:menu.history.eth_account`)} </span>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link to={`/control-panel/history/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                            <i className="mdi mdi-history"></i>
+                            <span> {i18n.t(`${packageNS}:menu.history.history`)} </span>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link to={`/control-panel/system-settings/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                            <i className="mdi mdi-settings"></i>
+                            <span> {i18n.t(`${packageNS}:menu.settings.system_settings`)} </span>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link to={`/control-panel/withdraw/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                            <i className="ti-cloud-down"></i>
+                            <span> {i18n.t(`${packageNS}:menu.withdraw.withdraw`)} </span>
+                        </Link>
+                    </li>
+                </Admin>
+                <NonAdmin>
                 <li>
                     <Link to={`/withdraw/${props.orgId}`} className="waves-effect side-nav-link-ref">
                         {/* <i className="mdi mdi-cloud-print-outline"></i> */}
@@ -107,7 +140,7 @@ const SideNavContent = (props) => {
                         <span> {i18n.t(`${packageNS}:menu.staking.staking`)} </span>
                     </Link>
                 </li>
-
+                </NonAdmin>
                 <li>
                     <Divider />
                 </li>
