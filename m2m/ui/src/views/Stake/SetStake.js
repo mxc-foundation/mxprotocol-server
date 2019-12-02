@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import StakeForm from "./StakeForm";
 import StakeStore from "../../stores/StakeStore";
 import Button from "@material-ui/core/Button";
+import Modal from "../common/Modal";
 //import Button from "@material-ui/core/Button";
 import Spinner from "../../components/ScaleLoader";
 import Card from '@material-ui/core/Card';
@@ -32,6 +33,7 @@ class SetStake extends FormComponent {
     revRate: 0,
     isUnstake: false,
     info: '',
+    modal: null,
     infoStatus: 0,
     notice: {
       succeed: i18n.t(`${packageNS}:menu.messages.congratulations_stake_set`),
@@ -86,7 +88,7 @@ class SetStake extends FormComponent {
     })
   }
 
-  confirm = (e, amt) => {
+  onSubmit = (e, amt) => {
     const amount = parseFloat(amt.amount);
     const orgId = this.props.match.params.organizationID;
     const req = {
@@ -94,11 +96,19 @@ class SetStake extends FormComponent {
       amount
     }
 
+    this.setState({ modal: true });
+
     if (this.state.isUnstake) {
       this.unstake(e, orgId);
     } else {
       this.stake(e, req);
     }
+
+    this.setState({ modal: false });
+  } 
+
+  confirm = (e, amt) => {
+    this.setState({ modal: true });
   }
 
   stake = (e, req) => {
@@ -142,6 +152,15 @@ class SetStake extends FormComponent {
       infoStatus: 0
     });
   }
+  showModal = (modal) => {
+    this.setState({ modal });
+  }
+
+  handleCloseModal = () => {
+    this.setState({
+      modal: null
+    })
+  }
 
   handleOnclick = () => {
     this.props.history.push(`/history/${this.props.match.params.organizationID}/stake`);
@@ -181,6 +200,10 @@ class SetStake extends FormComponent {
             </div>
           </div>
         </Grid>
+
+        {this.state.modal && 
+          <Modal title={i18n.t(`${packageNS}:menu.messages.confirmation`)} description={i18n.t(`${packageNS}:menu.messages.stake_confirmation_text`)} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onSubmit={this.onSubmit} />}
+
         <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pRight}>
           <Card className={this.props.classes.card}>
             <CardContent>
@@ -206,8 +229,8 @@ class SetStake extends FormComponent {
                 {this.state.info}
               </Typography>
               <div className={this.props.classes.between}>
-                <ExtLink dismissOn={this.dismissOn} for={'local'} context={i18n.t(`${packageNS}:menu.common.dismiss`)} />&nbsp;&nbsp;&nbsp;
-                        <ExtLink to={EXT_URL_STAKE} context={i18n.t(`${packageNS}:menu.common.learn_more`)} />
+                {/* <ExtLink dismissOn={this.dismissOn} for={'local'} context={i18n.t(`${packageNS}:menu.common.dismiss`)} />&nbsp;&nbsp;&nbsp; */}
+                <ExtLink to={EXT_URL_STAKE} context={i18n.t(`${packageNS}:menu.common.learn_more`)} />
               </div>
             </div>
           </div>}

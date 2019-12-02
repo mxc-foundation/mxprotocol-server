@@ -149,6 +149,7 @@
       "history": "HISTORY",
       "withdraw_stake": "Withdraw Stake",
       "congratulations_stake_set": "Congratulations! Your stake is set.",
+      "stake_confirmation_text": "Once you make stake, You can not unstake whithin 30 days. Do you really want to proceed?",
       "unstake_successful": "Unstake successful. MXC has been added to your M2M Wallet balance.",
       "staking_enhances": "Staking enhances data trade by giving all holders a fair way to take part in the network.",
       "close_to_acquiring": "You are close to acquiring your monthly revenue. If you unstake now, you will miss it."
