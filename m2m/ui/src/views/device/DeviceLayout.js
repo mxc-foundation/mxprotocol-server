@@ -114,7 +114,7 @@ class DeviceLayout extends Component {
   render() {
     return (
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
-        <Grid item xs={12} className={this.props.classes.divider}>
+        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.devices.devices`)} />
@@ -132,8 +132,7 @@ class DeviceLayout extends Component {
               </div>
           </div>
         </Grid>
-        <Grid item xs={12} className={this.props.classes.divider}>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={12} lg={6} className={this.props.classes.divider}>
           <DeviceForm
             submitLabel={i18n.t(`${packageNS}:menu.devices.devices`)}
             onSubmit={this.onSubmit}
@@ -142,7 +141,6 @@ class DeviceLayout extends Component {
             onSelectChange={this.onSelectChange}
             onSwitchChange={this.onSwitchChange}
           />
-          </Grid>
         </Grid>
       </Grid>
     );

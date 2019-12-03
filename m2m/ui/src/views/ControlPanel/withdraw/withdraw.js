@@ -38,7 +38,8 @@ class SuperAdminWithdraw extends Component {
                             opacity: 0.7,
                             "&:hover": {
                                 opacity: 1,
-                            }
+                            },
+                            margin: 16
                         }
                     } className={this.props.classes.link} >
                         Coming soon...

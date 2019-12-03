@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = {
   clear: {
     clear: "both",
+    margin: '0px 16px 0px 16px',
   },
 
   left: {

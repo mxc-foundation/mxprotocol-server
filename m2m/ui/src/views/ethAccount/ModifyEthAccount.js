@@ -99,7 +99,7 @@ class ModifyEthAccount extends Component {
   render() {
     return(
       <Grid container spacing={24}>
-        <Grid item xs={12} className={this.props.classes.divider}>
+        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.withdraw.eth_account`)} />
@@ -114,9 +114,9 @@ class ModifyEthAccount extends Component {
               </div>
           </div>
         </Grid>
-        <Grid item xs={6} className={this.props.classes.column}>
-          <Card className={this.props.classes.card}>
-            <CardContent>
+        <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>
+          {/* <Card className={this.props.classes.card}>
+            <CardContent> */}
               {this.state.activeAccount &&
                 <ModifyEthAccountForm
                   submitLabel={i18n.t(`${packageNS}:menu.withdraw.confirm`)}
@@ -130,8 +130,8 @@ class ModifyEthAccount extends Component {
                   onSubmit={this.onSubmit}
                 />
               }
-            </CardContent>
-          </Card>
+            {/* </CardContent>
+          </Card> */}
           
         </Grid>
         <Grid item xs={6}>

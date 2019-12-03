@@ -117,7 +117,7 @@ class SystemSettings extends Component {
 		return (
 			<Grid container spacing={3} className={this.props.classes.root}>
 				<Grid item xs={12}>
-					<Grid item container xs={6} direction="column">
+					<Grid item container xs={12} md={12} lg={6}  direction="column">
 						<TitleBar>
 							<TitleBarTitle title={i18n.t(`${packageNS}:menu.settings.system_settings`)} />
 						</TitleBar>
@@ -148,7 +148,7 @@ class SystemSettings extends Component {
 						</div>
 					</Grid>
 
-					<Grid item container direction="column" xs={6} className={this.props.classes.settingsForm}>
+					<Grid item container direction="column" xs={12} md={12} lg={6} className={this.props.classes.settingsForm}>
 						<TextField
 							id="withdrawFee"
 							label={i18n.t(`${packageNS}:menu.settings.withdraw_fee`)}
@@ -213,7 +213,7 @@ class SystemSettings extends Component {
 							onChange={(e) => this.handleChange('lbWarning', e)}
 						/>
 					</Grid>
-					<Grid container item xs={6} direction="row" justify="flex-end" spacing={2}>
+					<Grid container item xs={12} md={12} lg={6} direction="row" justify="flex-end" spacing={2}>
 						<Button variant="contained" className={this.props.classes.Button} onClick={this.loadSettings}>
 							{i18n.t(`${packageNS}:menu.settings.cancel`)}
 						</Button>

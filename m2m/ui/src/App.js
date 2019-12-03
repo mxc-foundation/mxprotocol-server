@@ -68,7 +68,8 @@ const styles = {
   },
   main: {
     width: "100%",
-    padding: 2 * 24,
+    /* padding: 16, */
+    padding: 0, 
     paddingTop: 95,
     flex: 1,
   },

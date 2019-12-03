@@ -97,14 +97,14 @@ class Topup extends Component {
           </div>
         </Grid>
         <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>
-          <Card className={this.props.classes.card}>
-            <CardContent>
+          {/* <Card className={this.props.classes.card}>
+            <CardContent> */}
               <TopupForm
                 reps={this.state.accounts} {...this.props}
                 orgId ={this.props.match.params.organizationID} 
               />
-            </CardContent>
-          </Card>
+            {/* </CardContent>
+          </Card> */}
         </Grid>
         <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>
           <InfoCard orgId={this.props.match.params.organizationID} />

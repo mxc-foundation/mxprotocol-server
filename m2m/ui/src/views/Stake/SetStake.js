@@ -224,7 +224,7 @@ class SetStake extends FormComponent {
                 <TitleBarTitle component={Link} to="#" title={title} className={this.props.classes.link} />
               </TitleBar>
 
-              <Button variant="outlined" color="inherit" onClick={this.handleOnclick} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.messages.history`)}</Button>
+              {/* <Button variant="outlined" color="inherit" onClick={this.handleOnclick} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.messages.history`)}</Button> */}
             </div>
           </div>
         </Grid>
@@ -235,35 +235,24 @@ class SetStake extends FormComponent {
         {this.state.modalTimer &&
           <ModalTimer title={i18n.t(`${packageNS}:menu.messages.stake_proc_tit`)} description={i18n.t(`${packageNS}:menu.messages.stake_proc_desc`)} onProgress={this.handleProgress} onCancelProgress={this.handleProgress} onProcClose={this.handleCloseProcModal} open={!!this.state.modalTimer} data={this.state.modalTimer} onProgress={this.handleProgress} onSubmit={this.onSubmit} />}
 
-        <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pRight}>
-          <Card className={this.props.classes.card}>
-            <CardContent>
+        <Grid item xs={12} md={12} lg={6} className={this.props.classes.pRight}>
+          {/* <Card className={this.props.classes.card}>
+            <CardContent> */}
               <StakeForm isUnstake={this.state.isUnstake} label={this.state.isUnstake ? i18n.t(`${packageNS}:menu.messages.withdraw_stake`) : i18n.t(`${packageNS}:menu.messages.set_stake`)} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirm={this.confirm} />
-            </CardContent>
-          </Card>
+            {/* </CardContent>
+          </Card> */}
 
         </Grid>
-        <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pLeft}>
-          <InfoCard />
-          {/* <div className={clsx(this.props.classes.urStake, this.props.classes.between)}>
+        <Grid item xs={12} md={12} lg={6} className={this.props.classes.pLeft}>
+          <div className={infoBoxCss[this.state.infoStatus]}>
             <Typography gutterBottom>
-              {i18n.t(`${packageNS}:menu.messages.your_stake_is`)}
-            </Typography>&nbsp;
-                    <Typography gutterBottom>
-              {this.state.amount} {MXC}
-            </Typography> 
-            
-          </div>*/}
-          
-            <div className={infoBoxCss[this.state.infoStatus]}>
-              <Typography gutterBottom>
-                {this.state.info}
-              </Typography>
-              <div className={this.props.classes.between}>
-                <ExtLink to={EXT_URL_STAKE} context={i18n.t(`${packageNS}:menu.common.learn_more`)} />
-              </div>
+              {this.state.info}
+            </Typography>
+            <div className={this.props.classes.between}>
+              <ExtLink to={EXT_URL_STAKE} context={i18n.t(`${packageNS}:menu.common.learn_more`)} />
             </div>
-          
+          </div>
+          <InfoCard />
         </Grid>
       </Grid>
     );
