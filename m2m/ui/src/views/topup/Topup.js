@@ -85,15 +85,7 @@ class Topup extends Component {
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.topup.topup`)} />
-              </TitleBar>    
-              {/* <Divider light={true}/> */}
-              <div className={this.props.classes.between}>
-              <TitleBar>
-                <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                <TitleBarTitle component={Link} to="#" title="Topup" className={this.props.classes.link}/>
               </TitleBar>
-              </div>
           </div>
         </Grid>
         <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>

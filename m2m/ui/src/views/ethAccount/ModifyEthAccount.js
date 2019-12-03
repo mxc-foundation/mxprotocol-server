@@ -103,15 +103,7 @@ class ModifyEthAccount extends Component {
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.withdraw.eth_account`)} />
-              </TitleBar>    
-              {/* <Divider light={true}/> */}
-              <div className={this.props.classes.between}>
-              <TitleBar>
-                <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                <TitleBarTitle component={Link} to="#" title={i18n.t(`${packageNS}:menu.withdraw.eth_account`)} className={this.props.classes.link}/>
               </TitleBar>
-              </div>
           </div>
         </Grid>
         <Grid item xs={6} className={this.props.classes.column}>

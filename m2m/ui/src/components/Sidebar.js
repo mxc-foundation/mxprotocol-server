@@ -57,7 +57,7 @@ const SideNavContent = (props) => {
                     <li>
                         <Link to={`/control-panel/modify-account/${props.orgId}`} className="waves-effect side-nav-link-ref">
                             <i className="mdi mdi-ethereum"></i>
-                            <span> {i18n.t(`${packageNS}:menu.history.eth_account`)} </span>
+                            <span> {i18n.t(`${packageNS}:menu.eth_account.eth_account`)} </span>
                         </Link>
                     </li>
 

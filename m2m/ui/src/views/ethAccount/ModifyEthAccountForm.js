@@ -51,14 +51,14 @@ class ModifyEthAccountForm extends FormComponent {
       return(<div></div>);
     }
 
-    const extraButtons = <>
+/*    const extraButtons = <>
       <Button  variant="outlined" color="inherit" onClick={this.clear} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.reset`)}</Button>
-    </>;
+    </>;*/
     
     return(
       <Form
         submitLabel={this.props.submitLabel}
-        extraButtons={extraButtons}
+/*        extraButtons={extraButtons}*/
         onSubmit={this.submit}
       >
         <TextField

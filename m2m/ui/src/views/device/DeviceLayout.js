@@ -118,30 +118,22 @@ class DeviceLayout extends Component {
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.devices.devices`)} />
-              </TitleBar>    
-              {/* <Divider light={true}/> */}
-              <div className={this.props.classes.between}>
-              <TitleBar>
-                <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                <TitleBarTitle component={Link} to="#" title={i18n.t(`${packageNS}:menu.devices.devices`)} className={this.props.classes.link}/>
               </TitleBar>
-              <div className={this.props.classes.subTitle}>
+{/*              <div className={this.props.classes.subTitle}>
                 {i18n.t(`${packageNS}:menu.devices.downlink_fee_mxc`)} {this.state.downlinkFee} MXC
-              </div>
-              </div>
+              </div>*/}
           </div>
         </Grid>
         <Grid item xs={12} className={this.props.classes.divider}>
-        <Grid item xs={6}>
-          <DeviceForm
-            submitLabel={i18n.t(`${packageNS}:menu.devices.devices`)}
-            onSubmit={this.onSubmit}
-            downlinkFee={this.state.downlinkFee}
-            haveGateway={this.state.haveGateway}
-            onSelectChange={this.onSelectChange}
-            onSwitchChange={this.onSwitchChange}
-          />
+          <Grid item xs={6} className={this.props.classes.divider}>
+            <DeviceForm
+              submitLabel={i18n.t(`${packageNS}:menu.devices.devices`)}
+              onSubmit={this.onSubmit}
+              downlinkFee={this.state.downlinkFee}
+              haveGateway={this.state.haveGateway}
+              onSelectChange={this.onSelectChange}
+              onSwitchChange={this.onSwitchChange}
+            />
           </Grid>
         </Grid>
       </Grid>

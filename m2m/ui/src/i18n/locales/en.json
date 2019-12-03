@@ -30,7 +30,7 @@
     "history": {
       "history": "History",
       "transactions": "TRANSACTIONS",
-      "eth_account": "ETH ACCOUNT",
+      "eth_account": "ETH Account",
       "network_activity": "NETWORK ACTIVITY",
       "from": "From",
       "to": "To",

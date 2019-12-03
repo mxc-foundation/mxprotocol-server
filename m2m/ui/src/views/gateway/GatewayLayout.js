@@ -97,21 +97,13 @@ class GatewayLayout extends Component {
   render() {
     return (
         <Grid container spacing={24} className={this.props.classes.backgroundColor}>
-            {this.state.modal && 
-            <Modal title={i18n.t(`${packageNS}:menu.messages.confirmation`)} description={i18n.t(`${packageNS}:menu.messages.confirmation_text`)} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
+{/*            {this.state.modal &&
+            <Modal title={i18n.t(`${packageNS}:menu.messages.confirmation`)} description={i18n.t(`${packageNS}:menu.messages.confirmation_text`)} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}*/}
             <Grid item xs={12} className={this.props.classes.divider}>
             <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
                   <TitleBarTitle title={i18n.t(`${packageNS}:menu.gateways.gateways`)} />
-                </TitleBar>    
-                {/* <Divider light={true}/> */}
-                <div className={this.props.classes.between}>
-                <TitleBar>
-                  <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                  <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                  <TitleBarTitle component={Link} to="#" title={i18n.t(`${packageNS}:menu.gateways.gateways`)} className={this.props.classes.link}/>
                 </TitleBar>
-                </div>
             </div>
           </Grid>
         <Grid item xs={12} className={this.props.classes.divider}>
