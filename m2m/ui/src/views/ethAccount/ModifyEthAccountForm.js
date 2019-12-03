@@ -114,6 +114,7 @@ class ModifyEthAccountForm extends FormComponent {
           label={i18n.t(`${packageNS}:menu.eth_account.password`)}
           margin="normal"
           value={this.state.password}
+          variant="filled"
           placeholder={i18n.t(`${packageNS}:menu.withdraw.type_here`)}
           onChange={this.onChange}
           /* inputProps={{

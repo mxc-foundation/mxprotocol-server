@@ -234,7 +234,7 @@ const theme = createMuiTheme({
       },
       MuiSvgIcon: {
         root: {
-          fill: '#F9FAFC80',
+          fill: dark,
         },
       },
       MuiDialog: {

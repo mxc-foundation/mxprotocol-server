@@ -222,7 +222,7 @@ class App extends Component {
     let topbanner = null;
 
     const { width } = this.state;
-    const isMobile = width <= 500;
+    const isMobile = width <= 800;
 
     if (this.state.user !== null) {
       topNav = (

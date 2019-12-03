@@ -102,7 +102,7 @@ class SuperNodeEth extends Component {
             <Grid item xs={12} className={this.props.classes.divider}>
               <div className={this.props.classes.TitleBar}>
                     <TitleBar className={this.props.classes.padding}>
-                      <TitleBarTitle title={i18n.t(`${packageNS}:menu.settings.system_settings`)} />
+                      <TitleBarTitle title={i18n.t(`${packageNS}:menu.eth_account.eth_account`)} />
                     </TitleBar>
 
                 </div>
