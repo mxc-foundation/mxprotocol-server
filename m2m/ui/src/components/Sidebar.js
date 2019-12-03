@@ -88,7 +88,7 @@ const SideNavContent = (props) => {
                         </Link>
                     </li>
                 </Admin>
-                <NonAdmin>
+                {/* <NonAdmin> */}
                 <li>
                     <Link to={`/withdraw/${props.orgId}`} className="waves-effect side-nav-link-ref">
                         {/* <i className="mdi mdi-cloud-print-outline"></i> */}
@@ -140,7 +140,7 @@ const SideNavContent = (props) => {
                         <span> {i18n.t(`${packageNS}:menu.staking.staking`)} </span>
                     </Link>
                 </li>
-                </NonAdmin>
+                {/* </NonAdmin> */}
                 <li>
                     <Divider />
                 </li>

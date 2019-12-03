@@ -33,8 +33,8 @@ class SetStake extends FormComponent {
 
   state = {
     amount: 0,
-    amountToStake: 0,
     revRate: 0,
+    event: null,
     isUnstake: false,
     info: '',
     modal: null,
@@ -45,7 +45,6 @@ class SetStake extends FormComponent {
       unstakeSucceed: i18n.t(`${packageNS}:menu.messages.unstake_successful`),
       warning: i18n.t(`${packageNS}:menu.messages.close_to_acquiring`)
     },
-    dismissOn: true
   }
 
   componentDidMount() {
@@ -61,16 +60,19 @@ class SetStake extends FormComponent {
     resp.then((res) => {
       let amount = 0;
       let isUnstake = false;
+
       if (res.actStake !== null) {
         amount = res.actStake.Amount;
         isUnstake = true;
       }
+
       this.setState({
         amount,
         isUnstake,
         info: i18n.t(`${packageNS}:menu.messages.staking_enhances`)
       })
     })
+
   }
 
   loadStakeTextTranslation = () => {
@@ -79,11 +81,9 @@ class SetStake extends FormComponent {
     })
   }
 
-  onChange = (event) => {
-    const { id, value } = event.target;
-
+  onChange = (event, name) => {
     this.setState({
-      [id]: value
+      [name]: event.target.value
     });
   }
 
@@ -104,31 +104,40 @@ class SetStake extends FormComponent {
     this.setState({ modal: true });
 
     if (this.state.isUnstake) {
-      this.unstake(orgId);
+      this.unstake(this.state.event, orgId);
     } else {
-      this.stake(req);
+      this.stake(this.state.event, req);
     }
 
     this.setState({ modal: false });
-  } 
+  }
 
-  confirm = (e, amt) => {
-    if(amt.amount === 0){
+  confirm = (e) => {
+    if (this.state.amount === 0) {
       return false;
     }
-    this.setState({ 
-      modal: true, 
-      amountToStake: amt.amount
-    });
+
+    if (this.state.isUnstake) {
+      const orgId = this.props.match.params.organizationID;
+      this.unstake(e, orgId);
+    } else {
+      this.setState({
+        modal: true,
+        event: e,
+        amount: this.state.amount
+      });
+    }
   }
 
   openModalTimer = (data) => {
-    this.setState({ modalTimer: true,
-                    modal: null });
+    this.setState({
+      modalTimer: true,
+      modal: null
+    });
   }
 
-  stake = (req) => {
-    //e.preventDefault();
+  stake = (e, req) => {
+    e.preventDefault();
     const resp = StakeStore.stake(req);
     resp.then((res) => {
       if (res.body.status === 'Stake successful.') {
@@ -148,8 +157,8 @@ class SetStake extends FormComponent {
     })
   }
 
-  unstake = (orgId) => {
-    //e.preventDefault();
+  unstake = (e, orgId) => {
+    e.preventDefault();
     const resp = StakeStore.unstake(orgId);
     resp.then((res) => {
       this.setState({
@@ -186,19 +195,9 @@ class SetStake extends FormComponent {
     this.setState({
       modalTimer: null
     })
-    if(oldCompleted === 100){
-      this.onSubmit(this.state.amountToStake);
+    if (oldCompleted === 100) {
+      this.onSubmit(this.state.amount);
     }
-  }
-
-  handleCancel = () => {
-    alert(12);
-  }
-
-  dismissOn = () => {
-    this.setState({
-      dismissOn: false
-    });
   }
 
   render() {
@@ -230,10 +229,10 @@ class SetStake extends FormComponent {
           </div>
         </Grid>
 
-        {this.state.modal && 
+        {this.state.modal &&
           <Modal title={i18n.t(`${packageNS}:menu.messages.confirmation`)} description={i18n.t(`${packageNS}:menu.messages.stake_confirmation_text`)} onProgress={this.handleProgress} onCancelProgress={this.handleCancel} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onSubmit={this.openModalTimer} />}
 
-        {this.state.modalTimer && 
+        {this.state.modalTimer &&
           <ModalTimer title={i18n.t(`${packageNS}:menu.messages.stake_proc_tit`)} description={i18n.t(`${packageNS}:menu.messages.stake_proc_desc`)} onProgress={this.handleProgress} onCancelProgress={this.handleProgress} onProcClose={this.handleCloseProcModal} open={!!this.state.modalTimer} data={this.state.modalTimer} onProgress={this.handleProgress} onSubmit={this.onSubmit} />}
 
         <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pRight}>
@@ -245,7 +244,7 @@ class SetStake extends FormComponent {
 
         </Grid>
         <Grid item xs={6} lg={6} spacing={24} className={this.props.classes.pLeft}>
-        <InfoCard />
+          <InfoCard />
           {/* <div className={clsx(this.props.classes.urStake, this.props.classes.between)}>
             <Typography gutterBottom>
               {i18n.t(`${packageNS}:menu.messages.your_stake_is`)}
@@ -255,17 +254,16 @@ class SetStake extends FormComponent {
             </Typography> 
             
           </div>*/}
-          {this.state.dismissOn && <div>
+          
             <div className={infoBoxCss[this.state.infoStatus]}>
-              <Typography  /* className={this.props.classes.title} */ gutterBottom>
+              <Typography gutterBottom>
                 {this.state.info}
               </Typography>
               <div className={this.props.classes.between}>
-                {/* <ExtLink dismissOn={this.dismissOn} for={'local'} context={i18n.t(`${packageNS}:menu.common.dismiss`)} />&nbsp;&nbsp;&nbsp; */}
                 <ExtLink to={EXT_URL_STAKE} context={i18n.t(`${packageNS}:menu.common.learn_more`)} />
               </div>
             </div>
-          </div>}
+          
         </Grid>
       </Grid>
     );
