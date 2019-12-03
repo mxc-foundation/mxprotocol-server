@@ -127,6 +127,8 @@
       "status": "Status",
       "date": "Date"
     },
+    "control_panel": "Control Panel",
+    "organization_list": "Organization List",
     "nb_iot_server": "NB-IoT Server",
     "lpwan_server": "LPWAN Server",
     "powered_by": "Powered by",

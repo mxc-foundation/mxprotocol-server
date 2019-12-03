@@ -127,6 +127,8 @@
       "status": "상태",
       "date": "데이트"
     },
+    "control_panel": "제어판",
+    "organization_list": "소속기관 리스트",
     "nb_iot_server": "NB-IoT 서버",
     "lpwan_server": "LPWAN 서버",
     "powered_by": "Powered by",

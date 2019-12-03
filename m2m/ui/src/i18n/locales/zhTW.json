@@ -126,6 +126,8 @@
       "status": "狀態",
       "date": "日期"
     },
+    "control_panel": "控制面板",
+    "organization_list": "組織列表",
     "nb_iot_server": "NB-IoT 伺服器",
     "lpwan_server": "LPWAN 伺服器",
     "powered_by": "由 MXC 極域技術支持",
