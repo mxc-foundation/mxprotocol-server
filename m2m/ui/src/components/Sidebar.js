@@ -13,8 +13,7 @@ import SessionStore from '../stores/SessionStore';
 import Admin from '../components/Admin';
 import NonAdmin from '../components/NonAdmin';
 import i18n, { packageNS } from '../i18n';
-import ServerInfoStore from "../stores/ServerInfoStore";
-import ProfileStore from "../stores/ProfileStore";
+import ServerInfoStore from '../stores/ServerInfoStore';
 
 const ProfileMenus = [{
     label: 'My Account',

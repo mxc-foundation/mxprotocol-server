@@ -140,7 +140,7 @@ class SetStake extends FormComponent {
     e.preventDefault();
     const resp = StakeStore.stake(req);
     resp.then((res) => {
-      if (res.body.status === 'Stake successful.') {
+      if (res.body.status === i18n.t(`${packageNS}:menu.staking.stake_success`)) {
         this.setState({
           isUnstake: true,
           info: i18n.t(`${packageNS}:menu.messages.congratulations_stake_set`),

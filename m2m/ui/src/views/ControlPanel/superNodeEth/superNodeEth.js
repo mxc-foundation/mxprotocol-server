@@ -12,8 +12,6 @@ import NewEthAccountForm from "../../ethAccount/NewEthAccountForm";
 import styles from "../../ethAccount/EthAccountStyle"
 import { ETHER } from "../../../util/Coin-type";
 import { SUPER_ADMIN } from "../../../util/M2mUtil";
-import CardContent from "@material-ui/core/CardContent";
-import Card from "@material-ui/core/Card";
 
 
 class SuperNodeEth extends Component {
@@ -94,35 +92,31 @@ class SuperNodeEth extends Component {
       }
     } 
 
-  render() {
-    return(
-      <Grid container spacing={24}>
-        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
-          <div className={this.props.classes.TitleBar}>
-              <TitleBar className={this.props.classes.padding}>
-                <TitleBarTitle title={i18n.t(`${packageNS}:menu.eth_account.eth_account`)} />
-              </TitleBar>
-          </div>
-        </Grid>
-        <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>
-          <Card className={this.props.classes.card}>
-            <CardContent>
-              {this.state.activeAccount &&
-                <ModifyEthAccountForm
-                  submitLabel={i18n.t(`${packageNS}:menu.eth_account.confirm`)}
-                  onSubmit={this.onSubmit}
-                  activeAccount={this.state.activeAccount}
-                />
-              }
-              {!this.state.activeAccount &&
-                <NewEthAccountForm
-                  submitLabel={i18n.t(`${packageNS}:menu.eth_account.confirm`)}
-                  onSubmit={this.onSubmit}
-                />
-              }
-            </CardContent>
-          </Card>
+    render() {
+        return(
+          <Grid container spacing={24}>
+            <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
+              <div className={this.props.classes.TitleBar}>
+                    <TitleBar className={this.props.classes.padding}>
+                      <TitleBarTitle title={i18n.t(`${packageNS}:menu.eth_account.eth_account`)} />
+                    </TitleBar>
 
+                </div>
+            </Grid>
+            <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>
+          {this.state.activeAccount &&
+            <ModifyEthAccountForm
+              submitLabel={i18n.t(`${packageNS}:menu.common.confirm`)}
+              onSubmit={this.onSubmit}
+              activeAccount={this.state.activeAccount}
+            />
+          }
+          {!this.state.activeAccount &&  
+          <NewEthAccountForm
+            submitLabel={i18n.t(`${packageNS}:menu.common.confirm`)}
+            onSubmit={this.onSubmit}
+          />
+          }
         </Grid>
         <Grid item xs={12} md={12} lg={6}>
         </Grid>
