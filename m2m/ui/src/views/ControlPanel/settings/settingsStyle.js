@@ -1,18 +1,6 @@
 import theme from "../../../theme";
 
 const settingsStyle = {
-    root:{
-        color:'#ffffff',
-        
-       
-
-    },
-    TextField:{
-      '& input':{
-         color:'#FFFFFF'
-      }
-     
-  },
     tabs: {
         borderBottom: "1px solid " + theme.palette.divider,
         height: "49px",
@@ -25,25 +13,13 @@ const settingsStyle = {
         width: '50%',
         light: true,
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        padding: '0px 0px 50px 0px' 
       },
       card: {
-      
+        minWidth: 180,
         width: '100%',
-        backgroundColor: "#0C027060",
-        color:"#ffffff",
-      },
-      cardTable:{
-          '& td':{
-           
-            borderBottom:'none',
-            '& span':{
-                color:'#00FFD9',
-                fontSize:'18px',
-                fontWeight:'bold'
-            }
-          }
-        
+        backgroundColor: 'white',
       },
       divider: {
         padding: 0,
@@ -62,6 +38,7 @@ const settingsStyle = {
         fontWeight: "bold",
         fontSize: 12,
         color: theme.palette.textSecondary.main,
+        cursor: "pointer",
         opacity: 0.7,
           "&:hover": {
             opacity: 1,

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
-
 import Grid from '@material-ui/core/Grid';
 import i18n, { packageNS } from '../../i18n';
 import TitleBar from "../../components/TitleBar";
@@ -14,7 +13,6 @@ import ModifyEthAccountForm from "./ModifyEthAccountForm";
 import NewEthAccountForm from "./NewEthAccountForm";
 import styles from "./EthAccountStyle";
 import { ETHER } from "../../util/Coin-type";
-import { SUPER_ADMIN } from "../../util/M2mUtil";
 
 
 class ModifyEthAccount extends Component {
@@ -57,7 +55,7 @@ class ModifyEthAccount extends Component {
           if(resp){
             resolve(resp);
           } else {
-            alert("inccorect username or password.");
+            alert(`${i18n.t(`${packageNS}:menu.withdraw.incorrect_username_or_password`)}`);
             return false;
           }
         })
@@ -102,7 +100,7 @@ class ModifyEthAccount extends Component {
         <Grid item xs={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
-                <TitleBarTitle title={i18n.t(`${packageNS}:menu.withdraw.eth_account`)} />
+                <TitleBarTitle title={i18n.t(`${packageNS}:menu.eth_account.eth_account`)} />
               </TitleBar>
           </div>
         </Grid>
@@ -111,14 +109,14 @@ class ModifyEthAccount extends Component {
             <CardContent>
               {this.state.activeAccount &&
                 <ModifyEthAccountForm
-                  submitLabel={i18n.t(`${packageNS}:menu.withdraw.confirm`)}
+                  submitLabel={i18n.t(`${packageNS}:menu.eth_account.confirm`)}
                   onSubmit={this.onSubmit}
                   activeAccount={this.state.activeAccount}
                 />
               }
               {!this.state.activeAccount &&  
                 <NewEthAccountForm
-                  submitLabel={i18n.t(`${packageNS}:menu.withdraw.confirm`)}
+                  submitLabel={i18n.t(`${packageNS}:menu.eth_account.confirm`)}
                   onSubmit={this.onSubmit}
                 />
               }
