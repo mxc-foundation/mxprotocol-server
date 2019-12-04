@@ -31,7 +31,6 @@ low_balance_threshold={{ .UserNotification.LowBalanceThreshold }}
 low_balance_threshold={{ .SysNotification.LowBalanceThreshold }}
 
 [pricing]
-downlink_package_price={{ .Pricing.DownLinkPkgPrice }}
 
 [accounting]
 interval_min="{{ .Accounting.IntervalMin }}"
@@ -136,6 +135,7 @@ check_account_seconds={{ .SuperNode.CheckAccountSeconds }}
 external_currency_abv={{ .SuperNode.ExtCurrAbv }}
 ether_test_net={{ .SuperNode.TestNet }}
 down_link_price={{ .SuperNode.DlPrice}}
+dl_pkt_tx_sn_income_ratio = {{ .SuperNode.DlPktTxSnIncomeRatio}}
 
 [paymentserver]
 payment_service_address={{ .PaymentServer.PaymentServiceAddress }}
