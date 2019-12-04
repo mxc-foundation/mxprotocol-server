@@ -180,7 +180,10 @@ func (*stakeRevenueInterface) GetStakeRevenueHistory(walletId int64, offset int6
 			s.id = sr.fk_stake_revenue_period
 		WHERE 
 			s.fk_wallet = $1
-		ORDER BY sr.id DESC
+		ORDER BY 
+			sr.id DESC,
+			unstake_time DESC, 
+			s.start_stake_time DESC
 		LIMIT $2 
 		OFFSET $3
 		;
