@@ -108,7 +108,7 @@ class GatewayForm extends Component {
               <TableRow>
                 <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.gateways.gateway`)}</TableCell>
                 <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.gateways.status`)}</TableCell>
-                <TableCell align={'right'}>{i18n.t(`${packageNS}:menu.gateways.downlink_price`)}</TableCell>
+                <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.gateways.downlink_price`)}</TableCell>
                 <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.gateways.mode`)}</TableCell>
               </TableRow>
             }

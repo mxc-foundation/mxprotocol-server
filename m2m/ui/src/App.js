@@ -68,7 +68,8 @@ const styles = {
   },
   main: {
     width: "100%",
-    padding: 2 * 24,
+    /* padding: 16, */
+    padding: 0, 
     paddingTop: 95,
     flex: 1,
   },
@@ -97,7 +98,6 @@ class RedirectedFromLora extends Component {
 
   render() {
     const { match: { params: { data: dataString } }} = this.props;
-
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
     const { path } = data;
     SessionStore.initProfile(data);
@@ -113,12 +113,27 @@ class App extends Component {
     this.state = {
       user: true,
       drawerOpen: true,
-      language: null
+      language: null,
+      width: window.innerWidth,
     };
 
     this.setDrawerOpen = this.setDrawerOpen.bind(this);
   }
-k
+
+  componentWillMount() {
+    window.addEventListener('resize', this.handleWindowSizeChange);
+  }
+  
+  // make sure to remove the listener
+  // when the component is not mounted anymore
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowSizeChange);
+  }
+
+  handleWindowSizeChange = () => {
+    this.setState({ width: window.innerWidth });
+  };
+
   componentDidMount() {
     SessionStore.on("change", () => {
       this.setState({
@@ -206,6 +221,9 @@ k
     let sideNav = null;
     let topbanner = null;
 
+    const { width } = this.state;
+    const isMobile = width <= 800;
+
     if (this.state.user !== null) {
       topNav = (
         <TopNav
@@ -218,7 +236,7 @@ k
       );
       //topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>; [edit]
       //sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>; [edit]
-      topbanner = <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} />;
+      topbanner = <Topbar rightSidebarToggle={this.toggleRightSidebar} onChangeLanguage={this.onChangeLanguage} menuToggle={this.toggleMenu} {...this.props} />;
       sideNav = <Sidebar isCondensed={this.state.isCondensed} {...this.props} />;
     }
     
@@ -234,7 +252,7 @@ k
               {/* {topNav} */}
               {topbanner}
               {sideNav}
-              <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
+              <div className={classNames(this.props.classes.main, !isMobile && this.props.classes.mainDrawerOpen )}>
                 <Grid container spacing={24}>
                   <Switch>
                     <Route path="/j/:data" component={RedirectedFromLora} />

@@ -7,12 +7,13 @@ import WalletStore from "../stores/WalletStore";
 import i18n, { packageNS } from '../i18n';
 import { SUPER_ADMIN } from "../util/M2mUtil";
 import SessionStore from "../stores/SessionStore";
+import DropdownMenuLanguage from "./DropdownMenuLanguage";
 
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import logoSm from '../assets/images/logo-sm.png';
 import logo from '../assets/images/logos_wallet_light.png';
-import profilePic from '../assets/images/users/user-1.jpg';
+import profilePic from '../assets/images/users/profile-icon.png'; 
 
 const Notifications = [{
   id: 1,
@@ -162,7 +163,7 @@ class Topbar extends Component {
     const balanceEl = balance === null ? 
       <span className="color-gray">(no org selected)</span> : 
       balance + " MXC";
-
+    const username = SessionStore.getUsername();
     return (
       <React.Fragment>
         <div className="navbar-custom">
@@ -193,27 +194,31 @@ class Topbar extends Component {
                 <span> {balanceEl}</span>
               </button>
             </li>
-            
+
             <li>
-              <ProfileDropdown profilePic={profilePic} menuItems={ProfileMenus} username={'Nik Patel'} />
+              <DropdownMenuLanguage onChangeLanguage={this.onChangeLanguage} />
             </li>
 
-            <li className="dropdown notification-list">
+            <li>
+              <ProfileDropdown profilePic={profilePic} menuItems={ProfileMenus} username={username} />
+            </li>
+
+            {/* <li className="dropdown notification-list">
               <button className="btn btn-link nav-link right-bar-toggle waves-effect waves-light" onClick={this.props.rightSidebarToggle}>
                 <i className="mdi mdi-help-circle-outline"></i>
               </button>
-            </li>
+            </li> */}
           </ul>
 
           <div className="logo-box">
-            <Link to="/" className="logo text-center">
+            <div to="/" className="logo text-center">
               <span className="logo-lg">
                 <img src={logo} alt="" height="16" />
               </span>
               <span className="logo-sm">
                 <img src={logoSm} alt="" height="24" />
               </span>
-            </Link>
+            </div>
           </div>
 
           <ul className="list-unstyled topnav-menu topnav-menu-left m-0">

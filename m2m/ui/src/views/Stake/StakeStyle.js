@@ -65,7 +65,7 @@ const DeviceStyles = {
     borderLeft: '5px solid #4d89e5',
     backgroundColor: 'white',
     padding: 10,
-    margin: '10px 0px 0px 20px'
+    margin: 16
   },
   infoBoxSucceed: {
     height: 159,
@@ -74,7 +74,7 @@ const DeviceStyles = {
     borderLeft: '5px solid #60af4e',
     backgroundColor: 'white',
     padding: 10,
-    margin: '10px 0px 0px 20px'
+    margin: 16
   },
   infoBoxError: {
     height: 159,
@@ -83,7 +83,7 @@ const DeviceStyles = {
     borderLeft: '5px solid #df434e',
     backgroundColor: 'white',
     padding: 10,
-    margin: '10px 0px 0px 20px'
+    margin: 16
   },
   pRight: {
     paddingRight: 0

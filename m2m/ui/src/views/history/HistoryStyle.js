@@ -9,12 +9,12 @@ const HistoryStyle = {
         fontSize: 14,
       },
       TitleBar: {
-        height: 115,
+        //height: 115,
         width: '100%',
         light: true,
         display: 'flex',
         flexDirection: 'column',
-        padding: '0px 0px 50px 0px' 
+        padding: '0px 0px 0px 0px' 
       },
       card: {
         minWidth: 180,

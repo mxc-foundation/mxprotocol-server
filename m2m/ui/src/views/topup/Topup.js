@@ -81,33 +81,24 @@ class Topup extends Component {
     return(
       <Grid container spacing={24}>
         <Spinner on={this.state.loading}/>
-        <Grid item xs={12} className={this.props.classes.divider}>
+        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.topup.topup`)} />
-              </TitleBar>    
-              {/* <Divider light={true}/> */}
-              <div className={this.props.classes.between}>
-              <TitleBar>
-                <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                <TitleBarTitle component={Link} to="#" title="Topup" className={this.props.classes.link}/>
               </TitleBar>
-              </div>
           </div>
         </Grid>
         <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>
-          
-          <Card className={this.props.classes.card}>
-            <CardContent>
+          {/* <Card className={this.props.classes.card}>
+            <CardContent> */}
               <TopupForm
                 reps={this.state.accounts} {...this.props}
                 orgId ={this.props.match.params.organizationID} 
               />
-            </CardContent>
-          </Card>
+            {/* </CardContent>
+          </Card> */}
         </Grid>
-        <Grid item xs={6} md={12} lg={6} className={this.props.classes.column}>
+        <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>
           <InfoCard orgId={this.props.match.params.organizationID} />
         </Grid>
       </Grid>

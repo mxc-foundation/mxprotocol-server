@@ -20,10 +20,10 @@ const GatewayStyles = {
     flexDirection: 'column'
   },
   navText: {
-    fontSize: 14,
+    fontSize: '0.85rem !important',
   },
   TitleBar: {
-    width: '50%',
+    width: '100%',
     light: true,
     display: 'flex',
     flexDirection: 'column',
@@ -40,7 +40,7 @@ const GatewayStyles = {
   link: {
     textDecoration: "none",
     fontWeight: "bold",
-    fontSize: 12,
+    fontSize: '1rem',
     color: theme.palette.textSecondary.main,
     opacity: 0.7,
       "&:hover": {
