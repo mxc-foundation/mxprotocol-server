@@ -40,7 +40,6 @@ class SystemSettings extends Component {
 
 			WithdrawStore.getWithdrawFee(ETHER, organizationID, (resp) => {
 				this.setState({ withdrawFee: resp.withdrawFee });
-				console.log("#####", resp.withdrawFee)
 			});
 
 			SettingsStore.getSystemSettings((resp) => {
@@ -49,10 +48,7 @@ class SystemSettings extends Component {
 					percentageShare: resp.transactionPercentageShare,
 					lbWarning: resp.lowBalanceWarning
 				});
-				console.log("#####", resp.downlinkPrice, resp.percentageShare, resp.lbWarning)
 			});
-
-			console.log("#####", this.state.downlinkPrice, this.state.percentageShare,this.state.lbWarning,this.state.withdrawFee)
 		} catch (e) {}
 	};
 
@@ -106,7 +102,7 @@ class SystemSettings extends Component {
 
             </CardContent>
           </Card>
-          
+
         </Grid>
         <Grid item xs={6}>
         </Grid>

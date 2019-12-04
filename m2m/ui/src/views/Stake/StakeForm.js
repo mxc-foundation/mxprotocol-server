@@ -71,9 +71,10 @@ class StakeForm extends FormComponent {
   }
 
   handleChange = (name, event) => {
-		this.setState({
+    this.props.onChange(event, name)
+		/* this.setState({
 			[name]: event.target.value
-		});
+		}); */
   };
   
   clear = () => {
@@ -95,7 +96,6 @@ class StakeForm extends FormComponent {
         submitLabel={this.props.isUnstake ? i18n.t(`${packageNS}:menu.messages.confirm_unstake`) : i18n.t(`${packageNS}:menu.messages.confirm_stake`)}
         extraButtons={extraButtons}
         onSubmit={(e) => this.props.confirm(e, {
-          amount: parseFloat(this.state.amount),
           action: this.props.isUnstake
         })}
       >
@@ -113,7 +113,8 @@ class StakeForm extends FormComponent {
           //value={this.props.amount}
           //onChange={this.props.onChange}
           autoComplete='off'
-          value={this.state.amount}
+          //value={this.props.amount !== 0 ? this.props.amount :this.state.amount}
+          value={this.props.amount}
           onChange={(e) => this.handleChange('amount', e)}
 
           InputProps={{

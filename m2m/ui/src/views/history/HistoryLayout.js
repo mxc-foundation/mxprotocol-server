@@ -85,7 +85,7 @@ class HistoryLayout extends Component {
     return(
       <Grid container spacing={24}>
         <Spinner on={this.state.loading}/>
-        <Grid item xs={12} className={this.props.classes.divider}>
+        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.history.history`)} />

@@ -23,7 +23,7 @@ const GatewayStyles = {
     fontSize: '0.85rem !important',
   },
   TitleBar: {
-    width: '50%',
+    width: '100%',
     light: true,
     display: 'flex',
     flexDirection: 'column',

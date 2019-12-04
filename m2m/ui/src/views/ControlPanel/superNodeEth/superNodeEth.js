@@ -97,14 +97,14 @@ class SuperNodeEth extends Component {
   render() {
     return(
       <Grid container spacing={24}>
-        <Grid item xs={12} className={this.props.classes.divider}>
+        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.eth_account.eth_account`)} />
               </TitleBar>
           </div>
         </Grid>
-        <Grid item xs={6} className={this.props.classes.column}>
+        <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>
           <Card className={this.props.classes.card}>
             <CardContent>
               {this.state.activeAccount &&
@@ -114,7 +114,7 @@ class SuperNodeEth extends Component {
                   activeAccount={this.state.activeAccount}
                 />
               }
-              {!this.state.activeAccount &&  
+              {!this.state.activeAccount &&
                 <NewEthAccountForm
                   submitLabel={i18n.t(`${packageNS}:menu.eth_account.confirm`)}
                   onSubmit={this.onSubmit}
@@ -122,9 +122,9 @@ class SuperNodeEth extends Component {
               }
             </CardContent>
           </Card>
-          
+
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={12} lg={6}>
         </Grid>
       </Grid>
     );

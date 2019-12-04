@@ -114,27 +114,25 @@ class DeviceLayout extends Component {
   render() {
     return (
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
-        <Grid item xs={12} className={this.props.classes.divider}>
+        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.devices.devices`)} />
               </TitleBar>
-{/*              <div className={this.props.classes.subTitle}>
+              <div className={this.props.classes.subTitle}>
                 {i18n.t(`${packageNS}:menu.devices.downlink_fee_mxc`)} {this.state.downlinkFee} MXC
-              </div>*/}
+              </div>
           </div>
         </Grid>
-        <Grid item xs={12} className={this.props.classes.divider}>
-          <Grid item xs={6} className={this.props.classes.divider}>
-            <DeviceForm
-              submitLabel={i18n.t(`${packageNS}:menu.devices.devices`)}
-              onSubmit={this.onSubmit}
-              downlinkFee={this.state.downlinkFee}
-              haveGateway={this.state.haveGateway}
-              onSelectChange={this.onSelectChange}
-              onSwitchChange={this.onSwitchChange}
-            />
-          </Grid>
+        <Grid item xs={12} md={12} lg={6} className={this.props.classes.divider}>
+          <DeviceForm
+            submitLabel={i18n.t(`${packageNS}:menu.devices.devices`)}
+            onSubmit={this.onSubmit}
+            downlinkFee={this.state.downlinkFee}
+            haveGateway={this.state.haveGateway}
+            onSelectChange={this.onSelectChange}
+            onSwitchChange={this.onSwitchChange}
+          />
         </Grid>
       </Grid>
     );

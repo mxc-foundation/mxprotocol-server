@@ -68,7 +68,8 @@ const styles = {
   },
   main: {
     width: "100%",
-    padding: 2 * 24,
+    /* padding: 16, */
+    padding: 0, 
     paddingTop: 95,
     flex: 1,
   },
@@ -221,7 +222,7 @@ class App extends Component {
     let topbanner = null;
 
     const { width } = this.state;
-    const isMobile = width <= 500;
+    const isMobile = width <= 800;
 
     if (this.state.user !== null) {
       topNav = (

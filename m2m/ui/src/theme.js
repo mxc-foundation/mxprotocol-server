@@ -165,13 +165,17 @@ const theme = createMuiTheme({
       MuiPaper: {
         root: {
           backgroundColor: white,
-          padding: 10,
+          //padding: 10,
+          margin: 10,
         }
       },
       MuiTablePagination: {
         root: {
           color: dark,
           background: 'none',
+        },
+        actions: {
+          marginLeft: 0
         }
       },
       MuiButton: { 
@@ -234,7 +238,7 @@ const theme = createMuiTheme({
       },
       MuiSvgIcon: {
         root: {
-          fill: '#F9FAFC80',
+          fill: dark,
         },
       },
       MuiDialog: {

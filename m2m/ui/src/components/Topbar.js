@@ -13,7 +13,7 @@ import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import logoSm from '../assets/images/logo-sm.png';
 import logo from '../assets/images/logos_wallet_light.png';
-import profilePic from '../assets/images/users/user-1.jpg';
+import profilePic from '../assets/images/users/profile-icon.png'; 
 
 const Notifications = [{
   id: 1,
@@ -163,7 +163,7 @@ class Topbar extends Component {
     const balanceEl = balance === null ? 
       <span className="color-gray">(no org selected)</span> : 
       balance + " MXC";
-
+    const username = SessionStore.getUsername();
     return (
       <React.Fragment>
         <div className="navbar-custom">
@@ -200,14 +200,14 @@ class Topbar extends Component {
             </li>
 
             <li>
-              <ProfileDropdown profilePic={profilePic} menuItems={ProfileMenus} username={'Nik Patel'} />
+              <ProfileDropdown profilePic={profilePic} menuItems={ProfileMenus} username={username} />
             </li>
 
-            <li className="dropdown notification-list">
+            {/* <li className="dropdown notification-list">
               <button className="btn btn-link nav-link right-bar-toggle waves-effect waves-light" onClick={this.props.rightSidebarToggle}>
                 <i className="mdi mdi-help-circle-outline"></i>
               </button>
-            </li>
+            </li> */}
           </ul>
 
           <div className="logo-box">
