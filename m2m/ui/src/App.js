@@ -38,7 +38,7 @@ import SetStake from "./views/Stake/SetStake";
 import { getLoraHost } from "./util/M2mUtil";
 import SuperAdminWithdraw from "./views/ControlPanel/withdraw/withdraw"
 import SupernodeHistory from "./views/ControlPanel/history/History"
-import SystemSettings from "./views/ControlPanel/settings/settings"
+import SystemSettings from "./views/ControlPanel/settings/Settings"
 
 const drawerWidth = 220;
 

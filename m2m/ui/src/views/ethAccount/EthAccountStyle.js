@@ -10,7 +10,7 @@ const EthAccountStyle = {
       },
       TitleBar: {
         height: 115,
-        width: '50%',
+        width: '100%',
         light: true,
         display: 'flex',
         flexDirection: 'column',
