@@ -12,11 +12,11 @@ import dispatcher from "../dispatcher";
 class ProfileStore extends EventEmitter {
   constructor() {
     super();
-    this.swagger = new Swagger("/swagger/profile.swagger.json", sessionStore.getClientOpts());
+    this.profileSwagger = new Swagger("/swagger/profile.swagger.json", sessionStore.getClientOpts());
   }
 
   getUserOrganizationList(orgId, callbackFunc) {
-    this.swagger.then(client => {
+    this.profileSwagger.then(client => {
       client.apis.InternalService.GetUserOrganizationList({
         orgId
       })

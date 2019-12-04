@@ -1,6 +1,6 @@
 import theme from "../../../theme";
 
-const EthAccountStyle = {
+const settingsStyle = {
     tabs: {
         borderBottom: "1px solid " + theme.palette.divider,
         height: "49px",
@@ -46,4 +46,4 @@ const EthAccountStyle = {
       },
   };
   
-export default EthAccountStyle;
+export default settingsStyle;

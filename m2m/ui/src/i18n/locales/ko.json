@@ -12,7 +12,7 @@
       "username": "이름",
       "password": "비밀번호",
       "confirm": "확인",
-      "type_here": "여기에 입력 하세요.",
+      "type_here": "여기에 입력 하세요",
       "incorrect_username_or_password": "잘못된 사용자 이름 또는 비밀번호 입니다.",
       "cancel": "취소",
       "proceed": "계속"
@@ -57,6 +57,7 @@
       "password": "비밀번호",
       "confirm": "확인",
       "users": "사용자",
+      "type_here": "여기에 입력 하세요",
       "change_password": "비밀번호 변경",
       "update_password": "비밀번호 갱신"
     },
@@ -127,6 +128,8 @@
       "status": "상태",
       "date": "데이트"
     },
+    "control_panel": "제어판",
+    "organization_list": "소속기관 리스트",
     "nb_iot_server": "NB-IoT 서버",
     "lpwan_server": "LPWAN 서버",
     "powered_by": "Powered by",
@@ -154,7 +157,8 @@
       "congratulations_stake_set": "축하합니다! 스테이크가 설정되었습니다",
       "unstake_successful": "성공하지 못한 스테이크. MXC 가 M2M Wallet 저울에 추가되었습니다",
       "staking_enhances": "스태킹은 모든 소지자에게 공정한 네트워크 참여 방법을 제공함으로써 데이터 거래를 향상시킵니다.",
-      "close_to_acquiring": "귀하는 월별 수입을 거의 얻었습니다. 당신이 지금 스테이크를 놓치면 놓치게됩니다"
+      "close_to_acquiring": "귀하는 월별 수입을 거의 얻었습니다. 당신이 지금 스테이크를 놓치면 놓치게됩니다",
+      "coming_soon": "change menu.messages.coming_soon in ko.json"
     },
     "store": {
       "device_has_been": "장치가",
@@ -203,7 +207,8 @@
       "monthly_downtime": "월간 다운 타임",
       "tickets_opened": "티켓 개설",
       "tickets_closed": "티켓 마감",
-      "hours": "시간"
+      "hours": "시간",
+      "type_here": "여기에 입력 하세요"
     },
     "login": {
       "login": "로그인",

@@ -67,6 +67,7 @@ class DeviceLayout extends Component {
   }
 
   componentDidMount() {
+    window.analytics.page();
     this.loadData();
   }
 
@@ -118,17 +119,9 @@ class DeviceLayout extends Component {
           <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.devices.devices`)} />
-              </TitleBar>    
-              {/* <Divider light={true}/> */}
-              <div className={this.props.classes.between}>
-              <TitleBar>
-                <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                <TitleBarTitle component={Link} to="#" title={i18n.t(`${packageNS}:menu.devices.devices`)} className={this.props.classes.link}/>
               </TitleBar>
               <div className={this.props.classes.subTitle}>
                 {i18n.t(`${packageNS}:menu.devices.downlink_fee_mxc`)} {this.state.downlinkFee} MXC
-              </div>
               </div>
           </div>
         </Grid>

@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import i18n, { packageNS } from '../../i18n';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
+
 class NewEthAccountForm extends FormComponent {
 
   state = {
@@ -53,7 +54,7 @@ class NewEthAccountForm extends FormComponent {
       >
         <TextField
           id="createAccount"//it is defined current account in swagger
-          label={i18n.t(`${packageNS}:menu.withdraw.new_account`)}
+          label={i18n.t(`${packageNS}:menu.eth_account.new_account`)}
           margin="normal"
           value={this.state.createAccount}
           variant="filled"
@@ -89,14 +90,14 @@ class NewEthAccountForm extends FormComponent {
 
         <TextField
           id="password"//it is defined current account in swagger
-          label={i18n.t(`${packageNS}:menu.withdraw.password`)}
+          label={i18n.t(`${packageNS}:menu.eth_account.password`)}
           margin="normal"
           value={this.state.password}
           variant="filled"
           InputLabelProps={{
             shrink: true
           }}
-          placeholder={i18n.t(`${packageNS}:menu.withdraw.type_here`)}
+          placeholder={i18n.t(`${packageNS}:menu.eth_account.type_here`)}
           onChange={this.onChange}
           type="password"
           autoComplete="off"
