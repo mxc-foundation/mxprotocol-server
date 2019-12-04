@@ -67,6 +67,7 @@ class DeviceLayout extends Component {
   }
 
   componentDidMount() {
+    window.analytics.page();
     this.loadData();
   }
 

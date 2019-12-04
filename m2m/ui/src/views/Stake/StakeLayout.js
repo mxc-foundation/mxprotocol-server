@@ -56,6 +56,11 @@ class StakeLayout extends Component {
     }); 
   }
 
+  componentDidMount() {
+    window.analytics.page();
+    this.loadData();
+  }
+
   componentWillMount(){
     this.loadData();
   }
