@@ -13,6 +13,8 @@ import SessionStore from '../stores/SessionStore';
 import Admin from '../components/Admin';
 import NonAdmin from '../components/NonAdmin';
 import i18n, { packageNS } from '../i18n';
+import ServerInfoStore from "../stores/ServerInfoStore";
+import ProfileStore from "../stores/ProfileStore";
 
 const ProfileMenus = [{
     label: 'My Account',
@@ -44,13 +46,6 @@ const SideNavContent = (props) => {
 
         <div id="sidebar-menu">
             <ul className="metismenu" id="side-menu">
-                <li className="menu-title">Navigation</li>
-
-                <li>
-                    {/* <DropdownMenu default={ this.state.default } onChange={this.onChange} /> [edit] */}
-                    <DropdownMenu2 default={ props.default } onChange={ props.onChange } />
-                </li> 
-
                 {/* <li>
                     <Link to="/dashboard" className="waves-effect side-nav-link-ref">
                         <i className="mdi mdi-view-dashboard"></i>
@@ -58,89 +53,96 @@ const SideNavContent = (props) => {
                     </Link>
                 </li> */}
                 <Admin>
-                    <li className="menu-title">Control Panel</li>
-
+                    <li className="menu-title">{i18n.t(`${packageNS}:menu.control_panel`)}</li>
                     <li>
-                        <Link to={`/control-panel/modify-account/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        <Link to={`/control-panel/modify-account/`} className="waves-effect side-nav-link-ref">
                             <i className="mdi mdi-ethereum"></i>
-                            <span> {i18n.t(`${packageNS}:menu.history.eth_account`)} </span>
+                            <span> {i18n.t(`${packageNS}:menu.eth_account.eth_account`)} </span>
                         </Link>
                     </li>
 
                     <li>
-                        <Link to={`/control-panel/history/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        <Link to={`/control-panel/history/`} className="waves-effect side-nav-link-ref">
                             <i className="mdi mdi-history"></i>
                             <span> {i18n.t(`${packageNS}:menu.history.history`)} </span>
                         </Link>
                     </li>
 
                     <li>
-                        <Link to={`/control-panel/system-settings/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        <Link to={`/control-panel/system-settings/`} className="waves-effect side-nav-link-ref">
                             <i className="mdi mdi-settings"></i>
                             <span> {i18n.t(`${packageNS}:menu.settings.system_settings`)} </span>
                         </Link>
                     </li>
 
                     <li>
-                        <Link to={`/control-panel/withdraw/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                        <Link to={`/control-panel/withdraw/`} className="waves-effect side-nav-link-ref">
                             <i className="ti-cloud-down"></i>
                             <span> {i18n.t(`${packageNS}:menu.withdraw.withdraw`)} </span>
                         </Link>
                     </li>
                 </Admin>
+
                 <NonAdmin>
-                <li>
-                    <Link to={`/withdraw/${props.orgId}`} className="waves-effect side-nav-link-ref">
-                        {/* <i className="mdi mdi-cloud-print-outline"></i> */}
-                        <i className="ti-cloud-down"></i>
-                        <span> {i18n.t(`${packageNS}:menu.withdraw.withdraw`)} </span>
-                    </Link>
-                </li>
+                    <li className="menu-title">{i18n.t(`${packageNS}:menu.organization_list`)}</li>
+                    <li>
+                        {/* <DropdownMenu default={ this.state.default } onChange={this.onChange} /> [edit] */}
+                        <DropdownMenu2 default={ props.default } onChange={ props.onChange } />
+                    </li>
 
-                <li>
-                    <Link to={`/topup/${props.orgId}`} className="waves-effect side-nav-link-ref">
-                        {/* <i className="mdi mdi-inbox-arrow-down"></i>
+                    <li>
+                        <Link to={`/withdraw/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                            {/* <i className="mdi mdi-cloud-print-outline"></i> */}
+                            <i className="ti-cloud-down"></i>
+                            <span> {i18n.t(`${packageNS}:menu.withdraw.withdraw`)} </span>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link to={`/topup/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                            {/* <i className="mdi mdi-inbox-arrow-down"></i>
                         <i className="mdi mdi-basket-fill"></i> */}
-                        <i className="ti-cloud-up"></i>
-                        <span> {i18n.t(`${packageNS}:menu.topup.topup`)} </span>
-                    </Link>
-                </li>
+                            <i className="ti-cloud-up"></i>
+                            <span> {i18n.t(`${packageNS}:menu.topup.topup`)} </span>
+                        </Link>
+                    </li>
 
-                <li>
-                    <Link to={`/history/${props.orgId}`} className="waves-effect side-nav-link-ref">
-                        <i className="mdi mdi-history"></i>
-                        <span> {i18n.t(`${packageNS}:menu.history.history`)} </span>
-                    </Link>
-                </li>
+                    <li>
+                        <Link to={`/history/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                            <i className="mdi mdi-history"></i>
+                            <span> {i18n.t(`${packageNS}:menu.history.history`)} </span>
+                        </Link>
+                    </li>
 
-                <li>
-                    <Link to={`/modify-account/${props.orgId}`} className="waves-effect side-nav-link-ref">
-                        <i className="mdi mdi-ethereum"></i>
-                        <span> {i18n.t(`${packageNS}:menu.eth_account.eth_account`)} </span>
-                    </Link>
-                </li>
+                    <li>
+                        <Link to={`/modify-account/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                            <i className="mdi mdi-ethereum"></i>
+                            <span> {i18n.t(`${packageNS}:menu.eth_account.eth_account`)} </span>
+                        </Link>
+                    </li>
 
-                <li>
-                    <Link to={`/device/${props.orgId}`} className="waves-effect side-nav-link-ref">
-                        <i className="mdi mdi-network-outline"></i>
-                        <span> {i18n.t(`${packageNS}:menu.devices.devices`)} </span>
-                    </Link>
-                </li>
+                    <li>
+                        <Link to={`/device/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                            <i className="mdi mdi-network-outline"></i>
+                            <span> {i18n.t(`${packageNS}:menu.devices.devices`)} </span>
+                        </Link>
+                    </li>
 
-                <li>
-                    <Link to={`/gateway/${props.orgId}`} className="waves-effect side-nav-link-ref">
-                        <i className="mdi mdi-remote"></i>
-                        <span> {i18n.t(`${packageNS}:menu.gateways.gateways`)} </span>
-                    </Link>
-                </li>
+                    <li>
+                        <Link to={`/gateway/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                            <i className="mdi mdi-remote"></i>
+                            <span> {i18n.t(`${packageNS}:menu.gateways.gateways`)} </span>
+                        </Link>
+                    </li>
 
-                <li>
-                    <Link to={`/stake/${props.orgId}`} className="waves-effect side-nav-link-ref">
-                        <i className="mdi mdi-vote"></i>
-                        <span> {i18n.t(`${packageNS}:menu.staking.staking`)} </span>
-                    </Link>
-                </li>
+                    <li>
+                        <Link to={`/stake/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                            <i className="mdi mdi-vote"></i>
+                            <span> {i18n.t(`${packageNS}:menu.staking.staking`)} </span>
+                        </Link>
+                    </li>
                 </NonAdmin>
+
                 <li>
                     <Divider />
                 </li>
@@ -218,6 +220,13 @@ const UserProfile = () => {
     </React.Fragment>
 }
 
+function loadServerVersion() {
+    return new Promise((resolve, reject) => {
+        ServerInfoStore.getVersion(data=>{
+            resolve(data);
+        });
+    });
+}
 
 class Sidebar extends Component {
     constructor(props) {
@@ -255,8 +264,29 @@ class Sidebar extends Component {
     /**
      * 
      */
+    loadData = async () => {
+        try {
+            const organizationID = SessionStore.getOrganizationID();
+            var data = await loadServerVersion();
+            const serverInfo = JSON.parse(data);
+
+            this.setState({
+                organizationID,
+                version: serverInfo.version
+            })
+
+            this.setState({loading: true})
+
+        } catch (error) {
+            this.setState({loading: false})
+            console.error(error);
+            this.setState({ error });
+        }
+    }
+
     componentDidMount = () => {
         this.initMenu();
+        this.loadData();
     }
 
     /**

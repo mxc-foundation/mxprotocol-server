@@ -54,19 +54,19 @@ class ModifyEthAccountForm extends FormComponent {
     const extraButtons = <>
       <Button  variant="outlined" color="inherit" onClick={this.clear} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.reset`)}</Button>
     </>;
-    
+
     return(
       <Form
         submitLabel={this.props.submitLabel}
         extraButtons={extraButtons}
-        onSubmit={this.submit}
+        onSubmit={this.onSubmit}
       >
         <TextField
           id="activeAccount"
           label={i18n.t(`${packageNS}:menu.eth_account.current_account`)}
           margin="normal"
           value={this.props.activeAccount || ""}
-          variant="filled"
+/*          variant="filled"*/
           InputLabelProps={{
             shrink: true
           }}
@@ -78,10 +78,13 @@ class ModifyEthAccountForm extends FormComponent {
 
         <TextField
           id="newaccount"//it is defined current account in swagger
-          label={i18n.t(`${packageNS}:menu.withdraw.new_account`)}
+          label={i18n.t(`${packageNS}:menu.eth_account.new_account`)}
           margin="normal"
           value={this.state.newaccount}
           variant="filled"
+          InputLabelProps={{
+            shrink: true
+          }}
           placeholder="0x0000000000000000000000000000000000000000" 
           onChange={this.onChange}
           inputProps={{
@@ -99,11 +102,11 @@ class ModifyEthAccountForm extends FormComponent {
           margin="normal"
           value={this.state.username}
           variant="filled"
+          InputLabelProps={{
+            shrink: true
+          }}
           placeholder={i18n.t(`${packageNS}:menu.withdraw.type_here`)}
           onChange={this.onChange}
-          /* inputProps={{
-            pattern: "[\\w-]+",
-          }} */
           autoComplete='off'
           required
           fullWidth
@@ -115,11 +118,11 @@ class ModifyEthAccountForm extends FormComponent {
           margin="normal"
           value={this.state.password}
           variant="filled"
-          placeholder={i18n.t(`${packageNS}:menu.withdraw.type_here`)}
+          InputLabelProps={{
+            shrink: true
+          }}
+          placeholder={i18n.t(`${packageNS}:menu.eth_account.type_here`)}
           onChange={this.onChange}
-          /* inputProps={{
-            pattern: "[\\w-]+",
-          }} */
           type="password"
           autoComplete="off"
           required

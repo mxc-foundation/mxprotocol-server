@@ -211,14 +211,14 @@ class Topbar extends Component {
           </ul>
 
           <div className="logo-box">
-            <Link to="/" className="logo text-center">
+            <div to="/" className="logo text-center">
               <span className="logo-lg">
                 <img src={logo} alt="" height="16" />
               </span>
               <span className="logo-sm">
                 <img src={logoSm} alt="" height="24" />
               </span>
-            </Link>
+            </div>
           </div>
 
           <ul className="list-unstyled topnav-menu topnav-menu-left m-0">

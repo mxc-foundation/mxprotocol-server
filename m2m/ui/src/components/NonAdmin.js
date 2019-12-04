@@ -7,19 +7,19 @@ class NonAdmin extends Component {
   constructor() {
     super();
     this.state = {
-      admin: false,
+      hasOrg: false,
     };
 
-    this.setIsAdmin = this.setIsAdmin.bind(this);
+    this.setRole = this.setRole.bind(this);
   }
 
   componentDidMount() {
-    SessionStore.on("change", this.setIsAdmin);
-    this.setIsAdmin();
+    SessionStore.on("change", this.setRole);
+    this.setRole();
   }
 
   componentWillUnmount() {
-    SessionStore.removeListener("change", this.setIsAdmin);
+    SessionStore.removeListener("change", this.setRole);
   }
 
   componentDidUpdate(prevProps) {
@@ -27,17 +27,25 @@ class NonAdmin extends Component {
       return;
     }
 
-    this.setIsAdmin();
+    this.setRole();
   }
 
-  setIsAdmin() {
+  setRole() {
+    let orgList = SessionStore.getOrganizationList()
+
+    if ((orgList.length === 0) || (orgList.length === 1 && orgList[0].value === "0")) {
       this.setState({
-        admin: !SessionStore.isAdmin(),
+        hasOrg: false ,
       });
+    }else {
+      this.setState({
+        hasOrg: true ,
+      });
+    }
   }
 
   render() {
-    if (this.state.admin) {
+    if (this.state.hasOrg) {
       return(this.props.children);
     }
 

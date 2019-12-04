@@ -103,7 +103,7 @@ class SupernodeHistory extends Component {
             scrollButtons="auto"
             textColor="primary"
           >
-            <Tab label={i18n.t(`${packageNS}:menu.eth_account.eth_account`)} component={Link} to={`/control-panel/history/`} />
+            <Tab label={i18n.t(`${packageNS}:menu.history.eth_account`)} component={Link} to={`/control-panel/history/`} />
           </Tabs>
 
             <Grid container justify="space-between" alignItems="center" className={this.props.classes.card}>

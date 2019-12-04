@@ -1,74 +1,39 @@
 import React, { Component } from 'react';
 
-import { Grid, Card, Table, TableBody, TextField, Button } from '@material-ui/core';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import { withRouter, Link } from 'react-router-dom';
+import { Grid } from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
 import TitleBar from '../../../components/TitleBar';
 import TitleBarTitle from '../../../components/TitleBarTitle';
-import TitleBarButton from '../../../components/TitleBarButton';
-import DataTable from '../../../components/DataTable';
-import styles from './settingsStyle';
-import Divider from '@material-ui/core/Divider';
+import styles from '../../ethAccount/EthAccountStyle';
 import WithdrawStore from '../../../stores/WithdrawStore';
 import SettingsStore from '../../../stores/SettingsStore';
 import { ETHER } from '../../../util/Coin-type';
 import i18n, { packageNS } from '../../../i18n';
-import NumberFormat from 'react-number-format';
-import PropTypes from 'prop-types';
+import CardContent from "@material-ui/core/CardContent";
+import Card from "@material-ui/core/Card";
+import SettingsForm from "./settingsForm"
 
-const NumberFormatMXC=(props)=> {
-	const { inputRef, onChange, ...other } = props;
-
-	return (
-		<NumberFormat
-			{...other}
-			getInputRef={inputRef}
-			onValueChange={(values) => {
-				onChange({
-					target: {
-						value: values.value
-					}
-				});
-			}}
-			suffix=" MXC"
-		/>
-	);
-}
-
-const NumberFormatPerc =(props) =>{
-	const { inputRef, onChange, ...other } = props;
-
-	return (
-		<NumberFormat
-			{...other}
-			getInputRef={inputRef}
-			onValueChange={(values) => {
-				onChange({
-					target: {
-						value: values.value
-					}
-				});
-			}}
-			suffix=" %"
-		/>
-	);
-}
 
 class SystemSettings extends Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {};
+	constructor() {
+		super();
+		this.state = {
+			downlinkPrice: '',
+			percentageShare: '',
+			lbWarning: '',
+			withdrawFee: ''
+		};
+		this.loadSettings = this.loadSettings.bind(this);
+		this.saveSettings = this.saveSettings.bind(this);
 	}
 
 	componentDidMount() {
 		this.loadSettings();
 	}
 
-	loadSettings = async () => {
+	loadSettings() {
 		try {
 			const organizationID = 0;
 			//this.setState({loading: true})
@@ -87,7 +52,7 @@ class SystemSettings extends Component {
 		} catch (e) {}
 	};
 
-	saveSettings = async () => {
+	saveSettings() {
 		try {
 			let bodyWF = {
 				moneyAbbr: 'Ether',
@@ -113,119 +78,37 @@ class SystemSettings extends Component {
 		});
 	};
 
-	render() {
-		return (
-			<Grid container spacing={3} className={this.props.classes.root}>
-				<Grid item xs={12}>
-					<Grid item container xs={12} md={12} lg={6}  direction="column">
-						<TitleBar>
+  render() {
+    return(
+      <Grid container spacing={24}>
+        <Grid item xs={12} className={this.props.classes.divider}>
+          <div className={this.props.classes.TitleBar}>
+              <TitleBar className={this.props.classes.padding}>
 							<TitleBarTitle title={i18n.t(`${packageNS}:menu.settings.system_settings`)} />
 						</TitleBar>
-						<Divider light={true} />
-						<div className={this.props.classes.breadcrumb}>
-							<TitleBar>
-								<TitleBarTitle
-									component={Link}
-									to="#"
-									title="M2M Wallet"
-									className={this.props.classes.link}
-								/>
-								<TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link} />
-								<TitleBarTitle
-									component={Link}
-									to="#"
-									title={i18n.t(`${packageNS}:menu.settings.control_panel`)}
-									className={this.props.classes.link}
-								/>
-								<TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link} />
-								<TitleBarTitle
-									component={Link}
-									to="#"
-									title={i18n.t(`${packageNS}:menu.settings.system_settings`)}
-									className={this.props.classes.link}
-								/>
-							</TitleBar>
-						</div>
-					</Grid>
+          </div>
+        </Grid>
+        <Grid item xs={6} className={this.props.classes.column}>
+          <Card className={this.props.classes.card}>
+            <CardContent>
+                <SettingsForm
+                  submitLabel={i18n.t(`${packageNS}:menu.eth_account.confirm`)}
+                  onSubmit={this.onSubmit}
+				  downlinkPrice={this.state.downlinkPrice}
+				  percentageShare={this.state.percentageShare}
+				  lbWarning={this.state.lbWarning}
+				  withdrawFee={this.state.withdrawFee}
+                />
 
-					<Grid item container direction="column" xs={12} md={12} lg={6} className={this.props.classes.settingsForm}>
-						<TextField
-							id="withdrawFee"
-							label={i18n.t(`${packageNS}:menu.settings.withdraw_fee`)}
-							className={this.props.classes.TextField}
-							variant="filled"
-							InputLabelProps={{
-								shrink: true
-							}}
-							InputProps={{
-								inputComponent: NumberFormatMXC
-							}}
-							margin="normal"
-							value={this.state.withdrawFee}
-							onChange={(e) => this.handleChange('withdrawFee', e)}
-						/>
+            </CardContent>
+          </Card>
 
-						<TextField
-							id="downlinkPrice"
-							label={i18n.t(`${packageNS}:menu.settings.downlink_price`)}
-							className={this.props.classes.TextField}
-							variant="filled"
-							InputLabelProps={{
-								shrink: true
-							}}
-							InputProps={{
-								inputComponent: NumberFormatMXC
-							}}
-							margin="normal"
-							value={this.state.downlinkPrice}
-							onChange={(e) => this.handleChange('downlinkPrice', e)}
-						/>
-
-						<TextField
-							id="percentageShare"
-							label={i18n.t(`${packageNS}:menu.settings.percentage_share`)}
-							className={this.props.classes.TextField}
-							variant="filled"
-							InputLabelProps={{
-								shrink: true
-							}}
-							InputProps={{
-								inputComponent: NumberFormatPerc
-							}}
-							margin="normal"
-							value={this.state.percentageShare}
-							onChange={(e) => this.handleChange('percentageShare', e)}
-						/>
-
-						<TextField
-							id="lbWarning"
-							label={i18n.t(`${packageNS}:menu.settings.low_balance`)}
-							className={this.props.classes.TextField}
-							variant="filled"
-							InputLabelProps={{
-								shrink: true
-							}}
-							InputProps={{
-								inputComponent: NumberFormatMXC
-							}}
-							margin="normal"
-							value={this.state.lbWarning}
-							onChange={(e) => this.handleChange('lbWarning', e)}
-						/>
-					</Grid>
-					<Grid container item xs={12} md={12} lg={6} direction="row" justify="flex-end" spacing={2}>
-						<Button variant="contained" className={this.props.classes.Button} onClick={this.loadSettings}>
-							{i18n.t(`${packageNS}:menu.settings.cancel`)}
-						</Button>
-
-						<Button className={this.props.classes.Button} onClick={this.saveSettings}>
-							{i18n.t(`${packageNS}:menu.settings.save_changes`)}
-						</Button>
-					</Grid>
-				</Grid>
-			</Grid>
-		);
-	}
+        </Grid>
+        <Grid item xs={6}>
+        </Grid>
+      </Grid>
+    );
+  }
 }
 
 export default withStyles(styles)(withRouter(SystemSettings));
