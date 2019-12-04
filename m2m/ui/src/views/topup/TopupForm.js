@@ -11,19 +11,19 @@ import Button from "@material-ui/core/Button";
 class TopupForm extends FormComponent {
 
   handleOpenAXS = () => {
-    window.location.replace(`https://wallet.mxc.org/`);
+    window.location.replace(`http://wallet.mxc.org/`);
   } 
 
   render() {
-/*    const extraButtons = <>
+    const extraButtons = <>
       <Button color="primary.main" onClick={this.handleOpenAXS} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.topup.use_axs_wallet`)}</Button>
-    </>;*/
+    </>;
     
     if (this.props.reps === undefined) {
       return(
         <Form
           submitLabel={this.props.submitLabel}
-          /*extraButtons={extraButtons}*/
+          extraButtons={extraButtons}
           onSubmit={this.onSubmit}
         >
           <TitleBarTitle component={Link} to={'#'} title={i18n.t(`${packageNS}:menu.topup.no_data_to_display`)} />
@@ -34,7 +34,7 @@ class TopupForm extends FormComponent {
     return(
       <Form
         submitLabel={this.props.submitLabel}
-/*        extraButtons={extraButtons}*/
+        extraButtons={extraButtons}
         onSubmit={this.onSubmit}
       >
         <TitleBarTitle title={i18n.t(`${packageNS}:menu.topup.send_tokens`)} />

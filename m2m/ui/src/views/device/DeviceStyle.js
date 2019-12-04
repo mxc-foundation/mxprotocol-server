@@ -47,7 +47,7 @@ const DeviceStyles = {
         opacity: 1,
       }
   },
-/*  subTitle2:{
+  subTitle2:{
     textDecoration: "none",
     padding: 0,
     fontWeight: "bold",
@@ -58,7 +58,7 @@ const DeviceStyles = {
       "&:hover": {
         opacity: 1,
       } 
-    }  */
+    }       
 };
   
 export default DeviceStyles;

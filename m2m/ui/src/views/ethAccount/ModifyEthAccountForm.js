@@ -59,7 +59,7 @@ class ModifyEthAccountForm extends FormComponent {
       <Form
         submitLabel={this.props.submitLabel}
         extraButtons={extraButtons}
-        onSubmit={this.onSubmit}
+        onSubmit={this.submit}
       >
         <TextField
           id="activeAccount"

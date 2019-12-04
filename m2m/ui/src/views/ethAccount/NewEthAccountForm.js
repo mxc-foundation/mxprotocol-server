@@ -5,7 +5,6 @@ import Button from "@material-ui/core/Button";
 import i18n, { packageNS } from '../../i18n';
 import FormComponent from "../../classes/FormComponent";
 import Form from "../../components/Form";
-
 class NewEthAccountForm extends FormComponent {
 
   state = {

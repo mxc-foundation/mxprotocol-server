@@ -129,8 +129,7 @@ class DeviceForm extends Component {
                 <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.devices.device`)}</TableCell>
                 <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.devices.status`)}</TableCell>
                 <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.devices.available`)}</TableCell>
-                {/*<TableCell className={this.props.classes.maxW} align={'left'}>{i18n.t(`${packageNS}:menu.devices.mode`)}</TableCell>*/}
-                <TableCell align={'left'}>{i18n.t(`${packageNS}:menu.devices.mode`)}</TableCell>
+                <TableCell className={this.props.classes.maxW} align={'left'}>{i18n.t(`${packageNS}:menu.devices.mode`)}</TableCell>
               </TableRow>
             }
             getPage={this.getPage}
