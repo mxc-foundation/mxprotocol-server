@@ -32,10 +32,10 @@ export default function MediaCard(props) {
       <CardActionArea>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            Synchronize your ETH Account
+            {i18n.t(`${packageNS}:menu.topup.synchronize_your_eth_account`)}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            Adding your ETH Account to your M2M Wallet increase your safety. 
+            {i18n.t(`${packageNS}:menu.topup.note`)}
           </Typography>
         </CardContent>
       </CardActionArea>

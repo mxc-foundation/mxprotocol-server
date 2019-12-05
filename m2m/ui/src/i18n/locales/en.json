@@ -25,7 +25,9 @@
       "to_eth_account": "To ETH Account",
       "use_axs_wallet": "USE AXS WALLET",
       "no_data_to_display": "THERE IS NO DATA TO DISPLAY",
-      "can_not_find_any_account": "Can not find any account."
+      "can_not_find_any_account": "Can not find any account.",
+      "synchronize_your_eth_account": "Synchronize your ETH Account",
+      "note": "Adding your ETH Account to your M2M Wallet increase your safety. "
     },
     "history": {
       "history": "History",
