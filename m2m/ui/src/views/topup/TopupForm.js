@@ -37,6 +37,7 @@ class TopupForm extends FormComponent {
         extraButtons={extraButtons}
         onSubmit={this.onSubmit}
       >
+        <TitleBarTitle title={i18n.t(`${packageNS}:menu.topup.send_tokens`)} />
         <TextField
           id="to"
           label={i18n.t(`${packageNS}:menu.topup.from_eth_account`)}
@@ -47,7 +48,6 @@ class TopupForm extends FormComponent {
           }}
           fullWidth
         />
-        <TitleBarTitle component={Link} to={`/modify-account/${this.props.orgId}`} title={i18n.t(`${packageNS}:menu.topup.change_eth_account`)} />
         <TextField
           id="to"
           label={i18n.t(`${packageNS}:menu.topup.to_eth_account`)}

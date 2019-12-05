@@ -57,6 +57,7 @@
       "password": "密碼",
       "confirm": "確認",
       "users": "用戶",
+      "type_here": "在此輸入",
       "change_password": "更改密碼",
       "update_password": "更新密碼"
     },
@@ -126,6 +127,8 @@
       "status": "狀態",
       "date": "日期"
     },
+    "control_panel": "控制面板",
+    "organization_list": "組織列表",
     "nb_iot_server": "NB-IoT 伺服器",
     "lpwan_server": "LPWAN 伺服器",
     "powered_by": "由 MXC 極域技術支持",
@@ -147,10 +150,14 @@
       "set_stake": "設定 Stake 數量",
       "history": "歷史",
       "withdraw_stake": "提款",
+      "stake_proc_tit": "Processing Stake...",
+      "stake_proc_desc": "If you want to cancel, click cancel button.",
+      "stake_confirmation_text": "Once you make stake, You can not unstake whithin 30 days. Do you really want to proceed?",
       "congratulations_stake_set": "恭喜你！您的 Stake 已經確定.",
       "unstake_successful": "解除 Stake 成功. MXC 已添加到您的 M2M 錢包中.",
       "staking_enhances": "Staking 通過鼓勵持有者的公平參與來增強數據交易流程.",
-      "close_to_acquiring": "您即將獲得每月收入. 如果現在放棄，您將錯過它."
+      "close_to_acquiring": "您即將獲得每月收入. 如果現在放棄，您將錯過它.",
+      "coming_soon": "快來了"
     },
     "store": {
       "device_has_been": "設備已",
@@ -205,7 +212,8 @@
       "monthly_downtime": "每月伺服器維護時間",
       "tickets_opened": "待解決問題",
       "tickets_closed": "已解決問題",
-      "hours": "小時"
+      "hours": "小時",
+      "type_here": "在此輸入"
     },
     "login": {
       "login": "登錄",

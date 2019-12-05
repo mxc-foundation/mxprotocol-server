@@ -85,7 +85,7 @@ class StakeLayout extends Component {
   render() {
     return (
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
-        <Grid item xs={12} className={this.props.classes.divider}>
+        <Grid item xs={12} md={12} lg={12}  className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
               {/* <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title="Stake" />
@@ -109,7 +109,7 @@ class StakeLayout extends Component {
           </div>
         </Grid>
         <Grid item xs={12} className={this.props.classes.divider}>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={12} lg={6} >
           {this.state.dismissOn && <div className={this.props.classes.infoBox}>
                   <p>{i18n.t(`${packageNS}:menu.messages.staking_enhances`)}</p>
                   <div className={this.props.classes.between}>
