@@ -37,7 +37,7 @@ class HistoryLayout extends Component {
   }
 
   componentDidMount() {
-    window.analytics.page();
+    /*window.analytics.page();*/
     const prevLoc = this.props.location.search.split('=')[1];
     this.setState({loading:true});
     this.locationToTab(prevLoc);

@@ -25,7 +25,7 @@ class ModifyEthAccount extends Component {
     }
     
     componentDidMount() {
-      window.analytics.page();
+      /*window.analytics.page();*/
       this.loadData();
     }
     
