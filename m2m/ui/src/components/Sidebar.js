@@ -148,7 +148,7 @@ const SideNavContent = (props) => {
                 </li>
 
                 <li>
-                    <Link to={`/stake/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                    <Link to={'#'} className="waves-effect side-nav-link-ref">
                         <i className="mdi mdi-view-dashboard"></i>
                         <span> {i18n.t(`${packageNS}:menu.nb_iot_server`)} </span>
                     </Link>
@@ -162,7 +162,7 @@ const SideNavContent = (props) => {
                 </li>
 
                 <li>
-                    <Link to={`/stake/${props.orgId}`} className="waves-effect side-nav-link-ref">
+                    <Link to={'#'} className="waves-effect side-nav-link-ref">
                         <span> {i18n.t(`${packageNS}:menu.powered_by`)} </span>&nbsp;
                         <img src={mxcLogo} className="iconStyle" alt={i18n.t(`${packageNS}:menu.lora_server`)} />
                     </Link>
