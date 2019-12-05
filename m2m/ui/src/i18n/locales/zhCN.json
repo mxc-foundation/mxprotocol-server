@@ -67,7 +67,7 @@
     "devices": {
       "device": "设备",
       "devices": "设备",
-      "downlink_fee_mxc": "下行费用 极域",
+      "downlink_fee_mxc": "下行链路价格",
       "status": "状态",
       "available": "可用",
       "mode": "模式",
@@ -84,7 +84,7 @@
       "gateway": "网关",
       "gateways": "网关列表",
       "status": "状态",
-      "downlink_price": "下行价格",
+      "downlink_price": "下行链路价格",
       "mode": "模式",
       "filter": "过滤"
     },
@@ -95,6 +95,7 @@
       "confirm_stake": "确认质押 ",
       "confirm_unstake": "确认解除质押",
       "unstake": "解除质押",
+      "set_stake": "设定质押",
       "history": "历史",
       "withdraw_stake": "提款",
       "set_stake_success": "恭喜你！您的质押已确认.",
@@ -136,7 +137,7 @@
     "lpwan_server": "LPWAN 服务器",
     "powered_by": "由 MXC 极域技术支持",
     "lora_server": "LPWAN服务器",
-    "version": "版",
+    "version": "版本",
     "messages": {
       "confirmation": "确认",
       "confirmation_text": "您即将从帐户中提取 MXC",
@@ -153,10 +154,10 @@
       "set_stake": "设定质押数额",
       "history": "历史",
       "withdraw_stake": "提款",
+      "congratulations_stake_set": "恭喜你！您的Stake已确认.",
       "stake_proc_tit": "质押请求处理中...",
       "stake_proc_desc": "取消当前请求操作, 请点击'取消'按钮.",
       "stake_confirmation_text": "质押请求一旦完成, 30天内无法取消质押. 确定继续?",
-      "congratulations_stake_set": "恭喜你！您的Stake已确认.",
       "unstake_successful": "解除质押成功. MXC 已添加到您的 M2M Wallet 余额中.",
       "staking_enhances": "通过质押鼓励持有者公平地参与网络来保障数据交易流程",
       "close_to_acquiring": "您即将获得每月收入. 如果现在放弃，您将错过它.",
@@ -184,13 +185,7 @@
       "control_panel": "控制面板"
     },
     "system_settings": {
-      "system_settings": "系统设置",
-      "withdraw_fee": "提款费",
-      "downlink_price": "下行价格",
-      "percentage_share": "每笔交易所收费用百分比",
-      "low_balance": "余额不足警告",
-      "save_changes": "保存更改",
-      "cancel": "取消"
+      "system_settings": "系统设置"
     },
     "settings": {
       "save_changes": "保存更改",
@@ -198,7 +193,7 @@
       "system_settings": "系统设置",
       "control_panel": "控制面板",
       "withdraw_fee": "提款费",
-      "downlink_price": "下行价格",
+      "downlink_price": "下行链路价格",
       "percentage_share": "每笔交易所占百分比",
       "low_balance": "余额不足警告",
       "cancel": "取消",
@@ -215,8 +210,7 @@
       "monthly_downtime": "每月停机时间",
       "tickets_opened": "未解决问题",
       "tickets_closed": "已解决问题",
-      "hours": "小时",
-      "type_here": "在此输入"
+      "hours": "小时"
     },
     "login": {
       "login": "登录",
@@ -235,10 +229,7 @@
       "active": "活性",
       "admin": "管理员",
       "is_active": "活跃",
-      "is_global_admin": "是全球管理员",
-      "tickets_opened": "门票开张",
-      "tickets_closed": "门票关闭",
-      "hours": "小时"
+      "is_global_admin": "是超级管理员"
     }
   }
 }

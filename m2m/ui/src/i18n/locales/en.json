@@ -156,7 +156,7 @@
       "withdraw_stake": "Withdraw Stake",
       "congratulations_stake_set": "Congratulations! Your stake is set.",
       "stake_proc_tit": "Processing Stake...",
-      "stake_proc_desc": "If you want to cancel, Please Click the cancel button.",
+      "stake_proc_desc": "If you want to cancel, please click the cancel button.",
       "stake_confirmation_text": "Once you make stake, You can not unstake whithin 30 days. Do you really want to proceed?",
       "unstake_successful": "Unstake successful. MXC has been added to your M2M Wallet balance.",
       "staking_enhances": "Staking enhances data trade by giving all holders a fair way to take part in the network.",
@@ -210,8 +210,7 @@
       "monthly_downtime": "Monthly Downtime",
       "tickets_opened": "Tickets opened",
       "tickets_closed": "Tickets closed",
-      "hours": "hours",
-      "type_here": "Type Here"
+      "hours": "hours"
     },
     "login": {
       "login": "Login",
