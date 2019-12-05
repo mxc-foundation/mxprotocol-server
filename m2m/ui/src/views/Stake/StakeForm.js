@@ -77,10 +77,8 @@ class StakeForm extends FormComponent {
 		}); */
   };
   
-  clear = () => {
-    this.setState({
-      amount: ''
-    })
+  reset = () => {
+    this.props.reset();
   }
   
   render() {
@@ -88,7 +86,7 @@ class StakeForm extends FormComponent {
       return(<Spinner on={this.state.loading}/>);
     } */
     const extraButtons = <>
-      <Button variant="outlined" color="inherit" onClick={this.handleOpenAXS} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.cancel`)}</Button>
+      <Button variant="outlined" color="inherit" onClick={this.reset} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.reset`)}</Button>
     </>;
 
     return (

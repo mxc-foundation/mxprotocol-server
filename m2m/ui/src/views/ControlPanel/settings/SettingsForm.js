@@ -105,6 +105,10 @@ class SettingsForm extends FormComponent {
     }
   };
 
+  reset = () => {
+    this.loadSettings();
+  }
+
   handleChange = (name, event) => {
     this.setState({
       [name]: event.target.value
@@ -113,7 +117,7 @@ class SettingsForm extends FormComponent {
 
   render() {
     const extraButtons = <>
-      <Button variant="outlined" color="inherit" onClick={this.clear} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.reset`)}</Button>
+      <Button variant="outlined" color="inherit" onClick={this.reset} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.reset`)}</Button>
     </>;
 
     return (

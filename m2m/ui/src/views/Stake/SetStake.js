@@ -87,9 +87,9 @@ class SetStake extends FormComponent {
     });
   }
 
-  clear() {
+  reset = () => {
     this.setState({
-      amount: ''
+      amount: 0
     })
   }
 
@@ -236,7 +236,7 @@ class SetStake extends FormComponent {
         <Grid item xs={12} md={12} lg={6} className={this.props.classes.pRight}>
           {/* <Card className={this.props.classes.card}>
             <CardContent> */}
-              <StakeForm isUnstake={this.state.isUnstake} label={this.state.isUnstake ? i18n.t(`${packageNS}:menu.messages.withdraw_stake`) : i18n.t(`${packageNS}:menu.messages.set_stake`)} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} confirm={this.confirm} />
+              <StakeForm isUnstake={this.state.isUnstake} label={this.state.isUnstake ? i18n.t(`${packageNS}:menu.messages.withdraw_stake`) : i18n.t(`${packageNS}:menu.messages.set_stake`)} onChange={this.onChange} amount={this.state.amount} revRate={this.state.revRate} reset={this.reset} confirm={this.confirm} />
             {/* </CardContent>
           </Card> */}
 
