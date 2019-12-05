@@ -35,4 +35,5 @@ body {
 .iconStyle {
   max-height: 20px;
   background-size: contain;
+  padding-bottom: 3px;
 }

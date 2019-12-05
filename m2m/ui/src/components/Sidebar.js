@@ -7,7 +7,8 @@ import ProfileDropdown from './ProfileDropdown';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import MetisMenu from 'metismenujs/dist/metismenujs';
-import profilePic from '../assets/images/users/user-1.jpg';
+import mxcLogo from '../assets/images/mxc_logo.png';
+import profilePic from '../assets/images/users/profile-icon.png'; 
 import Divider from '@material-ui/core/Divider';
 import SessionStore from '../stores/SessionStore';
 import Admin from '../components/Admin';
@@ -162,8 +163,8 @@ const SideNavContent = (props) => {
 
                 <li>
                     <Link to={`/stake/${props.orgId}`} className="waves-effect side-nav-link-ref">
-                        <i className="mdi mdi-view-dashboard"></i>
-                        <span> {i18n.t(`${packageNS}:menu.powered_by`)} </span>
+                        <span> {i18n.t(`${packageNS}:menu.powered_by`)} </span>&nbsp;
+                        <img src={mxcLogo} className="iconStyle" alt={i18n.t(`${packageNS}:menu.lora_server`)} />
                     </Link>
                 </li>
                 
@@ -387,4 +388,3 @@ class Sidebar extends Component {
 }
 
 export default withRouter(Sidebar);
-//export default connect()(Sidebar); [edit]
