@@ -167,10 +167,9 @@ const theme = createMuiTheme({
       MuiPaper: {
         root: {
           backgroundColor: white,
-          width: '100%',
           overflow: 'auto',
-          //padding: 10,
-          margin: 10,
+          padding: 10,
+          //margin: 10,
         }
       },
       MuiCardContent: {
@@ -181,7 +180,7 @@ const theme = createMuiTheme({
       MuiTablePagination: {
         root: {
           color: dark,
-          background: 'none',
+          background: white,
         },
         actions: {
           marginLeft: 0
@@ -259,7 +258,7 @@ const theme = createMuiTheme({
       },
       MuiMenu: {
         paper: {
-          backgroundColor: blueBG,
+          backgroundColor: white,
           marginTop: '50px',
           color: dark
         }
