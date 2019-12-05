@@ -157,7 +157,7 @@
       "unstake_successful": "解除 Stake 成功. MXC 已添加到您的 M2M Wallet 余额中.",
       "staking_enhances": "Staking 通过鼓励持有者公平地参与网络来保障数据交易流程",
       "close_to_acquiring": "您即将获得每月收入. 如果现在放弃，您将错过它.",
-      "coming_soon": "change menu.messages.coming_soon in zhCN.json"
+      "coming_soon": "快来了"
     },
     "store": {
       "device_has_been": "设备已",

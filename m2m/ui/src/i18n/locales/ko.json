@@ -158,7 +158,7 @@
       "unstake_successful": "성공하지 못한 스테이크. MXC 가 M2M Wallet 저울에 추가되었습니다",
       "staking_enhances": "스태킹은 모든 소지자에게 공정한 네트워크 참여 방법을 제공함으로써 데이터 거래를 향상시킵니다.",
       "close_to_acquiring": "귀하는 월별 수입을 거의 얻었습니다. 당신이 지금 스테이크를 놓치면 놓치게됩니다",
-      "coming_soon": "change menu.messages.coming_soon in ko.json"
+      "coming_soon": "작업 중 입니다."
     },
     "store": {
       "device_has_been": "장치가",
