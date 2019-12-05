@@ -25,13 +25,16 @@
       "to_eth_account": "To ETH Account",
       "use_axs_wallet": "USE AXS WALLET",
       "no_data_to_display": "THERE IS NO DATA TO DISPLAY",
-      "can_not_find_any_account": "Can not find any account."
+      "can_not_find_any_account": "Can not find any account.",
+      "synchronize_your_eth_account": "Synchronize your ETH Account",
+      "note": "Adding your ETH Account to your M2M Wallet increase your safety. "
     },
     "history": {
       "history": "History",
-      "transactions": "TRANSACTIONS",
+      "transactions": "Transactions",
       "eth_account": "ETH Account",
-      "network_activity": "NETWORK ACTIVITY",
+      "network_activity": "Network Activity",
+      "staking": "Staking",
       "from": "From",
       "to": "To",
       "tx_hash": "TxHash",
@@ -153,7 +156,7 @@
       "withdraw_stake": "Withdraw Stake",
       "congratulations_stake_set": "Congratulations! Your stake is set.",
       "stake_proc_tit": "Processing Stake...",
-      "stake_proc_desc": "If you want to cancel, Please Click the cancel button.",
+      "stake_proc_desc": "If you want to cancel, please click the cancel button.",
       "stake_confirmation_text": "Once you make stake, You can not unstake whithin 30 days. Do you really want to proceed?",
       "unstake_successful": "Unstake successful. MXC has been added to your M2M Wallet balance.",
       "staking_enhances": "Staking enhances data trade by giving all holders a fair way to take part in the network.",
@@ -207,8 +210,7 @@
       "monthly_downtime": "Monthly Downtime",
       "tickets_opened": "Tickets opened",
       "tickets_closed": "Tickets closed",
-      "hours": "hours",
-      "type_here": "Type Here"
+      "hours": "hours"
     },
     "login": {
       "login": "Login",

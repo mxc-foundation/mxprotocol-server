@@ -170,7 +170,7 @@ const SideNavContent = (props) => {
 
                 <li>
                     <Link to={'#'} className="waves-effect side-nav-link-ref">
-                        <span> Version: {props.version} </span>
+                        <span> {i18n.t(`${packageNS}:menu.version`)}: {props.version} </span>
                     </Link>
                 </li>
                 

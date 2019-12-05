@@ -25,13 +25,16 @@
       "to_eth_account": "到 ETH 帳戶",
       "use_axs_wallet": "使用 AXS 錢包",
       "no_data_to_display": "沒有數據可顯示",
-      "can_not_find_any_account": "找不到任何帳戶"
+      "can_not_find_any_account": "找不到任何帳戶",
+      "synchronize_your_eth_account": "同步您的 ETH 帳戶",
+      "note": "將您的 ETH 帳戶加入您的 M2M 錢包，以增強安全性."
     },
     "history": {
       "history": "歷史紀錄",
       "transactions": "交易",
       "eth_account": "ETH 帳戶",
       "network_activity": "網路活動",
+      "staking": "質押",
       "from": "從",
       "to": "到",
       "tx_hash": "TxHash",
@@ -64,7 +67,7 @@
     "devices": {
       "device": "裝置",
       "devices": "裝置",
-      "downlink_fee_mxc": "下行鏈路費用 MXC",
+      "downlink_fee_mxc": "下行鏈路價格",
       "status": "狀態",
       "available": "可用",
       "mode": "模式",
@@ -86,23 +89,24 @@
       "filter": "過濾"
     },
     "staking": {
-      "staking": "Staking",
+      "staking": "質押",
       "revenue_rate": "收益率",
-      "your_stake": "你的 Stake 是",
-      "confirm_stake": "確認 Stake",
-      "confirm_unstake": "確認解除 Stake",
-      "unstake": "解除 Stake",
+      "your_stake": "你的質押是",
+      "confirm_stake": "確認質押",
+      "confirm_unstake": "確認解除質押",
+      "unstake": "解除質押",
+      "set_stake": "設定質押",
       "history": "歷史",
       "withdraw_stake": "提款",
-      "set_stake_success": "恭喜你！您的 Stake 已經確定.",
-      "unstake_set_success": "解除 Stake 成功. MXC 已添加到您的 M2M 錢包中.",
-      "stake_description": "Staking 通過鼓勵持有者的公平參與來增強數據交易流程.",
+      "set_stake_success": "恭喜你！您的質押已經確定.",
+      "unstake_set_success": "解除質押成功. MXC 已添加到您的 M2M 錢包中.",
+      "stake_description": "質押通過鼓勵持有者的公平參與來增強數據交易流程.",
       "stake_warning_001": "您即將獲得每月收入. 如果現在放棄，您將錯過它.",
-      "stake_successful": "Stake 成功.",
+      "stake_successful": "質押成功.",
       "inactive": "待用",
       "private": "私人",
       "network": "網絡",
-      "stake_success": "Stake 成功.",
+      "stake_success": "質押成功.",
       "cancel": "取消",
       "reset": "重設",
       "monthly": "每月一次",
@@ -115,7 +119,7 @@
       "revenue": "收入",
       "balance": "餘額",
       "set_stake_caps": "設定質押",
-      "go_to_staking": "去買東西",
+      "go_to_staking": "去質押",
       "filter": "過濾",
       "time": "時間",
       "packets_sent": "發送的數據包",
@@ -143,21 +147,21 @@
       "learn_more": "更多訊息",
       "amount": "量",
       "revenue_rate": "收益率",
-      "your_stake_is": "你的 Stake 是",
-      "confirm_stake": "確認 Stake",
-      "confirm_unstake": "確認解除 Stake",
-      "unstake": "解除 Stake",
-      "set_stake": "設定 Stake 數量",
+      "your_stake_is": "你的質押是",
+      "confirm_stake": "確認質押",
+      "confirm_unstake": "確認解除質押",
+      "unstake": "解除質押",
+      "set_stake": "設定質押數量",
       "history": "歷史",
       "withdraw_stake": "提款",
-      "stake_proc_tit": "Processing Stake...",
-      "stake_proc_desc": "If you want to cancel, click cancel button.",
-      "stake_confirmation_text": "Once you make stake, You can not unstake whithin 30 days. Do you really want to proceed?",
-      "congratulations_stake_set": "恭喜你！您的 Stake 已經確定.",
-      "unstake_successful": "解除 Stake 成功. MXC 已添加到您的 M2M 錢包中.",
-      "staking_enhances": "Staking 通過鼓勵持有者的公平參與來增強數據交易流程.",
+      "congratulations_stake_set": "恭喜你！您的質押已經確定.",
+      "stake_proc_tit": "質押請求處理中...",
+      "stake_proc_desc": "取消當前請求操作, 請點擊'取消'按鈕.",
+      "stake_confirmation_text": "質押請求一旦完成，30天內無法取消質押。確定繼續？",
+      "unstake_successful": "解除質押成功. MXC 已添加到您的 M2M 錢包中.",
+      "staking_enhances": "質押通過鼓勵持有者的公平參與來增強數據交易流程.",
       "close_to_acquiring": "您即將獲得每月收入. 如果現在放棄，您將錯過它.",
-      "coming_soon": "快來了"
+      "coming_soon": "敬請期待"
     },
     "store": {
       "device_has_been": "設備已",
@@ -181,13 +185,7 @@
       "control_panel": "控制面板"
     },
     "system_settings": {
-      "system_settings": "系統設置",
-      "withdraw_fee": "提款費用",
-      "downlink_price": "下行鏈路價格",
-      "percentage_share": "每筆交易所收費用百分比",
-      "low_balance": "餘額不足警告",
-      "save_changes": "儲存更改設定",
-      "cancel": "取消"
+      "system_settings": "系統設置"
     },
     "settings": {
       "save_changes": "儲存更改設定",
@@ -212,8 +210,7 @@
       "monthly_downtime": "每月伺服器維護時間",
       "tickets_opened": "待解決問題",
       "tickets_closed": "已解決問題",
-      "hours": "小時",
-      "type_here": "在此輸入"
+      "hours": "小時"
     },
     "login": {
       "login": "登錄",
@@ -232,7 +229,7 @@
       "active": "活性",
       "admin": "管理員",
       "is_active": "活躍",
-      "is_global_admin": "是全球管理員"
+      "is_global_admin": "是超级管理員"
     }
   }
 }
