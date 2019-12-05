@@ -217,15 +217,13 @@ class SetStake extends FormComponent {
             <TitleBar className={this.props.classes.padding}>
               <TitleBarTitle title={title} />
             </TitleBar>
-            <div className={this.props.classes.between}>
+            {/* <div className={this.props.classes.between}>
               <TitleBar>
                 <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link} />
                 <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link} />
                 <TitleBarTitle component={Link} to="#" title={title} className={this.props.classes.link} />
               </TitleBar>
-
-              {/* <Button variant="outlined" color="inherit" onClick={this.handleOnclick} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.messages.history`)}</Button> */}
-            </div>
+            </div> */}
           </div>
         </Grid>
 

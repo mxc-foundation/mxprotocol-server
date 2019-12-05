@@ -75,9 +75,9 @@ class SupernodeHistory extends Component {
   render() {
       
     return(
-      <Grid container spacing={24}>
+      <Grid container alignContent={'center'} spacing={24}>
         <Spinner on={this.state.loading}/>
-        <Grid item xs={12} md={12} lg={6} className={this.props.classes.divider}>
+        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
                   <TitleBarTitle title={i18n.t(`${packageNS}:menu.history.history`)} />
@@ -93,7 +93,7 @@ class SupernodeHistory extends Component {
             </div>
         </Grid>
 
-        <Grid item container xs={12} md={12} lg={6} justify="space-between" className={this.props.classes.tabsBlock}>
+        <Grid item container alignContent={'center'} xs={12} md={12} lg={12} justify="space-between" className={this.props.classes.tabsBlock}>
         <Tabs
             value={this.state.tab}
             onChange={this.onChangeTab}
@@ -113,7 +113,7 @@ class SupernodeHistory extends Component {
         
         </Grid>
 
-        <Grid item xs={12} md={12} lg={6} >
+        <Grid item alignItems={'center'} xs={12} md={12} lg={12} >
           <Switch>
             <Route exact path={`${this.props.match.path}/`} render={props => <SuperNodeEthAccount organizationID={SUPER_ADMIN} {...props} />} />
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}

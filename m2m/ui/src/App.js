@@ -68,9 +68,7 @@ const styles = {
   },
   main: {
     width: "100%",
-    /* padding: 16, */
-    padding: 0, 
-    paddingTop: 95,
+    padding: '95px 16px 16px 16px',
     flex: 1,
   },
 

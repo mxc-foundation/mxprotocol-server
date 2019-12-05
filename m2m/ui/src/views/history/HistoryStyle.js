@@ -14,7 +14,7 @@ const HistoryStyle = {
         light: true,
         display: 'flex',
         flexDirection: 'column',
-        padding: '0px 0px 0px 0px' 
+        padding: '0px 0px 50px 0px' 
       },
       card: {
         minWidth: 180,

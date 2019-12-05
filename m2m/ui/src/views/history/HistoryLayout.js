@@ -84,7 +84,7 @@ class HistoryLayout extends Component {
     const organizationID = this.props.match.params.organizationID;
     
     return(
-      <Grid container spacing={24}>
+      <Grid container alignContent={'center'} spacing={24}>
         <Spinner on={this.state.loading}/>
         <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
@@ -92,17 +92,17 @@ class HistoryLayout extends Component {
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.history.history`)} />
               </TitleBar>    
               {/* <Divider light={true}/> */}
-              <div className={this.props.classes.between}>
+              {/* <div className={this.props.classes.between}>
               <TitleBar>
                 <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
                 <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
                 <TitleBarTitle component={Link} to="#" title={i18n.t(`${packageNS}:menu.history.history`)} className={this.props.classes.link}/>
               </TitleBar>
-              </div>
+              </div> */}
           </div>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid item xs={12} md={12} lg={12} alignItems={'center'}>
           <Tabs
             value={this.state.tab}
             onChange={this.onChangeTab}
@@ -120,7 +120,7 @@ class HistoryLayout extends Component {
 
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid item xs={12} md={12} lg={12}>
           <Switch>
             <Route exact path={`${this.props.match.path}/`} render={props => <Transactions organizationID={organizationID} {...props} />} />
             <Route exact path={`${this.props.match.path}/eth-account`} render={props => <EthAccount organizationID={organizationID} {...props} />} />

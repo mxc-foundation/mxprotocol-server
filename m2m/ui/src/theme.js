@@ -132,6 +132,8 @@ const theme = createMuiTheme({
       MuiTable: {
         root: {
           background: 'transparent',
+          overflowX: 'auto',
+          width: '100%'
           //minWidth: 840,
         }
       },
@@ -165,8 +167,15 @@ const theme = createMuiTheme({
       MuiPaper: {
         root: {
           backgroundColor: white,
+          width: '100%',
+          overflow: 'auto',
           //padding: 10,
           margin: 10,
+        }
+      },
+      MuiCardContent: {
+        root: {
+          padding: 4,
         }
       },
       MuiTablePagination: {
