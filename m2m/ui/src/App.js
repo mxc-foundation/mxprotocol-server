@@ -45,7 +45,6 @@ const drawerWidth = 220;
 const styles = {
   outerRoot: {
     width: '100%',
-    background: "#311b92",
   },
   root: {
     //width: '1024px',
