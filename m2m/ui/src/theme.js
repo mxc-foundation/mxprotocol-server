@@ -191,7 +191,7 @@ const theme = createMuiTheme({
         root: {
           background: tealHighLight,
           color: blueMxcBrand,
-          width: 160,
+          width: 150,
           height: 50,
           fontWeight: 'bolder',
           marginRight: 5,
