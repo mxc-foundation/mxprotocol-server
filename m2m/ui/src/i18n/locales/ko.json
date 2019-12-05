@@ -25,13 +25,16 @@
       "to_eth_account": "받는 ETH 계좌",
       "use_axs_wallet": "AXS 지갑 사용하기",
       "no_data_to_display": "표시 할 데이터가 없습니다",
-      "can_not_find_any_account": "계정을 찾을 수 없습니다"
+      "can_not_find_any_account": "계정을 찾을 수 없습니다",
+      "synchronize_your_eth_account": "이더리움 어카운트를 동기화 합니다",
+      "note": "안정성 향상을 위해 이더리움 어카운트를 M2M 지갑에 추가합니다."
     },
     "history": {
       "history": "결제내역",
       "transactions": "거래내역",
       "eth_account": "ETH 계좌",
       "network_activity": "네트워크 액티비티",
+      "staking": "스테이킹",
       "from": "발송자",
       "to": "받는자",
       "tx_hash": "TX해쉬",
@@ -132,7 +135,7 @@
     "organization_list": "소속기관 리스트",
     "nb_iot_server": "NB-IoT 서버",
     "lpwan_server": "LPWAN 서버",
-    "powered_by": "Powered by",
+    "powered_by": "운영기관",
     "lora_server": "LPWAN 서버",
     "version": "버전",
     "messages": {
@@ -140,7 +143,7 @@
       "confirmation_text": "귀하의 계정에서 MXC를 인출하려고 합니다",
       "invalid_amount": "출금하려면 유효한 금액을 입력 하십시오",
       "invalid_account": "잘못된 ETH 계정. ETH 계정 메뉴로 진행하십시오",
-      "dismiss": "더이상 보지 않기",
+      "dismiss": "닫기",
       "learn_more": "더 알아보기",
       "amount": "양",
       "revenue_rate": "수익률",
@@ -152,9 +155,13 @@
       "history": "결제내역",
       "withdraw_stake": "스테이킹 출금",
       "congratulations_stake_set": "축하합니다! 스테이킹이 설정 되었습니다.",
+      "stake_proc_tit": "스테이크가 진행 중입니다...",
+      "stake_proc_desc": "취소를 원하시면 최소 버튼을 클릭하세요",
+      "stake_confirmation_text": "스테이킹이 완료된 후에는 30일 동안 되돌릴 수 업습니다. 정말로 진행하시겠습니까?",
       "unstake_successful": "스테이킹이 취소되었습니다. MXC 토큰이 귀하의 M2M 지갑에 추가되었습니다.",
       "staking_enhances": "스태킹은 모든 소지자에게 공정한 네트워크 참여 방법을 제공함으로써 데이터 거래를 향상시킵니다.",
-      "close_to_acquiring": "곧 월별 수입을 받으실 수 있습니다. 지금 스테이킹을 취소하시면 월별 수입을 받을 수 없습니다."
+      "close_to_acquiring": "곧 월별 수입을 받으실 수 있습니다. 지금 스테이킹을 취소하시면 월별 수입을 받을 수 없습니다.",
+      "coming_soon": "작업 중 입니다."
     },
     "store": {
       "device_has_been": "장치가",
@@ -171,7 +178,7 @@
       "demo_version": "이것은 데모 버전입니다"
     },
     "common": {
-      "dismiss": "더이상 보지 않기",
+      "dismiss": "닫기",
       "learn_more": "더 알아보기",
       "amount": "양",
       "confirm": "확인",

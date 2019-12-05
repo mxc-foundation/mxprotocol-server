@@ -115,7 +115,7 @@ class HistoryLayout extends Component {
             <Tab label={i18n.t(`${packageNS}:menu.history.transactions`)} component={Link} to={`/history/${organizationID}/`} />
             <Tab label={i18n.t(`${packageNS}:menu.history.eth_account`)} component={Link} to={`/history/${organizationID}/eth-account`} />
             <Tab label={i18n.t(`${packageNS}:menu.history.network_activity`)} component={Link} to={`/history/${organizationID}/network-activity`} />
-            <Tab label="Staking" component={Link} to={`/history/${organizationID}/stake`} />
+            <Tab label={i18n.t(`${packageNS}:menu.history.staking`)} component={Link} to={`/history/${organizationID}/stake`} />
           </Tabs>
 
         </Grid>
