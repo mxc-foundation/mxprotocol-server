@@ -167,6 +167,12 @@ const SideNavContent = (props) => {
                         <img src={mxcLogo} className="iconStyle" alt={i18n.t(`${packageNS}:menu.lora_server`)} />
                     </Link>
                 </li>
+
+                <li>
+                    <Link to={'#'} className="waves-effect side-nav-link-ref">
+                        <span> Version: {props.version} </span>
+                    </Link>
+                </li>
                 
             </ul>
         </div>
@@ -376,11 +382,12 @@ class Sidebar extends Component {
     render() {
         const isCondensed = this.props.isCondensed || false;
         const orgId = SessionStore.getOrganizationID();
+        const version = this.state.version;
         return (
             <React.Fragment>
                 <div className='left-side-menu' ref={node => this.menuNodeRef = node}>
-                    {!isCondensed && <PerfectScrollbar><SideNavContent orgId={orgId} onChange={this.onChange} /></PerfectScrollbar>}
-                    {isCondensed && <PerfectScrollbar><SideNavContent orgId={orgId} onChange={this.onChange} /></PerfectScrollbar>}
+                    {!isCondensed && <PerfectScrollbar><SideNavContent orgId={orgId} version={version} onChange={this.onChange} /></PerfectScrollbar>}
+                    {isCondensed && <PerfectScrollbar><SideNavContent orgId={orgId} version={version} onChange={this.onChange} /></PerfectScrollbar>}
                 </div>
             </React.Fragment>
         );
