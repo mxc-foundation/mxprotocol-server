@@ -31,9 +31,10 @@
     },
     "history": {
       "history": "History",
-      "transactions": "TRANSACTIONS",
+      "transactions": "Transactions",
       "eth_account": "ETH Account",
-      "network_activity": "NETWORK ACTIVITY",
+      "network_activity": "Network Activity",
+      "staking": "Staking",
       "from": "From",
       "to": "To",
       "tx_hash": "TxHash",

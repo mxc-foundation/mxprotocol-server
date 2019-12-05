@@ -34,6 +34,7 @@
       "transactions": "交易",
       "eth_account": "ETH 帳戶",
       "network_activity": "網路活動",
+      "staking": "質押",
       "from": "從",
       "to": "到",
       "tx_hash": "TxHash",

@@ -34,6 +34,7 @@
       "transactions": "거래내역",
       "eth_account": "ETH 계좌",
       "network_activity": "네트워크 액티비티",
+      "staking": "스테이킹",
       "from": "발송자",
       "to": "받는자",
       "tx_hash": "TX해쉬",
