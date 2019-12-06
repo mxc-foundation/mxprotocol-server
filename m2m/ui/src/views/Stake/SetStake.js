@@ -209,6 +209,7 @@ class SetStake extends FormComponent {
     this.props.classes.infoBoxSucceed,
     this.props.classes.infoBoxError];
     const title = this.state.isUnstake ? i18n.t(`${packageNS}:menu.messages.unstake`) : i18n.t(`${packageNS}:menu.messages.set_stake`);
+    const orgId = this.props.match.params.organizationID;
 
     return (
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
@@ -250,7 +251,7 @@ class SetStake extends FormComponent {
               <ExtLink to={EXT_URL_STAKE} context={i18n.t(`${packageNS}:menu.common.learn_more`)} />
             </div>
           </div>
-          <InfoCard />
+          <InfoCard orgId={orgId}/>
         </Grid>
       </Grid>
     );
