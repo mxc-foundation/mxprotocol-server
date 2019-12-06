@@ -40,7 +40,7 @@ export default function MediaCard(props) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <TitleBarTitle component={Link} to={`/modify-account/${props.orgId}`} title={i18n.t(`${packageNS}:menu.topup.change_eth_account`)} />
+        <TitleBarTitle component={Link} to={`${props.path}`} title={i18n.t(`${packageNS}:menu.topup.change_eth_account`)} />
       </CardActions>
     </Card>
   );
