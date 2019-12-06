@@ -129,7 +129,7 @@ class Topbar extends Component {
     this.state = {
       balance: 0,
       ProfileMenus : [{
-        label: 'Log out',
+        label: 'Logout',
         icon: 'fe-log-out',
         redirectTo: "/logout",
         hasDivider: true
