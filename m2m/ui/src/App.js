@@ -20,6 +20,7 @@ import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
+
 //import ProfileStore from "./stores/ProfileStore";
 import './assets/scss/DefaultTheme.scss';
 // search
@@ -96,9 +97,12 @@ class RedirectedFromLora extends Component {
   render() {
     const { match: { params: { data: dataString } }} = this.props;
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
-    const { path } = data;
+    let { path } = data;
     SessionStore.initProfile(data);
     
+    if(SessionStore.getOrganizationID() === process.env.REACT_APP_SUPER_ADMIN_LPWAN){
+      path = '/control-panel/modify-account/'
+    }
     return <Redirect to={path} />; 
   }
 }
