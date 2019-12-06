@@ -100,7 +100,7 @@ const ProfileMenus = [/* {
   redirectTo: "/",
 }, */
 {
-  label: 'Logout',
+  label: 'Log out',
   icon: 'fe-log-out',
   redirectTo: "/logout",
   hasDivider: true
@@ -128,6 +128,12 @@ class Topbar extends Component {
     super(props);
     this.state = {
       balance: 0,
+      ProfileMenus : [{
+        label: 'Log out',
+        icon: 'fe-log-out',
+        redirectTo: "/logout",
+        hasDivider: true
+      }]
     };
   }
 
@@ -155,6 +161,14 @@ class Topbar extends Component {
 
   onChangeLanguage = (newLanguageState) => {
     this.props.onChangeLanguage(newLanguageState);
+
+    const obj = this.state.ProfileMenus.filter((obj, i, b)=>{
+      if(obj.hasOwnProperty('redirectTo')) return obj;
+    });
+    
+    if(obj){
+      this.state.ProfileMenus[0].label = i18n.t(`${packageNS}:menu.settings.logout`);
+    }
   }
 
   render() {
@@ -200,7 +214,7 @@ class Topbar extends Component {
             </li>
 
             <li>
-              <ProfileDropdown profilePic={profilePic} menuItems={ProfileMenus} username={username} />
+              <ProfileDropdown profilePic={profilePic} menuItems={this.state.ProfileMenus} username={username} />
             </li>
 
             {/* <li className="dropdown notification-list">

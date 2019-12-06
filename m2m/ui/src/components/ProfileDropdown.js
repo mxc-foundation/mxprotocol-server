@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Dropdown, DropdownMenu, DropdownToggle, DropdownItem } from 'reactstrap';
-
+import i18n, { packageNS } from '../i18n';
 
 class ProfileDropdown extends Component {
     constructor(props) {
@@ -36,7 +36,7 @@ class ProfileDropdown extends Component {
                 <DropdownMenu right className="profile-dropdown">
                     <div onClick={this.toggleDropdown}>
                         <div className="dropdown-header noti-title">
-                            <h6 className="text-overflow m-0">Welcome !</h6>
+                            <h6 className="text-overflow m-0">{i18n.t(`${packageNS}:menu.settings.welcome`)}</h6>
                         </div>
                         {this.props.menuItems.map((item, i) => {
                             return <React.Fragment key={i + "-profile-menu"}>
