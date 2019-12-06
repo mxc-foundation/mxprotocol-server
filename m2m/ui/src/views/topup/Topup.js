@@ -78,6 +78,12 @@ class Topup extends Component {
   }
 
   render() {
+    const path = `/modify-account/${this.props.match.params.organizationID}`;;
+    /* if(this.props.match.params.organizationID === process.env.REACT_APP_SUPER_ADMIN_LPWAN){
+      path = '/control-panel/modify-account/';
+    }else{
+      
+    } */
     return(
       <Grid container spacing={24}>
         <Spinner on={this.state.loading}/>
@@ -99,7 +105,7 @@ class Topup extends Component {
           </Card> */}
         </Grid>
         <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>
-          <InfoCard orgId={this.props.match.params.organizationID} />
+          <InfoCard path={path}/>
         </Grid>
       </Grid>
     );

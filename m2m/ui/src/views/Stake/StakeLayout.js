@@ -22,7 +22,7 @@ function doIHaveGateway(orgId) {
       resolve(parseInt(data.count));
     });
   });
-}  
+}
 
 function getDlPrice(orgId) {
   return new Promise((resolve, reject) => {
@@ -53,7 +53,7 @@ class StakeLayout extends Component {
         amount,
         isFirst
       })
-    }); 
+    });
   }
 
   componentDidMount() {
@@ -61,7 +61,7 @@ class StakeLayout extends Component {
     this.loadData();
   }
 
-  componentWillMount(){
+  componentWillMount() {
     this.loadData();
   }
 
@@ -71,13 +71,13 @@ class StakeLayout extends Component {
     }
     this.loadData();
   }
-  
+
   dismissOn = () => {
     this.setState({
       dismissOn: false
     });
   }
-  
+
   onSubmit = (e, apiWithdrawReqRequest) => {
     e.preventDefault();
   }
@@ -85,13 +85,13 @@ class StakeLayout extends Component {
   render() {
     return (
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
-        <Grid item xs={12} md={12} lg={12}  className={this.props.classes.divider}>
+        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
-              {/* <TitleBar className={this.props.classes.padding}>
+            {/* <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title="Stake" />
-              </TitleBar> */}    
-              {/* <Divider light={true}/> */}
-              <div className={this.props.classes.between}>
+              </TitleBar> */}
+            {/* <Divider light={true}/> */}
+            <div className={this.props.classes.between}>
               <TitleBar>
                 <TitleBarTitle title="Stake" />
                 {/* <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
@@ -105,18 +105,20 @@ class StakeLayout extends Component {
                 to={`/stake/${this.props.match.params.organizationID}/set-stake`}
                 classes={this.props.classes}
               /> */}
-              </div>
+            </div>
           </div>
         </Grid>
         <Grid item xs={12} className={this.props.classes.divider}>
           <Grid item xs={12} md={12} lg={6} >
-          {this.state.dismissOn && <div className={this.props.classes.infoBox}>
-                  <p>{i18n.t(`${packageNS}:menu.messages.staking_enhances`)}</p>
-                  <div className={this.props.classes.between}>
-                    <ExtLink dismissOn={this.dismissOn} for={'local'} context={i18n.t(`${packageNS}:menu.common.dismiss`)} />&nbsp;&nbsp;&nbsp;
-                    <ExtLink to={EXT_URL_STAKE} context={i18n.t(`${packageNS}:menu.common.learn_more`)} />
-                  </div>
-                </div>}
+            {this.state.dismissOn && <div className={this.props.classes.infoBox}>
+              <Typography gutterBottom>
+                {i18n.t(`${packageNS}:menu.messages.staking_enhances`)}
+              </Typography>
+              <div className={this.props.classes.between}>
+                {/* <ExtLink dismissOn={this.dismissOn} for={'local'} context={i18n.t(`${packageNS}:menu.common.dismiss`)} />&nbsp;&nbsp;&nbsp; */}
+                <ExtLink to={EXT_URL_STAKE} context={i18n.t(`${packageNS}:menu.common.learn_more`)} />
+              </div>
+            </div>}
           </Grid>
         </Grid>
       </Grid>
