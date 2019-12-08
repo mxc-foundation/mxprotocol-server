@@ -4,12 +4,14 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import classNames from "classnames";
 import { BackToLora } from "./util/M2mUtil";
 
+import themeChinese from "./themeChinese";
+import theme from "./theme";
+
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 
 import history from "./history";
-import theme from "./theme";
 import i18n, { packageNS, DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "./i18n";
 
 import TopNav from "./components/TopNav";
@@ -97,6 +99,13 @@ class RedirectedFromLora extends Component {
   render() {
     const { match: { params: { data: dataString } }} = this.props;
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
+    /* const data = {
+      jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJleHAiOjE1NzU4OTU5MDUsImlzcyI6ImxvcmEtYXBwLXNlcnZlciIsIm5iZiI6MTU3NTgwOTUwNSwic3ViIjoidXNlciIsInVzZXJuYW1lIjoiYWRtaW4ifQ.2RR7SOdt4PC1nIPtMnKAiKvYUKIOA56usYAgfvT9xnk',
+      orgId: '1',
+      orgName: 'loraserver',
+      loraHostUrl: 'localhost:3001',
+      path: '/modify-account/1'
+    } */
     let { path } = data;
     SessionStore.initProfile(data);
     
@@ -116,6 +125,7 @@ class App extends Component {
       drawerOpen: true,
       language: null,
       width: window.innerWidth,
+      theme: theme
     };
 
     this.setDrawerOpen = this.setDrawerOpen.bind(this);
@@ -184,9 +194,10 @@ class App extends Component {
         console.error(`Error loading language ${newLanguage.id}: `, err);
       }
     });
-
+    
     this.setState({
-      language: newLanguage
+      language: newLanguage,
+      theme: newLanguage.code === 'cn' ? themeChinese:theme
     });
   }
 
@@ -244,8 +255,8 @@ class App extends Component {
     return (
       <Router history={history}>
         <React.Fragment>
+          <MuiThemeProvider theme={this.state.theme}>
           <CssBaseline />
-          <MuiThemeProvider theme={theme}>
             {/* <div className={this.props.classes.outerRoot}>
             <div className={this.props.classes.root}> [edit]*/}
             <div className="app">

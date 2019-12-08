@@ -3,16 +3,14 @@ import { border } from "@material-ui/system";
 //import { teal } from "@material-ui/core/colors";
 import MicrosoftYahei from '../src/fonts/Microsoft Yahei.ttf';
 const microsoftYahei = {
-    fontFamily: 'Microsoft YaHei',
+    fontFamily: 'Microsoft YaHei', 
     fontStyle: 'normal',
     fontDisplay: 'swap',
     fontWeight: 400,
     src: `
     local('Microsoft YaHei'),
-    local('Microsoft YaHei'),
     url(${MicrosoftYahei}) format('ttf')
   `,
-    unicodeRange: 'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
 };
 
 const tealHighLight = '#00FFD9';
