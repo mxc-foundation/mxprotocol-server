@@ -21,7 +21,7 @@ export function errorHandler(error) {
     });
   } else {
     if (error.response.obj.code === 16) {
-      history.push("/login");
+      onLoginFailed();
     } else {
       dispatcher.dispatch({
         type: "CREATE_NOTIFICATION",
@@ -33,6 +33,11 @@ export function errorHandler(error) {
     }
   }
 };
+
+export function onLoginFailed() {
+  //console.error('login failed');
+  history.push("/login");
+}
 
 export function errorHandlerLogin(error) {
   if(error.response === undefined) {
@@ -65,7 +70,7 @@ export function errorHandlerIgnoreNotFound(error) {
     });
   } else {
     if (error.response.obj.code === 16 && history.location.pathname !== "/login") {
-      history.push("/login");
+      onLoginFailed();
     } else if (error.response.obj.code !== 5) {
       dispatcher.dispatch({
         type: "CREATE_NOTIFICATION",

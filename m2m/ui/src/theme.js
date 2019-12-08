@@ -49,7 +49,7 @@ const theme = createMuiTheme({
         color: dark
       },
       fontFamily: [
-        'Montserrat',
+        'Karla',
       ].join(','),
     },
     overrides: {
