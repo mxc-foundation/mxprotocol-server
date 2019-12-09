@@ -15,15 +15,15 @@ class TopupForm extends FormComponent {
   } 
 
   render() {
-    const extraButtons = <>
+    /* const extraButtons = <>
       <Button color="primary.main" onClick={this.handleOpenAXS} type="button" disabled={false}>{i18n.t(`${packageNS}:menu.topup.use_axs_wallet`)}</Button>
-    </>;
+    </>; */
     
     if (this.props.reps === undefined) {
       return(
         <Form
           submitLabel={this.props.submitLabel}
-          extraButtons={extraButtons}
+          /* extraButtons={extraButtons} */
           onSubmit={this.onSubmit}
         >
           <TitleBarTitle component={Link} to={'#'} title={i18n.t(`${packageNS}:menu.topup.no_data_to_display`)} />
@@ -34,9 +34,10 @@ class TopupForm extends FormComponent {
     return(
       <Form
         submitLabel={this.props.submitLabel}
-        extraButtons={extraButtons}
+        /* extraButtons={extraButtons} */
         onSubmit={this.onSubmit}
       >
+        <TitleBarTitle title={i18n.t(`${packageNS}:menu.topup.send_tokens`)} />
         <TextField
           id="to"
           label={i18n.t(`${packageNS}:menu.topup.from_eth_account`)}
@@ -47,7 +48,6 @@ class TopupForm extends FormComponent {
           }}
           fullWidth
         />
-        <TitleBarTitle component={Link} to={`/modify-account/${this.props.orgId}`} title={i18n.t(`${packageNS}:menu.topup.change_eth_account`)} />
         <TextField
           id="to"
           label={i18n.t(`${packageNS}:menu.topup.to_eth_account`)}

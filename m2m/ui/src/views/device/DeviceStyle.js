@@ -23,11 +23,11 @@ const DeviceStyles = {
     fontSize: '0.85rem !important',
   },
   TitleBar: {
-    width: '50%',
+    width: '100%',
     light: true,
     display: 'flex',
-    flexDirection: 'column',
-    padding: '0px 0px 50px 0px' 
+    justifyContent:'spaceBetween',
+    padding: '0px 0px 50px 0px'
   },
   divider: {
     padding: 0,
@@ -47,9 +47,9 @@ const DeviceStyles = {
         opacity: 1,
       }
   },
-  subTitle2:{
+  subTitle:{
     textDecoration: "none",
-    padding: 0,
+    paddingTop: 20,
     fontWeight: "bold",
     fontSize: 12,
     color: theme.palette.textPrimary.main,

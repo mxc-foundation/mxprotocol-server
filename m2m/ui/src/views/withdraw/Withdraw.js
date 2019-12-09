@@ -1,20 +1,15 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
 import i18n, { packageNS } from '../../i18n';
-import TitleBar from "../../components/TitleBar";
 import TitleBarTitle from "../../components/TitleBarTitle";
 import MoneyStore from "../../stores/MoneyStore";
 import WithdrawStore from "../../stores/WithdrawStore";
 import SupernodeStore from "../../stores/SupernodeStore";
 import WalletStore from "../../stores/WalletStore";
-import WithdrawForm from "./WithdrawForm";
 import Modal from "./Modal";
-//import WithdrawBalanceInfo from "./WithdrawBalanceInfo";
-import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
-import Divider from '@material-ui/core/Divider';
 import styles from "./WithdrawStyle"
 import { ETHER } from "../../util/Coin-type"
 import { SUPER_ADMIN } from "../../util/M2mUtil"
@@ -179,7 +174,7 @@ class Withdraw extends Component {
                         }
                       }
                     } className={this.props.classes.link} >
-                        Coming soon...
+                        {i18n.t(`${packageNS}:menu.messages.coming_soon`)}
                     </span>
           </TableCell>
           {/*<WithdrawForm
