@@ -19,10 +19,10 @@ const Spinner = (props) => (
         css={override}
         sizeUnit={"px"}
         height={80}
-        width={4}
+        width={8}
         redius={20}
         margin={'4px'}
-        color={'#00FFD9'}  
+        color={'#09006E'}  
         loading={props.on}
         />
     </div>

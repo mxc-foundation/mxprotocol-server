@@ -49,7 +49,7 @@ class Transactions extends Component {
   }
   
   getRow(obj, index) {
-    const url = process.env.REACT_APP_ETHERSCAN_ROPSTEN_HOST + `/tx/${obj.txHash}`;
+    const url = process.env.REACT_APP_ETHERSCAN_HOST + `/tx/${obj.txHash}`;
     return(
       <TableRow key={index}>
         <TableCell align={'center'} className={this.props.classes.maxW140} >{obj.from}</TableCell>

@@ -50,7 +50,7 @@ class SuperNodeEthAccount extends Component {
           }
         >
         </TitleBar>*/}
-        <Grid item xs={12}>
+        <Grid item xs={12} md={12} lg={6} >
           <DataTable
             header={
               <TableRow>

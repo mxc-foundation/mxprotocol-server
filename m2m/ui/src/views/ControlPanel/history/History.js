@@ -75,9 +75,9 @@ class SupernodeHistory extends Component {
   render() {
       
     return(
-      <Grid container spacing={24}>
+      <Grid container alignContent={'center'} spacing={24}>
         <Spinner on={this.state.loading}/>
-        <Grid item xs={12} className={this.props.classes.divider}>
+        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
                   <TitleBarTitle title={i18n.t(`${packageNS}:menu.history.history`)} />
@@ -93,7 +93,7 @@ class SupernodeHistory extends Component {
             </div>
         </Grid>
 
-        <Grid item container xs={12} justify="space-between" className={this.props.classes.tabsBlock}>
+        <Grid item container alignContent={'center'} xs={12} md={12} lg={12} justify="space-between" className={this.props.classes.tabsBlock}>
         <Tabs
             value={this.state.tab}
             onChange={this.onChangeTab}
@@ -103,7 +103,7 @@ class SupernodeHistory extends Component {
             scrollButtons="auto"
             textColor="primary"
           >
-            <Tab label={i18n.t(`${packageNS}:menu.eth_account.eth_account`)} component={Link} to={`/control-panel/history/`} />
+            <Tab label={i18n.t(`${packageNS}:menu.history.eth_account`)} component={Link} to={`/control-panel/history/`} />
           </Tabs>
 
             <Grid container justify="space-between" alignItems="center" className={this.props.classes.card}>
@@ -113,7 +113,7 @@ class SupernodeHistory extends Component {
         
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid item alignItems={'center'} xs={12} md={12} lg={12} >
           <Switch>
             <Route exact path={`${this.props.match.path}/`} render={props => <SuperNodeEthAccount organizationID={SUPER_ADMIN} {...props} />} />
             {/* <Redirect to={`/history/${organizationID}/transactions`} /> */}
@@ -125,3 +125,5 @@ class SupernodeHistory extends Component {
 }
 
 export default withStyles(styles)(withRouter(SupernodeHistory));
+/* const _ExportedHistory = withStyles(styles)(withRouter(SupernodeHistory));
+export default _ExportedHistory; */

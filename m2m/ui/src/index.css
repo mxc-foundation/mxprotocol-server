@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Montserrat', sans-serif;
+  background-color:#ebeff2 !important;
 }
 
 .default-text {
@@ -34,4 +35,5 @@ body {
 .iconStyle {
   max-height: 20px;
   background-size: contain;
+  padding-bottom: 3px;
 }

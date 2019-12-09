@@ -14,7 +14,8 @@ func Setup(conf config.MxpConfig) error {
 		now := time.Now().UTC()
 		nextTickTimeDiff := now.Truncate(time.Hour).Add(time.Hour).Sub(now)
 		t := time.NewTicker(nextTickTimeDiff)
-		superNodePktSentIncomeRatio := 0.08 // TODO: should be received from configs
+		var superNodePktSentIncomeRatio float64 = conf.SuperNode.DlPktTxSnIncomeRatio
+
 		for {
 			// Wait for tick from the ticker
 			<-t.C

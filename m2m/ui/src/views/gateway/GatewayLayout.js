@@ -18,11 +18,11 @@ import { ETHER } from "../../util/Coin-type"
 import { SUPER_ADMIN } from "../../util/M2mUtil"
 
 function getDlPrice(orgId) {
-    return new Promise((resolve, reject) => {
-        WalletStore.getDlPrice(orgId, resp => {
-            resolve(resp.downLinkPrice);
-        });
+  return new Promise((resolve, reject) => {
+    WalletStore.getDlPrice(orgId, resp => {
+      resolve(resp.downLinkPrice);
     });
+  });
 }
 
 class GatewayLayout extends Component {
@@ -42,16 +42,16 @@ class GatewayLayout extends Component {
   loadData = async () => {
     try {
       const orgId = this.props.match.params.organizationID;
-      this.setState({loading: true})
+      this.setState({ loading: true })
       var downlinkFee = await getDlPrice(orgId);
 
       this.setState({
         downlinkFee
       });
 
-      this.setState({loading: false})
+      this.setState({ loading: false })
     } catch (error) {
-      this.setState({loading: false})
+      this.setState({ loading: false })
       console.error(error);
       this.setState({ error });
     }
@@ -67,7 +67,7 @@ class GatewayLayout extends Component {
     }
     this.loadData();
   }
-  
+
   showModal(modal) {
     this.setState({ modal });
   }
@@ -91,40 +91,31 @@ class GatewayLayout extends Component {
   }
 
   onConfirm = (data) => {
-    
+
   }
-  
+
   render() {
     return (
         <Grid container spacing={24} className={this.props.classes.backgroundColor}>
-            {this.state.modal && 
-            <Modal title={i18n.t(`${packageNS}:menu.messages.confirmation`)} description={i18n.t(`${packageNS}:menu.messages.confirmation_text`)} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}
-            <Grid item xs={12} className={this.props.classes.divider}>
+{/*            {this.state.modal &&
+            <Modal title={i18n.t(`${packageNS}:menu.messages.confirmation`)} description={i18n.t(`${packageNS}:menu.messages.confirmation_text`)} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onConfirm={this.onConfirm} />}*/}
+            <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
             <div className={this.props.classes.TitleBar}>
                 <TitleBar className={this.props.classes.padding}>
-                    <TitleBarTitle title={i18n.t(`${packageNS}:menu.gateways.gateways`)} />
-                </TitleBar>    
-                {/* <Divider light={true}/> */}
-                <div className={this.props.classes.between}>
-                <TitleBar>
-                    {/* <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                    <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                    <TitleBarTitle component={Link} to="#" title="Gateway" className={this.props.classes.link}/> */}
+                  <TitleBarTitle title={i18n.t(`${packageNS}:menu.gateways.gateways`)} />
                 </TitleBar>
-                </div>
             </div>
-            </Grid>
-        <Grid item xs={12} className={this.props.classes.divider}>
-          <Grid item xs={6} className={this.props.classes.divider}>
+          </Grid>
+        <Grid item xs={12} md={12} lg={6} className={this.props.classes.divider}>
             <GatewayForm
               submitLabel={i18n.t(`${packageNS}:menu.gateways.gateways`)}
               downlinkFee={this.state.downlinkFee}
               onSelectChange={this.onSelectChange}
               onSubmit={this.onSubmit}
             />
-          </Grid>
         </Grid>
-        </Grid>
+
+      </Grid>
     );
   }
 }
