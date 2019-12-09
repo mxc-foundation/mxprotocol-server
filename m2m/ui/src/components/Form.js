@@ -6,14 +6,17 @@ import { withStyles } from "@material-ui/core/styles";
 
 const styles = {
   formControl: {
-    paddingTop: 24,
+    paddingTop: 24, 
   },
+  formMargin: {
+    margin: 16,
+  }
 }
 
 class Form extends Component {
   render() {
     return(
-      <form onSubmit={this.props.onSubmit}>
+      <form onSubmit={this.props.onSubmit} className={this.props.classes.formMargin}>
         {this.props.children}
 
         <Grid container justify="flex-end" className={this.props.classes.formControl}>

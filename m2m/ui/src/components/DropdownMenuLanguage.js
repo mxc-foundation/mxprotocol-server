@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Select from "react-select";
+import Select, {components} from "react-select";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "../i18n";
@@ -21,8 +21,8 @@ const styles = {
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    color: "#FFFFFF",
-    width: "180px",
+    //color: "#FFFFFF",
+    width: "70px",
     margin: 20,
     // match with the menu
     borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
@@ -37,7 +37,7 @@ const customStyles = {
   }),
   menu: base => ({
     ...base,
-    background:"#101c4a",
+    background:'white',
     // override border radius to match the box
     borderRadius: 0,
     // kill the gap
@@ -47,7 +47,7 @@ const customStyles = {
   }),
   menuList: base => ({
     ...base,
-    background: "#1a2d6e",
+    background: 'white',
     // kill the white space on first and last option
     paddingTop: 0,
   }),
@@ -60,6 +60,20 @@ const customStyles = {
     overflow: "hidden",
     textOverflow: "ellipsis"
   }),
+};
+
+
+const customSelectComponents = {
+  SingleValue: ({ children, ...props }) => {
+    
+    const {code} = props.data || {};
+    return (<components.SingleValue {...props}>
+      {<FlagIcon
+              code={code}
+              size='1x'
+            />}
+    </components.SingleValue>);
+  }
 };
 
 class WithPromises extends Component {
@@ -117,7 +131,7 @@ class WithPromises extends Component {
 
     return (
       <div className={classNames(this.props.classes.languageWrapper)}>
-        {
+        {/* {
           selectedOption && selectedOption.code
           ? (
             <FlagIcon
@@ -126,7 +140,7 @@ class WithPromises extends Component {
               size='2x'
             />
           ) : null
-        }
+        } */}
         <Select
           className={classNames(this.props.classes.languageSelection)}
           styles={customStyles}
@@ -142,6 +156,7 @@ class WithPromises extends Component {
           onChange={this.onChangeLanguage}
           options={SUPPORTED_LANGUAGES}
           value={selectedOption}
+          components={customSelectComponents}
         />
       </div>
     );

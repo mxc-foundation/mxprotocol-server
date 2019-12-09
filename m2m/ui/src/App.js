@@ -1,25 +1,30 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import {Router} from "react-router-dom";
 import { Route, Switch, Redirect } from 'react-router-dom';
 import classNames from "classnames";
 import { BackToLora } from "./util/M2mUtil";
+
+import themeChinese from "./themeChinese";
+import theme from "./theme";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 
 import history from "./history";
-import theme from "./theme";
 import i18n, { packageNS, DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "./i18n";
 
 import TopNav from "./components/TopNav";
 import TopBanner from "./components/TopBanner";
-import SideNav from "./components/SideNav";
+//import SideNav from "./components/SideNav"; [edit]
+import Sidebar from "./components/Sidebar";
+import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
 import Notifications from "./components/Notifications";
 import SessionStore from "./stores/SessionStore";
-//import ProfileStore from "./stores/ProfileStore";
 
+//import ProfileStore from "./stores/ProfileStore";
+import './assets/scss/DefaultTheme.scss';
 // search
 //import Search from "./views/search/Search";
 
@@ -33,17 +38,16 @@ import DeviceLayout from "./views/device/DeviceLayout";
 import GatewayLayout from "./views/gateway/GatewayLayout";
 import StakeLayout from "./views/Stake/StakeLayout";
 import SetStake from "./views/Stake/SetStake";
-
+import { getLoraHost } from "./util/M2mUtil";
 import SuperAdminWithdraw from "./views/ControlPanel/withdraw/withdraw"
 import SupernodeHistory from "./views/ControlPanel/history/History"
-import SystemSettings from "./views/ControlPanel/settings/settings"
+import SystemSettings from "./views/ControlPanel/settings/Settings"
 
-const drawerWidth = 270;
+const drawerWidth = 220;
 
 const styles = {
   outerRoot: {
     width: '100%',
-    background: "#311b92",
   },
   root: {
     //width: '1024px',
@@ -66,8 +70,7 @@ const styles = {
   },
   main: {
     width: "100%",
-    padding: 2 * 24,
-    paddingTop: 115,
+    padding: '95px 16px 16px 16px',
     flex: 1,
   },
 
@@ -95,11 +98,20 @@ class RedirectedFromLora extends Component {
 
   render() {
     const { match: { params: { data: dataString } }} = this.props;
-
     const data = JSON.parse(decodeURIComponent(dataString) || '{}');
-    const { path } = data;
+    /* const data = {
+      jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJleHAiOjE1NzU4OTU5MDUsImlzcyI6ImxvcmEtYXBwLXNlcnZlciIsIm5iZiI6MTU3NTgwOTUwNSwic3ViIjoidXNlciIsInVzZXJuYW1lIjoiYWRtaW4ifQ.2RR7SOdt4PC1nIPtMnKAiKvYUKIOA56usYAgfvT9xnk',
+      orgId: '1',
+      orgName: 'loraserver',
+      loraHostUrl: 'localhost:3001',
+      path: '/modify-account/1'
+    } */
+    let { path } = data;
     SessionStore.initProfile(data);
     
+    if(SessionStore.getOrganizationID() === process.env.REACT_APP_SUPER_ADMIN_LPWAN){
+      path = '/control-panel/modify-account/'
+    }
     return <Redirect to={path} />; 
   }
 }
@@ -111,12 +123,28 @@ class App extends Component {
     this.state = {
       user: true,
       drawerOpen: true,
-      language: null
+      language: null,
+      width: window.innerWidth,
+      theme: theme
     };
 
     this.setDrawerOpen = this.setDrawerOpen.bind(this);
   }
-k
+
+  componentWillMount() {
+    window.addEventListener('resize', this.handleWindowSizeChange);
+  }
+  
+  // make sure to remove the listener
+  // when the component is not mounted anymore
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowSizeChange);
+  }
+
+  handleWindowSizeChange = () => {
+    this.setState({ width: window.innerWidth });
+  };
+
   componentDidMount() {
     SessionStore.on("change", () => {
       this.setState({
@@ -166,9 +194,10 @@ k
         console.error(`Error loading language ${newLanguage.id}: `, err);
       }
     });
-
+    
     this.setState({
-      language: newLanguage
+      language: newLanguage,
+      theme: newLanguage.code === 'cn' ? themeChinese:theme
     });
   }
 
@@ -182,12 +211,30 @@ k
     this.forceUpdate();
   }
 
+    /**
+     * toggle Menu
+     */
+    toggleMenu = (e) => {
+        e.preventDefault();
+        this.setState({ isCondensed: !this.state.isCondensed });
+    }
+
+    /**
+     * Toggle right side bar
+     */
+    toggleRightSidebar = () => {
+        document.body.classList.toggle("right-bar-enabled");
+    }
+
   render() {
     const { language } = this.state;
 
     let topNav = null;
     let sideNav = null;
     let topbanner = null;
+
+    const { width } = this.state;
+    const isMobile = width <= 800;
 
     if (this.state.user !== null) {
       topNav = (
@@ -199,22 +246,25 @@ k
           username={SessionStore.getUsername()}
         />
       );
-      topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>;
-      sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>
+      //topbanner = <TopBanner setDrawerOpen={this.setDrawerOpen} drawerOpen={this.state.drawerOpen} user={this.state.user} organizationId={this.state.organizationId}/>; [edit]
+      //sideNav = <SideNav initProfile={SessionStore.initProfile} open={this.state.drawerOpen} organizationID={SessionStore.getOrganizationID()}/>; [edit]
+      topbanner = <Topbar rightSidebarToggle={this.toggleRightSidebar} onChangeLanguage={this.onChangeLanguage} menuToggle={this.toggleMenu} {...this.props} />;
+      sideNav = <Sidebar isCondensed={this.state.isCondensed} {...this.props} />;
     }
     
     return (
       <Router history={history}>
         <React.Fragment>
+          <MuiThemeProvider theme={this.state.theme}>
           <CssBaseline />
-          <MuiThemeProvider theme={theme}>
-            <div className={this.props.classes.outerRoot}>
-            <div className={this.props.classes.root}>
-              {topNav}
+            {/* <div className={this.props.classes.outerRoot}>
+            <div className={this.props.classes.root}> [edit]*/}
+            <div className="app">
+                <div id="wrapper">
+              {/* {topNav} */}
               {topbanner}
               {sideNav}
-              {topNav}
-              <div className={classNames(this.props.classes.main, this.state.drawerOpen && this.props.classes.mainDrawerOpen)}>
+              <div className={classNames(this.props.classes.main, !isMobile && this.props.classes.mainDrawerOpen )}>
                 <Grid container spacing={24}>
                   <Switch>
                     <Route path="/j/:data" component={RedirectedFromLora} />
@@ -231,6 +281,14 @@ k
                     <Route path="/control-panel/history" component={SupernodeHistory} />
                     <Route path="/control-panel/system-settings" component={SystemSettings} />
                     <Route render={BackToLora} />
+                    <Route path='/ext' component={() => { 
+                            window.location.href = getLoraHost(); 
+                            return null;
+                        }}/>
+                    <Route path='/logout' component={() => { 
+                            window.location.href = getLoraHost(); 
+                            return null;
+                        }}/>    
                   </Switch>
                 </Grid>
               </div>

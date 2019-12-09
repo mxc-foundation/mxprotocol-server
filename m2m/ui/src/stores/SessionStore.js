@@ -101,10 +101,9 @@ class SessionStore extends EventEmitter {
       organizationList = organizations.map((o, i) => { 
       return {label: o.organizationName, value: o.organizationID}});
     }
-    
+
     localStorage.setItem("organizationList", JSON.stringify(organizationList));
-    this.emit("organizationList.change");
-    //this.emit("organizationList.change");
+/*    this.emit("organizationList.change");*/
   }
 
   getOrganizationList() {
@@ -167,7 +166,6 @@ class SessionStore extends EventEmitter {
   }
 
   initProfile(data) {
-
     const { jwt, orgId, orgName, username, loraHostUrl, language } = data;
     
     if(jwt === "" || orgId === "" || orgId === undefined){
@@ -216,9 +214,8 @@ class SessionStore extends EventEmitter {
         .then(checkStatus)
         .then(resp => {
           localStorage.setItem("user", JSON.stringify(resp.obj.userProfile.user))
-
-          if(resp.obj.organizations !== undefined) {
-            this.organizations = resp.obj.organizations;
+          if(resp.obj.userProfile.organizations !== undefined) {
+            this.setOrganizationList(resp.obj.userProfile.organizations);
           }
 
           if(resp.obj.settings !== undefined) {

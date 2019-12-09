@@ -59,44 +59,44 @@ const DeviceStyles = {
       } 
   },
   infoBox: {
-    height: 150,
+    height: 159,
     width: '100%',
     borderWidth: 2,
     borderLeft: '5px solid #4d89e5',
-    backgroundColor: '#142257',
+    backgroundColor: 'white',
     padding: 10,
-    margin: 10
+    margin: 16
   },
   infoBoxSucceed: {
-    height: 150,
+    height: 159,
     width: '100%',
     borderWidth: 2,
     borderLeft: '5px solid #60af4e',
-    backgroundColor: '#142257',
+    backgroundColor: 'white',
     padding: 10,
-    margin: 10
+    margin: 16
   },
   infoBoxError: {
-    height: 150,
+    height: 159,
     width: '100%',
     borderWidth: 2,
     borderLeft: '5px solid #df434e',
-    backgroundColor: '#142257',
+    backgroundColor: 'white',
     padding: 10,
-    margin: 10
+    margin: 16
   },
   pRight: {
-    paddingRight: 10
+    paddingRight: 0
   },
   pLeft: {
-    paddingLeft: 10
+    paddingLeft: 0
   },
   urStake: {
     width: '100%',
     height: 60,
-    backgroundColor: '#142257',
+    backgroundColor: 'white',
     padding: 10,
-    margin: 10
+    margin: 0
   },
   mxc: {
     fontWeight: 'bolder'

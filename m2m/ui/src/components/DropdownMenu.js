@@ -7,7 +7,7 @@ import { SUPER_ADMIN } from "../util/M2mUtil";
 const customStyles = {
     control: (base, state) => ({
       ...base,
-      margin: 20,
+      margin: 5,
       // match with the menu
       borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
       // Overwrittes the different states of border
@@ -21,7 +21,8 @@ const customStyles = {
     }),
     menu: base => ({
       ...base,
-      background:'#101c4a',
+      //background:'#101c4a', [edit] 191126
+      background: 'white',
       // override border radius to match the box
       borderRadius: 0,
       // kill the gap
@@ -31,9 +32,11 @@ const customStyles = {
     }),
     menuList: base => ({
       ...base,
-      background: '#1a2d6e',
+      //background: '#1a2d6e', [edit] 191126
+      background: 'white',
       // kill the white space on first and last option
       paddingTop: 0,
+      
     }),
     option: base => ({
         ...base,

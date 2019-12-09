@@ -2,6 +2,7 @@ package ui
 
 import (
 	"context"
+	"time"
 
 	"github.com/golang/protobuf/ptypes"
 	log "github.com/sirupsen/logrus"
@@ -242,7 +243,12 @@ func (s *TopUpServerAPI) GetIncome(ctx context.Context, req *api.GetIncomeReques
 		return nil, status.Error(codes.Unknown, "")
 	}
 
+	amount, err := db.Wallet.GetSupernodeIncomeAmount(time.Time{}, time.Now())
+	if err != nil {
+		return &api.GetIncomeResponse{Amount: 0}, err
+	}
+
 	return &api.GetIncomeResponse{
-		Amount: 2380,
+		Amount: amount,
 	}, nil
 }

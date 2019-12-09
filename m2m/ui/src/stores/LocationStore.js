@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 import "whatwg-fetch";
 import dispatcher from "../dispatcher";
 import history from "../history";
+import { onLoginFailed } from "./helpers";
 
 
 function checkStatus(response) {
@@ -15,7 +16,7 @@ function checkStatus(response) {
 function errorHandler(error) {
   error.then((data) => {
     if (data.code === 16) {
-      history.push("/login");
+      onLoginFailed();
     } else {
       dispatcher.dispatch({
         type: "CREATE_ERROR",

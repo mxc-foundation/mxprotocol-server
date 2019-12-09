@@ -24,7 +24,7 @@ function doIHaveGateway(orgId) {
       resolve(parseInt(data.count));
     });
   });
-}  
+}
 
 function getDlPrice(orgId) {
   return new Promise((resolve, reject) => {
@@ -48,7 +48,7 @@ class DeviceLayout extends Component {
   loadData = async () => {
     try {
       const orgId = this.props.match.params.organizationID;
-      this.setState({loading: true})
+      this.setState({ loading: true })
       let res = await doIHaveGateway(orgId);
       let downlinkFee = await getDlPrice(orgId);
       let haveGateway = (res > 0) ? true : false;
@@ -58,15 +58,16 @@ class DeviceLayout extends Component {
         haveGateway
       });
 
-      this.setState({loading: false})
+      this.setState({ loading: false })
     } catch (error) {
-      this.setState({loading: false})
+      this.setState({ loading: false })
       console.error(error);
       this.setState({ error });
     }
   }
 
   componentDidMount() {
+    /*window.analytics.page();*/
     this.loadData();
   }
 
@@ -76,7 +77,7 @@ class DeviceLayout extends Component {
     }
     this.loadData();
   }
-  
+
   onSubmit = (e, apiWithdrawReqRequest) => {
     e.preventDefault();
   }
@@ -100,11 +101,11 @@ class DeviceLayout extends Component {
     const { dvId, available } = device;
     //console.log('onSwitchChange', device);
     let mod = DV_FREE_GATEWAYS_LIMITED;
-    if(!this.state.haveGateway){
+    if (!this.state.haveGateway) {
       mod = DV_WHOLE_NETWORK;
     }
-    if(!available){
-     mod = DV_INACTIVE;   
+    if (!available) {
+      mod = DV_INACTIVE;
     }
     //console.log('onSwitchChange', mod);
     DeviceStore.setDeviceMode(this.props.match.params.organizationID, dvId, mod, data => {
@@ -114,26 +115,19 @@ class DeviceLayout extends Component {
   render() {
     return (
       <Grid container spacing={24} className={this.props.classes.backgroundColor}>
-        <Grid item xs={12} className={this.props.classes.divider}>
-          <div className={this.props.classes.TitleBar}>
+        <Grid item xs={12} md={12} lg={12}>
+          <Grid item xs={12} md={12} lg={6} className={this.props.classes.divider}>
+            <div className={this.props.classes.TitleBar}>
               <TitleBar className={this.props.classes.padding}>
                 <TitleBarTitle title={i18n.t(`${packageNS}:menu.devices.devices`)} />
-              </TitleBar>    
-              {/* <Divider light={true}/> */}
-              <div className={this.props.classes.between}>
-              <TitleBar>
-                {/* <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
-                <TitleBarTitle component={Link} to="#" title="Devices" className={this.props.classes.link}/> */}
               </TitleBar>
               <div className={this.props.classes.subTitle}>
                 {i18n.t(`${packageNS}:menu.devices.downlink_fee_mxc`)} {this.state.downlinkFee} MXC
-              </div>
-              </div>
-          </div>
+             </div>
+            </div>
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={this.props.classes.divider}>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={12} lg={6} className={this.props.classes.divider}>
           <DeviceForm
             submitLabel={i18n.t(`${packageNS}:menu.devices.devices`)}
             onSubmit={this.onSubmit}
@@ -142,7 +136,6 @@ class DeviceLayout extends Component {
             onSelectChange={this.onSelectChange}
             onSwitchChange={this.onSwitchChange}
           />
-          </Grid>
         </Grid>
       </Grid>
     );

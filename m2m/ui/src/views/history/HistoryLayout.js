@@ -37,6 +37,7 @@ class HistoryLayout extends Component {
   }
 
   componentDidMount() {
+    /*window.analytics.page();*/
     const prevLoc = this.props.location.search.split('=')[1];
     this.setState({loading:true});
     this.locationToTab(prevLoc);
@@ -83,29 +84,25 @@ class HistoryLayout extends Component {
     const organizationID = this.props.match.params.organizationID;
     
     return(
-      <Grid container spacing={24}>
+      <Grid container alignContent={'center'} spacing={24}>
         <Spinner on={this.state.loading}/>
-        <Grid item xs={12} className={this.props.classes.divider}>
+        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
-                <TitleBar className={this.props.classes.padding}>
-                  <TitleBarTitle title={i18n.t(`${packageNS}:menu.history.history`)} />
-                </TitleBar>
-                {/* <Divider light={true}/>
-                <div className={this.props.classes.breadcrumb}>
-                <TitleBar>
-                  <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                  <TitleBarTitle title="/" className={this.props.classes.navText}/>
-                  <TitleBarTitle component={Link} to="#" title="History" className={this.props.classes.link}/>
-                </TitleBar>
-                </div> */}
-                  {this.state.tab === 3 && <div className={this.props.classes.alignCol}>
-                      <Button color="primary.main" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} /* onClick={this.handleOpenAXS} */ type="button" disabled={false}>{i18n.t(`${packageNS}:menu.staking.go_to_staking`)}</Button>
-                      {/* <Button variant="outlined" color="inherit" component={Link} to={`/stake/${this.props.match.params.organizationID}/set-stake`} onClick={this.unstake} type="button" disabled={false}>UNSTAKE</Button> */}
-                  </div>}
-            </div>
+              <TitleBar className={this.props.classes.padding}>
+                <TitleBarTitle title={i18n.t(`${packageNS}:menu.history.history`)} />
+              </TitleBar>    
+              {/* <Divider light={true}/> */}
+              {/* <div className={this.props.classes.between}>
+              <TitleBar>
+                <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
+                <TitleBarTitle component={Link} to="#" title="/" className={this.props.classes.link}/>
+                <TitleBarTitle component={Link} to="#" title={i18n.t(`${packageNS}:menu.history.history`)} className={this.props.classes.link}/>
+              </TitleBar>
+              </div> */}
+          </div>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid item xs={12} md={12} lg={12} alignItems={'center'}>
           <Tabs
             value={this.state.tab}
             onChange={this.onChangeTab}
@@ -118,12 +115,12 @@ class HistoryLayout extends Component {
             <Tab label={i18n.t(`${packageNS}:menu.history.transactions`)} component={Link} to={`/history/${organizationID}/`} />
             <Tab label={i18n.t(`${packageNS}:menu.history.eth_account`)} component={Link} to={`/history/${organizationID}/eth-account`} />
             <Tab label={i18n.t(`${packageNS}:menu.history.network_activity`)} component={Link} to={`/history/${organizationID}/network-activity`} />
-            <Tab label="Staking" component={Link} to={`/history/${organizationID}/stake`} />
+            <Tab label={i18n.t(`${packageNS}:menu.history.staking`)} component={Link} to={`/history/${organizationID}/stake`} />
           </Tabs>
 
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid item xs={12} md={12} lg={12}>
           <Switch>
             <Route exact path={`${this.props.match.path}/`} render={props => <Transactions organizationID={organizationID} {...props} />} />
             <Route exact path={`${this.props.match.path}/eth-account`} render={props => <EthAccount organizationID={organizationID} {...props} />} />
