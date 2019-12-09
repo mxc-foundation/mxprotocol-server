@@ -35,7 +35,7 @@ export function errorHandler(error) {
 };
 
 export function onLoginFailed() {
-  //console.error('login failed');
+  console.error('login failed');
   history.push("/login");
 }
 
