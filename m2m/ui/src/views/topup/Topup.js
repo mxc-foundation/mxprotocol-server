@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter, Link } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
+import Modal from "../common/Modal";
 
 import Grid from '@material-ui/core/Grid';
 import i18n, { packageNS } from '../../i18n';
@@ -10,8 +11,12 @@ import Divider from '@material-ui/core/Divider';
 import Spinner from "../../components/ScaleLoader";
 import TopupStore from "../../stores/TopupStore";
 import MoneyStore from "../../stores/MoneyStore";
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import SessionStorage from "../../stores/SessionStore";
 import TopupForm from "./TopupForm";
 import { ETHER } from "../../util/Coin-type"
+import InfoCard from "./InfoCard"; 
 import styles from "./TopupStyle"
 
 function loadSuperNodeActiveMoneyAccount(organizationID) {
@@ -36,6 +41,7 @@ class Topup extends Component {
     super(props);
     this.state = {
       loading: false,
+      modal: null,
     };
     this.loadData = this.loadData.bind(this);
   }
@@ -63,6 +69,15 @@ class Topup extends Component {
       accounts.superNodeAccount = superNodeAccount;
       accounts.account = account;
 
+      
+      if(accounts.superNodeAccount === process.env.REACT_APP_DEFAULT_ETH_ACCOUNT &&  SessionStorage.getUser().isAdmin){
+        this.showModal(true);
+      }
+
+      if(accounts.account === '' &&  !SessionStorage.getUser().isAdmin){
+        this.showModal(true);
+      }
+
       this.setState({
         accounts
       }); 
@@ -74,35 +89,59 @@ class Topup extends Component {
     }
   }
 
+  showModal = (modal) => {
+    this.setState({ modal});
+  }
+
+  handleCloseModal = () => {
+    this.setState({
+      modal: null
+    })
+  }
+
+  onSubmit = () => {
+    if(SessionStorage.getUser().isAdmin){
+      this.props.history.push(`/control-panel/modify-account`);
+    }else{
+      this.props.history.push(`/modify-account/${this.props.match.params.organizationID}`);
+    }
+  }
+
   render() {
+    const path = `/modify-account/${this.props.match.params.organizationID}`;;
+    /* if(this.props.match.params.organizationID === process.env.REACT_APP_SUPER_ADMIN_LPWAN){
+      path = '/control-panel/modify-account/';
+    }else{
+      
+    } */
+    const description = SessionStorage.getUser().isAdmin 
+      ? i18n.t(`${packageNS}:menu.topup.notice001`) +" "+ i18n.t(`${packageNS}:menu.topup.notice003`)
+      : i18n.t(`${packageNS}:menu.topup.notice002`) +" "+ i18n.t(`${packageNS}:menu.topup.notice003`);
+
     return(
       <Grid container spacing={24}>
         <Spinner on={this.state.loading}/>
-        <Grid item xs={12} className={this.props.classes.divider}>
+        {this.state.modal && 
+          <Modal title={i18n.t(`${packageNS}:menu.topup.notice`)} description={description} onClose={this.handleCloseModal} open={!!this.state.modal} data={this.state.modal} onSubmit={this.onSubmit} />}
+        <Grid item xs={12} md={12} lg={12} className={this.props.classes.divider}>
           <div className={this.props.classes.TitleBar}>
-                <TitleBar className={this.props.classes.padding}>
-                  <TitleBarTitle title={i18n.t(`${packageNS}:menu.topup.topup`)} />
-                </TitleBar>
-                {/* <Divider light={true}/>
-                <div className={this.props.classes.breadcrumb}>
-                <TitleBar>
-                  <TitleBarTitle component={Link} to="#" title="M2M Wallet" className={this.props.classes.link}/> 
-                  <TitleBarTitle title="/" className={this.props.classes.navText}/>
-                  <TitleBarTitle component={Link} to="#" title="Top up" className={this.props.classes.link}/>
-                </TitleBar>
-                </div> */}
-            </div>
+              <TitleBar className={this.props.classes.padding}>
+                <TitleBarTitle title={i18n.t(`${packageNS}:menu.topup.topup`)} />
+              </TitleBar>
+          </div>
         </Grid>
-        <Grid item xs={6} className={this.props.classes.column}>
-          <TitleBarTitle title={i18n.t(`${packageNS}:menu.topup.send_tokens`)} />
-          <Divider light={true}/>
-          <TopupForm
-            reps={this.state.accounts} {...this.props}
-            orgId ={this.props.match.params.organizationID} 
-          />
-            
+        <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>
+          {/* <Card className={this.props.classes.card}>
+            <CardContent> */}
+              <TopupForm
+                reps={this.state.accounts} {...this.props}
+                orgId ={this.props.match.params.organizationID} 
+              />
+            {/* </CardContent>
+          </Card> */}
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={12} lg={6} className={this.props.classes.column}>
+          <InfoCard path={path}/>
         </Grid>
       </Grid>
     );

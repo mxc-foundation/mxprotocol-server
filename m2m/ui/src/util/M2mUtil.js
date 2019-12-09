@@ -1,3 +1,6 @@
+import React, { Component } from 'react';
+import NumberFormat from 'react-number-format';
+
 export const SUPER_ADMIN = '0';
 
 export function BackToLora() {
@@ -13,4 +16,45 @@ export function getLoraHost(){
     }
 
     return host;
+}
+
+export const NumberFormatMXC=(props)=> {
+	const { inputRef, onChange, ...other } = props;
+
+	return (
+		<NumberFormat
+			{...other}
+			getInputRef={inputRef}
+			onValueChange={(values) => {
+				onChange({
+					target: {
+						value: values.value
+					}
+				});
+			}}
+			suffix=" MXC"
+		/>
+	);
+}
+
+export const NumberFormatPerc =(props) =>{
+	const { inputRef, onChange, id, ...other } = props;
+    let suffix = " %";
+    if(id === 'revRate'){
+        suffix += " Monthly";
+    }
+	return (
+		<NumberFormat
+			{...other}
+			getInputRef={inputRef}
+			onValueChange={(values) => {
+				onChange({
+					target: {
+						value: values.value
+					}
+				});
+			}}
+			suffix={suffix}
+		/>
+	);
 }

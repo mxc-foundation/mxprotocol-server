@@ -113,17 +113,17 @@ appserver="appserver:8002"
 
 [supernode]
 ## For official Eth network
-#contract_address="0x5Ca381bBfb58f0092df149bD3D243b08B9a8386e"
-#supernode_address="0x8a96E17d85Bd897a88B547718865de990D2Fcb80"
+contract_address="0x5Ca381bBfb58f0092df149bD3D243b08B9a8386e"
+supernode_address="0x8De4C32da37A15A66Ac73754016D8917D2a667a9"
 
 ## For Ether testnetwork (Ropsten)
-contract_address="0xd0B0e864959d4625577939fC4d45b77aeB04F1d0"
-supernode_address="0x63dF6a06D4a9e20199C6Be3eE9cac591b7d5D01F"
+#contract_address="0xd0B0e864959d4625577939fC4d45b77aeB04F1d0"
+#supernode_address="0x63dF6a06D4a9e20199C6Be3eE9cac591b7d5D01F"
 
 api_key="W8M6B92HBM7CUAQINJ8IMST29RY2ZVSQH4"
 check_account_seconds=30
 external_currency_abv="Ether"
-ether_test_net=true
+ether_test_net=false
 
 down_link_price = 0.1
 

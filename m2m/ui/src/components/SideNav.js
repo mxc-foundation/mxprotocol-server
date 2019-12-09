@@ -65,7 +65,7 @@ class SideNav extends Component {
   }
 
   handleMXC = async () => {
-    window.location.replace(`http://mxc.org/`);
+    window.location.replace(`https://www.mxc.org/`);
   } 
 
   loadData = async () => {
