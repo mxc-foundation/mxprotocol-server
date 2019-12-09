@@ -9,7 +9,7 @@ import LinearDeterminate from '../../components/LinearDeterminate';
 import i18n, { packageNS } from '../../i18n';
 
 export default function ConfirmDialog(props) {
-  const { open, onClose, title, description, onProgress } = props
+  const { open, onClose, title, description } = props
 
   const agree = () => {
     const { data, onSubmit } = props;
@@ -28,7 +28,6 @@ export default function ConfirmDialog(props) {
       >
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
-        {/* <LinearDeterminate onProgress={props.onProgress}/> */}
           <DialogContentText id="alert-dialog-description">
             {description}
           </DialogContentText>

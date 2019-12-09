@@ -25,6 +25,10 @@
       "to_eth_account": "到 ETH 帳戶",
       "use_axs_wallet": "使用 AXS 錢包",
       "no_data_to_display": "沒有數據可顯示",
+      "notice": "注意.",
+      "notice001": "請在為MXC充值之前，為您的超級節點更改ETH帳戶。",
+      "notice002": "請先註冊您的ETH帳戶，然後再充值MXC。",
+      "notice003": "您會轉到ETH帳戶菜單來更新您的帳戶嗎。",
       "can_not_find_any_account": "找不到任何帳戶",
       "synchronize_your_eth_account": "同步您的 ETH 帳戶",
       "note": "將您的 ETH 帳戶加入您的 M2M 錢包，以增強安全性."
