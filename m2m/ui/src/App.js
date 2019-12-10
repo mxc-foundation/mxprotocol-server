@@ -109,9 +109,9 @@ class RedirectedFromLora extends Component {
     let { path } = data;
     SessionStore.initProfile(data);
     
-    if(SessionStore.getOrganizationID() === process.env.REACT_APP_SUPER_ADMIN_LPWAN){
+/*    if(SessionStore.getOrganizationID() === process.env.REACT_APP_SUPER_ADMIN_LPWAN){
       path = '/control-panel/modify-account/'
-    }
+    }*/
     return <Redirect to={path} />; 
   }
 }
