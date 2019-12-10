@@ -115,7 +115,11 @@ func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, 
 		return api.ProfileResponse{}, VerifyResult{err, AuthFailed}
 	}
 
-	return isOrgListRearranged(userProfile, reqOrgId)
+	res, verifyResult := isOrgListRearranged(userProfile, reqOrgId)
+	if verifyResult.Type == OrganizationIdRearranged {
+		log.WithError(err).Warn("auth/VerifyRequestViaAuthServer: user no longer belongs to organization ", reqOrgId)
+	}
+	return res, verifyResult
 }
 
 func isOrgListRearranged(userProfile ProfileResponse, orgId int64) (api.ProfileResponse, VerifyResult) {
