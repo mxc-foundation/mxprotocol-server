@@ -1,26 +1,19 @@
-package ui
+package appserver
 
 import (
 	"context"
 	"strconv"
 
 	log "github.com/sirupsen/logrus"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-type SettingsServerAPI struct {
-	serviceName string
-}
 
-func NewSettingsServerAPI() *SettingsServerAPI {
-	return &SettingsServerAPI{serviceName: "settings"}
-}
-
-func (s *SettingsServerAPI) GetSettings(ctx context.Context, in *api.GetSettingsRequest) (*api.GetSettingsResponse, error) {
+func (s *M2MServerAPI) GetSettings(ctx context.Context, in *api.GetSettingsRequest) (*api.GetSettingsResponse, error) {
 	log.Info("GetSettings")
 	_, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
 
@@ -64,7 +57,7 @@ func (s *SettingsServerAPI) GetSettings(ctx context.Context, in *api.GetSettings
 	return result, nil
 }
 
-func (s *SettingsServerAPI) ModifySettings(ctx context.Context, in *api.ModifySettingsRequest) (*api.ModifySettingsResponse, error) {
+func (s *M2MServerAPI) ModifySettings(ctx context.Context, in *api.ModifySettingsRequest) (*api.ModifySettingsResponse, error) {
 	_, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
 
 	switch res.Type {

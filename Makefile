@@ -1,4 +1,4 @@
-.PHONY: subdirs all clean ui-subdirs ui-requirements dev-requirements
+.PHONY: subdirs all clean dev-requirements
 SUBDIRS=m2m
 
 subdirs:
@@ -10,13 +10,6 @@ subdirs:
 
 all: subdirs
 
-ui-subdirs:
-	@for subdir in $(SUBDIRS); \
-	do \
-	echo "build ui in $$subdir"; \
-	( cd $$subdir && make ui-requirements) || exit 1; \
-	done
-
 clean:
 	@for subdir in $(SUBDIRS); \
 	do \
@@ -25,8 +18,6 @@ clean:
 	done
 
 # shortcuts for development
-ui-requirements: ui-subdirs
-
 dev-requirements:
 	go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 	go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger

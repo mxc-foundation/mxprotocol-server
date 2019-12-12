@@ -10,25 +10,15 @@ import (
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
 
-type M2MServerAPI struct{}
+type M2MServerAPI struct{
+	serviceName string
+}
 
 // M2MServerAPI returns a new M2MServerAPI.
 func NewM2MServerAPI() *M2MServerAPI {
 	return &M2MServerAPI{}
 }
 
-func (*M2MServerAPI) GetWalletBalance(ctx context.Context, req *api.GetWalletBalanceRequest) (*api.GetWalletBalanceResponse, error) {
-	log.WithFields(log.Fields{
-		"orgId": req.OrgId,
-	}).Debug("grpc_api/GetWalletBalance")
-
-	balance, err := wallet.GetBalance(req.OrgId)
-	if err != nil {
-		return &api.GetWalletBalanceResponse{}, err
-	}
-
-	return &api.GetWalletBalanceResponse{Balance: balance}, nil
-}
 
 func (*M2MServerAPI) AddDeviceInM2MServer(ctx context.Context, req *api.AddDeviceInM2MServerRequest) (*api.AddDeviceInM2MServerResponse, error) {
 	log.WithFields(log.Fields{
