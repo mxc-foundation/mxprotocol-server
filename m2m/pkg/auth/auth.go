@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -21,23 +21,21 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-type errStruct struct {
+type ErrStruct struct {
 	Error   string `json:"error,omitempty"`
 	Message string `json:"message,omitempty"`
 	Code    int64  `json:"code,omitempty"`
 	Details []byte `json:"details,omitempty"`
 }
 
-var ctxAuth struct {
-	authServer string
-	authUrl    string
-}
+var AuthServer string
+var AuthUrl    string
 
 func Setup(conf config.MxpConfig) error {
 	log.Info("setup auth service")
 
-	ctxAuth.authServer = conf.General.AuthServer
-	ctxAuth.authUrl = conf.General.AuthUrl
+	AuthServer = conf.General.AuthServer
+	AuthUrl = conf.General.AuthUrl
 
 	return nil
 }
@@ -102,7 +100,7 @@ type ProfileResponse struct {
 
 func VerifyRequestViaAuthServer(ctx context.Context, requestServiceName string, reqOrgId int64) (api.ProfileResponse, VerifyResult) {
 	// parse jwt from context
-	tokenStr, err := getTokenFromContext(ctx)
+	tokenStr, err := GetTokenFromContext(ctx)
 	if err != nil {
 		log.WithError(err).Error("auth/VerifyRequestViaAuthServer")
 		return api.ProfileResponse{}, VerifyResult{err, JsonParseError}
@@ -166,13 +164,13 @@ func isOrgListRearranged(userProfile ProfileResponse, orgId int64) (api.ProfileR
 }
 
 func requestUserProfileWithJWT(jwToken string) (ProfileResponse, error) {
-	res, err := getRequest(ctxAuth.authServer+ctxAuth.authUrl, jwToken)
+	res, err := getRequest(AuthServer+AuthUrl, jwToken)
 	if err != nil {
 		log.WithError(err).Error("auth/requestUserProfileWithJWT")
 		return ProfileResponse{}, err
 	}
 
-	errInfo := errStruct{}
+	errInfo := ErrStruct{}
 	err = json.Unmarshal(*res, &errInfo)
 	if err != nil {
 		log.WithError(err).Error("auth/requestUserProfileWithJWT")
@@ -197,7 +195,7 @@ func requestUserProfileWithJWT(jwToken string) (ProfileResponse, error) {
 var validAuthorizationRegexp = regexp.MustCompile(`(?i)^bearer (.*)$`)
 
 //get jwt token from ctx
-func getTokenFromContext(ctx context.Context) (string, error) {
+func GetTokenFromContext(ctx context.Context) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return "", errors.New("invalid algorithm")
@@ -254,7 +252,7 @@ func requestJWTWithUsernamePass(username string, password string) (string, error
 		return "", err
 	}
 
-	request, err := http.NewRequest("POST", ctxAuth.authServer+"/api/internal/login", bytes.NewBuffer(requestBody))
+	request, err := http.NewRequest("POST", AuthServer+"/api/internal/login", bytes.NewBuffer(requestBody))
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "application/json")
 
@@ -275,7 +273,7 @@ func requestJWTWithUsernamePass(username string, password string) (string, error
 	}
 
 	// parse response
-	errInfo := errStruct{}
+	errInfo := ErrStruct{}
 	err = json.Unmarshal(body, &errInfo)
 	if err != nil {
 		fmt.Println("unmarshal err", err)
@@ -299,7 +297,7 @@ func (s *InternalServerAPI) Login(ctx context.Context, req *api.LoginRequest) (*
 		return &api.LoginResponse{}, err
 	}
 
-	tokenStr, err := getTokenFromContext(ctx)
+	tokenStr, err := GetTokenFromContext(ctx)
 	if err != nil {
 		if jwt != tokenStr {
 			return &api.LoginResponse{}, err
