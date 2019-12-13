@@ -9,7 +9,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"testing"
@@ -94,7 +93,7 @@ func createClient(hostname string, caCert, tlsCert, tlsKey []byte) (*grpc.Client
 
 	devServiceClient, err := grpc.DialContext(ctx, hostname, nsOpts...)
 	if err != nil {
-		log.WithError(err).Error("dial m2m-server device service api error")
+		log.WithError(err).Error("dial m2m-server device service api error", hostname)
 		return nil, nil, err
 	}
 
@@ -103,43 +102,29 @@ func createClient(hostname string, caCert, tlsCert, tlsKey []byte) (*grpc.Client
 
 func (ts *M2MServerAPITestSuite) TestM2MServerAPIs() {
 	assert := require.New(ts.T())
+	ctx := context.Background()
 
-	m2mClient, err := Get("localhost"+config.Cstruct.M2MServer.HttpServer.Bind, []byte(""), []byte(""),[]byte(""))
+	m2mClient, err := Get("localhost:4000", []byte(""), []byte(""),[]byte(""))
 	assert.Nil(err)
-
-	ts.T().Run("Call InternalService APIs", func(t *testing.T) {
-		assert := require.New(t)
-		ctx := context.Background()
-/*
-		loginRes, err := m2mClient.Login(ctx, &appserver.LoginRequest{Username: "admin", Password:"admin"})
-		assert.Nil(err)
-		log.Info(loginRes.Jwt)*/
-
-		getUserOrgListRes, err := m2mClient.GetUserOrganizationList(context.WithValue(ctx, ), &appserver.GetUserOrganizationListRequest{OrgId:int64(1)})
-		assert.Nil(err)
-		getUserOrgListRes.Organizations
-
-		m2mClient.GetUserProfile()
-		assert.Nil(err)
-	})
 
 	ts.T().Run("Call WalletService APIs", func(t *testing.T) {
 		assert := require.New(t)
-		m2mClient.GetWalletBalance()
+		getBalanceRes, err := m2mClient.GetWalletBalance(ctx, &appserver.GetWalletBalanceRequest{OrgId:0})
 		assert.Nil(err)
+		log.Info("GetWalletBalance ", getBalanceRes.Balance)
 
-		m2mClient.GetVmxcTxHistory()
+/*		m2mClient.GetVmxcTxHistory()
 		assert.Nil(err)
 
 		m2mClient.GetWalletUsageHist()
 		assert.Nil(err)
 
 		m2mClient.GetDlPrice()
-		assert.Nil(err)
+		assert.Nil(err)*/
 
 	})
 
-	ts.T().Run("Call DeviceService APIs", func(t *testing.T) {
+	/*ts.T().Run("Call DeviceService APIs", func(t *testing.T) {
 		assert := require.New(t)
 		m2mClient.GetDeviceList()
 		assert.Nil(err)
@@ -262,6 +247,6 @@ func (ts *M2MServerAPITestSuite) TestM2MServerAPIs() {
 		m2mClient.ModifyWithdrawFee
 		assert.Nil(err)
 
-	})
+	})*/
 
 }
