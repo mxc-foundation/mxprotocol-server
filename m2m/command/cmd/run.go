@@ -13,7 +13,6 @@ import (
 	"github.com/spf13/cobra"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/accounting"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/device"
@@ -35,7 +34,6 @@ func run(cmd *cobra.Command, args []string) error {
 		printStartMessage,
 		setupDb,
 		setupAppserver,
-		setupAuth,
 		setupMoney,
 		setupWallet,
 		setupWithdraw,
@@ -80,13 +78,6 @@ func printStartMessage() error {
 	log.WithFields(log.Fields{
 		"version": version,
 	}).Info("starting mxp-server")
-	return nil
-}
-
-func setupAuth() error {
-	if err := auth.Setup(config.Cstruct); err != nil {
-		return errors.Wrap(err, "Setup auth error")
-	}
 	return nil
 }
 

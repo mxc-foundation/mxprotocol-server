@@ -13,11 +13,6 @@ service M2MServerService {
     rpc AddGatewayInM2MServer (AddGatewayInM2MServerRequest) returns (AddGatewayInM2MServerResponse);
     rpc DeleteGatewayInM2MServer (DeleteGatewayInM2MServerRequest) returns (DeleteGatewayInM2MServerResponse);
 
-    // InternalService
-    rpc Login(LoginRequest) returns (LoginResponse);
-    rpc GetUserOrganizationList(GetUserOrganizationListRequest) returns (GetUserOrganizationListResponse);
-    rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
-
     // WalletService
     rpc GetWalletBalance(GetWalletBalanceRequest) returns (GetWalletBalanceResponse);
     rpc GetVmxcTxHistory(GetVmxcTxHistoryRequest) returns (GetVmxcTxHistoryResponse);
@@ -154,95 +149,6 @@ message GetGatewayMacListResponse {
     repeated string gateway_mac = 1;
 }
 
-// InternalService
-message ProfileResponse {
-    // User object.
-    User user = 1;
-
-    // Organizations to which the user is associated.
-    repeated OrganizationLink organizations = 3;
-
-    // Profile settings.
-    ProfileSettings settings = 4;
-}
-
-message User {
-    // User ID.
-    // Will be set automatically on create.
-    string id = 1;
-
-    // Username of the user.
-    string username = 2;
-
-    // The session timeout, in minutes.
-    int32 session_ttl = 3 [json_name = "sessionTTL"];
-
-    // Set to true to make the user a global administrator.
-    bool is_admin = 4;
-
-    // Set to false to disable the user.
-    bool is_active = 5;
-
-    // E-mail of the user.
-    string email = 6;
-
-    // Optional note to store with the user.
-    string note = 7;
-}
-
-message ProfileSettings {
-    // Existing users in the system can not be assigned to organizations and
-    // application and can not be listed by non global admin users.
-    bool disable_assign_existing_users = 1;
-}
-
-// Defines an organization to which an user is associated.
-message OrganizationLink {
-    // Organization ID.
-    int64 organization_id = 1 [json_name = "organizationID"];
-
-    // Organization name.
-    string organization_name = 2;
-
-    // User is admin within the context of this organization.
-    bool is_admin = 3;
-
-    // Created at timestamp.
-    google.protobuf.Timestamp created_at = 4;
-
-    // Last update timestamp.
-    google.protobuf.Timestamp updated_at = 5;
-}
-
-message LoginRequest {
-    // Username of the user.
-    string username = 1;
-
-    // Password of the user.
-    string password = 2;
-}
-
-message LoginResponse {
-    // The JWT tag to be used to access lora-app-server interfaces.
-    string jwt = 1;
-}
-
-message GetUserOrganizationListRequest {
-    int64 org_id = 1;
-}
-
-message GetUserOrganizationListResponse {
-    repeated OrganizationLink organizations = 1;
-}
-
-message GetUserProfileRequest {
-    int64 org_id = 1;
-}
-
-message GetUserProfileResponse {
-    ProfileResponse user_profile = 1;
-}
-
 // WalletService
 message GetWalletBalanceRequest {
     int64 org_id = 1;
@@ -250,7 +156,6 @@ message GetWalletBalanceRequest {
 
 message GetWalletBalanceResponse {
     double balance = 1;
-    ProfileResponse user_profile = 2;
 }
 
 message GetVmxcTxHistoryRequest {
@@ -270,7 +175,6 @@ message VmxcTxHistory {
 message GetVmxcTxHistoryResponse {
     int64 count = 1;
     repeated VmxcTxHistory tx_history = 2;
-    ProfileResponse user_profile = 3;
 }
 
 message GetWalletUsageHistRequest {
@@ -299,8 +203,7 @@ message GetWalletUsageHist {
 
 message GetWalletUsageHistResponse {
     repeated GetWalletUsageHist wallet_usage_his = 1;
-    ProfileResponse user_profile = 2;
-    int64 count = 3;
+    int64 count = 2;
 }
 
 message GetDownLinkPriceRequest {
@@ -309,7 +212,6 @@ message GetDownLinkPriceRequest {
 
 message GetDownLinkPriceResponse {
     double down_link_price = 1;
-    ProfileResponse user_profile = 2;
 }
 
 // DeviceService
@@ -329,7 +231,6 @@ message GetDeviceListRequest {
 message GetDeviceListResponse {
     repeated DeviceProfile dev_profile = 1;
     int64 count = 2;
-    ProfileResponse user_profile = 3;
 }
 
 message GetDeviceProfileRequest {
@@ -350,7 +251,6 @@ message DeviceProfile {
 
 message GetDeviceProfileResponse {
     DeviceProfile dev_profile = 1;
-    ProfileResponse user_profile = 3;
 }
 
 message GetDeviceHistoryRequest {
@@ -362,7 +262,6 @@ message GetDeviceHistoryRequest {
 
 message GetDeviceHistoryResponse {
     string dev_history = 1;
-    ProfileResponse user_profile = 2;
 }
 
 message SetDeviceModeRequest {
@@ -373,7 +272,6 @@ message SetDeviceModeRequest {
 
 message SetDeviceModeResponse {
     bool status = 1;
-    ProfileResponse user_profile = 3;
 }
 
 // MoneyService
@@ -389,7 +287,6 @@ message ModifyMoneyAccountRequest {
 
 message ModifyMoneyAccountResponse {
     bool status = 1;
-    ProfileResponse user_profile = 2;
 }
 
 message GetMoneyAccountChangeHistoryRequest {
@@ -408,7 +305,6 @@ message MoneyAccountChangeHistory {
 message GetMoneyAccountChangeHistoryResponse {
     int64 count = 1;
     repeated MoneyAccountChangeHistory change_history = 2;
-    ProfileResponse user_profile = 3;
 }
 
 message GetActiveMoneyAccountRequest {
@@ -418,7 +314,6 @@ message GetActiveMoneyAccountRequest {
 
 message GetActiveMoneyAccountResponse {
     string active_account = 1;
-    ProfileResponse user_profile = 2;
 }
 
 // GatewayService
@@ -438,7 +333,6 @@ message GetGatewayListRequest {
 message GetGatewayListResponse {
     repeated GatewayProfile gw_profile = 1;
     int64 count = 2;
-    ProfileResponse user_profile = 3;
 }
 
 message GetGatewayProfileRequest {
@@ -463,7 +357,6 @@ message GatewayProfile {
 
 message GetGatewayProfileResponse {
     GatewayProfile gw_profile = 1;
-    ProfileResponse user_profile = 2;
 }
 
 message GetGatewayHistoryRequest {
@@ -475,7 +368,6 @@ message GetGatewayHistoryRequest {
 
 message GetGatewayHistoryResponse {
     string gw_history = 1;
-    ProfileResponse user_profile = 2;
 }
 
 message SetGatewayModeRequest {
@@ -486,7 +378,6 @@ message SetGatewayModeRequest {
 
 message SetGatewayModeResponse {
     bool status = 1;
-    ProfileResponse user_profile = 3;
 }
 
 // ServerInfoService
@@ -521,7 +412,6 @@ message StakeRequest {
 
 message StakeResponse {
     string status = 1;
-    ProfileResponse user_profile = 2;
 }
 
 message UnstakeRequest {
@@ -530,7 +420,6 @@ message UnstakeRequest {
 
 message UnstakeResponse {
     string status = 1;
-    ProfileResponse user_profile = 2;
 }
 
 message GetActiveStakesRequest {
@@ -548,7 +437,6 @@ message ActiveStake {
 
 message GetActiveStakesResponse {
     ActiveStake act_stake = 1;
-    ProfileResponse user_profile = 2;
 }
 
 message StakingHistoryRequest {
@@ -569,9 +457,8 @@ message GetStakingHistory {
 }
 
 message StakingHistoryResponse {
-    ProfileResponse user_profile = 1;
-    repeated GetStakingHistory staking_hist = 2;
-    int64 count = 3;
+    repeated GetStakingHistory staking_hist = 1;
+    int64 count = 2;
 }
 
 message StakingPercentageRequest {
@@ -590,7 +477,6 @@ message GetSuperNodeActiveMoneyAccountRequest {
 
 message GetSuperNodeActiveMoneyAccountResponse {
     string supernode_active_account = 1;
-    ProfileResponse user_profile = 2;
 }
 
 message AddSuperNodeMoneyAccountRequest {
@@ -601,7 +487,6 @@ message AddSuperNodeMoneyAccountRequest {
 
 message AddSuperNodeMoneyAccountResponse {
     bool status = 1;
-    ProfileResponse user_profile = 2;
 }
 
 // TopUpService
@@ -614,7 +499,6 @@ message GetTransactionsHistoryRequest {
 message GetTransactionsHistoryResponse {
     int64 count = 1;
     repeated TransactionsHistory transaction_history = 2;
-    ProfileResponse user_profile = 3;
 }
 
 message GetIncomeRequest {
@@ -654,7 +538,6 @@ message TopUpHistory {
 message GetTopUpHistoryResponse {
     int64 count = 1;
     repeated TopUpHistory topup_history = 2;
-    ProfileResponse user_profile = 3;
 }
 
 message GetTopUpDestinationRequest {
@@ -664,7 +547,6 @@ message GetTopUpDestinationRequest {
 
 message GetTopUpDestinationResponse {
     string active_account = 1;
-    ProfileResponse user_profile = 2;
 }
 
 // WithdrawService
@@ -677,7 +559,6 @@ message GetWithdrawFeeRequest {
 message GetWithdrawFeeResponse {
     // Withdraw object.
     double withdrawFee = 1;
-    ProfileResponse user_profile = 2;
 }
 
 message WithdrawReqRequest {
@@ -688,7 +569,6 @@ message WithdrawReqRequest {
 
 message WithdrawReqResponse {
     bool status = 1;
-    ProfileResponse user_profile = 2;
 }
 
 message GetWithdrawHistoryRequest {
@@ -713,7 +593,6 @@ message WithdrawHistory {
 message GetWithdrawHistoryResponse {
     int64 count = 1;
     repeated WithdrawHistory withdraw_history = 2;
-    ProfileResponse user_profile = 3;
 }
 
 message ModifyWithdrawFeeRequest {
@@ -724,5 +603,4 @@ message ModifyWithdrawFeeRequest {
 
 message ModifyWithdrawFeeResponse {
     bool status = 1;
-    ProfileResponse user_profile = 2;
 }
