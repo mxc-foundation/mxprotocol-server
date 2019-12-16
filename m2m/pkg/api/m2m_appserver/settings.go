@@ -7,24 +7,12 @@ import (
 	log "github.com/sirupsen/logrus"
 	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 
 func (s *M2MServerAPI) GetSettings(ctx context.Context, in *api.GetSettingsRequest) (*api.GetSettingsResponse, error) {
-	log.Info("GetSettings")
-	_, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
-
-	switch res.Type {
-	case auth.AuthFailed, auth.JsonParseError, auth.OrganizationIdMisMatch, auth.OrganizationIdRearranged:
-		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
-	case auth.OK:
-	default:
-		return nil, status.Error(codes.Unknown, "")
-	}
-
 	configs, err := db.ConfigTable.GetConfigs([]string{
 		"downlink_fee",
 		"transaction_percentage_share",
@@ -58,16 +46,6 @@ func (s *M2MServerAPI) GetSettings(ctx context.Context, in *api.GetSettingsReque
 }
 
 func (s *M2MServerAPI) ModifySettings(ctx context.Context, in *api.ModifySettingsRequest) (*api.ModifySettingsResponse, error) {
-	_, res := auth.VerifyRequestViaAuthServer(ctx, s.serviceName, 0)
-
-	switch res.Type {
-	case auth.AuthFailed, auth.JsonParseError, auth.OrganizationIdMisMatch, auth.OrganizationIdRearranged:
-		return nil, status.Errorf(codes.Unauthenticated, "authentication failed: %s", res.Err)
-	case auth.OK:
-	default:
-		return nil, status.Error(codes.Unknown, "")
-	}
-
 	if in.TransactionPercentageShare == nil && in.LowBalanceWarning == nil && in.DownlinkFee == nil {
 		return nil, status.Error(codes.InvalidArgument, "")
 	}
