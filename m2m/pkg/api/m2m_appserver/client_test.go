@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
+	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"testing"
@@ -24,32 +24,30 @@ func TestM2MServerAPI(t *testing.T) {
 }
 
 type m2mServiceClient struct {
-	client     appserver.M2MServerServiceClient
 	clientConn *grpc.ClientConn
 	caCert     []byte
 	tlsCert    []byte
 	tlsKey     []byte
 }
 
-func Get(hostname string, caCert, tlsCert, tlsKey []byte) (appserver.M2MServerServiceClient, error) {
+func Get(hostname string, caCert, tlsCert, tlsKey []byte) (*grpc.ClientConn, error) {
 
-		clientConn, nsClient, err := createClient(hostname, caCert, tlsCert, tlsKey)
-		if err != nil {
-			log.WithError(err).Error("create m2m-server api client error")
-			return nil, err
-		}
-		c := m2mServiceClient{
-			client:     nsClient,
-			clientConn: clientConn,
-			caCert:     caCert,
-			tlsCert:    tlsCert,
-			tlsKey:     tlsKey,
-		}
+	clientConn, err := createClient(hostname, caCert, tlsCert, tlsKey)
+	if err != nil {
+		log.WithError(err).Error("create m2m-server api client error")
+		return nil, err
+	}
+	c := m2mServiceClient{
+		clientConn: clientConn,
+		caCert:     caCert,
+		tlsCert:    tlsCert,
+		tlsKey:     tlsKey,
+	}
 
-	return c.client, nil
+	return c.clientConn, nil
 }
 
-func createClient(hostname string, caCert, tlsCert, tlsKey []byte) (*grpc.ClientConn, appserver.M2MServerServiceClient, error) {
+func createClient(hostname string, caCert, tlsCert, tlsKey []byte) (*grpc.ClientConn, error) {
 	logrusEntry := log.NewEntry(log.StandardLogger())
 	logrusOpts := []grpc_logrus.Option{
 		grpc_logrus.WithLevels(grpc_logrus.DefaultCodeToLevel),
@@ -73,13 +71,13 @@ func createClient(hostname string, caCert, tlsCert, tlsKey []byte) (*grpc.Client
 		cert, err := tls.X509KeyPair(tlsCert, tlsKey)
 		if err != nil {
 			log.WithError(err).Error("load x509 keypair error")
-			return nil, nil, err
+			return nil, err
 		}
 
 		caCertPool := x509.NewCertPool()
 		if !caCertPool.AppendCertsFromPEM(caCert) {
 			log.WithError(err).Error("append ca cert to pool error")
-			return nil, nil, err
+			return nil, err
 		}
 
 		nsOpts = append(nsOpts, grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{
@@ -94,33 +92,34 @@ func createClient(hostname string, caCert, tlsCert, tlsKey []byte) (*grpc.Client
 	devServiceClient, err := grpc.DialContext(ctx, hostname, nsOpts...)
 	if err != nil {
 		log.WithError(err).Error("dial m2m-server device service api error", hostname)
-		return nil, nil, err
+		return nil, err
 	}
 
-	return devServiceClient, appserver.NewM2MServerServiceClient(devServiceClient), nil
+	return devServiceClient, nil
 }
 
 func (ts *M2MServerAPITestSuite) TestM2MServerAPIs() {
 	assert := require.New(ts.T())
 	ctx := context.Background()
 
-	m2mClient, err := Get("localhost:4000", []byte(""), []byte(""),[]byte(""))
+	clientConn, err := Get("localhost:4000", []byte(""), []byte(""), []byte(""))
 	assert.Nil(err)
 
 	ts.T().Run("Call WalletService APIs", func(t *testing.T) {
 		assert := require.New(t)
-		getBalanceRes, err := m2mClient.GetWalletBalance(ctx, &appserver.GetWalletBalanceRequest{OrgId:0})
+		m2mClient := m2m_ui.NewWalletServiceClient(clientConn)
+		getBalanceRes, err := m2mClient.GetWalletBalance(ctx, &m2m_ui.GetWalletBalanceRequest{OrgId: 0})
 		assert.Nil(err)
 		log.Info("GetWalletBalance ", getBalanceRes.Balance)
 
-/*		m2mClient.GetVmxcTxHistory()
-		assert.Nil(err)
+		/*		m2mClient.GetVmxcTxHistory()
+				assert.Nil(err)
 
-		m2mClient.GetWalletUsageHist()
-		assert.Nil(err)
+				m2mClient.GetWalletUsageHist()
+				assert.Nil(err)
 
-		m2mClient.GetDlPrice()
-		assert.Nil(err)*/
+				m2mClient.GetDlPrice()
+				assert.Nil(err)*/
 
 	})
 

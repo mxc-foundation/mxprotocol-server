@@ -1,3 +1,3 @@
 //go:generate sh gen.sh
 
-package appserver
+package m2m_server

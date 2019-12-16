@@ -12,7 +12,6 @@ type configTableDBInterface interface {
 	InsertConfigs(data map[string]interface{}, ignoreDuplicateKey bool) (err error)
 	GetConfig(key string) (val string, err error)
 	GetConfigs(keys []string) (configs []pg.Config, err error)
-
 }
 
 var ConfigTable = configTableDBInterface(&pg.PgConfigTable)

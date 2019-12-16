@@ -2,9 +2,10 @@ package api
 
 import (
 	log "github.com/sirupsen/logrus"
-	grpcAppserver "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
+	grpcAppserver "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_server"
+	m2mServer "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/networkserver"
-	appserverApi "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_appserver"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_appserver"
 	networkserverApi "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_networkserver"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"google.golang.org/grpc"
@@ -16,7 +17,19 @@ func SetupHTTPServer(conf config.MxpConfig) error {
 	server := grpc.NewServer()
 
 	// register all servers here
-	grpcAppserver.RegisterM2MServerServiceServer(server, appserverApi.NewM2MServerAPI())
+	grpcAppserver.RegisterM2MServerServiceServer(server, api.NewM2MServerAPI())
+
+	m2mServer.RegisterDeviceServiceServer(server, api.NewM2MServerAPI())
+	m2mServer.RegisterGatewayServiceServer(server, api.NewM2MServerAPI())
+	m2mServer.RegisterMoneyServiceServer(server, api.NewM2MServerAPI())
+	m2mServer.RegisterServerInfoServiceServer(server, api.NewM2MServerAPI())
+	m2mServer.RegisterSettingsServiceServer(server, api.NewM2MServerAPI())
+	m2mServer.RegisterStakingServiceServer(server, api.NewM2MServerAPI())
+	m2mServer.RegisterSuperNodeServiceServer(server, api.NewM2MServerAPI())
+	m2mServer.RegisterTopUpServiceServer(server, api.NewM2MServerAPI())
+	m2mServer.RegisterWalletServiceServer(server, api.NewM2MServerAPI())
+	m2mServer.RegisterWithdrawServiceServer(server, api.NewM2MServerAPI())
+
 	networkserver.RegisterM2MServerServiceServer(server, networkserverApi.NewM2MNetworkServerAPI())
 
 	ln, err := net.Listen("tcp", conf.M2MServer.HttpServer.Bind)

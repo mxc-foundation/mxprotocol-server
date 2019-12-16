@@ -3,7 +3,7 @@ package appserver
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
@@ -34,53 +34,53 @@ func (s *M2MServerAPI) GetVmxcTxHistory(ctx context.Context, req *api.GetVmxcTxH
 }
 
 func (s *M2MServerAPI) GetWalletUsageHist(ctx context.Context, req *api.GetWalletUsageHistRequest) (*api.GetWalletUsageHistResponse, error) {
-		walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
-		if err != nil {
-			log.WithError(err).Error("grpc_api/GetWalletUsageHist")
-			return &api.GetWalletUsageHistResponse{}, nil
-		}
+	walletId, err := db.Wallet.GetWalletIdFromOrgId(req.OrgId)
+	if err != nil {
+		log.WithError(err).Error("grpc_api/GetWalletUsageHist")
+		return &api.GetWalletUsageHistResponse{}, nil
+	}
 
-		offset := req.Offset * req.Limit
+	offset := req.Offset * req.Limit
 
-		wuList, err := db.AggWalletUsage.GetWalletUsageHist(walletId, offset, req.Limit)
-		if err != nil {
-			log.WithError(err).Error("grpc_api/GetWalletUsageHist")
-			return &api.GetWalletUsageHistResponse{}, nil
-		}
+	wuList, err := db.AggWalletUsage.GetWalletUsageHist(walletId, offset, req.Limit)
+	if err != nil {
+		log.WithError(err).Error("grpc_api/GetWalletUsageHist")
+		return &api.GetWalletUsageHistResponse{}, nil
+	}
 
-		count, err := db.AggWalletUsage.GetWalletUsageHistCnt(walletId)
-		if err != nil {
-			log.WithError(err).Error("grpc_api/GetWalletUsageHist")
-			return &api.GetWalletUsageHistResponse{}, nil
-		}
+	count, err := db.AggWalletUsage.GetWalletUsageHistCnt(walletId)
+	if err != nil {
+		log.WithError(err).Error("grpc_api/GetWalletUsageHist")
+		return &api.GetWalletUsageHistResponse{}, nil
+	}
 
-		resp := &api.GetWalletUsageHistResponse{}
-		resp.Count = count
+	resp := &api.GetWalletUsageHistResponse{}
+	resp.Count = count
 
-		for _, v := range wuList {
-			wuHist := &api.GetWalletUsageHist{}
-			wuHist.StartAt = v.StartAt.String()
-			wuHist.DurationMinutes = v.DurationMinutes
-			wuHist.DlCntDv = v.DlCntDv
-			wuHist.DlCntDvFree = v.DlCntDvFree
-			wuHist.DlCntGw = v.DlCntGw
-			wuHist.DlCntGwFree = v.DlCntGwFree
-			wuHist.UlCntDv = v.UlCntDv
-			wuHist.UlCntDvFree = v.UlCntDvFree
-			wuHist.UlCntGw = v.UlCntGw
-			wuHist.UlCntGwFree = v.UlCntGwFree
-			wuHist.Income = v.Income
-			wuHist.Spend = v.Spend
-			wuHist.UpdatedBalance = v.UpdatedBalance
+	for _, v := range wuList {
+		wuHist := &api.GetWalletUsageHist{}
+		wuHist.StartAt = v.StartAt.String()
+		wuHist.DurationMinutes = v.DurationMinutes
+		wuHist.DlCntDv = v.DlCntDv
+		wuHist.DlCntDvFree = v.DlCntDvFree
+		wuHist.DlCntGw = v.DlCntGw
+		wuHist.DlCntGwFree = v.DlCntGwFree
+		wuHist.UlCntDv = v.UlCntDv
+		wuHist.UlCntDvFree = v.UlCntDvFree
+		wuHist.UlCntGw = v.UlCntGw
+		wuHist.UlCntGwFree = v.UlCntGwFree
+		wuHist.Income = v.Income
+		wuHist.Spend = v.Spend
+		wuHist.UpdatedBalance = v.UpdatedBalance
 
-			resp.WalletUsageHis = append(resp.WalletUsageHis, wuHist)
-		}
-		return resp, nil
+		resp.WalletUsageHis = append(resp.WalletUsageHis, wuHist)
+	}
+	return resp, nil
 }
 
 func (s *M2MServerAPI) GetDlPrice(ctx context.Context, req *api.GetDownLinkPriceRequest) (*api.GetDownLinkPriceResponse, error) {
-		dlPrice := config.Cstruct.SuperNode.DlPrice
-		return &api.GetDownLinkPriceResponse{
-			DownLinkPrice: dlPrice,
-		}, nil
+	dlPrice := config.Cstruct.SuperNode.DlPrice
+	return &api.GetDownLinkPriceResponse{
+		DownLinkPrice: dlPrice,
+	}, nil
 }
