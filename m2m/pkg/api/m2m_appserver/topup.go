@@ -6,11 +6,10 @@ import (
 
 	"github.com/golang/protobuf/ptypes"
 	log "github.com/sirupsen/logrus"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
 )
-
 
 func (s *M2MServerAPI) GetTransactionsHistory(ctx context.Context, req *api.GetTransactionsHistoryRequest) (*api.GetTransactionsHistoryResponse, error) {
 	log.WithFields(log.Fields{

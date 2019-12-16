@@ -4,7 +4,7 @@ import (
 	"context"
 
 	log "github.com/sirupsen/logrus"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
 )
@@ -37,7 +37,7 @@ func (s *M2MServerAPI) GetDeviceList(ctx context.Context, req *api.GetDeviceList
 	}
 
 	resp := api.GetDeviceListResponse{
-		Count:       totalDev,
+		Count: totalDev,
 	}
 	for _, v := range dvList {
 		dvProfile := api.DeviceProfile{}

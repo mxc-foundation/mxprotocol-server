@@ -3,7 +3,7 @@ package appserver
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
+	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/ext_account"
 	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
@@ -33,39 +33,39 @@ func (s *M2MServerAPI) ModifyMoneyAccount(ctx context.Context, req *api.ModifyMo
 }
 
 func (s *M2MServerAPI) GetChangeMoneyAccountHistory(ctx context.Context, req *api.GetMoneyAccountChangeHistoryRequest) (*api.GetMoneyAccountChangeHistoryResponse, error) {
-		log.WithFields(log.Fields{
-			"orgId":     req.OrgId,
-			"offset":    req.Offset,
-			"limit":     req.Limit,
-			"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
-		}).Debug("grpc_api/GetChangeMoneyAccountHistory")
+	log.WithFields(log.Fields{
+		"orgId":     req.OrgId,
+		"offset":    req.Offset,
+		"limit":     req.Limit,
+		"moneyAbbr": api.Money_name[int32(req.MoneyAbbr)],
+	}).Debug("grpc_api/GetChangeMoneyAccountHistory")
 
-		walletId, err := wallet.GetWalletId(req.OrgId)
-		if err != nil {
-			log.WithError(err).Error("grpc_api/GetChangeMoneyAccountHistory")
-			return &api.GetMoneyAccountChangeHistoryResponse{}, nil
+	walletId, err := wallet.GetWalletId(req.OrgId)
+	if err != nil {
+		log.WithError(err).Error("grpc_api/GetChangeMoneyAccountHistory")
+		return &api.GetMoneyAccountChangeHistoryResponse{}, nil
+	}
+
+	response := api.GetMoneyAccountChangeHistoryResponse{}
+	ptr, err := db.ExtAccount.GetExtAcntHist(walletId, req.Offset*req.Limit, req.Limit)
+	if err != nil {
+		log.WithError(err).Error("grpc_api/GetChangeMoneyAccountHistory")
+		return &api.GetMoneyAccountChangeHistoryResponse{}, nil
+	}
+
+	for _, v := range ptr {
+		if v.ExtCurrencyAbv != api.Money_name[int32(req.MoneyAbbr)] {
+			continue
 		}
+		history := api.MoneyAccountChangeHistory{}
+		history.Addr = v.AccountAdr
+		history.CreatedAt = v.InsertTime.String()
+		history.Status = v.Status
+		response.ChangeHistory = append(response.ChangeHistory, &history)
+	}
+	response.Count, err = db.ExtAccount.GetExtAcntHistRecCnt(walletId)
 
-		response := api.GetMoneyAccountChangeHistoryResponse{}
-		ptr, err := db.ExtAccount.GetExtAcntHist(walletId, req.Offset*req.Limit, req.Limit)
-		if err != nil {
-			log.WithError(err).Error("grpc_api/GetChangeMoneyAccountHistory")
-			return &api.GetMoneyAccountChangeHistoryResponse{}, nil
-		}
-
-		for _, v := range ptr {
-			if v.ExtCurrencyAbv != api.Money_name[int32(req.MoneyAbbr)] {
-				continue
-			}
-			history := api.MoneyAccountChangeHistory{}
-			history.Addr = v.AccountAdr
-			history.CreatedAt = v.InsertTime.String()
-			history.Status = v.Status
-			response.ChangeHistory = append(response.ChangeHistory, &history)
-		}
-		response.Count, err = db.ExtAccount.GetExtAcntHistRecCnt(walletId)
-
-		return &response, nil
+	return &response, nil
 }
 
 func (s *M2MServerAPI) GetActiveMoneyAccount(ctx context.Context, req *api.GetActiveMoneyAccountRequest) (*api.GetActiveMoneyAccountResponse, error) {

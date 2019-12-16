@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/appserver"
+	appserver "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_server"
 )
 
 var p Pool
