@@ -14,38 +14,97 @@ At the first stage, MXC M2M wallet will be used in the MXProtocol MVP. MXProtoco
 __Note.__ This preliminary version of M2M wallet is under development and supposed to be improved. 
 Additional features will be added to M2M wallet  based on the MXProtocol design.
 
-#### To run m2m-wallet service, three services are needed:
+# Setup
 
-- lora-app-server (open source)  
-$ git clone https://github.com/mxc-foundation/lora-app-server.git 
-- payments-service (not open)  
-- mxprotocol-server (open source)
-$ git clone https://github.com/mxc-foundation/mxprotocol-server.git  
+See MXC Developer Handbook for further information.
+
+Note: UI part from m2m has been merged into lpwan-app-server, m2m no longer contains UI part.  
+However part of the APIs get data from m2m service, you need to start m2m service for accessing all features correctly.
+
+## Environment
+
+#### Set up docker
+- [Install Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)  
+Just follow __Install using the repository / SET UP THE REPOSITORY__, no need to install docker engine community
+
+- [Install docker-compose](https://docs.docker.com/compose/install/)
+Just follow __Install Compose on Linux systems__
+
+- Add user to docker group
+```bash
+$ sudo usermod -aG docker $USER
+```
+
+## Clone the repo:
+
+```bash
+git clone git@gitlab.com:MXCFoundation/cloud/mxprotocol-server.git &&
+cd mxprotocol-server
+```
+
+## Fetch latest develop branch:
+
+```bash
+git fetch origin develop:develop &&
+git checkout develop &&
+git pull --rebase origin develop
+```
+
+## Existing or new feature branch
+
+* New feature branch required?
+
+```
+git checkout -b feature/MCL-XXX
+```
+
+* Existing feature branch?
+
+> Example: If there is a "feature" branch that you are working on in Jira
+(i.e. feature/MCL-117) and you are working on a task of that feature,
+then create a branch from that feature that is prefixed with your name
+(i.e. luke/MCL-118-page-network-servers)
+
+```bash
+git fetch origin feature/MCL-117:feature/MCL-117 &&
+git checkout feature/MCL-117 &&
+git pull --rebase origin feature/MCL-117
+```
+
+## Create task branch from feature branch:
+
+```bash
+git checkout -b luke/MCL-118-page-network-servers
+```
+
+## Build Docker container and start container shell session:
+
+```bash
+docker-compose up -d && docker-compose exec mxprotocol-server bash
+```
+
+## Start Mxprotocol Server:
+
+```bash
+make clean &&
+make &&
+./m2m/build/m2m
+```
 
 
-#### Start visiting the service
-Authentication center is within lora-app-server currently, it is restricted that user must login on lora-app-server first, then relocate to m2m-wallet service.  
-1. Open your browser and visit localhost:8080 
-![login_lora-app-server.png](docs/pics/login_lora-app-server.png)
-2. Login as admin/admin, click bottom left button __M2M WALLET__
-![homepage_lora-app-server.png](docs/pics/homepage_lora-app-server.png)
+## Configuration
 
-Your page is then redirected to __M2M WALLET__
-![Withdraw_screen.png](docs/pics/Withdraw_screen.png)
+##### - redirect database
+For sharing testing data during development, set postgresql service server wherever it is needed.
+Change in configuration/lora-app-server.toml
+```toml
+[postgresql]
+dsn="postgres://USERNAME:PASSWORD@SERVICE_SERVER_DOMAIN_NAME:5432/DATABASE_NAME?sslmode=disable"
+```
 
-3. Explore __M2M WALLET__ now :) You can relocate yourself back to lora-app-server whenever you want by clicking bottom left button __LoRaServer__
-- withdraw page
+After changing config file, simply restart the service in docker container again
 
-![Withdraw_screen.png](docs/pics/Withdraw_screen.png)
+```bash
+$ ./m2m/build/m2m -c configuration/mxprotocol-server.toml
+```
 
-- TopUp page
-
-![Topup_screen.png](docs/pics/Topup_screen.png)
-
-- History page
-
-![History_screen.png](docs/pics/History_screen.png)
-
-- ETH Account page
-
-![ETHAccount_screen.png](docs/pics/ETHAccount_screen.png)

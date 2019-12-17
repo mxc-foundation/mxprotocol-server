@@ -8,7 +8,7 @@ services:
       - ./configuration:/etc/mxprotocol-server
       - ./:/mxprotocol-server
     links:
-      - postgresql
+      #- postgresql
       - redis
       - mosquitto
     environment:
@@ -21,10 +21,10 @@ services:
       - seccomp:unconfined
     cap_add:
       - SYS_PTRACE
-  postgresql:
-    image: postgres:9.6-alpine
-    volumes:
-      - ./.docker-compose/postgresql/initdb:/docker-entrypoint-initdb.d
+  #postgresql:
+  #  image: postgres:9.6-alpine
+  #  volumes:
+  #    - ./.docker-compose/postgresql/initdb:/docker-entrypoint-initdb.d
 
   redis:
     image: redis:5-alpine
