@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/smartystreets/assertions"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/tests"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/db"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/tests"
 )
 
 func TestAccounting(t *testing.T) {

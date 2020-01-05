@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/types"
 )
 
 func dbErrorInit() {

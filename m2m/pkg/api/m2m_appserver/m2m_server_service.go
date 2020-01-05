@@ -4,10 +4,10 @@ import (
 	"context"
 	"github.com/golang/protobuf/ptypes"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_server"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/wallet"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/api/m2m_server"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/db"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/services/wallet"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/types"
 )
 
 type M2MServerAPI struct {

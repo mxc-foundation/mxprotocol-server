@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/api/m2m_ui"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"testing"

@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 	log "github.com/sirupsen/logrus"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	api "github.com/mxc-foundation/mxprotocol-server/m2m/api/m2m_ui"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/db"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/config"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/types"
 	"time"
 )
 

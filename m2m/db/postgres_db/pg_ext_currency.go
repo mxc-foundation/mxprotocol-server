@@ -4,7 +4,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/types"
 )
 
 type extCurrencyInterface struct{}

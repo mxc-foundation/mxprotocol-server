@@ -5,7 +5,7 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/config"
 	"sync"
 	"time"
 
@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	appserver "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_server"
+	appserver "github.com/mxc-foundation/mxprotocol-server/m2m/api/m2m_server"
 )
 
 var p Pool

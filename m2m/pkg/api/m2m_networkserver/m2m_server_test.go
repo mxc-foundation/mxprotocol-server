@@ -3,8 +3,8 @@ package m2m_networkserver
 import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/networkserver"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/api/networkserver"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/db"
 	"testing"
 )
 

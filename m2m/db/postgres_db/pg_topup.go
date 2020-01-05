@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/types"
 )
 
 type topupInterface struct{}

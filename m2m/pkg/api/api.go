@@ -2,12 +2,12 @@ package api
 
 import (
 	log "github.com/sirupsen/logrus"
-	grpcAppserver "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_server"
-	m2mServer "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/networkserver"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_appserver"
-	networkserverApi "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/m2m_networkserver"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	grpcAppserver "github.com/mxc-foundation/mxprotocol-server/m2m/api/m2m_server"
+	m2mServer "github.com/mxc-foundation/mxprotocol-server/m2m/api/m2m_ui"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/api/networkserver"
+	api "github.com/mxc-foundation/mxprotocol-server/m2m/pkg/api/m2m_appserver"
+	networkserverApi "github.com/mxc-foundation/mxprotocol-server/m2m/pkg/api/m2m_networkserver"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/config"
 	"google.golang.org/grpc"
 	"net"
 	"time"
