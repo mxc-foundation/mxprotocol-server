@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	log "github.com/sirupsen/logrus"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
+	api "github.com/mxc-foundation/mxprotocol-server/m2m/api/m2m_ui"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/db"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

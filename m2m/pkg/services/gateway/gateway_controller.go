@@ -5,11 +5,11 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/empty"
 	log "github.com/sirupsen/logrus"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_server"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/api/clients/appserver"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	api "github.com/mxc-foundation/mxprotocol-server/m2m/api/m2m_server"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/db"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/api/clients/appserver"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/config"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/types"
 	"time"
 )
 

@@ -3,7 +3,7 @@ package supernode
 import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/nanmu42/etherscan-api"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/config"
 	"log"
 )
 

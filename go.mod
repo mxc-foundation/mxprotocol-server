@@ -18,4 +18,5 @@ require (
 	github.com/stretchr/testify v1.4.0
 	google.golang.org/genproto v0.0.0-20191230161307-f3c370f40bfb
 	google.golang.org/grpc v1.26.0
+	honnef.co/go/tools v0.0.0-20190523083050-ea95bdfd59fc // indirect
 )

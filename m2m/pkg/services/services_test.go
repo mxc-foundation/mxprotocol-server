@@ -2,8 +2,8 @@ package services
 
 import (
 	"github.com/stretchr/testify/suite"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/tests"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/db"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/tests"
 	"testing"
 )
 

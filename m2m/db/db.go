@@ -6,8 +6,8 @@ import (
 	migrate "github.com/rubenv/sql-migrate"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/migrations"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/config"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/migrations"
 )
 
 func Setup(conf config.MxpConfig) error {

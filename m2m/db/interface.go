@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/config"
 	"time"
 )
 
