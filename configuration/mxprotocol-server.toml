@@ -19,7 +19,6 @@ low_balance_threshold=20
 # settings for notify events targeting system
 [system_notification]
 low_balance_threshold=20
-low_balance_warning=1000
 
 # pricing management related settings
 [pricing]

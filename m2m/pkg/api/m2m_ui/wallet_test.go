@@ -2,8 +2,8 @@ package ui
 
 import (
 	"context"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/config"
+	api "github.com/mxc-foundation/mxprotocol-server/m2m/api/m2m_ui"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/config"
 	"testing"
 )
 

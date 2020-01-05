@@ -7,10 +7,10 @@
     "dumpEventTime": "2019-12-03T14:19:18Z",
     "dumpEventTimeStamp": "1575379158471",
     "processId": 11333,
-    "cwd": "/home/namgyeong/mxc/go/src/gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/ui",
+    "cwd": "/home/namgyeong/mxc/go/src/github.com/mxc-foundation/mxprotocol-server/m2m/ui",
     "commandLine": [
       "node",
-      "/home/namgyeong/mxc/go/src/gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/ui/node_modules/react-scripts/scripts/start.js"
+      "/home/namgyeong/mxc/go/src/github.com/mxc-foundation/mxprotocol-server/m2m/ui/node_modules/react-scripts/scripts/start.js"
     ],
     "nodejsVersion": "v11.15.0",
     "glibcVersionRuntime": "2.27",
@@ -226,7 +226,7 @@
     "CHROME_DESKTOP": "code-url-handler.desktop",
     "QT4_IM_MODULE": "xim",
     "HOME": "/home/namgyeong",
-    "OLDPWD": "/home/namgyeong/mxc/go/src/gitlab.com/MXCFoundation/cloud/mxprotocol-server",
+    "OLDPWD": "/home/namgyeong/mxc/go/src/github.com/mxc-foundation/mxprotocol-server",
     "npm_package_dependencies_chart_js": "^2.7.3",
     "npm_package_dependencies_moment_timezone": "^0.5.26",
     "npm_package_dependencies_whatwg_fetch": "^3.0.0",
@@ -319,7 +319,7 @@
     "npm_config_local_address": "",
     "npm_config_viewer": "man",
     "npm_config_node_gyp": "/usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js",
-    "PATH": "/usr/local/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/home/namgyeong/mxc/go/src/gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/ui/node_modules/.bin:/home/namgyeong/mxc/go/bin:/usr/local/go/bin:/home/namgyeong/mxc/go/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-11-oracle/bin:/usr/lib/jvm/java-11-oracle/db/bin:/usr/lib/jvm/java-11-oracle/bin:/usr/lib/jvm/java-11-oracle/db/bin",
+    "PATH": "/usr/local/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/home/namgyeong/mxc/go/src/github.com/mxc-foundation/mxprotocol-server/m2m/ui/node_modules/.bin:/home/namgyeong/mxc/go/bin:/usr/local/go/bin:/home/namgyeong/mxc/go/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-11-oracle/bin:/usr/lib/jvm/java-11-oracle/db/bin:/usr/lib/jvm/java-11-oracle/bin:/usr/lib/jvm/java-11-oracle/db/bin",
     "DERBY_HOME": "/usr/lib/jvm/java-11-oracle/db",
     "PAPERSIZE": "letter",
     "SESSION_MANAGER": "local/mxc-Inspiron-5579:@/tmp/.ICE-unix/4079,unix/mxc-Inspiron-5579:/tmp/.ICE-unix/4079",
@@ -420,7 +420,7 @@
     "npm_config_init_module": "/home/namgyeong/.npm-init.js",
     "npm_config_parseable": "",
     "JAVA_HOME": "/usr/lib/jvm/java-11-oracle",
-    "PWD": "/home/namgyeong/mxc/go/src/gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/ui",
+    "PWD": "/home/namgyeong/mxc/go/src/github.com/mxc-foundation/mxprotocol-server/m2m/ui",
     "npm_package_dependencies_bootstrap": "^4.4.0",
     "npm_config_globalignorefile": "/usr/local/etc/npmignore",
     "npm_execpath": "/usr/local/lib/node_modules/npm/bin/npm-cli.js",
@@ -444,7 +444,7 @@
     "npm_config_optional": "true",
     "npm_package_dependencies_react": "^16.8.1",
     "npm_config_json": "",
-    "INIT_CWD": "/home/namgyeong/mxc/go/src/gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/ui",
+    "INIT_CWD": "/home/namgyeong/mxc/go/src/github.com/mxc-foundation/mxprotocol-server/m2m/ui",
     "BABEL_ENV": "development",
     "NODE_ENV": "development",
     "REACT_APP_LORA_APP_SERVER": "http://localhost:3001",
@@ -507,6 +507,6 @@
     "/lib/x86_64-linux-gnu/libc.so.6",
     "/lib64/ld-linux-x86-64.so.2",
     "/lib/x86_64-linux-gnu/libnss_files.so.2",
-    "/home/namgyeong/mxc/go/src/gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/ui/node_modules/node-sass/vendor/linux-x64-67/binding.node"
+    "/home/namgyeong/mxc/go/src/github.com/mxc-foundation/mxprotocol-server/m2m/ui/node_modules/node-sass/vendor/linux-x64-67/binding.node"
   ]
 }

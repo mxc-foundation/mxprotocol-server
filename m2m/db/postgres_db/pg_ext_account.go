@@ -1,7 +1,7 @@
 package postgres_db
 
 import (
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/types"
 	"strings"
 	"time"
 

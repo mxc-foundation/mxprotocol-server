@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/command/cmd"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/command/cmd"
 )
 
 var version string // set by the compiler
