@@ -3,9 +3,9 @@ package ui
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	api "gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/api/m2m_ui"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/auth"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/pkg/services/ext_account"
+	api "github.com/mxc-foundation/mxprotocol-server/m2m/api/m2m_ui"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/auth"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/services/ext_account"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"strings"

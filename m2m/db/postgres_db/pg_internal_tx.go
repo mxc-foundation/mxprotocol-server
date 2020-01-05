@@ -2,7 +2,7 @@ package postgres_db
 
 import (
 	"github.com/pkg/errors"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/types"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/types"
 )
 
 type internalTxInterface struct{}

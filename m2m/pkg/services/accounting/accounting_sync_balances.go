@@ -2,7 +2,7 @@ package accounting
 
 import (
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/MXCFoundation/cloud/mxprotocol-server/m2m/db"
+	"github.com/mxc-foundation/mxprotocol-server/m2m/db"
 )
 
 func syncTmpBalance(walletId int64) {
