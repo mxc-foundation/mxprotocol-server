@@ -2,14 +2,16 @@ package cmd
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
+	"os"
 	"reflect"
 	"strings"
 
+	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/config"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/mxc-foundation/mxprotocol-server/m2m/pkg/config"
 )
 
 var cfgFile string
@@ -106,6 +108,13 @@ func initConfig() {
 	}
 
 	config.Cstruct.Version = version
+
+	// replace servers with local env parameter
+	remoteServer := os.Getenv("REMOTE_SERVER_NAME")
+	if remoteServer != "" {
+		config.Cstruct.PostgreSQL.DSN = strings.Replace(config.Cstruct.PostgreSQL.DSN,
+			"@postgresql:5432/", fmt.Sprintf("@%s:5432/", remoteServer), -1)
+	}
 }
 
 func viperBindEnvs(iface interface{}, parts ...string) {
