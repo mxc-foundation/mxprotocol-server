@@ -1,0 +1,8 @@
+#!/bin/bash
+
+make clean || { echo "Make clean failed, please deal with error"; exit $ERRCODE; }
+
+make all || { echo "Make build failed, please deal with error"; exit $ERRCODE; }
+
+/mxprotocol-server/m2m/build/m2m -c /mxprotocol-server/configuration/mxprotocol-server.toml
+
