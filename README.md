@@ -77,19 +77,37 @@ git pull --rebase origin feature/MCL-117
 git checkout -b luke/MCL-118-page-network-servers
 ```
 
-## Build Docker container and start container shell session:
-
+## Start container and build service with local database
+- Outside of container, do
 ```bash
-docker-compose up -d && docker-compose exec mxprotocol-server bash
+$MXPROTOCOL-SERVER-PATH/mxprotocol-server local_database
 ```
+After building, the service will start running with config file $MXPROTOCOL-SERVER-PATH/configuration/mxprotocol-server.toml.  
 
-## Start Mxprotocol Server:
-
+- When you stop the service with Ctrl+c, you wil be inside of the container, after modifying the code, if you wanna rebuild, just stay inside of container and do:
 ```bash
-make clean &&
-make &&
-./m2m/build/m2m
+$MXPROTOCOL-SERVER-PATH/mxprotocol-server build
 ```
+Again, after building, the service will start running with config file $MXPROTOCOL-SERVER-PATH/configuration/mxprotocol-server.toml. 
+
+## Build service with remote database
+- Outside of container, do
+```bash
+$MXPROTOCOL-SERVER-PATH/mxprotocol-server remote_database REMOTE_SEVER
+```
+After building, the service will start running with config file $MXPROTOCOL-SERVER-PATH/configuration/mxprotocol-server.toml.  
+
+- When you stop the service with Ctrl+c, you wil be inside of the container, after modifying the code, if you wanna rebuild, just stay inside of container and do:
+```bash
+$MXPROTOCOL-SERVER-PATH/mxprotocol-server build
+```
+Again, after building, the service will start running with config file $MXPROTOCOL-SERVER-PATH/configuration/mxprotocol-server.toml.  
+
+> __Hint:__ if you wanna connect appserver, you need to do __outside__ container:
+>```bash
+> docker network connect NETWORK_NAME_APPSERVER MXPROTOCOL_CONTGAINER_ID
+> docker network connect MXPROTOCOL_CONTGAINER_ID NETWORK_NAME_APPSERVER 
+>```
 
 
 ## Configuration
