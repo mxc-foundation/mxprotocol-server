@@ -60,7 +60,7 @@ interval_min = 60
 # * require - Always SSL (skip verification)
 # * verify-ca - Always SSL (verify that the certificate presented by the server was signed by a trusted CA)
 # * verify-full - Always SSL (verify that the certification presented by the server was signed by a trusted CA and the server host name matches the one in the certificate)
-dsn="postgres://postgres@lora.test.cloud.mxc.org:5432/postgres?sslmode=disable"
+dsn="postgres://postgres@postgresql:5432/postgres?sslmode=disable"
 automigrate=false
 
 [redis]
@@ -133,4 +133,4 @@ payment_service_port=":2333"
 
 [staking]
 staking_percentage=0.1
-staking_min_days=30
+staking_min_days=0
