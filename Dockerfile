@@ -11,7 +11,7 @@ RUN mkdir -p $PROJECT_PATH
 COPY . $PROJECT_PATH
 WORKDIR $PROJECT_PATH
 
-RUN make dev-requirements ui-requirements clean all
+RUN make dev-requirements clean all
 
 FROM alpine:latest AS production
 

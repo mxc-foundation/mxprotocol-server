@@ -1,20 +1,17 @@
-.PHONY: build clean api pkg/static statics/swagger/api.swagger.json dev-requirements pkg/migrations scripts
+.PHONY: build clean api dev-requirements pkg/migrations scripts
 PKGS := $(shell go list ./... | grep -v /vendor |grep -v m2m/api | grep -v m2m/migrations \
             | grep -v m2m/static | grep -v m2m/ui| grep -v grpc_api-paymemt_service )
 VERSION := $(shell git describe --tags |sed -e "s/^v//")
 
-build: ui/build pkg/static pkg/migrations
+build: pkg/migrations
 	mkdir -p build
 	go build $(GO_EXTRA_BUILD_ARGS) -ldflags "-s -w -X main.version=$(VERSION)" -o build/m2m command/main.go
 
 clean:
 	@echo "Cleaning up workspace"
-	@rm -rf build pkg/static/static_gen.go pkg/migrations/migrations_gen.go ui/build static/static
-	@rm -f static/index.html static/icon.png static/manifest.json static/asset-manifest.json static/service-worker.js
-	@rm -f static/swagger/*.json
-	@rm -rf static/logo
+	@rm -rf build  pkg/migrations/migrations_gen.go
 
-test: pkg/static pkg/migrations
+test: pkg/migrations
 	@echo "Running tests"
 	@rm -f coverage.out
 	@for pkg in $(PKGS) ; do \
@@ -23,27 +20,13 @@ test: pkg/static pkg/migrations
 	@go vet $(PKGS)
 	@go test -p 1 -v $(PKGS) -cover -coverprofile coverage.out
 
-ui/build:
-	@echo "Building ui"
-	@cd ui && npm run build
-	@mv ui/build/* static
 api:
 	@echo "Generating API code from .proto files"
 	@go mod vendor
-	@go generate api/m2m_ui/api.go
 	@go generate api/appserver/api.go
+	@go generate api/networkserver/api.go
 	@rm -rf vendor/
 
-pkg/static pkg/migrations: static/swagger/api.swagger.json
+pkg/migrations:
 	@echo "Generating static files"
-	@go generate pkg/static/static.go
 	@go generate pkg/migrations/migration.go
-
-static/swagger/api.swagger.json:
-	@echo "Generating combined Swagger JSON"
-	@GOOS="" GOARCH="" go run api/m2m_ui/swagger/main.go api/m2m_ui/swagger > static/swagger/api.swagger.json
-	@cp api/m2m_ui/swagger/*.json static/swagger
-
-ui-requirements:
-	@echo "Installing UI requirements"
-	@cd ui && npm install
