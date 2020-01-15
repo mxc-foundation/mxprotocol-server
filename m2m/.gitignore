@@ -29,5 +29,5 @@
 node_modules
 
 #docker-compose
-/*.yml
+*.yml
 *.sum

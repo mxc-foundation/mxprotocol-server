@@ -14,10 +14,115 @@ At the first stage, MXC M2M wallet will be used in the MXProtocol MVP. MXProtoco
 __Note.__ This preliminary version of M2M wallet is under development and supposed to be improved. 
 Additional features will be added to M2M wallet  based on the MXProtocol design.
 
-#### To run m2m-wallet service, three services are needed:
+# Setup
 
-- lora-app-server (open source)  
-$ git clone https://github.com/mxc-foundation/lora-app-server.git 
-- payments-service (not open)  
-- mxprotocol-server (open source)
-$ git clone https://github.com/mxc-foundation/mxprotocol-server.git  
+See MXC Developer Handbook for further information.
+
+Note: UI part from m2m has been merged into lpwan-app-server, m2m no longer contains UI part.  
+However part of the APIs get data from m2m service, you need to start m2m service for accessing all features correctly.
+
+## Environment
+
+#### Set up docker
+- [Install Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)  
+Just follow __Install using the repository / SET UP THE REPOSITORY__, no need to install docker engine community
+
+- [Install docker-compose](https://docs.docker.com/compose/install/)
+Just follow __Install Compose on Linux systems__
+
+- Add user to docker group
+```bash
+$ sudo usermod -aG docker $USER
+```
+
+## Clone the repo:
+
+```bash
+git clone git@gitlab.com:MXCFoundation/cloud/mxprotocol-server.git &&
+cd mxprotocol-server
+```
+
+## Fetch latest develop branch:
+
+```bash
+git fetch origin develop:develop &&
+git checkout develop &&
+git pull --rebase origin develop
+```
+
+## Existing or new feature branch
+
+* New feature branch required?
+
+```
+git checkout -b feature/MCL-XXX
+```
+
+* Existing feature branch?
+
+> Example: If there is a "feature" branch that you are working on in Jira
+(i.e. feature/MCL-117) and you are working on a task of that feature,
+then create a branch from that feature that is prefixed with your name
+(i.e. luke/MCL-118-page-network-servers)
+
+```bash
+git fetch origin feature/MCL-117:feature/MCL-117 &&
+git checkout feature/MCL-117 &&
+git pull --rebase origin feature/MCL-117
+```
+
+## Create task branch from feature branch:
+
+```bash
+git checkout -b luke/MCL-118-page-network-servers
+```
+
+## Start container and build service with local database
+- Outside of container, do
+```bash
+$MXPROTOCOL-SERVER-PATH/mxprotocol-server local_database
+```
+After building, the service will start running with config file $MXPROTOCOL-SERVER-PATH/configuration/mxprotocol-server.toml.  
+
+- When you stop the service with Ctrl+c, you wil be inside of the container, after modifying the code, if you wanna rebuild, just stay inside of container and do:
+```bash
+$MXPROTOCOL-SERVER-PATH/mxprotocol-server build
+```
+Again, after building, the service will start running with config file $MXPROTOCOL-SERVER-PATH/configuration/mxprotocol-server.toml. 
+
+## Build service with remote database
+- Outside of container, do
+```bash
+$MXPROTOCOL-SERVER-PATH/mxprotocol-server remote_database REMOTE_SEVER
+```
+After building, the service will start running with config file $MXPROTOCOL-SERVER-PATH/configuration/mxprotocol-server.toml.  
+
+- When you stop the service with Ctrl+c, you wil be inside of the container, after modifying the code, if you wanna rebuild, just stay inside of container and do:
+```bash
+$MXPROTOCOL-SERVER-PATH/mxprotocol-server build
+```
+Again, after building, the service will start running with config file $MXPROTOCOL-SERVER-PATH/configuration/mxprotocol-server.toml.  
+
+> __Hint:__ if you wanna connect appserver, you need to do __outside__ container:
+>```bash
+> docker network connect NETWORK_NAME_APPSERVER MXPROTOCOL_CONTGAINER_ID
+> docker network connect MXPROTOCOL_CONTGAINER_ID NETWORK_NAME_APPSERVER 
+>```
+
+
+## Configuration
+
+##### - redirect database
+For sharing testing data during development, set postgresql service server wherever it is needed.
+Change in configuration/lora-app-server.toml
+```toml
+[postgresql]
+dsn="postgres://USERNAME:PASSWORD@SERVICE_SERVER_DOMAIN_NAME:5432/DATABASE_NAME?sslmode=disable"
+```
+
+After changing config file, simply restart the service in docker container again
+
+```bash
+$ ./m2m/build/m2m -c configuration/mxprotocol-server.toml
+```
+
